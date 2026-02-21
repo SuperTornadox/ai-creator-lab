@@ -1,0 +1,96 @@
+/* AI Creator Lab — Reveal.js Slide Overrides
+   Matches the course design system. */
+
+:root {
+  --slide-primary: #4f6ef7;
+  --slide-secondary: #7c3aed;
+  --slide-accent: #0ea5a5;
+  --slide-text: #1e2330;
+  --slide-muted: #6b7280;
+}
+
+/* Overall slide look */
+.reveal {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+  color: var(--slide-text);
+}
+.reveal .slides section { text-align: center; padding: 40px; }
+
+/* Background: subtle gradient */
+.reveal .slide-background-content {
+  background: linear-gradient(160deg, #f8f9fc 0%, #eef1fb 50%, #f0edfb 100%);
+}
+
+/* Typography — large and readable */
+.reveal h1 { font-size: 2.8rem; font-weight: 800; color: var(--slide-text); }
+.reveal h2 { font-size: 2.2rem; font-weight: 700; color: var(--slide-text); }
+.reveal h3 { font-size: 1.6rem; font-weight: 600; color: var(--slide-text); }
+.reveal p, .reveal li { font-size: 1.75rem; line-height: 1.6; }
+.reveal ul, .reveal ol { text-align: left; display: inline-block; }
+
+/* Images */
+.reveal img {
+  max-width: 80%;
+  margin: 0 auto;
+  display: block;
+  border-radius: 10px;
+}
+
+/* Lesson badge — top-left corner */
+.lesson-badge {
+  position: fixed;
+  top: 18px;
+  left: 18px;
+  background: var(--slide-primary);
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 700;
+  padding: 0.2em 0.7em;
+  border-radius: 9999px;
+  z-index: 100;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+/* --- Utility Classes --- */
+
+/* Title slides: extra large with gradient text */
+.slide-title {
+  font-size: 3.4rem !important;
+  font-weight: 800 !important;
+  background: linear-gradient(135deg, var(--slide-primary), var(--slide-secondary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Side-by-side comparison layout */
+.slide-comparison {
+  display: flex;
+  gap: 40px;
+  align-items: flex-start;
+  text-align: left;
+}
+.slide-comparison > * { flex: 1; }
+
+/* Oversized emoji */
+.slide-big-emoji {
+  font-size: 5rem !important;
+  line-height: 1.2;
+  margin-bottom: 0.2em;
+}
+
+/* Discussion question prompt */
+.slide-question {
+  font-size: 2.4rem !important;
+  font-weight: 700;
+  color: var(--slide-secondary);
+  font-style: italic;
+  max-width: 80%;
+  margin: 0 auto;
+  line-height: 1.4;
+}
+
+/* Links */
+.reveal a { color: var(--slide-primary); text-decoration: underline; }
+.reveal a:hover { color: var(--slide-secondary); }
