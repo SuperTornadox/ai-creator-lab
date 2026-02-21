@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI First Contact - AI Creator Lab</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/white.css">
+  <link rel="stylesheet" href="/shared/slides-base.css">
+  <style>
+    /* Character grid for slide 9 */
+    .character-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      max-width: 900px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .character-grid .char-item {
+      padding: 16px;
+      border-radius: 12px;
+      background: rgba(79, 110, 247, 0.06);
+    }
+
+    .character-grid .char-item .char-emoji {
+      font-size: 2.5rem;
+      margin-bottom: 4px;
+    }
+
+    .character-grid .char-item .char-name {
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+
+    /* "Not" list styling */
+    .not-list {
+      list-style: none;
+      text-align: left;
+      display: inline-block;
+    }
+
+    .not-list li {
+      font-size: 1.75rem;
+      margin-bottom: 0.3em;
+    }
+
+    /* Examples row for slide 3 */
+    .examples-row {
+      display: flex;
+      gap: 40px;
+      justify-content: center;
+      margin-top: 20px;
+    }
+
+    .examples-row .example-item {
+      text-align: center;
+      flex: 1;
+      max-width: 280px;
+    }
+
+    .examples-row .example-emoji {
+      font-size: 3rem;
+      margin-bottom: 8px;
+    }
+
+    .examples-row .example-title {
+      font-size: 1.3rem;
+      font-weight: 650;
+    }
+
+    .examples-row .example-desc {
+      font-size: 1.1rem;
+      color: var(--slide-muted);
+    }
+
+    /* Analogy box */
+    .analogy-box {
+      background: rgba(79, 110, 247, 0.08);
+      border-radius: 14px;
+      padding: 28px 36px;
+      max-width: 750px;
+      margin: 24px auto 0;
+      font-size: 1.5rem;
+      line-height: 1.6;
+      color: var(--slide-text);
+    }
+  </style>
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- Slide 1: Title -->
+      <section>
+        <p class="slide-big-emoji">&#x1F916;</p>
+        <h1 class="slide-title">AI First Contact</h1>
+        <p>Your first conversation with artificial intelligence</p>
+        <p style="margin-top: 12px; font-size: 1.1rem; color: var(--slide-muted);">AI Creator Lab &middot; Lesson 01</p>
+      </section>
+
+      <!-- Slide 2: Discussion — What is AI? -->
+      <section>
+        <p class="slide-question">"What do you think AI is?"</p>
+        <p style="margin-top: 24px; font-size: 1.5rem;">&#x1F4AD; Take a moment to share your thoughts</p>
+      </section>
+
+      <!-- Slide 3: AI in your life -->
+      <section>
+        <h2>AI Is Already In Your Life</h2>
+        <div class="examples-row">
+          <div class="example-item">
+            <div class="example-emoji">&#x1F5E3;&#xFE0F;</div>
+            <div class="example-title">Siri &amp; Alexa</div>
+            <div class="example-desc">Voice assistants</div>
+          </div>
+          <div class="example-item">
+            <div class="example-emoji">&#x1F4F1;</div>
+            <div class="example-title">YouTube &amp; TikTok</div>
+            <div class="example-desc">Recommending videos you like</div>
+          </div>
+          <div class="example-item">
+            <div class="example-emoji">&#x1F4F8;</div>
+            <div class="example-title">Face ID</div>
+            <div class="example-desc">Unlocking your phone</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 4: What AI is NOT -->
+      <section>
+        <h2>What AI is NOT</h2>
+        <ul class="not-list">
+          <li>&#x274C; Not a brain</li>
+          <li>&#x274C; Not alive</li>
+          <li>&#x274C; Not magic</li>
+          <li>&#x274C; Not always right</li>
+        </ul>
+      </section>
+
+      <!-- Slide 5: What AI IS -->
+      <section>
+        <h2>What AI IS</h2>
+        <p style="font-size: 1.8rem; max-width: 800px; margin: 0 auto;">A program that learns patterns<br>from lots and lots of data</p>
+        <div class="analogy-box">
+          &#x1F4DA; Like a student who read every book in the library &mdash; they can talk about anything, but they didn't actually <em>experience</em> any of it.
+        </div>
+      </section>
+
+      <!-- Slide 6: Live Demo -->
+      <section>
+        <h2>Let's Ask AI Something Weird!</h2>
+        <p class="slide-question">&#x1F914; "What would happen if cats could send emails?"</p>
+        <p style="margin-top: 32px; font-size: 1.2rem; color: var(--slide-muted);">[Live demo time!]</p>
+      </section>
+
+      <!-- Slide 7: Discussion — How did AI do that? -->
+      <section>
+        <h2>How did AI come up with that answer?</h2>
+        <p style="font-size: 1.6rem; margin-top: 20px;">Did it really <em>"know"</em> the answer?</p>
+        <p style="font-size: 1.6rem; margin-top: 12px;">Or did it create something that<br><strong>sounds like</strong> a good answer?</p>
+      </section>
+
+      <!-- Slide 8: Today's Mission -->
+      <section>
+        <p class="slide-big-emoji">&#x1F4F0;</p>
+        <h2>Today's Mission: You're a REPORTER!</h2>
+        <p style="font-size: 1.6rem; margin-top: 16px;">Interview an AI character and write about it</p>
+      </section>
+
+      <!-- Slide 9: Meet Your Characters -->
+      <section>
+        <h2>Meet Your Characters</h2>
+        <div class="character-grid">
+          <div class="char-item">
+            <div class="char-emoji">&#x1F431;</div>
+            <div class="char-name">A Talking Cat</div>
+          </div>
+          <div class="char-item">
+            <div class="char-emoji">&#x1F680;</div>
+            <div class="char-name">Person from Year 3000</div>
+          </div>
+          <div class="char-item">
+            <div class="char-emoji">&#x1F47D;</div>
+            <div class="char-name">Friendly Alien</div>
+          </div>
+          <div class="char-item">
+            <div class="char-emoji">&#x1F9C1;</div>
+            <div class="char-name">Dessert-Only Chef</div>
+          </div>
+          <div class="char-item">
+            <div class="char-emoji">&#x1F9B8;</div>
+            <div class="char-name">Superhero on Vacation</div>
+          </div>
+          <div class="char-item">
+            <div class="char-emoji">&#x1F995;</div>
+            <div class="char-name">Last Dinosaur</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 10: Launch! -->
+      <section>
+        <h2>Open your laptops!</h2>
+        <p style="font-size: 2rem; margin-top: 24px;">&#x1F449; Go to the <strong>Lesson 1</strong> page</p>
+        <p style="font-size: 2.5rem; margin-top: 32px;">Let's go! &#x1F680;</p>
+      </section>
+
+    </div>
+  </div>
+
+  <!-- Lesson badge overlay -->
+  <div class="lesson-badge">01</div>
+
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+  <script>
+    Reveal.initialize({
+      hash: true,
+      transition: 'slide',
+      width: 1280,
+      height: 720
+    });
+  </script>
+</body>
+</html>

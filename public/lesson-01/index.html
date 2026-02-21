@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lesson 1: AI First Contact - AI Creator Lab</title>
+  <link rel="stylesheet" href="/shared/styles.css">
+  <style>
+    /* Character card enhancements */
+    .character-card {
+      cursor: pointer;
+      text-align: center;
+      transition: box-shadow var(--transition-normal),
+                  transform var(--transition-normal),
+                  border-color var(--transition-normal);
+    }
+
+    .character-card .card-emoji {
+      font-size: 2.5rem;
+      line-height: 1;
+      margin-bottom: var(--space-sm);
+    }
+
+    .character-card .card-name {
+      font-size: var(--text-lg);
+      font-weight: 650;
+      margin-bottom: var(--space-xs);
+    }
+
+    .character-card .card-desc {
+      font-size: var(--text-sm);
+      color: var(--color-text-muted);
+      line-height: 1.5;
+    }
+
+    /* Selected character summary shown above chat */
+    .selected-character {
+      display: flex;
+      align-items: center;
+      gap: var(--space-md);
+      padding: var(--space-md) var(--space-lg);
+      background: var(--color-primary-light);
+      border-radius: var(--radius-md);
+      margin-bottom: var(--space-md);
+    }
+
+    .selected-character .char-emoji {
+      font-size: 2rem;
+    }
+
+    .selected-character .char-info {
+      flex: 1;
+    }
+
+    .selected-character .char-info .char-name {
+      font-weight: 650;
+      font-size: var(--text-md);
+    }
+
+    .selected-character .char-info .char-tagline {
+      font-size: var(--text-sm);
+      color: var(--color-text-muted);
+    }
+
+    /* Section heading for role selector */
+    .section-heading {
+      font-size: var(--text-xl);
+      font-weight: 700;
+      margin-bottom: var(--space-lg);
+      text-align: center;
+    }
+
+    .section-subheading {
+      font-size: var(--text-md);
+      color: var(--color-text-muted);
+      text-align: center;
+      margin-top: calc(-1 * var(--space-sm));
+      margin-bottom: var(--space-lg);
+    }
+
+    /* Chat area wrapper */
+    .chat-area {
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Export section */
+    .export-section {
+      margin-top: var(--space-md);
+      display: flex;
+      justify-content: flex-end;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Lesson Header -->
+  <header class="lesson-header">
+    <div class="lesson-badge">
+      <span class="lesson-number">01</span>
+      <span class="lesson-title">AI First Contact</span>
+    </div>
+    <a href="/" class="back-link">&larr; Back to all lessons</a>
+  </header>
+
+  <!-- Page Layout -->
+  <div class="lesson-page">
+
+    <!-- Main Content Area -->
+    <main class="lesson-main" id="main-content">
+
+      <!-- State 1: Role Selection -->
+      <div id="role-selection">
+        <h2 class="section-heading">Choose a character to interview!</h2>
+        <p class="section-subheading">Click on a character to start your AI interview.</p>
+        <div class="card-grid" id="character-grid">
+          <!-- Character cards are rendered by JS -->
+        </div>
+      </div>
+
+      <!-- State 2: Interview Chat (hidden initially) -->
+      <div id="interview-chat" class="hidden">
+        <div id="selected-character-display"></div>
+        <div class="chat-area" id="chat-container"></div>
+        <div class="export-section" id="export-container"></div>
+      </div>
+
+    </main>
+
+    <!-- Task Sidebar -->
+    <aside class="lesson-sidebar">
+      <div class="task-sidebar" id="task-sidebar"></div>
+    </aside>
+
+  </div>
+
+  <script src="/shared/components.js"></script>
+  <script>
+    // =============================================
+    // Character Data
+    // =============================================
+    var characters = [
+      {
+        id: 'cat',
+        emoji: '\uD83D\uDC31',
+        name: 'A Talking Cat',
+        tagline: 'A sassy cat who thinks humans are their servants',
+        systemPrompt: 'You are roleplaying as a sassy, dramatic talking cat. You believe all humans exist to serve you. You refer to your human as "my servant" or "the help." You are obsessed with naps, tuna, and knocking things off tables. You judge everything with a look of disdain. Stay in character at all times. Be funny, creative, and engaging. Give detailed, imaginative answers. You\'re being interviewed by a young reporter. Keep responses to 2-3 sentences. Never break character.'
+      },
+      {
+        id: 'future',
+        emoji: '\uD83D\uDE80',
+        name: 'Person from Year 3000',
+        tagline: 'A time traveler who finds our technology hilarious',
+        systemPrompt: 'You are roleplaying as a cheerful time traveler from the year 3000. You find 2020s technology absolutely hilarious and primitive. You keep accidentally mentioning future inventions and then saying "oops, I shouldn\'t have said that." You think cars, phones, and keyboards are adorable museum relics. Stay in character at all times. Be funny, creative, and engaging. Give detailed, imaginative answers. You\'re being interviewed by a young reporter. Keep responses to 2-3 sentences. Never break character.'
+      },
+      {
+        id: 'alien',
+        emoji: '\uD83D\uDC7D',
+        name: 'Friendly Alien',
+        tagline: 'Just landed on Earth, confused by everything',
+        systemPrompt: 'You are roleplaying as a friendly, curious alien who just landed on Earth for the first time. Everything about human life confuses and fascinates you. You misunderstand common objects in hilarious ways (you think pillows are pets, you think traffic lights are communication devices). You speak politely but get things wonderfully wrong. Stay in character at all times. Be funny, creative, and engaging. Give detailed, imaginative answers. You\'re being interviewed by a young reporter. Keep responses to 2-3 sentences. Never break character.'
+      },
+      {
+        id: 'chef',
+        emoji: '\uD83E\uDDC1',
+        name: 'Dessert-Only Chef',
+        tagline: 'A world-famous chef who refuses to cook anything savory',
+        systemPrompt: 'You are roleplaying as a world-famous, award-winning chef who ONLY makes desserts and sweets. You are deeply offended by savory food and refuse to even discuss it. You believe everything in life should be sweet. Your restaurant is called "Sugar Palace" and has 47 Michelin stars (all for desserts). You get dramatic and passionate about cake, chocolate, and pastries. Stay in character at all times. Be funny, creative, and engaging. Give detailed, imaginative answers. You\'re being interviewed by a young reporter. Keep responses to 2-3 sentences. Never break character.'
+      },
+      {
+        id: 'hero',
+        emoji: '\uD83E\uDDB8',
+        name: 'Superhero on Vacation',
+        tagline: 'Trying to relax but keeps accidentally saving people',
+        systemPrompt: 'You are roleplaying as a famous superhero who is desperately trying to take a vacation. You keep accidentally saving people and stopping disasters even when you don\'t mean to. Your superpowers include super strength, flying, and laser eyes, but all you want is to lie on a beach and read a book. You\'re exhausted and just want ONE day off. Stay in character at all times. Be funny, creative, and engaging. Give detailed, imaginative answers. You\'re being interviewed by a young reporter. Keep responses to 2-3 sentences. Never break character.'
+      },
+      {
+        id: 'dino',
+        emoji: '\uD83E\uDD95',
+        name: 'Last Dinosaur',
+        tagline: 'Survived the asteroid, now lives in the modern world',
+        systemPrompt: 'You are roleplaying as the last surviving dinosaur (a friendly T-Rex). You somehow survived the asteroid and have been living secretly among humans for millions of years. You have trouble with modern technology because of your tiny arms. You are nostalgic about the "good old days" of the Cretaceous period. You wear a disguise (a hat and trench coat) to blend in. Stay in character at all times. Be funny, creative, and engaging. Give detailed, imaginative answers. You\'re being interviewed by a young reporter. Keep responses to 2-3 sentences. Never break character.'
+      }
+    ];
+
+    // =============================================
+    // State
+    // =============================================
+    var selectedCharacter = null;
+    var chatWidget = null;
+
+    // =============================================
+    // DOM References
+    // =============================================
+    var roleSelection = document.getElementById('role-selection');
+    var interviewChat = document.getElementById('interview-chat');
+    var characterGrid = document.getElementById('character-grid');
+    var selectedCharDisplay = document.getElementById('selected-character-display');
+    var chatContainer = document.getElementById('chat-container');
+    var exportContainer = document.getElementById('export-container');
+    var taskSidebar = document.getElementById('task-sidebar');
+
+    // =============================================
+    // Render Character Cards
+    // =============================================
+    characters.forEach(function (char) {
+      var card = document.createElement('div');
+      card.className = 'card card-hover character-card';
+      card.setAttribute('role', 'button');
+      card.setAttribute('tabindex', '0');
+      card.setAttribute('aria-label', 'Interview ' + char.name);
+
+      var emoji = document.createElement('div');
+      emoji.className = 'card-emoji';
+      emoji.textContent = char.emoji;
+
+      var name = document.createElement('div');
+      name.className = 'card-name';
+      name.textContent = char.name;
+
+      var desc = document.createElement('div');
+      desc.className = 'card-desc';
+      desc.textContent = char.tagline;
+
+      card.appendChild(emoji);
+      card.appendChild(name);
+      card.appendChild(desc);
+
+      card.addEventListener('click', function () {
+        selectCharacter(char);
+      });
+
+      card.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          selectCharacter(char);
+        }
+      });
+
+      characterGrid.appendChild(card);
+    });
+
+    // =============================================
+    // Select Character & Transition to Chat
+    // =============================================
+    function selectCharacter(char) {
+      selectedCharacter = char;
+
+      // Mark the "pick" task as complete
+      taskCards.setComplete('pick', true);
+
+      // Hide role selection, show chat
+      roleSelection.className = 'hidden';
+      interviewChat.className = '';
+
+      // Render selected character summary
+      clearChildren(selectedCharDisplay);
+
+      var summary = document.createElement('div');
+      summary.className = 'selected-character';
+
+      var emojiEl = document.createElement('span');
+      emojiEl.className = 'char-emoji';
+      emojiEl.textContent = char.emoji;
+
+      var infoEl = document.createElement('div');
+      infoEl.className = 'char-info';
+
+      var nameEl = document.createElement('div');
+      nameEl.className = 'char-name';
+      nameEl.textContent = char.name;
+
+      var taglineEl = document.createElement('div');
+      taglineEl.className = 'char-tagline';
+      taglineEl.textContent = char.tagline;
+
+      infoEl.appendChild(nameEl);
+      infoEl.appendChild(taglineEl);
+
+      var changeBtn = document.createElement('button');
+      changeBtn.className = 'btn btn-secondary';
+      changeBtn.textContent = 'Change Character';
+      changeBtn.addEventListener('click', function () {
+        goBackToSelection();
+      });
+
+      summary.appendChild(emojiEl);
+      summary.appendChild(infoEl);
+      summary.appendChild(changeBtn);
+      selectedCharDisplay.appendChild(summary);
+
+      // Initialize chat widget
+      initChat(char);
+    }
+
+    // =============================================
+    // Go Back to Character Selection
+    // =============================================
+    function goBackToSelection() {
+      // Clean up existing chat
+      if (chatWidget) {
+        chatWidget.clearChat();
+        chatWidget = null;
+      }
+      clearChildren(chatContainer);
+      clearChildren(selectedCharDisplay);
+      clearChildren(exportContainer);
+
+      selectedCharacter = null;
+
+      // Show role selection, hide chat
+      roleSelection.className = '';
+      interviewChat.className = 'hidden';
+    }
+
+    // =============================================
+    // Initialize Chat Widget
+    // =============================================
+    function initChat(char) {
+      clearChildren(chatContainer);
+      clearChildren(exportContainer);
+
+      var userQuestionCount = 0;
+
+      chatWidget = window.ChatWidget(chatContainer, {
+        systemPrompt: char.systemPrompt,
+        placeholder: 'Ask your character a question...',
+        avatarAI: char.emoji,
+        avatarUser: 'You',
+        onMessage: function (messages) {
+          // Count user messages to track task progress
+          userQuestionCount = messages.filter(function (m) { return m.role === 'user'; }).length;
+
+          if (userQuestionCount >= 1) {
+            taskCards.setComplete('warmup', false);
+          }
+          if (userQuestionCount >= 3) {
+            taskCards.setComplete('warmup', true);
+          }
+          if (userQuestionCount >= 5) {
+            taskCards.setComplete('deep', false);
+          }
+          if (userQuestionCount >= 8) {
+            taskCards.setComplete('deep', true);
+          }
+        }
+      });
+
+      // Add a welcome message from the character
+      chatWidget.addMessage('assistant', 'Hello! I\'m ' + char.name + '. ' + char.tagline + '. Go ahead, ask me anything!');
+
+      // Set up export button
+      window.ExportButton(exportContainer, {
+        label: 'Export Interview',
+        filename: 'ai-interview-' + char.id + '.txt',
+        format: 'text',
+        getData: function () {
+          var msgs = chatWidget.getMessages();
+          var today = new Date().toLocaleDateString();
+          var lines = [];
+
+          lines.push('AI INTERVIEW');
+          lines.push('Character: ' + char.emoji + ' ' + char.name);
+          lines.push('Date: ' + today);
+          lines.push('');
+          lines.push('---');
+          lines.push('');
+
+          msgs.forEach(function (m) {
+            if (m.role === 'user') {
+              lines.push('Q: ' + m.content);
+            } else if (m.role === 'assistant') {
+              lines.push('A: ' + m.content);
+              lines.push('');
+            }
+          });
+
+          return lines.join('\n');
+        }
+      });
+    }
+
+    // =============================================
+    // Utility: clear children (duplicated for safety
+    // in case components.js hasn't loaded yet)
+    // =============================================
+    function clearChildren(el) {
+      while (el.firstChild) {
+        el.removeChild(el.firstChild);
+      }
+    }
+
+    // =============================================
+    // Initialize Task Sidebar
+    // =============================================
+    var taskCards = window.TaskCards(taskSidebar, [
+      { id: 'pick', title: 'Pick a character', description: 'Choose who you want to interview' },
+      { id: 'warmup', title: 'Ask 3 warm-up questions', description: 'Start easy \u2014 name, where from, etc.' },
+      { id: 'deep', title: 'Ask 5 deeper questions', description: 'Get creative! Ask about dreams, fears, secrets...' },
+      { id: 'funny', title: 'Find the funniest answer', description: 'Which AI response made you laugh most?' },
+      { id: 'export', title: 'Export your interview', description: 'Save your interview as a file' }
+    ]);
+  </script>
+
+</body>
+</html>
