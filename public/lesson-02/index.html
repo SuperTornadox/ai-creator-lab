@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lesson 2: AI Story Factory - AI Creator Lab</title>
+  <link rel="stylesheet" href="/shared/styles.css">
+  <style>
+    /* Suggestion chips */
+    .chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-xs);
+      margin-top: var(--space-xs);
+    }
+
+    .chip {
+      display: inline-block;
+      padding: 0.3em 0.75em;
+      font-size: var(--text-sm);
+      background: var(--color-primary-light);
+      color: var(--color-primary);
+      border: 1px solid transparent;
+      border-radius: var(--radius-full);
+      cursor: pointer;
+      transition: background var(--transition-fast),
+                  border-color var(--transition-fast);
+      font-family: inherit;
+    }
+
+    .chip:hover {
+      background: var(--color-surface);
+      border-color: var(--color-primary);
+    }
+
+    /* Story reading pane */
+    .story-pane {
+      background: var(--color-surface);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--color-border);
+      padding: var(--space-lg) var(--space-xl);
+      font-size: 1.05rem;
+      line-height: 1.85;
+      white-space: pre-wrap;
+      max-height: 420px;
+      overflow-y: auto;
+    }
+
+    /* Story textarea in revision mode */
+    .story-editor {
+      width: 100%;
+      min-height: 280px;
+      padding: var(--space-lg);
+      font-size: 1.05rem;
+      line-height: 1.85;
+      font-family: inherit;
+      color: var(--color-text);
+      background: var(--color-surface);
+      border: 1.5px solid var(--color-border);
+      border-radius: var(--radius-md);
+      resize: vertical;
+      transition: border-color var(--transition-fast),
+                  box-shadow var(--transition-fast);
+    }
+
+    .story-editor:focus {
+      outline: none;
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px var(--color-primary-light);
+    }
+
+    /* Button row */
+    .btn-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-sm);
+      margin-top: var(--space-md);
+    }
+
+    /* Version history buttons */
+    .version-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-xs);
+      align-items: center;
+      margin-top: var(--space-md);
+    }
+
+    .version-label {
+      font-size: var(--text-sm);
+      font-weight: 600;
+      color: var(--color-text-muted);
+      margin-right: var(--space-xs);
+    }
+
+    .version-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      font-size: var(--text-sm);
+      font-weight: 600;
+      border: 1.5px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      background: var(--color-surface);
+      color: var(--color-text-muted);
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      font-family: inherit;
+    }
+
+    .version-btn:hover {
+      border-color: var(--color-primary);
+      color: var(--color-primary);
+    }
+
+    .version-btn.active {
+      background: var(--color-primary);
+      border-color: var(--color-primary);
+      color: #ffffff;
+    }
+
+    /* Revision input area */
+    .revision-input-row {
+      display: flex;
+      gap: var(--space-sm);
+      margin-top: var(--space-md);
+    }
+
+    .revision-input-row .input {
+      flex: 1;
+    }
+
+    /* Loading state */
+    .loading-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--space-md);
+      padding: var(--space-xl);
+    }
+
+    .loading-card .loading-text {
+      font-size: var(--text-md);
+      color: var(--color-text-muted);
+    }
+
+    /* Step heading */
+    .step-heading {
+      font-size: var(--text-xl);
+      font-weight: 700;
+      margin-bottom: var(--space-lg);
+    }
+
+    .step-subheading {
+      font-size: var(--text-md);
+      color: var(--color-text-muted);
+      margin-top: calc(-1 * var(--space-sm));
+      margin-bottom: var(--space-lg);
+    }
+
+    /* Export section */
+    .export-section {
+      margin-top: var(--space-md);
+      display: flex;
+      justify-content: flex-end;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Lesson Header -->
+  <header class="lesson-header">
+    <div class="lesson-badge">
+      <span class="lesson-number">02</span>
+      <span class="lesson-title">AI Story Factory</span>
+    </div>
+    <a href="/" class="back-link">&larr; Back to all lessons</a>
+  </header>
+
+  <!-- Page Layout -->
+  <div class="lesson-page">
+
+    <!-- Main Content Area -->
+    <main class="lesson-main" id="main-content">
+
+      <!-- Step 1: Story Framework -->
+      <div id="step-framework">
+        <h2 class="step-heading">Build Your Story Framework</h2>
+        <p class="step-subheading">Pick your ingredients and let AI cook up a story!</p>
+
+        <div class="flex-col gap-lg">
+
+          <!-- Main Character -->
+          <div class="form-group">
+            <label for="input-character">Main Character</label>
+            <input type="text" id="input-character" class="input" placeholder="Describe your main character...">
+            <div class="chip-row" id="character-chips">
+              <!-- chips rendered by JS -->
+            </div>
+          </div>
+
+          <!-- Setting -->
+          <div class="form-group">
+            <label for="select-setting">Setting</label>
+            <select id="select-setting" class="select">
+              <option value="">-- Choose a setting --</option>
+              <option value="Outer Space">Outer Space</option>
+              <option value="Underwater Kingdom">Underwater Kingdom</option>
+              <option value="Haunted School">Haunted School</option>
+              <option value="Future City">Future City</option>
+              <option value="Enchanted Forest">Enchanted Forest</option>
+              <option value="Candy World">Candy World</option>
+            </select>
+          </div>
+
+          <!-- Conflict -->
+          <div class="form-group">
+            <label for="select-conflict">Conflict</label>
+            <select id="select-conflict" class="select">
+              <option value="">-- What goes wrong? --</option>
+              <option value="Lost something important">Lost something important</option>
+              <option value="Must save a friend">Must save a friend</option>
+              <option value="Discovers a secret">Discovers a secret</option>
+              <option value="Enters a competition">Enters a competition</option>
+              <option value="Gets a mysterious power">Gets a mysterious power</option>
+              <option value="Accidentally travels to another world">Accidentally travels to another world</option>
+            </select>
+          </div>
+
+          <!-- Ending Style -->
+          <div class="form-group">
+            <label for="select-ending">Ending Style</label>
+            <select id="select-ending" class="select">
+              <option value="">-- How does it end? --</option>
+              <option value="Happy ending">Happy ending</option>
+              <option value="Surprise twist">Surprise twist</option>
+              <option value="Funny ending">Funny ending</option>
+              <option value="Mysterious cliffhanger">Mysterious cliffhanger</option>
+            </select>
+          </div>
+
+          <button class="btn btn-primary btn-lg" id="btn-generate">Generate My Story!</button>
+        </div>
+      </div>
+
+      <!-- Step 2: AI Draft (hidden initially) -->
+      <div id="step-draft" class="hidden">
+        <h2 class="step-heading">Your AI-Generated Story</h2>
+
+        <!-- Loading state -->
+        <div id="draft-loading" class="card loading-card hidden">
+          <div class="loading-spinner"></div>
+          <div class="loading-text">AI is writing your story...</div>
+        </div>
+
+        <!-- Story display -->
+        <div id="draft-story" class="hidden">
+          <div class="story-pane" id="story-display"></div>
+
+          <div class="btn-row">
+            <button class="btn btn-primary" id="btn-revise">&#x270F;&#xFE0F; Revise This Story</button>
+            <button class="btn btn-secondary" id="btn-regenerate">&#x1F504; Generate a Different Version</button>
+            <button class="btn btn-secondary" id="btn-back-framework">&larr; Back to Framework</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 3: Revision Studio (hidden initially) -->
+      <div id="step-revision" class="hidden">
+        <h2 class="step-heading">Revision Studio</h2>
+        <p class="step-subheading">Edit directly or tell AI what to change</p>
+
+        <textarea class="story-editor" id="story-editor"></textarea>
+
+        <div class="revision-input-row">
+          <input type="text" class="input" id="revision-input"
+                 placeholder="Tell AI how to change the story... (e.g., 'Make the ending funnier' or 'Add a talking sword')">
+          <button class="btn btn-primary" id="btn-update-story">Update Story</button>
+        </div>
+
+        <div class="version-row" id="version-row">
+          <span class="version-label">Versions:</span>
+          <!-- version buttons rendered by JS -->
+        </div>
+
+        <div class="btn-row">
+          <button class="btn btn-primary" id="btn-save-final">&#x1F4E5; Save Final Story</button>
+          <button class="btn btn-secondary" id="btn-back-draft">&larr; Back to Draft View</button>
+        </div>
+
+        <div class="export-section" id="export-container"></div>
+      </div>
+
+    </main>
+
+    <!-- Task Sidebar -->
+    <aside class="lesson-sidebar">
+      <div class="task-sidebar" id="task-sidebar"></div>
+    </aside>
+
+  </div>
+
+  <script src="/shared/components.js"></script>
+  <script>
+    // =============================================
+    // Constants
+    // =============================================
+    var SYSTEM_PROMPT = 'You are a creative story writer for kids. Write a fun, engaging short story (about 250-300 words) based on the provided framework. Use vivid descriptions, dialogue, and humor. Make it exciting and age-appropriate for 12-13 year olds. Just write the story, no title needed.';
+
+    var REVISION_SYSTEM_PROMPT = 'You are a creative story editor for kids. You will receive an existing story and a revision request. Rewrite the story incorporating the requested changes. Keep the same general structure but apply the changes throughout. Output only the revised story, no explanations.';
+
+    var CHARACTER_SUGGESTIONS = [
+      'a brave robot',
+      'a shy dragon',
+      'a talking dog',
+      'a young wizard'
+    ];
+
+    // =============================================
+    // State
+    // =============================================
+    var storyVersions = [];    // Array of story strings
+    var currentVersionIdx = -1;
+    var revisionCount = 0;
+    var framework = {
+      character: '',
+      setting: '',
+      conflict: '',
+      ending: ''
+    };
+
+    // =============================================
+    // DOM References
+    // =============================================
+    var stepFramework = document.getElementById('step-framework');
+    var stepDraft = document.getElementById('step-draft');
+    var stepRevision = document.getElementById('step-revision');
+    var draftLoading = document.getElementById('draft-loading');
+    var draftStory = document.getElementById('draft-story');
+    var storyDisplay = document.getElementById('story-display');
+    var storyEditor = document.getElementById('story-editor');
+    var revisionInput = document.getElementById('revision-input');
+    var versionRow = document.getElementById('version-row');
+    var exportContainer = document.getElementById('export-container');
+    var taskSidebar = document.getElementById('task-sidebar');
+
+    var inputCharacter = document.getElementById('input-character');
+    var selectSetting = document.getElementById('select-setting');
+    var selectConflict = document.getElementById('select-conflict');
+    var selectEnding = document.getElementById('select-ending');
+
+    var btnGenerate = document.getElementById('btn-generate');
+    var btnRevise = document.getElementById('btn-revise');
+    var btnRegenerate = document.getElementById('btn-regenerate');
+    var btnBackFramework = document.getElementById('btn-back-framework');
+    var btnUpdateStory = document.getElementById('btn-update-story');
+    var btnSaveFinal = document.getElementById('btn-save-final');
+    var btnBackDraft = document.getElementById('btn-back-draft');
+
+    // =============================================
+    // Render Suggestion Chips
+    // =============================================
+    var chipRow = document.getElementById('character-chips');
+    CHARACTER_SUGGESTIONS.forEach(function (suggestion) {
+      var chip = document.createElement('button');
+      chip.className = 'chip';
+      chip.type = 'button';
+      chip.textContent = suggestion;
+      chip.addEventListener('click', function () {
+        inputCharacter.value = suggestion;
+        inputCharacter.focus();
+      });
+      chipRow.appendChild(chip);
+    });
+
+    // =============================================
+    // Step Navigation
+    // =============================================
+    function showStep(stepName) {
+      stepFramework.className = stepName === 'framework' ? '' : 'hidden';
+      stepDraft.className = stepName === 'draft' ? '' : 'hidden';
+      stepRevision.className = stepName === 'revision' ? '' : 'hidden';
+    }
+
+    // =============================================
+    // Generate Story (API call)
+    // =============================================
+    async function generateStory() {
+      var character = inputCharacter.value.trim();
+      var setting = selectSetting.value;
+      var conflict = selectConflict.value;
+      var ending = selectEnding.value;
+
+      if (!character || !setting || !conflict || !ending) {
+        alert('Please fill in all four fields to generate your story!');
+        return;
+      }
+
+      // Save framework
+      framework.character = character;
+      framework.setting = setting;
+      framework.conflict = conflict;
+      framework.ending = ending;
+
+      // Mark task complete
+      taskCards.setComplete('ingredients', true);
+
+      // Show draft step with loading
+      showStep('draft');
+      draftLoading.className = 'card loading-card';
+      draftStory.className = 'hidden';
+
+      var userMessage = 'Write a story about ' + character + ' in ' + setting + ' who ' + conflict + '. Make the ending ' + ending + '.';
+
+      try {
+        var res = await fetch('/api/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            system: SYSTEM_PROMPT,
+            messages: [{ role: 'user', content: userMessage }]
+          })
+        });
+
+        var data = await res.json();
+
+        if (!res.ok) {
+          alert(data.error || 'Something went wrong. Please try again.');
+          showStep('framework');
+          return;
+        }
+
+        var story = data.response || '';
+
+        // Reset versions and store first draft
+        storyVersions = [story];
+        currentVersionIdx = 0;
+        revisionCount = 0;
+
+        displayStory(story);
+        taskCards.setComplete('read', true);
+
+      } catch (err) {
+        alert('Could not reach the AI service. Check your connection and try again.');
+        showStep('framework');
+      }
+    }
+
+    // =============================================
+    // Display Story in Draft View
+    // =============================================
+    function displayStory(story) {
+      draftLoading.className = 'card loading-card hidden';
+      draftStory.className = '';
+      storyDisplay.textContent = story;
+    }
+
+    // =============================================
+    // Regenerate Story (same framework, new version)
+    // =============================================
+    async function regenerateStory() {
+      draftLoading.className = 'card loading-card';
+      draftStory.className = 'hidden';
+
+      var userMessage = 'Write a story about ' + framework.character + ' in ' + framework.setting + ' who ' + framework.conflict + '. Make the ending ' + framework.ending + '. Write a completely different version from before.';
+
+      try {
+        var res = await fetch('/api/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            system: SYSTEM_PROMPT,
+            messages: [{ role: 'user', content: userMessage }]
+          })
+        });
+
+        var data = await res.json();
+
+        if (!res.ok) {
+          alert(data.error || 'Something went wrong. Please try again.');
+          displayStory(storyVersions[currentVersionIdx]);
+          return;
+        }
+
+        var story = data.response || '';
+
+        // Replace versions with new base
+        storyVersions = [story];
+        currentVersionIdx = 0;
+        revisionCount = 0;
+
+        displayStory(story);
+
+      } catch (err) {
+        alert('Could not reach the AI service. Check your connection and try again.');
+        displayStory(storyVersions[currentVersionIdx]);
+      }
+    }
+
+    // =============================================
+    // Enter Revision Mode
+    // =============================================
+    function enterRevisionMode() {
+      showStep('revision');
+      storyEditor.value = storyVersions[currentVersionIdx];
+      renderVersionButtons();
+      revisionInput.value = '';
+    }
+
+    // =============================================
+    // Update Story via AI Revision
+    // =============================================
+    async function updateStory() {
+      var instruction = revisionInput.value.trim();
+      if (!instruction) {
+        alert('Please describe what you want to change!');
+        return;
+      }
+
+      // Get current text (may have been manually edited)
+      var currentStory = storyEditor.value.trim();
+      if (!currentStory) {
+        alert('The story is empty. Please go back and generate one first.');
+        return;
+      }
+
+      btnUpdateStory.disabled = true;
+      btnUpdateStory.textContent = 'Updating...';
+
+      var userMessage = 'Here is the current story:\n\n' + currentStory + '\n\nRevision request: ' + instruction;
+
+      try {
+        var res = await fetch('/api/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            system: REVISION_SYSTEM_PROMPT,
+            messages: [{ role: 'user', content: userMessage }]
+          })
+        });
+
+        var data = await res.json();
+
+        if (!res.ok) {
+          alert(data.error || 'Something went wrong. Please try again.');
+          return;
+        }
+
+        var revisedStory = data.response || '';
+
+        // Save the manually-edited version if it differs from the stored version
+        if (storyEditor.value.trim() !== storyVersions[currentVersionIdx]) {
+          storyVersions.push(storyEditor.value.trim());
+          currentVersionIdx = storyVersions.length - 1;
+        }
+
+        // Add revised version
+        storyVersions.push(revisedStory);
+        currentVersionIdx = storyVersions.length - 1;
+        revisionCount++;
+
+        storyEditor.value = revisedStory;
+        revisionInput.value = '';
+        renderVersionButtons();
+
+        // Track revision progress
+        if (revisionCount >= 2) {
+          taskCards.setComplete('revise', true);
+        }
+
+      } catch (err) {
+        alert('Could not reach the AI service. Check your connection and try again.');
+      } finally {
+        btnUpdateStory.disabled = false;
+        btnUpdateStory.textContent = 'Update Story';
+      }
+    }
+
+    // =============================================
+    // Version History
+    // =============================================
+    function renderVersionButtons() {
+      // Clear all version buttons (keep the label)
+      var children = versionRow.children;
+      while (children.length > 1) {
+        versionRow.removeChild(children[1]);
+      }
+
+      for (var i = 0; i < storyVersions.length; i++) {
+        (function (idx) {
+          var btn = document.createElement('button');
+          btn.className = 'version-btn' + (idx === currentVersionIdx ? ' active' : '');
+          btn.textContent = 'v' + (idx + 1);
+          btn.type = 'button';
+          btn.addEventListener('click', function () {
+            currentVersionIdx = idx;
+            storyEditor.value = storyVersions[idx];
+            renderVersionButtons();
+          });
+          versionRow.appendChild(btn);
+        })(i);
+      }
+    }
+
+    // =============================================
+    // Export / Save
+    // =============================================
+    function setupExport() {
+      clearChildren(exportContainer);
+      window.ExportButton(exportContainer, {
+        label: 'Download Story',
+        filename: 'my-ai-story.txt',
+        format: 'text',
+        getData: function () {
+          var lines = [];
+          lines.push('MY AI STORY');
+          lines.push('Created with AI Story Factory');
+          lines.push('Date: ' + new Date().toLocaleDateString());
+          lines.push('');
+          lines.push('Framework:');
+          lines.push('  Character: ' + framework.character);
+          lines.push('  Setting: ' + framework.setting);
+          lines.push('  Conflict: ' + framework.conflict);
+          lines.push('  Ending: ' + framework.ending);
+          lines.push('');
+          lines.push('---');
+          lines.push('');
+          lines.push(storyEditor.value || storyVersions[currentVersionIdx] || '');
+          return lines.join('\n');
+        }
+      });
+    }
+
+    // =============================================
+    // Utility
+    // =============================================
+    function clearChildren(el) {
+      while (el.firstChild) {
+        el.removeChild(el.firstChild);
+      }
+    }
+
+    // =============================================
+    // Event Listeners
+    // =============================================
+    btnGenerate.addEventListener('click', generateStory);
+
+    btnRevise.addEventListener('click', function () {
+      enterRevisionMode();
+      setupExport();
+    });
+
+    btnRegenerate.addEventListener('click', regenerateStory);
+
+    btnBackFramework.addEventListener('click', function () {
+      showStep('framework');
+    });
+
+    btnUpdateStory.addEventListener('click', updateStory);
+
+    btnSaveFinal.addEventListener('click', function () {
+      taskCards.setComplete('read-aloud', true);
+      taskCards.setComplete('export', true);
+      // Trigger export
+      var exportBtn = exportContainer.querySelector('button');
+      if (exportBtn) {
+        exportBtn.click();
+      }
+    });
+
+    btnBackDraft.addEventListener('click', function () {
+      // Update the draft display with current editor content
+      storyVersions[currentVersionIdx] = storyEditor.value;
+      storyDisplay.textContent = storyVersions[currentVersionIdx];
+      showStep('draft');
+    });
+
+    // Allow Enter key in revision input
+    revisionInput.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        updateStory();
+      }
+    });
+
+    // =============================================
+    // Initialize Task Sidebar
+    // =============================================
+    var taskCards = window.TaskCards(taskSidebar, [
+      { id: 'ingredients', title: 'Pick your story ingredients', description: 'Choose character, setting, conflict & ending' },
+      { id: 'read', title: 'Read the AI\'s first draft', description: 'See what AI creates from your framework' },
+      { id: 'revise', title: 'Request at least 2 changes', description: 'Use the revision studio to improve your story' },
+      { id: 'read-aloud', title: 'Read your final story out loud', description: 'Share your creation with the class' },
+      { id: 'export', title: 'Export and save your story', description: 'Download your finished story as a file' }
+    ]);
+  </script>
+
+</body>
+</html>

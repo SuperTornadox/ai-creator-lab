@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Story Factory - AI Creator Lab</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/white.css">
+  <link rel="stylesheet" href="/shared/slides-base.css">
+  <style>
+    /* Comparison boxes */
+    .prompt-box {
+      background: rgba(0, 0, 0, 0.04);
+      border-radius: 14px;
+      padding: 24px 28px;
+      text-align: left;
+      font-size: 1.3rem;
+      line-height: 1.6;
+    }
+
+    .prompt-box.bad {
+      border: 2px solid #ef4444;
+    }
+
+    .prompt-box.good {
+      border: 2px solid #22c55e;
+    }
+
+    .prompt-box .prompt-label {
+      font-size: 1rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 8px;
+    }
+
+    .prompt-box.bad .prompt-label { color: #ef4444; }
+    .prompt-box.good .prompt-label { color: #22c55e; }
+
+    .prompt-box .prompt-text {
+      font-style: italic;
+      margin-bottom: 12px;
+      color: var(--slide-text);
+    }
+
+    .prompt-box .prompt-result {
+      font-size: 1.1rem;
+      color: var(--slide-muted);
+      border-top: 1px solid rgba(0, 0, 0, 0.1);
+      padding-top: 12px;
+    }
+
+    /* Tip cards */
+    .tip-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+      max-width: 900px;
+      margin: 20px auto 0;
+    }
+
+    .tip-card {
+      background: rgba(79, 110, 247, 0.06);
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .tip-card .tip-number {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--slide-primary);
+      margin-bottom: 4px;
+    }
+
+    .tip-card .tip-label {
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+
+    .tip-card .tip-question {
+      font-size: 1.05rem;
+      color: var(--slide-muted);
+      margin-top: 4px;
+    }
+
+    /* Process steps */
+    .process-steps {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      justify-content: center;
+      margin-top: 28px;
+      flex-wrap: wrap;
+    }
+
+    .process-step {
+      background: rgba(79, 110, 247, 0.08);
+      border-radius: 12px;
+      padding: 18px 22px;
+      text-align: center;
+      min-width: 160px;
+    }
+
+    .process-step .step-num {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--slide-primary);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .process-step .step-label {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-top: 4px;
+    }
+
+    .process-arrow {
+      font-size: 2rem;
+      color: var(--slide-muted);
+    }
+
+    /* Recipe analogy box */
+    .recipe-box {
+      background: rgba(79, 110, 247, 0.08);
+      border-radius: 14px;
+      padding: 28px 36px;
+      max-width: 750px;
+      margin: 24px auto 0;
+      font-size: 1.5rem;
+      line-height: 1.6;
+      color: var(--slide-text);
+    }
+  </style>
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- Slide 1: Title -->
+      <section>
+        <p class="slide-big-emoji">&#x1F4DD;</p>
+        <h1 class="slide-title">AI Story Factory</h1>
+        <p>Today: We write stories WITH AI!</p>
+        <p style="margin-top: 12px; font-size: 1.1rem; color: var(--slide-muted);">AI Creator Lab &middot; Lesson 02</p>
+      </section>
+
+      <!-- Slide 2: Review -->
+      <section>
+        <h2>Quick Review</h2>
+        <p style="font-size: 1.8rem; margin-top: 20px;">Last week you interviewed AI characters</p>
+        <p class="slide-question" style="margin-top: 24px;">Did AI really &ldquo;understand&rdquo; you?</p>
+        <p style="margin-top: 28px; font-size: 1.5rem;">&#x1F4A1; Today we go deeper!</p>
+      </section>
+
+      <!-- Slide 3: What's a prompt? -->
+      <section>
+        <h2>What's a Prompt?</h2>
+        <p style="font-size: 2rem; margin-top: 20px;">A prompt is your <strong>INSTRUCTIONS</strong> to AI</p>
+        <div class="recipe-box">
+          &#x1F373; Think of it as a <strong>recipe</strong>:<br>
+          the clearer your recipe, the better the food!
+        </div>
+      </section>
+
+      <!-- Slide 4: Demo comparison -->
+      <section>
+        <h2>Vague vs. Specific</h2>
+        <div class="slide-comparison" style="margin-top: 20px;">
+          <div class="prompt-box bad">
+            <div class="prompt-label">&#x274C; Vague prompt</div>
+            <div class="prompt-text">"Write me a story"</div>
+            <div class="prompt-result">&#x1F971; Boring, generic, short... meh</div>
+          </div>
+          <div class="prompt-box good">
+            <div class="prompt-label">&#x2705; Specific prompt</div>
+            <div class="prompt-text">"Write a funny story about a shy dragon in candy world who accidentally gets superpowers"</div>
+            <div class="prompt-result">&#x1F929; Vivid, creative, hilarious, unique!</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 5: Prompt tips — The Story Framework -->
+      <section>
+        <h2>The Story Framework</h2>
+        <div class="tip-grid">
+          <div class="tip-card">
+            <div class="tip-number">1</div>
+            <div class="tip-label">Character</div>
+            <div class="tip-question">Who is the main character?</div>
+          </div>
+          <div class="tip-card">
+            <div class="tip-number">2</div>
+            <div class="tip-label">Setting</div>
+            <div class="tip-question">Where does it happen?</div>
+          </div>
+          <div class="tip-card">
+            <div class="tip-number">3</div>
+            <div class="tip-label">Conflict</div>
+            <div class="tip-question">What goes wrong?</div>
+          </div>
+          <div class="tip-card">
+            <div class="tip-number">4</div>
+            <div class="tip-label">Ending</div>
+            <div class="tip-question">How does it end?</div>
+          </div>
+        </div>
+        <p style="margin-top: 24px; font-size: 1.5rem;">= Your perfect prompt recipe! &#x1F4A1;</p>
+      </section>
+
+      <!-- Slide 6: Today's mission -->
+      <section>
+        <p class="slide-big-emoji">&#x1F4D6;</p>
+        <h2>Today's Mission</h2>
+        <p style="font-size: 1.8rem; margin-top: 16px;">Write your own creative short story using AI</p>
+        <p style="font-size: 1.4rem; margin-top: 16px; color: var(--slide-muted);">You give the ideas, AI does the writing,<br>then you direct the revisions</p>
+      </section>
+
+      <!-- Slide 7: The process -->
+      <section>
+        <h2>The Process</h2>
+        <div class="process-steps">
+          <div class="process-step">
+            <div class="step-num">Step 1</div>
+            <div class="step-label">&#x1F3D7;&#xFE0F; Build your framework</div>
+          </div>
+          <div class="process-arrow">&rarr;</div>
+          <div class="process-step">
+            <div class="step-num">Step 2</div>
+            <div class="step-label">&#x1F916; AI writes</div>
+          </div>
+          <div class="process-arrow">&rarr;</div>
+          <div class="process-step">
+            <div class="step-num">Step 3</div>
+            <div class="step-label">&#x270F;&#xFE0F; You revise</div>
+          </div>
+          <div class="process-arrow">&rarr;</div>
+          <div class="process-step">
+            <div class="step-num">Final</div>
+            <div class="step-label">&#x2B50; Your perfect story!</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 8: Let's go! -->
+      <section>
+        <h2>Open your laptops!</h2>
+        <p style="font-size: 2rem; margin-top: 24px;">&#x1F449; Go to the <strong>Lesson 2</strong> page</p>
+        <p style="font-size: 2.5rem; margin-top: 32px;">Let's go! &#x1F680;</p>
+      </section>
+
+    </div>
+  </div>
+
+  <!-- Lesson badge overlay -->
+  <div class="lesson-badge">02</div>
+
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+  <script>
+    Reveal.initialize({
+      hash: true,
+      transition: 'slide',
+      width: 1280,
+      height: 720
+    });
+  </script>
+</body>
+</html>
