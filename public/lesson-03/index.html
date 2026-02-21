@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lesson 3: AI Artist - AI Creator Lab</title>
+  <link rel="stylesheet" href="/shared/styles.css">
+  <style>
+    /* Tab navigation */
+    .tab-nav {
+      display: flex;
+      gap: var(--space-sm);
+      margin-bottom: var(--space-lg);
+      border-bottom: 2px solid var(--color-border);
+      padding-bottom: var(--space-sm);
+    }
+
+    .tab-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-sm);
+      padding: 0.5em 1.2em;
+      font-size: var(--text-md);
+      font-weight: 600;
+      font-family: inherit;
+      border: none;
+      background: transparent;
+      color: var(--color-text-muted);
+      cursor: pointer;
+      border-radius: var(--radius-md) var(--radius-md) 0 0;
+      transition: background var(--transition-fast),
+                  color var(--transition-fast);
+    }
+
+    .tab-btn:hover {
+      background: var(--color-bg);
+      color: var(--color-text);
+    }
+
+    .tab-btn.active {
+      color: var(--color-primary);
+      background: var(--color-primary-light);
+      border-bottom: 2px solid var(--color-primary);
+      margin-bottom: -2px;
+    }
+
+    .tab-panel {
+      display: none;
+    }
+
+    .tab-panel.active {
+      display: block;
+    }
+
+    /* Challenge mode */
+    .challenge-card {
+      background: var(--color-surface);
+      border-radius: var(--radius-lg);
+      border: 2px solid var(--color-border);
+      padding: var(--space-xl);
+      max-width: 700px;
+    }
+
+    .challenge-card.completed {
+      border-color: var(--color-success);
+      background: var(--color-success-light);
+    }
+
+    .challenge-header {
+      display: flex;
+      align-items: center;
+      gap: var(--space-md);
+      margin-bottom: var(--space-lg);
+    }
+
+    .challenge-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: var(--text-sm);
+      font-weight: 700;
+      padding: 0.2em 0.8em;
+      border-radius: var(--radius-full);
+      white-space: nowrap;
+    }
+
+    .challenge-badge.easy {
+      background: var(--color-success-light);
+      color: #16a34a;
+    }
+
+    .challenge-badge.medium {
+      background: var(--color-warning-light);
+      color: #d97706;
+    }
+
+    .challenge-badge.hard {
+      background: var(--color-error-light);
+      color: #dc2626;
+    }
+
+    .challenge-concept {
+      font-size: var(--text-lg);
+      font-weight: 650;
+      padding: var(--space-md) var(--space-lg);
+      background: var(--color-bg);
+      border-radius: var(--radius-md);
+      margin-bottom: var(--space-lg);
+      text-align: center;
+      line-height: 1.5;
+    }
+
+    .challenge-result {
+      margin-top: var(--space-md);
+    }
+
+    .challenge-result .gallery-item {
+      max-width: 400px;
+      margin: 0 auto;
+    }
+
+    .challenge-nav {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: var(--space-lg);
+    }
+
+    /* Gallery section heading */
+    .gallery-heading {
+      font-size: var(--text-lg);
+      font-weight: 650;
+      margin-top: var(--space-xl);
+      margin-bottom: var(--space-md);
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+    }
+
+    .gallery-heading .count-badge {
+      background: var(--color-primary-light);
+      color: var(--color-primary);
+      font-size: var(--text-sm);
+      font-weight: 700;
+      padding: 0.1em 0.6em;
+      border-radius: var(--radius-full);
+    }
+
+    /* Export section */
+    .export-section {
+      margin-top: var(--space-lg);
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    /* Fullscreen caption edit */
+    .caption-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.85);
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-md);
+      cursor: default;
+    }
+
+    .caption-overlay img {
+      max-width: 80vw;
+      max-height: 60vh;
+      border-radius: var(--radius-md);
+      object-fit: contain;
+    }
+
+    .caption-overlay .caption-input-row {
+      display: flex;
+      gap: var(--space-sm);
+      align-items: center;
+      max-width: 500px;
+      width: 90%;
+    }
+
+    .caption-overlay .caption-input-row input {
+      flex: 1;
+      padding: 0.5em 0.85em;
+      font-size: var(--text-md);
+      font-family: inherit;
+      border: 1.5px solid rgba(255, 255, 255, 0.3);
+      border-radius: var(--radius-md);
+      background: rgba(255, 255, 255, 0.1);
+      color: #ffffff;
+    }
+
+    .caption-overlay .caption-input-row input::placeholder {
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    .caption-overlay .caption-input-row input:focus {
+      outline: none;
+      border-color: var(--color-primary);
+    }
+
+    .caption-overlay .caption-input-row button {
+      padding: 0.5em 1em;
+      font-size: var(--text-md);
+      font-weight: 600;
+      font-family: inherit;
+      border: none;
+      border-radius: var(--radius-md);
+      background: var(--color-primary);
+      color: #ffffff;
+      cursor: pointer;
+    }
+
+    .caption-overlay .close-hint {
+      color: rgba(255, 255, 255, 0.5);
+      font-size: var(--text-sm);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Lesson Header -->
+  <header class="lesson-header">
+    <div class="lesson-badge">
+      <span class="lesson-number">03</span>
+      <span class="lesson-title">AI Artist</span>
+    </div>
+    <a href="/" class="back-link">&larr; Back to all lessons</a>
+  </header>
+
+  <!-- Page Layout -->
+  <div class="lesson-page">
+
+    <!-- Main Content Area -->
+    <main class="lesson-main" id="main-content">
+
+      <!-- Tab Navigation -->
+      <div class="tab-nav">
+        <button class="tab-btn active" data-tab="free-create">&#x1F3A8; Free Create</button>
+        <button class="tab-btn" data-tab="challenge-mode">&#x1F3AF; Challenge Mode</button>
+      </div>
+
+      <!-- Tab 1: Free Create -->
+      <div class="tab-panel active" id="tab-free-create">
+        <div id="image-generator-container"></div>
+
+        <div class="gallery-heading">
+          <span>Your Gallery</span>
+          <span class="count-badge" id="gallery-count">0</span>
+        </div>
+        <div id="gallery-container"></div>
+
+        <div class="export-section" id="export-container"></div>
+      </div>
+
+      <!-- Tab 2: Challenge Mode -->
+      <div class="tab-panel" id="tab-challenge-mode">
+        <div id="challenge-container"></div>
+      </div>
+
+    </main>
+
+    <!-- Task Sidebar -->
+    <aside class="lesson-sidebar">
+      <div class="task-sidebar" id="task-sidebar"></div>
+    </aside>
+
+  </div>
+
+  <script src="/shared/components.js"></script>
+  <script>
+    // =============================================
+    // Tab Switching
+    // =============================================
+    var tabButtons = document.querySelectorAll('.tab-btn');
+    var tabPanels = document.querySelectorAll('.tab-panel');
+
+    tabButtons.forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var tabId = btn.getAttribute('data-tab');
+
+        tabButtons.forEach(function (b) { b.classList.remove('active'); });
+        tabPanels.forEach(function (p) { p.classList.remove('active'); });
+
+        btn.classList.add('active');
+        document.getElementById('tab-' + tabId).classList.add('active');
+      });
+    });
+
+    // =============================================
+    // Gallery Data (shared across Free Create and Challenge)
+    // =============================================
+    var allImages = []; // { url, caption, source }
+
+    function addImageToCollection(url, caption, source) {
+      allImages.push({ url: url, caption: caption || '', source: source || 'free' });
+      updateGalleryCount();
+    }
+
+    function updateGalleryCount() {
+      document.getElementById('gallery-count').textContent = allImages.length;
+
+      // Auto-complete tasks based on image count
+      if (allImages.length >= 1) {
+        taskCards.setComplete('first-image', true);
+      }
+      if (allImages.length >= 3) {
+        taskCards.setComplete('three-images', true);
+      }
+    }
+
+    // =============================================
+    // Image Generator (Free Create tab)
+    // =============================================
+    var genContainer = document.getElementById('image-generator-container');
+
+    var imageGen = window.ImageGenerator(genContainer, {
+      showGallery: false,
+      styles: [
+        { label: 'Realistic Photo', emoji: '\uD83D\uDCF8', value: 'realistic photograph, high detail' },
+        { label: 'Cartoon / Anime', emoji: '\uD83C\uDFA8', value: 'cartoon anime style, colorful' },
+        { label: 'Watercolor', emoji: '\uD83D\uDD8C\uFE0F', value: 'watercolor painting style' },
+        { label: 'Pixel Art', emoji: '\uD83D\uDC7E', value: 'pixel art style, 8-bit retro' },
+        { label: 'Oil Painting', emoji: '\uD83C\uDFAD', value: 'oil painting style, classical' },
+        { label: '3D Render', emoji: '\uD83D\uDC8E', value: '3D rendered, studio lighting' }
+      ],
+      onGenerate: function (result) {
+        addImageToCollection(result.url, result.prompt, 'free');
+        gallery.addImage(result.url, result.prompt);
+      }
+    });
+
+    // =============================================
+    // Gallery (below generator)
+    // =============================================
+    var galleryContainer = document.getElementById('gallery-container');
+    var gallery = window.Gallery(galleryContainer, {});
+
+    // Override the gallery's click handler to support captioning
+    // We'll rebuild the gallery's addImage to use our custom overlay
+    var originalAddImage = gallery.addImage;
+    gallery.addImage = function (url, caption) {
+      var grid = galleryContainer.querySelector('.gallery-grid');
+      if (!grid) return;
+
+      var item = document.createElement('div');
+      item.className = 'gallery-item';
+
+      var img = document.createElement('img');
+      img.src = url;
+      img.alt = caption || '';
+      item.appendChild(img);
+
+      var cap = document.createElement('div');
+      cap.className = 'gallery-item-caption';
+      cap.textContent = caption || 'Click to add a title';
+      item.appendChild(cap);
+
+      item.addEventListener('click', function () {
+        showCaptionOverlay(url, caption, function (newCaption) {
+          cap.textContent = newCaption || caption || 'Untitled';
+          // Update the record in allImages
+          for (var i = 0; i < allImages.length; i++) {
+            if (allImages[i].url === url) {
+              allImages[i].caption = newCaption || allImages[i].caption;
+              break;
+            }
+          }
+          // Mark the "title" task complete
+          taskCards.setComplete('title', true);
+        });
+      });
+
+      grid.appendChild(item);
+    };
+
+    // =============================================
+    // Caption Overlay (fullscreen + title input)
+    // =============================================
+    function showCaptionOverlay(url, currentCaption, onSave) {
+      var overlay = document.createElement('div');
+      overlay.className = 'caption-overlay';
+
+      var img = document.createElement('img');
+      img.src = url;
+      img.alt = currentCaption || '';
+      overlay.appendChild(img);
+
+      var inputRow = document.createElement('div');
+      inputRow.className = 'caption-input-row';
+
+      var input = document.createElement('input');
+      input.type = 'text';
+      input.placeholder = 'Give this artwork a title...';
+      input.value = currentCaption || '';
+
+      var saveBtn = document.createElement('button');
+      saveBtn.textContent = 'Save Title';
+
+      inputRow.appendChild(input);
+      inputRow.appendChild(saveBtn);
+      overlay.appendChild(inputRow);
+
+      var hint = document.createElement('div');
+      hint.className = 'close-hint';
+      hint.textContent = 'Click outside the image to close';
+      overlay.appendChild(hint);
+
+      function save() {
+        var value = input.value.trim();
+        if (value && onSave) {
+          onSave(value);
+        }
+        overlay.remove();
+        document.removeEventListener('keydown', onKeydown);
+      }
+
+      saveBtn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        save();
+      });
+
+      input.addEventListener('keydown', function (e) {
+        e.stopPropagation();
+        if (e.key === 'Enter') {
+          save();
+        }
+      });
+
+      input.addEventListener('click', function (e) {
+        e.stopPropagation();
+      });
+
+      img.addEventListener('click', function (e) {
+        e.stopPropagation();
+      });
+
+      inputRow.addEventListener('click', function (e) {
+        e.stopPropagation();
+      });
+
+      overlay.addEventListener('click', function () {
+        overlay.remove();
+        document.removeEventListener('keydown', onKeydown);
+      });
+
+      function onKeydown(e) {
+        if (e.key === 'Escape') {
+          overlay.remove();
+          document.removeEventListener('keydown', onKeydown);
+        }
+      }
+      document.addEventListener('keydown', onKeydown);
+
+      document.body.appendChild(overlay);
+      input.focus();
+    }
+
+    // =============================================
+    // Challenge Mode
+    // =============================================
+    var challenges = [
+      {
+        id: 1,
+        difficulty: 'easy',
+        label: 'Easy',
+        concept: 'A cat wearing sunglasses',
+        hint: 'Describe what you see in your mind. What kind of cat? What kind of sunglasses?'
+      },
+      {
+        id: 2,
+        difficulty: 'medium',
+        label: 'Medium',
+        concept: 'A magical treehouse at sunset',
+        hint: 'Think about mood, colors, and details. What makes it magical? What does the sky look like?'
+      },
+      {
+        id: 3,
+        difficulty: 'hard',
+        label: 'Hard',
+        concept: 'A tiny astronaut exploring a giant\'s kitchen',
+        hint: 'This is a complex scene! Think about scale, perspective, and specific objects the astronaut might be near.'
+      }
+    ];
+
+    var currentChallengeIndex = 0;
+    var challengeContainer = document.getElementById('challenge-container');
+
+    function renderChallenge(index) {
+      clearChildren(challengeContainer);
+
+      if (index >= challenges.length) {
+        // All challenges completed
+        var doneCard = document.createElement('div');
+        doneCard.className = 'challenge-card completed';
+
+        var doneEmoji = document.createElement('div');
+        doneEmoji.style.fontSize = '3rem';
+        doneEmoji.style.textAlign = 'center';
+        doneEmoji.style.marginBottom = 'var(--space-md)';
+        doneEmoji.textContent = '\uD83C\uDF89';
+
+        var doneTitle = document.createElement('h2');
+        doneTitle.textContent = 'All Challenges Complete!';
+        doneTitle.style.textAlign = 'center';
+        doneTitle.style.marginBottom = 'var(--space-md)';
+
+        var doneText = document.createElement('p');
+        doneText.textContent = 'Great work! You\'ve completed all three prompt challenges. Go back to Free Create to keep experimenting, or check out your gallery.';
+        doneText.style.textAlign = 'center';
+        doneText.style.color = 'var(--color-text-muted)';
+
+        var backBtn = document.createElement('button');
+        backBtn.className = 'btn btn-primary mt-lg';
+        backBtn.textContent = '\uD83C\uDFA8 Back to Free Create';
+        backBtn.style.display = 'block';
+        backBtn.style.margin = 'var(--space-lg) auto 0';
+        backBtn.addEventListener('click', function () {
+          // Switch to Free Create tab
+          tabButtons[0].click();
+        });
+
+        doneCard.appendChild(doneEmoji);
+        doneCard.appendChild(doneTitle);
+        doneCard.appendChild(doneText);
+        doneCard.appendChild(backBtn);
+        challengeContainer.appendChild(doneCard);
+        return;
+      }
+
+      var ch = challenges[index];
+
+      var card = document.createElement('div');
+      card.className = 'challenge-card';
+
+      // Header
+      var header = document.createElement('div');
+      header.className = 'challenge-header';
+
+      var badge = document.createElement('span');
+      badge.className = 'challenge-badge ' + ch.difficulty;
+      badge.textContent = 'Challenge ' + (index + 1) + ' / ' + challenges.length + ' \u2014 ' + ch.label;
+
+      header.appendChild(badge);
+      card.appendChild(header);
+
+      // Concept description
+      var conceptTitle = document.createElement('p');
+      conceptTitle.style.fontWeight = '600';
+      conceptTitle.style.marginBottom = 'var(--space-sm)';
+      conceptTitle.textContent = 'Your goal: generate an image that matches this description';
+
+      var concept = document.createElement('div');
+      concept.className = 'challenge-concept';
+      concept.textContent = '\u201C' + ch.concept + '\u201D';
+
+      card.appendChild(conceptTitle);
+      card.appendChild(concept);
+
+      // Hint
+      var hintEl = document.createElement('p');
+      hintEl.style.fontSize = 'var(--text-sm)';
+      hintEl.style.color = 'var(--color-text-muted)';
+      hintEl.style.marginBottom = 'var(--space-md)';
+      hintEl.textContent = '\uD83D\uDCA1 Tip: ' + ch.hint;
+      card.appendChild(hintEl);
+
+      // Prompt input
+      var promptGroup = document.createElement('div');
+      promptGroup.className = 'form-group';
+
+      var promptLabel = document.createElement('label');
+      promptLabel.textContent = 'Write your prompt';
+
+      var promptInput = document.createElement('textarea');
+      promptInput.className = 'textarea';
+      promptInput.placeholder = 'Describe the image you want AI to generate...';
+      promptInput.rows = 3;
+
+      promptGroup.appendChild(promptLabel);
+      promptGroup.appendChild(promptInput);
+      card.appendChild(promptGroup);
+
+      // Generate button
+      var genBtn = document.createElement('button');
+      genBtn.className = 'btn btn-primary w-full mt-md';
+      genBtn.textContent = '\uD83C\uDFA8 Generate Image';
+      card.appendChild(genBtn);
+
+      // Result area
+      var resultArea = document.createElement('div');
+      resultArea.className = 'challenge-result';
+      card.appendChild(resultArea);
+
+      // Next challenge button (hidden until image generated)
+      var navDiv = document.createElement('div');
+      navDiv.className = 'challenge-nav hidden';
+
+      var nextBtn = document.createElement('button');
+      nextBtn.className = 'btn btn-secondary';
+      if (index < challenges.length - 1) {
+        nextBtn.textContent = 'Next Challenge \u2192';
+      } else {
+        nextBtn.textContent = 'Finish Challenges \uD83C\uDF89';
+      }
+
+      nextBtn.addEventListener('click', function () {
+        currentChallengeIndex++;
+        renderChallenge(currentChallengeIndex);
+      });
+
+      navDiv.appendChild(nextBtn);
+
+      // Also add a "Try Again" button
+      var retryBtn = document.createElement('button');
+      retryBtn.className = 'btn btn-icon';
+      retryBtn.textContent = '\uD83D\uDD04 Try Again';
+      retryBtn.style.marginRight = 'var(--space-sm)';
+      retryBtn.addEventListener('click', function () {
+        clearChildren(resultArea);
+        navDiv.classList.add('hidden');
+        promptInput.value = '';
+        promptInput.focus();
+      });
+
+      navDiv.insertBefore(retryBtn, nextBtn);
+      card.appendChild(navDiv);
+
+      challengeContainer.appendChild(card);
+
+      // Generate handler
+      genBtn.addEventListener('click', async function () {
+        var prompt = promptInput.value.trim();
+        if (!prompt) {
+          clearChildren(resultArea);
+          var errDiv = document.createElement('div');
+          errDiv.className = 'card';
+          errDiv.style.marginTop = 'var(--space-md)';
+          errDiv.textContent = 'Please write a prompt first!';
+          resultArea.appendChild(errDiv);
+          return;
+        }
+
+        genBtn.disabled = true;
+        genBtn.textContent = 'Generating...';
+        clearChildren(resultArea);
+
+        var spinnerWrapper = document.createElement('div');
+        spinnerWrapper.className = 'flex-center p-lg';
+        var spinner = document.createElement('div');
+        spinner.className = 'loading-spinner';
+        spinnerWrapper.appendChild(spinner);
+        resultArea.appendChild(spinnerWrapper);
+
+        try {
+          var res = await fetch('/api/image', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ prompt: prompt }),
+          });
+
+          var data = await res.json();
+          clearChildren(resultArea);
+
+          if (!res.ok) {
+            var errCard = document.createElement('div');
+            errCard.className = 'card';
+            errCard.textContent = data.error || 'Something went wrong. Please try again.';
+            resultArea.appendChild(errCard);
+            genBtn.disabled = false;
+            genBtn.textContent = '\uD83C\uDFA8 Generate Image';
+            return;
+          }
+
+          var url = data.url;
+          if (!url) {
+            var noUrlCard = document.createElement('div');
+            noUrlCard.className = 'card';
+            noUrlCard.textContent = 'No image was returned. Please try again.';
+            resultArea.appendChild(noUrlCard);
+            genBtn.disabled = false;
+            genBtn.textContent = '\uD83C\uDFA8 Generate Image';
+            return;
+          }
+
+          // Show the result
+          var imgWrapper = document.createElement('div');
+          imgWrapper.className = 'gallery-item';
+          imgWrapper.style.maxWidth = '400px';
+          imgWrapper.style.margin = '0 auto';
+
+          var img = document.createElement('img');
+          img.src = url;
+          img.alt = prompt;
+          imgWrapper.appendChild(img);
+          resultArea.appendChild(imgWrapper);
+
+          // Add to the shared collection and Free Create gallery
+          addImageToCollection(url, prompt, 'challenge');
+          gallery.addImage(url, 'Challenge: ' + ch.concept);
+
+          // Mark challenge task
+          taskCards.setComplete('challenge', true);
+
+          // Show nav
+          navDiv.classList.remove('hidden');
+
+        } catch (err) {
+          clearChildren(resultArea);
+          var networkErr = document.createElement('div');
+          networkErr.className = 'card';
+          networkErr.textContent = 'Could not reach the image service. Check your connection and try again.';
+          resultArea.appendChild(networkErr);
+        } finally {
+          genBtn.disabled = false;
+          genBtn.textContent = '\uD83C\uDFA8 Generate Image';
+        }
+      });
+
+      promptInput.focus();
+    }
+
+    // Initial render of challenge
+    renderChallenge(0);
+
+    // =============================================
+    // Export Button
+    // =============================================
+    var exportContainer = document.getElementById('export-container');
+
+    window.ExportButton(exportContainer, {
+      label: 'Download Gallery as HTML',
+      filename: 'my-ai-art-gallery.html',
+      format: 'html',
+      getData: function () {
+        var lines = [];
+        lines.push('<!DOCTYPE html>');
+        lines.push('<html lang="en">');
+        lines.push('<head>');
+        lines.push('<meta charset="UTF-8">');
+        lines.push('<meta name="viewport" content="width=device-width, initial-scale=1.0">');
+        lines.push('<title>My AI Art Gallery</title>');
+        lines.push('<style>');
+        lines.push('body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #f8f9fc; color: #1e2330; padding: 40px; }');
+        lines.push('h1 { text-align: center; font-size: 2rem; margin-bottom: 8px; }');
+        lines.push('.subtitle { text-align: center; color: #6b7280; margin-bottom: 32px; }');
+        lines.push('.gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 24px; max-width: 1000px; margin: 0 auto; }');
+        lines.push('.item { background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }');
+        lines.push('.item img { width: 100%; aspect-ratio: 1/1; object-fit: cover; }');
+        lines.push('.item .caption { padding: 12px 16px; font-size: 14px; color: #374151; }');
+        lines.push('</style>');
+        lines.push('</head>');
+        lines.push('<body>');
+        lines.push('<h1>My AI Art Gallery</h1>');
+        lines.push('<p class="subtitle">Created with AI Creator Lab &mdash; Lesson 3: AI Artist</p>');
+        lines.push('<div class="gallery">');
+
+        allImages.forEach(function (img) {
+          lines.push('<div class="item">');
+          // Escape caption for safe HTML
+          var safeCaption = (img.caption || 'Untitled')
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;');
+          var safeUrl = img.url
+            .replace(/&/g, '&amp;')
+            .replace(/"/g, '&quot;');
+          lines.push('<img src="' + safeUrl + '" alt="' + safeCaption + '">');
+          lines.push('<div class="caption">' + safeCaption + '</div>');
+          lines.push('</div>');
+        });
+
+        lines.push('</div>');
+        lines.push('</body>');
+        lines.push('</html>');
+        return lines.join('\n');
+      }
+    });
+
+    // =============================================
+    // Task Sidebar
+    // =============================================
+    var taskSidebar = document.getElementById('task-sidebar');
+
+    var taskCards = window.TaskCards(taskSidebar, [
+      { id: 'first-image', title: 'Generate your first image', description: 'Try anything \u2014 describe something fun!' },
+      { id: 'three-images', title: 'Generate 2 more images', description: 'Try different styles for variety' },
+      { id: 'challenge', title: 'Try a Challenge', description: 'Match a description in Challenge Mode' },
+      { id: 'title', title: 'Title your best work', description: 'Click a gallery image to add a title' },
+      { id: 'statement', title: '(Optional) Artist statement', description: 'Write 1 sentence about your favorite piece' }
+    ]);
+
+    // =============================================
+    // Utility
+    // =============================================
+    function clearChildren(el) {
+      while (el.firstChild) {
+        el.removeChild(el.firstChild);
+      }
+    }
+  </script>
+
+</body>
+</html>

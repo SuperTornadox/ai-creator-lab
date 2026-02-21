@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Artist - AI Creator Lab</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/white.css">
+  <link rel="stylesheet" href="/shared/slides-base.css">
+  <style>
+    /* 2x2 guessing game grid */
+    .image-grid-2x2 {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+      max-width: 800px;
+      margin: 24px auto 0;
+    }
+
+    .image-grid-2x2 .image-box {
+      padding: 32px 24px;
+      border-radius: 14px;
+      background: rgba(79, 110, 247, 0.06);
+      border: 2px solid rgba(79, 110, 247, 0.12);
+      text-align: center;
+      font-size: 1.2rem;
+      line-height: 1.5;
+    }
+
+    .image-grid-2x2 .image-box .box-label {
+      font-weight: 700;
+      font-size: 1.4rem;
+      margin-bottom: 6px;
+      color: var(--slide-primary);
+    }
+
+    .image-grid-2x2 .image-box .box-desc {
+      color: var(--slide-muted);
+      font-size: 1.1rem;
+    }
+
+    .image-grid-2x2 .image-box.ai-made {
+      border-color: var(--slide-secondary);
+      background: rgba(124, 58, 237, 0.08);
+    }
+
+    .image-grid-2x2 .image-box.ai-made .box-label {
+      color: var(--slide-secondary);
+    }
+
+    /* Prompt comparison side-by-side */
+    .prompt-compare {
+      display: flex;
+      gap: 40px;
+      align-items: stretch;
+      max-width: 950px;
+      margin: 28px auto 0;
+    }
+
+    .prompt-compare .compare-side {
+      flex: 1;
+      padding: 28px;
+      border-radius: 14px;
+      text-align: center;
+    }
+
+    .prompt-compare .compare-side.side-basic {
+      background: rgba(239, 68, 68, 0.06);
+      border: 2px solid rgba(239, 68, 68, 0.15);
+    }
+
+    .prompt-compare .compare-side.side-detailed {
+      background: rgba(34, 197, 94, 0.06);
+      border: 2px solid rgba(34, 197, 94, 0.15);
+    }
+
+    .prompt-compare .prompt-text {
+      font-size: 1.15rem;
+      font-style: italic;
+      color: var(--slide-muted);
+      margin-bottom: 12px;
+      padding: 8px 12px;
+      background: rgba(255, 255, 255, 0.7);
+      border-radius: 8px;
+    }
+
+    .prompt-compare .result-text {
+      font-size: 1.5rem;
+      font-weight: 650;
+    }
+
+    .prompt-compare .arrow {
+      font-size: 1.8rem;
+      margin: 8px 0;
+    }
+
+    /* Style grid (4 items) */
+    .style-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      max-width: 900px;
+      margin: 24px auto 0;
+    }
+
+    .style-grid .style-item {
+      padding: 20px 12px;
+      border-radius: 12px;
+      background: rgba(79, 110, 247, 0.06);
+      text-align: center;
+    }
+
+    .style-grid .style-item .style-emoji {
+      font-size: 2.5rem;
+      margin-bottom: 6px;
+    }
+
+    .style-grid .style-item .style-name {
+      font-size: 1.05rem;
+      font-weight: 650;
+    }
+
+    .style-grid .style-item .style-desc {
+      font-size: 0.9rem;
+      color: var(--slide-muted);
+      margin-top: 4px;
+    }
+
+    /* Tips list */
+    .tips-list {
+      list-style: none;
+      text-align: left;
+      display: inline-block;
+      font-size: 1.6rem;
+    }
+
+    .tips-list li {
+      margin-bottom: 0.4em;
+      padding-left: 0.3em;
+    }
+
+    .tips-list .tip-number {
+      display: inline-block;
+      width: 36px;
+      height: 36px;
+      line-height: 36px;
+      text-align: center;
+      background: var(--slide-primary);
+      color: #fff;
+      border-radius: 50%;
+      font-size: 1rem;
+      font-weight: 700;
+      margin-right: 10px;
+      vertical-align: middle;
+    }
+
+    /* Analogy box */
+    .concept-box {
+      background: rgba(79, 110, 247, 0.08);
+      border-radius: 14px;
+      padding: 24px 32px;
+      max-width: 750px;
+      margin: 20px auto 0;
+      font-size: 1.4rem;
+      line-height: 1.6;
+      color: var(--slide-text);
+    }
+  </style>
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- Slide 1: Title -->
+      <section>
+        <p class="slide-big-emoji">&#x1F3A8;</p>
+        <h1 class="slide-title">AI Artist</h1>
+        <p>Today: We paint with WORDS!</p>
+        <p style="margin-top: 12px; font-size: 1.1rem; color: var(--slide-muted);">AI Creator Lab &middot; Lesson 03</p>
+      </section>
+
+      <!-- Slide 2: Guessing Game -->
+      <section>
+        <h2>Can You Tell Which Are AI? &#x1F50D;</h2>
+        <div class="image-grid-2x2">
+          <div class="image-box">
+            <div class="box-label">Image A</div>
+            <div class="box-desc">Landscape photo of mountains at sunrise</div>
+          </div>
+          <div class="image-box">
+            <div class="box-label">Image B</div>
+            <div class="box-desc">Portrait painting of a girl with pearl earring</div>
+          </div>
+          <div class="image-box">
+            <div class="box-label">Image C</div>
+            <div class="box-desc">Street photo of a busy city at night</div>
+          </div>
+          <div class="image-box">
+            <div class="box-label">Image D</div>
+            <div class="box-desc">Fantasy castle floating in the clouds</div>
+          </div>
+        </div>
+        <p style="margin-top: 24px; font-size: 1.3rem;">&#x1F914; Which ones did AI make?</p>
+      </section>
+
+      <!-- Slide 3: Reveal -->
+      <section>
+        <h2>Surprise! &#x1F389;</h2>
+        <div class="image-grid-2x2">
+          <div class="image-box">
+            <div class="box-label">Image A &#x2014; Human &#x1F4F7;</div>
+            <div class="box-desc">Real photograph</div>
+          </div>
+          <div class="image-box ai-made">
+            <div class="box-label">Image B &#x2014; AI &#x1F916;</div>
+            <div class="box-desc">AI-generated painting</div>
+          </div>
+          <div class="image-box">
+            <div class="box-label">Image C &#x2014; Human &#x1F4F7;</div>
+            <div class="box-desc">Real photograph</div>
+          </div>
+          <div class="image-box ai-made">
+            <div class="box-label">Image D &#x2014; AI &#x1F916;</div>
+            <div class="box-desc">AI-generated scene</div>
+          </div>
+        </div>
+        <p style="margin-top: 24px; font-size: 1.6rem; font-weight: 650;">Could you tell the difference?</p>
+      </section>
+
+      <!-- Slide 4: How it works -->
+      <section>
+        <h2>How Does AI Make Images?</h2>
+        <div class="concept-box">
+          Just like last week &mdash; you <strong>DESCRIBE</strong> what you want,<br>AI <strong>CREATES</strong> it.
+        </div>
+        <p style="font-size: 1.6rem; margin-top: 28px;">But this time, instead of words...<br>you get <strong style="color: var(--slide-secondary);">PICTURES</strong> &#x1F5BC;&#xFE0F;</p>
+      </section>
+
+      <!-- Slide 5: The power of details -->
+      <section>
+        <h2>Details Make the Difference</h2>
+        <div class="prompt-compare">
+          <div class="compare-side side-basic">
+            <div class="prompt-text">&ldquo;a cat&rdquo;</div>
+            <div class="arrow">&#x2B07;&#xFE0F;</div>
+            <div class="result-text" style="color: #ef4444;">Basic result &#x1F63E;</div>
+            <p style="font-size: 1rem; color: var(--slide-muted); margin-top: 8px;">AI has to guess everything</p>
+          </div>
+          <div class="compare-side side-detailed">
+            <div class="prompt-text">&ldquo;a fluffy orange cat wearing a tiny top hat, sitting on a velvet cushion, watercolor style&rdquo;</div>
+            <div class="arrow">&#x2B07;&#xFE0F;</div>
+            <div class="result-text" style="color: #22c55e;">Amazing result &#x1F929;</div>
+            <p style="font-size: 1rem; color: var(--slide-muted); margin-top: 8px;">AI knows exactly what you want</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 6: Style matters -->
+      <section>
+        <h2>Same Prompt, Different Style</h2>
+        <p style="font-size: 1.3rem; color: var(--slide-muted); margin-bottom: 8px;">Prompt: &ldquo;a castle on a hill&rdquo;</p>
+        <div class="style-grid">
+          <div class="style-item">
+            <div class="style-emoji">&#x1F4F8;</div>
+            <div class="style-name">Realistic</div>
+            <div class="style-desc">Like a photograph</div>
+          </div>
+          <div class="style-item">
+            <div class="style-emoji">&#x1F3A8;</div>
+            <div class="style-name">Cartoon</div>
+            <div class="style-desc">Bright &amp; playful</div>
+          </div>
+          <div class="style-item">
+            <div class="style-emoji">&#x1F58C;&#xFE0F;</div>
+            <div class="style-name">Watercolor</div>
+            <div class="style-desc">Soft &amp; dreamy</div>
+          </div>
+          <div class="style-item">
+            <div class="style-emoji">&#x1F47E;</div>
+            <div class="style-name">Pixel Art</div>
+            <div class="style-desc">Retro &amp; blocky</div>
+          </div>
+        </div>
+        <p style="margin-top: 20px; font-size: 1.3rem;">Style completely changes the feel!</p>
+      </section>
+
+      <!-- Slide 7: Prompt tips -->
+      <section>
+        <h2>Prompt Tips for Images &#x1F4DD;</h2>
+        <ul class="tips-list">
+          <li><span class="tip-number">1</span> <strong>What</strong> is in the picture?</li>
+          <li><span class="tip-number">2</span> What <strong>style</strong>?</li>
+          <li><span class="tip-number">3</span> What <strong>mood / colors</strong>?</li>
+          <li><span class="tip-number">4</span> Any <strong>special details</strong>?</li>
+        </ul>
+      </section>
+
+      <!-- Slide 8: Today's mission -->
+      <section>
+        <p class="slide-big-emoji">&#x1F5BC;&#xFE0F;</p>
+        <h2>Today's Mission</h2>
+        <p style="font-size: 1.8rem; margin-top: 16px;">Create your own <strong style="color: var(--slide-secondary);">AI Art Exhibition</strong>!</p>
+        <div class="concept-box" style="margin-top: 24px; font-size: 1.3rem;">
+          &#x2705; Make at least 3 artworks in different styles<br>
+          &#x2705; Try the Challenge Mode<br>
+          &#x2705; Pick your best work and give it a title
+        </div>
+      </section>
+
+      <!-- Slide 9: Challenge preview -->
+      <section>
+        <h2>Challenge Mode &#x1F3AF;</h2>
+        <p style="font-size: 1.7rem; margin-top: 16px;">Can you make AI create<br><strong>exactly</strong> what you imagine?</p>
+        <div class="concept-box" style="margin-top: 24px; font-size: 1.25rem;">
+          You'll get a description &mdash; then write a prompt to match it.<br>
+          Three challenges, getting harder each time!
+        </div>
+      </section>
+
+      <!-- Slide 10: Let's go! -->
+      <section>
+        <h2>Open your laptops!</h2>
+        <p style="font-size: 2rem; margin-top: 24px;">&#x1F449; Go to the <strong>Lesson 3</strong> page</p>
+        <p style="font-size: 2.5rem; margin-top: 32px;">Let's go! &#x1F680;</p>
+      </section>
+
+    </div>
+  </div>
+
+  <!-- Lesson badge overlay -->
+  <div class="lesson-badge">03</div>
+
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+  <script>
+    Reveal.initialize({
+      hash: true,
+      transition: 'slide',
+      width: 1280,
+      height: 720
+    });
+  </script>
+</body>
+</html>
