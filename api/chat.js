@@ -69,13 +69,13 @@ module.exports = async function handler(req, res) {
       if (response.status === 429) {
         return res.status(429).json({ error: "The AI is too busy right now. Please wait a moment and try again." });
       }
-      return res.status(500).json({ error: "AI service error", debug: JSON.stringify(data) });
+      return res.status(500).json({ error: "AI service error" });
     }
 
     const text = data.choices?.[0]?.message?.content || "";
     return res.status(200).json({ response: text });
   } catch (err) {
     console.error("Chat API error:", err);
-    return res.status(500).json({ error: "Something went wrong talking to the AI. Please try again.", debug: err.message || String(err) });
+    return res.status(500).json({ error: "Something went wrong talking to the AI. Please try again." });
   }
 };

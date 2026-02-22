@@ -60,13 +60,13 @@ module.exports = async function handler(req, res) {
       if (data.error?.code === "content_policy_violation") {
         return res.status(400).json({ error: "That image description isn't allowed. Try something different!" });
       }
-      return res.status(500).json({ error: "Image generation failed", debug: JSON.stringify(data) });
+      return res.status(500).json({ error: "Image generation failed" });
     }
 
     const url = data.data?.[0]?.url || "";
     return res.status(200).json({ url });
   } catch (err) {
     console.error("Image API error:", err);
-    return res.status(500).json({ error: "Something went wrong generating the image. Please try again.", debug: err.message });
+    return res.status(500).json({ error: "Something went wrong generating the image. Please try again." });
   }
 };

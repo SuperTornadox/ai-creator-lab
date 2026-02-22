@@ -67,13 +67,13 @@ module.exports = async function handler(req, res) {
 
     if (!response.ok) {
       console.error("OpenAI API error:", data);
-      return res.status(500).json({ error: "AI service error", debug: JSON.stringify(data) });
+      return res.status(500).json({ error: "AI service error" });
     }
 
     const code = data.choices?.[0]?.message?.content || "";
     return res.status(200).json({ code });
   } catch (err) {
     console.error("Code API error:", err);
-    return res.status(500).json({ error: "Something went wrong generating code. Please try again.", debug: err.message });
+    return res.status(500).json({ error: "Something went wrong generating code. Please try again." });
   }
 };
