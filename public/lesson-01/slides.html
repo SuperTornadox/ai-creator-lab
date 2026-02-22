@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AI First Contact - AI Creator Lab</title>
+  <title>AI Words - AI Creator Lab</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/white.css">
   <link rel="stylesheet" href="/shared/slides-base.css">
   <style>
-    /* Character grid for slide 9 */
+    /* Character grid for slide */
     .character-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -46,7 +46,7 @@
       margin-bottom: 0.3em;
     }
 
-    /* Examples row for slide 3 */
+    /* Examples row */
     .examples-row {
       display: flex;
       gap: 40px;
@@ -86,21 +86,141 @@
       line-height: 1.6;
       color: var(--slide-text);
     }
+
+    /* Comparison side-by-side */
+    .prompt-compare {
+      display: flex;
+      gap: 40px;
+      max-width: 1000px;
+      margin: 20px auto 0;
+      text-align: left;
+    }
+
+    .prompt-compare .prompt-box {
+      flex: 1;
+      padding: 24px 28px;
+      border-radius: 14px;
+      font-size: 1.2rem;
+      line-height: 1.5;
+    }
+
+    .prompt-compare .prompt-bad {
+      background: rgba(239, 68, 68, 0.08);
+      border: 2px solid rgba(239, 68, 68, 0.2);
+    }
+
+    .prompt-compare .prompt-good {
+      background: rgba(34, 197, 94, 0.08);
+      border: 2px solid rgba(34, 197, 94, 0.2);
+    }
+
+    .prompt-compare .prompt-label {
+      font-weight: 700;
+      font-size: 1.1rem;
+      margin-bottom: 8px;
+    }
+
+    .prompt-compare .prompt-bad .prompt-label { color: #ef4444; }
+    .prompt-compare .prompt-good .prompt-label { color: #22c55e; }
+
+    .prompt-compare .prompt-text {
+      font-style: italic;
+      color: var(--slide-text);
+    }
+
+    /* Tips list */
+    .tips-list {
+      list-style: none;
+      text-align: left;
+      display: inline-block;
+      font-size: 1.6rem;
+    }
+
+    .tips-list li {
+      margin-bottom: 0.4em;
+    }
+
+    /* Two-activity layout */
+    .two-activities {
+      display: flex;
+      gap: 40px;
+      max-width: 1000px;
+      margin: 20px auto 0;
+      text-align: center;
+    }
+
+    .two-activities .activity-box {
+      flex: 1;
+      padding: 28px 24px;
+      border-radius: 14px;
+      background: rgba(79, 110, 247, 0.06);
+    }
+
+    .two-activities .activity-emoji {
+      font-size: 3rem;
+      margin-bottom: 8px;
+    }
+
+    .two-activities .activity-title {
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .two-activities .activity-desc {
+      font-size: 1.1rem;
+      color: var(--slide-muted);
+    }
+
+    /* Framework ingredients */
+    .framework-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+      max-width: 800px;
+      margin: 20px auto 0;
+    }
+
+    .framework-grid .fw-item {
+      text-align: center;
+      padding: 20px;
+      border-radius: 14px;
+      background: rgba(124, 58, 237, 0.06);
+    }
+
+    .framework-grid .fw-item .fw-emoji {
+      font-size: 2.5rem;
+      margin-bottom: 4px;
+    }
+
+    .framework-grid .fw-item .fw-label {
+      font-size: 1.2rem;
+      font-weight: 700;
+    }
+
+    .framework-grid .fw-item .fw-desc {
+      font-size: 1rem;
+      color: var(--slide-muted);
+    }
   </style>
 </head>
 <body>
   <div class="reveal">
     <div class="slides">
 
+      <!-- ============================================= -->
+      <!-- AI INTRODUCTION (Slides 1-6)                 -->
+      <!-- ============================================= -->
+
       <!-- Slide 1: Title -->
       <section>
         <p class="slide-big-emoji">&#x1F916;</p>
-        <h1 class="slide-title">AI First Contact</h1>
-        <p>Your first conversation with artificial intelligence</p>
+        <h1 class="slide-title">AI Words</h1>
+        <p style="font-size: 1.8rem;">Chat, Write, Create</p>
         <p style="margin-top: 12px; font-size: 1.1rem; color: var(--slide-muted);">AI Creator Lab &middot; Lesson 01</p>
       </section>
 
-      <!-- Slide 2: Discussion — What is AI? -->
+      <!-- Slide 2: Discussion -->
       <section>
         <p class="slide-question">"What do you think AI is?"</p>
         <p style="margin-top: 24px; font-size: 1.5rem;">&#x1F4AD; Take a moment to share your thoughts</p>
@@ -137,73 +257,180 @@
           <li>&#x274C; Not magic</li>
           <li>&#x274C; Not always right</li>
         </ul>
+        <p style="margin-top: 20px; font-size: 1.3rem; color: var(--slide-muted);">It's a computer program that learns patterns from data</p>
       </section>
 
-      <!-- Slide 5: What AI IS -->
+      <!-- Slide 5: How AI works -->
       <section>
-        <h2>What AI IS</h2>
-        <p style="font-size: 1.8rem; max-width: 800px; margin: 0 auto;">A program that learns patterns<br>from lots and lots of data</p>
+        <h2>How AI Works</h2>
+        <p style="font-size: 1.6rem; max-width: 800px; margin: 0 auto;">Pattern matching from <em>lots</em> of data</p>
         <div class="analogy-box">
-          &#x1F4DA; Like a student who read every book in the library &mdash; they can talk about anything, but they didn't actually <em>experience</em> any of it.
+          &#x1F4DA; Imagine a student who read every book in the library &mdash; they can talk about anything, but they didn't actually <em>experience</em> any of it.
         </div>
       </section>
 
-      <!-- Slide 6: Live Demo -->
+      <!-- Slide 6: Today's plan -->
       <section>
-        <h2>Let's Ask AI Something Weird!</h2>
-        <p class="slide-question">&#x1F914; "What would happen if cats could send emails?"</p>
-        <p style="margin-top: 32px; font-size: 1.2rem; color: var(--slide-muted);">[Live demo time!]</p>
+        <h2>Today: Two Activities!</h2>
+        <div class="two-activities">
+          <div class="activity-box">
+            <div class="activity-emoji">&#x1F4F0;</div>
+            <div class="activity-title">Part 1: AI Interview</div>
+            <div class="activity-desc">Chat with a funny AI character<br>and ask it great questions</div>
+          </div>
+          <div class="activity-box">
+            <div class="activity-emoji">&#x1F4DD;</div>
+            <div class="activity-title">Part 2: Story Factory</div>
+            <div class="activity-desc">Write a creative story WITH AI<br>and direct your own revisions</div>
+          </div>
+        </div>
       </section>
 
-      <!-- Slide 7: Discussion — How did AI do that? -->
+      <!-- ============================================= -->
+      <!-- PROMPT ENGINEERING (Slides 7-10)              -->
+      <!-- ============================================= -->
+
+      <!-- Slide 7: What is a prompt? -->
       <section>
-        <h2>How did AI come up with that answer?</h2>
-        <p style="font-size: 1.6rem; margin-top: 20px;">Did it really <em>"know"</em> the answer?</p>
-        <p style="font-size: 1.6rem; margin-top: 12px;">Or did it create something that<br><strong>sounds like</strong> a good answer?</p>
+        <p class="slide-big-emoji">&#x1F4AC;</p>
+        <h2>What Is a "Prompt"?</h2>
+        <p style="font-size: 1.6rem; max-width: 800px; margin: 16px auto 0;">A prompt is <strong>your instructions to AI</strong>.</p>
+        <div class="analogy-box">
+          &#x1F373; Think of it like a recipe:<br>
+          "Make me food" &#x2192; ??? (raw potato?)<br>
+          "Make me a chocolate cake with strawberries on top" &#x2192; &#x1F370;
+        </div>
       </section>
 
-      <!-- Slide 8: Today's Mission -->
+      <!-- Slide 8: Vague vs Specific -->
       <section>
-        <p class="slide-big-emoji">&#x1F4F0;</p>
-        <h2>Today's Mission: You're a REPORTER!</h2>
-        <p style="font-size: 1.6rem; margin-top: 16px;">Interview an AI character and write about it</p>
+        <h2>Vague vs. Specific Prompts</h2>
+        <div class="prompt-compare">
+          <div class="prompt-box prompt-bad">
+            <div class="prompt-label">&#x274C; Vague</div>
+            <div class="prompt-text">"Write me a story"</div>
+            <p style="font-size: 1rem; margin-top: 12px; color: var(--slide-muted);">Result: generic, boring story about a kid going to school</p>
+          </div>
+          <div class="prompt-box prompt-good">
+            <div class="prompt-label">&#x2705; Specific</div>
+            <div class="prompt-text">"Write a funny story about a shy dragon who accidentally gets superpowers in a candy world"</div>
+            <p style="font-size: 1rem; margin-top: 12px; color: var(--slide-muted);">Result: creative, detailed, exactly what you wanted!</p>
+          </div>
+        </div>
       </section>
 
-      <!-- Slide 9: Meet Your Characters -->
+      <!-- Slide 9: Good prompt formula -->
+      <section>
+        <h2>Good Prompt = </h2>
+        <ul class="tips-list">
+          <li>&#x1F3AF; <strong>Clear</strong> &mdash; AI knows exactly what you want</li>
+          <li>&#x1F50D; <strong>Specific</strong> &mdash; include details and examples</li>
+          <li>&#x2728; <strong>Creative</strong> &mdash; interesting ideas get interesting results</li>
+        </ul>
+        <p style="margin-top: 28px; font-size: 1.3rem; color: var(--slide-muted);">Better instructions &#x2192; better results. You're the director!</p>
+      </section>
+
+      <!-- Slide 10: Live demo — same topic different prompts -->
+      <section>
+        <h2>Demo: Same Topic, Different Prompts</h2>
+        <div class="prompt-compare">
+          <div class="prompt-box prompt-bad">
+            <div class="prompt-label">Prompt A</div>
+            <div class="prompt-text">"Tell me about cats"</div>
+          </div>
+          <div class="prompt-box prompt-good">
+            <div class="prompt-label">Prompt B</div>
+            <div class="prompt-text">"You are a sassy talking cat. Describe your typical Tuesday in 3 sentences. Be dramatic."</div>
+          </div>
+        </div>
+        <p style="margin-top: 24px; font-size: 1.2rem; color: var(--slide-muted);">[Live demo time! Let's see the difference.]</p>
+      </section>
+
+      <!-- ============================================= -->
+      <!-- MISSION (Slides 11-12)                        -->
+      <!-- ============================================= -->
+
+      <!-- Slide 11: Mission overview -->
+      <section>
+        <p class="slide-big-emoji">&#x1F680;</p>
+        <h2>Your Mission Today</h2>
+        <div class="two-activities">
+          <div class="activity-box">
+            <div class="activity-emoji">&#x1F399;&#xFE0F;</div>
+            <div class="activity-title">Part 1: Interview</div>
+            <div class="activity-desc">Pick an AI character<br>Ask 8&ndash;10 creative questions<br>Find the funniest answer!</div>
+          </div>
+          <div class="activity-box">
+            <div class="activity-emoji">&#x1F4D6;</div>
+            <div class="activity-title">Part 2: Story</div>
+            <div class="activity-desc">Build a story framework<br>Let AI write a draft<br>Revise it 2+ times!</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 12: Meet your characters -->
       <section>
         <h2>Meet Your Characters</h2>
         <div class="character-grid">
           <div class="char-item">
             <div class="char-emoji">&#x1F431;</div>
-            <div class="char-name">A Talking Cat</div>
+            <div class="char-name">Talking Cat</div>
           </div>
           <div class="char-item">
             <div class="char-emoji">&#x1F680;</div>
-            <div class="char-name">Person from Year 3000</div>
+            <div class="char-name">Future Human</div>
           </div>
           <div class="char-item">
             <div class="char-emoji">&#x1F47D;</div>
             <div class="char-name">Friendly Alien</div>
           </div>
           <div class="char-item">
-            <div class="char-emoji">&#x1F9C1;</div>
-            <div class="char-name">Dessert-Only Chef</div>
+            <div class="char-emoji">&#x231B;</div>
+            <div class="char-name">Time Traveler</div>
           </div>
           <div class="char-item">
-            <div class="char-emoji">&#x1F9B8;</div>
-            <div class="char-name">Superhero on Vacation</div>
+            <div class="char-emoji">&#x1F409;</div>
+            <div class="char-name">Dragon Chef</div>
           </div>
           <div class="char-item">
-            <div class="char-emoji">&#x1F995;</div>
-            <div class="char-name">Last Dinosaur</div>
+            <div class="char-emoji">&#x1F916;</div>
+            <div class="char-name">Robot Comedian</div>
           </div>
         </div>
       </section>
 
-      <!-- Slide 10: Launch! -->
+      <!-- Slide 13: Story framework preview -->
+      <section>
+        <h2>Story Framework: 4 Ingredients</h2>
+        <div class="framework-grid">
+          <div class="fw-item">
+            <div class="fw-emoji">&#x1F9D1;</div>
+            <div class="fw-label">WHO?</div>
+            <div class="fw-desc">Main character</div>
+          </div>
+          <div class="fw-item">
+            <div class="fw-emoji">&#x1F30D;</div>
+            <div class="fw-label">WHERE?</div>
+            <div class="fw-desc">Setting</div>
+          </div>
+          <div class="fw-item">
+            <div class="fw-emoji">&#x26A1;</div>
+            <div class="fw-label">WHAT goes wrong?</div>
+            <div class="fw-desc">Conflict</div>
+          </div>
+          <div class="fw-item">
+            <div class="fw-emoji">&#x1F3AC;</div>
+            <div class="fw-label">HOW does it end?</div>
+            <div class="fw-desc">Ending style</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 14: Let's go! -->
       <section>
         <h2>Open your laptops!</h2>
         <p style="font-size: 2rem; margin-top: 24px;">&#x1F449; Go to the <strong>Lesson 1</strong> page</p>
+        <p style="font-size: 1.4rem; margin-top: 16px; color: var(--slide-muted);">Part 1: Interview first &mdash; then scroll down for Part 2</p>
         <p style="font-size: 2.5rem; margin-top: 32px;">Let's go! &#x1F680;</p>
       </section>
 

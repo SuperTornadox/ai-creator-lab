@@ -3,91 +3,180 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AI Story Factory - AI Creator Lab</title>
+  <title>AI Images — Paint with Words - AI Creator Lab</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/white.css">
   <link rel="stylesheet" href="/shared/slides-base.css">
   <style>
-    /* Comparison boxes */
-    .prompt-box {
-      background: rgba(0, 0, 0, 0.04);
-      border-radius: 14px;
-      padding: 24px 28px;
-      text-align: left;
-      font-size: 1.3rem;
-      line-height: 1.6;
-    }
-
-    .prompt-box.bad {
-      border: 2px solid #ef4444;
-    }
-
-    .prompt-box.good {
-      border: 2px solid #22c55e;
-    }
-
-    .prompt-box .prompt-label {
-      font-size: 1rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      margin-bottom: 8px;
-    }
-
-    .prompt-box.bad .prompt-label { color: #ef4444; }
-    .prompt-box.good .prompt-label { color: #22c55e; }
-
-    .prompt-box .prompt-text {
-      font-style: italic;
-      margin-bottom: 12px;
-      color: var(--slide-text);
-    }
-
-    .prompt-box .prompt-result {
-      font-size: 1.1rem;
-      color: var(--slide-muted);
-      border-top: 1px solid rgba(0, 0, 0, 0.1);
-      padding-top: 12px;
-    }
-
-    /* Tip cards */
-    .tip-grid {
+    /* 2x2 guessing game grid */
+    .image-grid-2x2 {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
       gap: 20px;
-      max-width: 900px;
-      margin: 20px auto 0;
+      max-width: 800px;
+      margin: 24px auto 0;
     }
 
-    .tip-card {
+    .image-grid-2x2 .image-box {
+      padding: 32px 24px;
+      border-radius: 14px;
       background: rgba(79, 110, 247, 0.06);
-      border-radius: 12px;
-      padding: 20px;
+      border: 2px solid rgba(79, 110, 247, 0.12);
+      text-align: center;
+      font-size: 1.2rem;
+      line-height: 1.5;
+    }
+
+    .image-grid-2x2 .image-box .box-label {
+      font-weight: 700;
+      font-size: 1.4rem;
+      margin-bottom: 6px;
+      color: var(--slide-primary);
+    }
+
+    .image-grid-2x2 .image-box .box-desc {
+      color: var(--slide-muted);
+      font-size: 1.1rem;
+    }
+
+    .image-grid-2x2 .image-box.ai-made {
+      border-color: var(--slide-secondary);
+      background: rgba(124, 58, 237, 0.08);
+    }
+
+    .image-grid-2x2 .image-box.ai-made .box-label {
+      color: var(--slide-secondary);
+    }
+
+    /* Concept box */
+    .concept-box {
+      background: rgba(79, 110, 247, 0.08);
+      border-radius: 14px;
+      padding: 24px 32px;
+      max-width: 750px;
+      margin: 20px auto 0;
+      font-size: 1.4rem;
+      line-height: 1.6;
+      color: var(--slide-text);
+    }
+
+    /* Prompt comparison */
+    .prompt-compare {
+      display: flex;
+      gap: 40px;
+      align-items: stretch;
+      max-width: 950px;
+      margin: 28px auto 0;
+    }
+
+    .prompt-compare .compare-side {
+      flex: 1;
+      padding: 28px;
+      border-radius: 14px;
       text-align: center;
     }
 
-    .tip-card .tip-number {
+    .prompt-compare .compare-side.side-basic {
+      background: rgba(239, 68, 68, 0.06);
+      border: 2px solid rgba(239, 68, 68, 0.15);
+    }
+
+    .prompt-compare .compare-side.side-detailed {
+      background: rgba(34, 197, 94, 0.06);
+      border: 2px solid rgba(34, 197, 94, 0.15);
+    }
+
+    .prompt-compare .prompt-text {
+      font-size: 1.15rem;
+      font-style: italic;
+      color: var(--slide-muted);
+      margin-bottom: 12px;
+      padding: 8px 12px;
+      background: rgba(255, 255, 255, 0.7);
+      border-radius: 8px;
+    }
+
+    .prompt-compare .result-text {
+      font-size: 1.5rem;
+      font-weight: 650;
+    }
+
+    .prompt-compare .arrow {
+      font-size: 1.8rem;
+      margin: 8px 0;
+    }
+
+    /* Style grid (6 items: 3x2) */
+    .style-grid-6 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      max-width: 900px;
+      margin: 24px auto 0;
+    }
+
+    .style-grid-6 .style-item {
+      padding: 18px 12px;
+      border-radius: 12px;
+      background: rgba(79, 110, 247, 0.06);
+      text-align: center;
+    }
+
+    .style-grid-6 .style-item .style-emoji {
+      font-size: 2.2rem;
+      margin-bottom: 4px;
+    }
+
+    .style-grid-6 .style-item .style-name {
+      font-size: 1.05rem;
+      font-weight: 650;
+    }
+
+    .style-grid-6 .style-item .style-desc {
+      font-size: 0.85rem;
+      color: var(--slide-muted);
+      margin-top: 2px;
+    }
+
+    /* Prompt anatomy */
+    .anatomy-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+      max-width: 850px;
+      margin: 24px auto 0;
+    }
+
+    .anatomy-grid .anatomy-item {
+      padding: 20px;
+      border-radius: 12px;
+      background: rgba(79, 110, 247, 0.06);
+      text-align: center;
+    }
+
+    .anatomy-grid .anatomy-item .anatomy-num {
       font-size: 2rem;
       font-weight: 800;
       color: var(--slide-primary);
       margin-bottom: 4px;
     }
 
-    .tip-card .tip-label {
+    .anatomy-grid .anatomy-item .anatomy-label {
       font-size: 1.2rem;
-      font-weight: 600;
+      font-weight: 650;
     }
 
-    .tip-card .tip-question {
-      font-size: 1.05rem;
+    .anatomy-grid .anatomy-item .anatomy-example {
+      font-size: 0.95rem;
       color: var(--slide-muted);
       margin-top: 4px;
+      font-style: italic;
     }
 
     /* Process steps */
     .process-steps {
       display: flex;
-      gap: 16px;
+      gap: 14px;
       align-items: center;
       justify-content: center;
       margin-top: 28px;
@@ -97,9 +186,9 @@
     .process-step {
       background: rgba(79, 110, 247, 0.08);
       border-radius: 12px;
-      padding: 18px 22px;
+      padding: 16px 20px;
       text-align: center;
-      min-width: 160px;
+      min-width: 140px;
     }
 
     .process-step .step-num {
@@ -111,26 +200,46 @@
     }
 
     .process-step .step-label {
-      font-size: 1.2rem;
+      font-size: 1.15rem;
       font-weight: 600;
       margin-top: 4px;
     }
 
     .process-arrow {
-      font-size: 2rem;
+      font-size: 1.8rem;
       color: var(--slide-muted);
     }
 
-    /* Recipe analogy box */
-    .recipe-box {
-      background: rgba(79, 110, 247, 0.08);
-      border-radius: 14px;
-      padding: 28px 36px;
-      max-width: 750px;
+    /* Tips for consistency */
+    .tips-row {
+      display: flex;
+      gap: 20px;
+      max-width: 900px;
       margin: 24px auto 0;
-      font-size: 1.5rem;
-      line-height: 1.6;
-      color: var(--slide-text);
+    }
+
+    .tips-row .tip-box {
+      flex: 1;
+      padding: 20px;
+      border-radius: 12px;
+      background: rgba(79, 110, 247, 0.06);
+      text-align: center;
+    }
+
+    .tips-row .tip-box .tip-icon {
+      font-size: 2rem;
+      margin-bottom: 6px;
+    }
+
+    .tips-row .tip-box .tip-text {
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+
+    .tips-row .tip-box .tip-detail {
+      font-size: 0.9rem;
+      color: var(--slide-muted);
+      margin-top: 4px;
     }
   </style>
 </head>
@@ -140,114 +249,228 @@
 
       <!-- Slide 1: Title -->
       <section>
-        <p class="slide-big-emoji">&#x1F4DD;</p>
-        <h1 class="slide-title">AI Story Factory</h1>
-        <p>Today: We write stories WITH AI!</p>
+        <p class="slide-big-emoji">&#x1F3A8;</p>
+        <h1 class="slide-title">AI Images &mdash; Paint with Words</h1>
+        <p>Today: We create art AND picture books with AI!</p>
         <p style="margin-top: 12px; font-size: 1.1rem; color: var(--slide-muted);">AI Creator Lab &middot; Lesson 02</p>
       </section>
 
-      <!-- Slide 2: Review -->
+      <!-- Slide 2: Real or AI? Guessing Game -->
       <section>
-        <h2>Quick Review</h2>
-        <p style="font-size: 1.8rem; margin-top: 20px;">Last week you interviewed AI characters</p>
-        <p class="slide-question" style="margin-top: 24px;">Did AI really &ldquo;understand&rdquo; you?</p>
-        <p style="margin-top: 28px; font-size: 1.5rem;">&#x1F4A1; Today we go deeper!</p>
+        <h2>Real or AI? &#x1F50D;</h2>
+        <div class="image-grid-2x2">
+          <div class="image-box">
+            <div class="box-label">Image A</div>
+            <div class="box-desc">Landscape photo of mountains at sunrise</div>
+          </div>
+          <div class="image-box">
+            <div class="box-label">Image B</div>
+            <div class="box-desc">Portrait painting of a girl with pearl earring</div>
+          </div>
+          <div class="image-box">
+            <div class="box-label">Image C</div>
+            <div class="box-desc">Street photo of a busy city at night</div>
+          </div>
+          <div class="image-box">
+            <div class="box-label">Image D</div>
+            <div class="box-desc">Fantasy castle floating in the clouds</div>
+          </div>
+        </div>
+        <p style="margin-top: 24px; font-size: 1.3rem;">&#x1F914; Which ones did AI make? Vote now!</p>
       </section>
 
-      <!-- Slide 3: What's a prompt? -->
+      <!-- Slide 3: How Does AI Make Images? -->
       <section>
-        <h2>What's a Prompt?</h2>
-        <p style="font-size: 2rem; margin-top: 20px;">A prompt is your <strong>INSTRUCTIONS</strong> to AI</p>
-        <div class="recipe-box">
-          &#x1F373; Think of it as a <strong>recipe</strong>:<br>
-          the clearer your recipe, the better the food!
+        <h2>How Does AI Make Images?</h2>
+        <div class="concept-box">
+          You <strong>DESCRIBE</strong> what you want in words<br>
+          &#x2B07;&#xFE0F;<br>
+          AI finds <strong>PATTERNS</strong> it learned from millions of images<br>
+          &#x2B07;&#xFE0F;<br>
+          AI <strong>CREATES</strong> a brand new image that matches your description
+        </div>
+        <p style="font-size: 1.5rem; margin-top: 24px;">Your words are the paintbrush! &#x1F58C;&#xFE0F;</p>
+      </section>
+
+      <!-- Slide 4: The Power of Prompts -->
+      <section>
+        <h2>The Power of Prompts</h2>
+        <div class="prompt-compare">
+          <div class="compare-side side-basic">
+            <div class="prompt-text">&ldquo;a cat&rdquo;</div>
+            <div class="arrow">&#x2B07;&#xFE0F;</div>
+            <div class="result-text" style="color: #ef4444;">Generic result &#x1F63E;</div>
+            <p style="font-size: 1rem; color: var(--slide-muted); margin-top: 8px;">AI has to guess everything</p>
+          </div>
+          <div class="compare-side side-detailed">
+            <div class="prompt-text">&ldquo;a fluffy orange cat wearing a tiny top hat, sitting on a velvet cushion, watercolor style&rdquo;</div>
+            <div class="arrow">&#x2B07;&#xFE0F;</div>
+            <div class="result-text" style="color: #22c55e;">Amazing result &#x1F929;</div>
+            <p style="font-size: 1rem; color: var(--slide-muted); margin-top: 8px;">AI knows exactly what you want</p>
+          </div>
         </div>
       </section>
 
-      <!-- Slide 4: Demo comparison -->
+      <!-- Slide 5: Style Matters — 6 Styles -->
       <section>
-        <h2>Vague vs. Specific</h2>
-        <div class="slide-comparison" style="margin-top: 20px;">
-          <div class="prompt-box bad">
-            <div class="prompt-label">&#x274C; Vague prompt</div>
-            <div class="prompt-text">"Write me a story"</div>
-            <div class="prompt-result">&#x1F971; Boring, generic, short... meh</div>
+        <h2>Style Matters!</h2>
+        <p style="font-size: 1.2rem; color: var(--slide-muted);">Same subject, completely different feel</p>
+        <div class="style-grid-6">
+          <div class="style-item">
+            <div class="style-emoji">&#x1F4F8;</div>
+            <div class="style-name">Realistic</div>
+            <div class="style-desc">Like a photograph</div>
           </div>
-          <div class="prompt-box good">
-            <div class="prompt-label">&#x2705; Specific prompt</div>
-            <div class="prompt-text">"Write a funny story about a shy dragon in candy world who accidentally gets superpowers"</div>
-            <div class="prompt-result">&#x1F929; Vivid, creative, hilarious, unique!</div>
+          <div class="style-item">
+            <div class="style-emoji">&#x1F3A8;</div>
+            <div class="style-name">Cartoon / Anime</div>
+            <div class="style-desc">Bright &amp; playful</div>
+          </div>
+          <div class="style-item">
+            <div class="style-emoji">&#x1F58C;&#xFE0F;</div>
+            <div class="style-name">Watercolor</div>
+            <div class="style-desc">Soft &amp; dreamy</div>
+          </div>
+          <div class="style-item">
+            <div class="style-emoji">&#x1F47E;</div>
+            <div class="style-name">Pixel Art</div>
+            <div class="style-desc">Retro &amp; blocky</div>
+          </div>
+          <div class="style-item">
+            <div class="style-emoji">&#x1F3AD;</div>
+            <div class="style-name">Oil Painting</div>
+            <div class="style-desc">Rich &amp; textured</div>
+          </div>
+          <div class="style-item">
+            <div class="style-emoji">&#x1F48E;</div>
+            <div class="style-name">3D Render</div>
+            <div class="style-desc">Modern &amp; polished</div>
           </div>
         </div>
       </section>
 
-      <!-- Slide 5: Prompt tips — The Story Framework -->
+      <!-- Slide 6: Anatomy of a Great Image Prompt -->
       <section>
-        <h2>The Story Framework</h2>
-        <div class="tip-grid">
-          <div class="tip-card">
-            <div class="tip-number">1</div>
-            <div class="tip-label">Character</div>
-            <div class="tip-question">Who is the main character?</div>
+        <h2>Anatomy of a Great Prompt</h2>
+        <div class="anatomy-grid">
+          <div class="anatomy-item">
+            <div class="anatomy-num">1</div>
+            <div class="anatomy-label">Subject</div>
+            <div class="anatomy-example">&ldquo;a friendly robot&rdquo;</div>
           </div>
-          <div class="tip-card">
-            <div class="tip-number">2</div>
-            <div class="tip-label">Setting</div>
-            <div class="tip-question">Where does it happen?</div>
+          <div class="anatomy-item">
+            <div class="anatomy-num">2</div>
+            <div class="anatomy-label">Style</div>
+            <div class="anatomy-example">&ldquo;watercolor painting&rdquo;</div>
           </div>
-          <div class="tip-card">
-            <div class="tip-number">3</div>
-            <div class="tip-label">Conflict</div>
-            <div class="tip-question">What goes wrong?</div>
+          <div class="anatomy-item">
+            <div class="anatomy-num">3</div>
+            <div class="anatomy-label">Mood</div>
+            <div class="anatomy-example">&ldquo;warm golden sunset light&rdquo;</div>
           </div>
-          <div class="tip-card">
-            <div class="tip-number">4</div>
-            <div class="tip-label">Ending</div>
-            <div class="tip-question">How does it end?</div>
+          <div class="anatomy-item">
+            <div class="anatomy-num">4</div>
+            <div class="anatomy-label">Details</div>
+            <div class="anatomy-example">&ldquo;holding flowers, in a garden&rdquo;</div>
           </div>
         </div>
-        <p style="margin-top: 24px; font-size: 1.5rem;">= Your perfect prompt recipe! &#x1F4A1;</p>
+        <p style="margin-top: 20px; font-size: 1.4rem;">Subject + Style + Mood + Details = &#x2728; Magic!</p>
       </section>
 
-      <!-- Slide 6: Today's mission -->
+      <!-- Slide 7: Part 1 Mission — Art Exhibition -->
       <section>
-        <p class="slide-big-emoji">&#x1F4D6;</p>
-        <h2>Today's Mission</h2>
-        <p style="font-size: 1.8rem; margin-top: 16px;">Write your own creative short story using AI</p>
-        <p style="font-size: 1.4rem; margin-top: 16px; color: var(--slide-muted);">You give the ideas, AI does the writing,<br>then you direct the revisions</p>
+        <p class="slide-big-emoji">&#x1F5BC;&#xFE0F;</p>
+        <h2>Part 1: AI Art Exhibition</h2>
+        <p style="font-size: 1.7rem; margin-top: 16px;">Create your own collection of AI artworks!</p>
+        <div class="concept-box" style="margin-top: 20px; font-size: 1.2rem;">
+          &#x2705; Make at least 3 artworks in different styles<br>
+          &#x2705; Try the Style Match challenge<br>
+          &#x2705; Pick your best work &amp; give it a title
+        </div>
       </section>
 
-      <!-- Slide 7: The process -->
+      <!-- Slide 8: What is a Picture Book? -->
       <section>
-        <h2>The Process</h2>
+        <h2>What is a Picture Book?</h2>
+        <div class="concept-box" style="font-size: 1.5rem;">
+          <strong>Text</strong> tells the story &#x1F4DD;<br>
+          +<br>
+          <strong>Images</strong> bring it to life &#x1F3A8;<br>
+          =<br>
+          A <strong style="color: var(--slide-secondary);">Picture Book</strong>! &#x1F4D6;
+        </div>
+        <p style="margin-top: 20px; font-size: 1.3rem; color: var(--slide-muted);">Words and pictures work together to tell one story</p>
+      </section>
+
+      <!-- Slide 9: Picture Book Workflow -->
+      <section>
+        <h2>Picture Book Workflow</h2>
         <div class="process-steps">
           <div class="process-step">
             <div class="step-num">Step 1</div>
-            <div class="step-label">&#x1F3D7;&#xFE0F; Build your framework</div>
+            <div class="step-label">&#x270D;&#xFE0F; Write</div>
           </div>
           <div class="process-arrow">&rarr;</div>
           <div class="process-step">
             <div class="step-num">Step 2</div>
-            <div class="step-label">&#x1F916; AI writes</div>
+            <div class="step-label">&#x2702;&#xFE0F; Split</div>
           </div>
           <div class="process-arrow">&rarr;</div>
           <div class="process-step">
             <div class="step-num">Step 3</div>
-            <div class="step-label">&#x270F;&#xFE0F; You revise</div>
+            <div class="step-label">&#x1F3A8; Illustrate</div>
           </div>
           <div class="process-arrow">&rarr;</div>
           <div class="process-step">
-            <div class="step-num">Final</div>
-            <div class="step-label">&#x2B50; Your perfect story!</div>
+            <div class="step-num">Step 4</div>
+            <div class="step-label">&#x1F4D6; Preview</div>
           </div>
+        </div>
+        <p style="margin-top: 24px; font-size: 1.4rem;">Write a story &rarr; Split into pages &rarr; Add illustrations &rarr; Flip through!</p>
+      </section>
+
+      <!-- Slide 10: Tips for Consistent Illustrations -->
+      <section>
+        <h2>Tips for Consistent Illustrations</h2>
+        <div class="tips-row">
+          <div class="tip-box">
+            <div class="tip-icon">&#x1F9D1;</div>
+            <div class="tip-text">Same Character</div>
+            <div class="tip-detail">Describe your character the same way every time</div>
+          </div>
+          <div class="tip-box">
+            <div class="tip-icon">&#x1F3A8;</div>
+            <div class="tip-text">Same Style</div>
+            <div class="tip-detail">Pick one art style and stick with it</div>
+          </div>
+          <div class="tip-box">
+            <div class="tip-icon">&#x1F308;</div>
+            <div class="tip-text">Same Colors</div>
+            <div class="tip-detail">Use similar color descriptions throughout</div>
+          </div>
+        </div>
+        <p style="margin-top: 20px; font-size: 1.3rem;">Consistency makes your book feel <strong>professional</strong>!</p>
+      </section>
+
+      <!-- Slide 11: Part 2 Mission — Picture Book -->
+      <section>
+        <p class="slide-big-emoji">&#x1F4D6;</p>
+        <h2>Part 2: Make Your Own Picture Book</h2>
+        <p style="font-size: 1.7rem; margin-top: 16px;">Write a story, illustrate every page, preview your book!</p>
+        <div class="concept-box" style="margin-top: 20px; font-size: 1.2rem;">
+          &#x2705; Write or generate a short story with AI<br>
+          &#x2705; Split it into picture book pages<br>
+          &#x2705; Create illustrations for each page<br>
+          &#x2705; Preview &amp; download your finished book
         </div>
       </section>
 
-      <!-- Slide 8: Let's go! -->
+      <!-- Slide 12: Let's Create! -->
       <section>
         <h2>Open your laptops!</h2>
         <p style="font-size: 2rem; margin-top: 24px;">&#x1F449; Go to the <strong>Lesson 2</strong> page</p>
-        <p style="font-size: 2.5rem; margin-top: 32px;">Let's go! &#x1F680;</p>
+        <p style="font-size: 1.4rem; margin-top: 16px; color: var(--slide-muted);">Start with Part 1 (Art Studio) &mdash; then move to Part 2 (Picture Book)</p>
+        <p style="font-size: 2.5rem; margin-top: 32px;">Let's create! &#x1F680;</p>
       </section>
 
     </div>

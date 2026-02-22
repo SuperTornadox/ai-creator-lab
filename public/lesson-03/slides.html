@@ -3,127 +3,269 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AI Artist - AI Creator Lab</title>
+  <title>AI Media — Sound, Scene, Action! - AI Creator Lab</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/white.css">
   <link rel="stylesheet" href="/shared/slides-base.css">
   <style>
-    /* 2x2 guessing game grid */
-    .image-grid-2x2 {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 20px;
-      max-width: 800px;
-      margin: 24px auto 0;
+    /* Guessing game: song rows */
+    .song-guess-list {
+      list-style: none;
+      text-align: left;
+      display: inline-block;
+      margin-top: 24px;
     }
 
-    .image-grid-2x2 .image-box {
-      padding: 32px 24px;
+    .song-guess-list li {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      padding: 16px 24px;
+      margin-bottom: 12px;
+      background: rgba(79, 110, 247, 0.06);
+      border-radius: 14px;
+      border: 2px solid rgba(79, 110, 247, 0.12);
+      font-size: 1.4rem;
+    }
+
+    .song-guess-list .song-label {
+      font-weight: 700;
+      color: var(--slide-primary);
+      min-width: 100px;
+    }
+
+    .song-guess-list .guess-options {
+      display: flex;
+      gap: 16px;
+    }
+
+    .song-guess-list .guess-option {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 1.2rem;
+      cursor: pointer;
+    }
+
+    .song-guess-list .guess-option input[type="checkbox"] {
+      width: 20px;
+      height: 20px;
+      accent-color: var(--slide-primary);
+    }
+
+    /* Genre showcase grid */
+    .genre-showcase {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      max-width: 900px;
+      margin: 28px auto 0;
+    }
+
+    .genre-showcase .genre-item {
+      padding: 20px 16px;
       border-radius: 14px;
       background: rgba(79, 110, 247, 0.06);
       border: 2px solid rgba(79, 110, 247, 0.12);
       text-align: center;
-      font-size: 1.2rem;
-      line-height: 1.5;
     }
 
-    .image-grid-2x2 .image-box .box-label {
-      font-weight: 700;
-      font-size: 1.4rem;
-      margin-bottom: 6px;
-      color: var(--slide-primary);
-    }
-
-    .image-grid-2x2 .image-box .box-desc {
-      color: var(--slide-muted);
-      font-size: 1.1rem;
-    }
-
-    .image-grid-2x2 .image-box.ai-made {
-      border-color: var(--slide-secondary);
-      background: rgba(124, 58, 237, 0.08);
-    }
-
-    .image-grid-2x2 .image-box.ai-made .box-label {
-      color: var(--slide-secondary);
-    }
-
-    /* Prompt comparison side-by-side */
-    .prompt-compare {
-      display: flex;
-      gap: 40px;
-      align-items: stretch;
-      max-width: 950px;
-      margin: 28px auto 0;
-    }
-
-    .prompt-compare .compare-side {
-      flex: 1;
-      padding: 28px;
-      border-radius: 14px;
-      text-align: center;
-    }
-
-    .prompt-compare .compare-side.side-basic {
-      background: rgba(239, 68, 68, 0.06);
-      border: 2px solid rgba(239, 68, 68, 0.15);
-    }
-
-    .prompt-compare .compare-side.side-detailed {
-      background: rgba(34, 197, 94, 0.06);
-      border: 2px solid rgba(34, 197, 94, 0.15);
-    }
-
-    .prompt-compare .prompt-text {
-      font-size: 1.15rem;
-      font-style: italic;
-      color: var(--slide-muted);
-      margin-bottom: 12px;
-      padding: 8px 12px;
-      background: rgba(255, 255, 255, 0.7);
-      border-radius: 8px;
-    }
-
-    .prompt-compare .result-text {
-      font-size: 1.5rem;
-      font-weight: 650;
-    }
-
-    .prompt-compare .arrow {
-      font-size: 1.8rem;
-      margin: 8px 0;
-    }
-
-    /* Style grid (4 items) */
-    .style-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 16px;
-      max-width: 900px;
-      margin: 24px auto 0;
-    }
-
-    .style-grid .style-item {
-      padding: 20px 12px;
-      border-radius: 12px;
-      background: rgba(79, 110, 247, 0.06);
-      text-align: center;
-    }
-
-    .style-grid .style-item .style-emoji {
+    .genre-showcase .genre-item .genre-emoji {
       font-size: 2.5rem;
       margin-bottom: 6px;
     }
 
-    .style-grid .style-item .style-name {
-      font-size: 1.05rem;
+    .genre-showcase .genre-item .genre-name {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .genre-showcase .genre-item .genre-desc {
+      font-size: 0.9rem;
+      color: var(--slide-muted);
+    }
+
+    /* Music description formula */
+    .formula-box {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      max-width: 850px;
+      margin: 28px auto 0;
+      flex-wrap: wrap;
+    }
+
+    .formula-item {
+      padding: 16px 24px;
+      border-radius: 12px;
+      text-align: center;
+      font-size: 1.2rem;
       font-weight: 650;
     }
 
-    .style-grid .style-item .style-desc {
-      font-size: 0.9rem;
+    .formula-item.mood { background: rgba(239, 68, 68, 0.08); border: 2px solid rgba(239, 68, 68, 0.15); color: #ef4444; }
+    .formula-item.genre { background: rgba(79, 110, 247, 0.08); border: 2px solid rgba(79, 110, 247, 0.15); color: var(--slide-primary); }
+    .formula-item.instruments { background: rgba(124, 58, 237, 0.08); border: 2px solid rgba(124, 58, 237, 0.15); color: var(--slide-secondary); }
+    .formula-item.theme { background: rgba(14, 165, 165, 0.08); border: 2px solid rgba(14, 165, 165, 0.15); color: var(--slide-accent); }
+
+    .formula-plus {
+      font-size: 2rem;
       color: var(--slide-muted);
-      margin-top: 4px;
+    }
+
+    /* Movie elements grid */
+    .movie-elements {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      max-width: 900px;
+      margin: 28px auto 0;
+    }
+
+    .movie-elements .element-item {
+      padding: 24px 16px;
+      border-radius: 14px;
+      background: rgba(79, 110, 247, 0.06);
+      border: 2px solid rgba(79, 110, 247, 0.12);
+      text-align: center;
+    }
+
+    .movie-elements .element-emoji {
+      font-size: 2.8rem;
+      margin-bottom: 8px;
+    }
+
+    .movie-elements .element-name {
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .movie-elements .element-desc {
+      font-size: 0.95rem;
+      color: var(--slide-muted);
+    }
+
+    /* Tool review cards */
+    .tools-review {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      max-width: 900px;
+      margin: 28px auto 0;
+    }
+
+    .tools-review .tool-card {
+      padding: 24px 16px;
+      border-radius: 14px;
+      text-align: center;
+    }
+
+    .tools-review .tool-card.card-text {
+      background: rgba(79, 110, 247, 0.08);
+      border: 2px solid rgba(79, 110, 247, 0.15);
+    }
+
+    .tools-review .tool-card.card-image {
+      background: rgba(124, 58, 237, 0.08);
+      border: 2px solid rgba(124, 58, 237, 0.15);
+    }
+
+    .tools-review .tool-card.card-music {
+      background: rgba(14, 165, 165, 0.08);
+      border: 2px solid rgba(14, 165, 165, 0.15);
+    }
+
+    .tools-review .tool-emoji {
+      font-size: 2.8rem;
+      margin-bottom: 8px;
+    }
+
+    .tools-review .tool-name {
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .tools-review .tool-desc {
+      font-size: 0.95rem;
+      color: var(--slide-muted);
+    }
+
+    /* Storyboard illustration */
+    .storyboard-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      max-width: 850px;
+      margin: 24px auto 0;
+    }
+
+    .storyboard-cell {
+      padding: 20px;
+      border-radius: 12px;
+      border: 2px solid rgba(79, 110, 247, 0.2);
+      background: rgba(79, 110, 247, 0.04);
+      text-align: center;
+    }
+
+    .storyboard-cell .cell-num {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--slide-primary);
+      margin-bottom: 8px;
+    }
+
+    .storyboard-cell .cell-icon {
+      font-size: 2rem;
+      margin-bottom: 6px;
+    }
+
+    .storyboard-cell .cell-text {
+      font-size: 0.95rem;
+      color: var(--slide-text);
+      line-height: 1.4;
+    }
+
+    /* Workflow steps */
+    .workflow-steps {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      max-width: 900px;
+      margin: 32px auto 0;
+      flex-wrap: wrap;
+    }
+
+    .workflow-step {
+      padding: 20px 24px;
+      border-radius: 14px;
+      text-align: center;
+      min-width: 130px;
+    }
+
+    .workflow-step.step-lyrics { background: rgba(79, 110, 247, 0.1); border: 2px solid rgba(79, 110, 247, 0.2); }
+    .workflow-step.step-music { background: rgba(14, 165, 165, 0.1); border: 2px solid rgba(14, 165, 165, 0.2); }
+    .workflow-step.step-script { background: rgba(124, 58, 237, 0.1); border: 2px solid rgba(124, 58, 237, 0.2); }
+    .workflow-step.step-images { background: rgba(245, 158, 11, 0.1); border: 2px solid rgba(245, 158, 11, 0.2); }
+    .workflow-step.step-combine { background: rgba(239, 68, 68, 0.1); border: 2px solid rgba(239, 68, 68, 0.2); }
+
+    .workflow-step .step-emoji {
+      font-size: 2rem;
+      margin-bottom: 6px;
+    }
+
+    .workflow-step .step-label {
+      font-size: 1rem;
+      font-weight: 700;
+    }
+
+    .workflow-arrow {
+      font-size: 2rem;
+      color: var(--slide-muted);
     }
 
     /* Tips list */
@@ -131,30 +273,16 @@
       list-style: none;
       text-align: left;
       display: inline-block;
-      font-size: 1.6rem;
+      margin-top: 20px;
     }
 
     .tips-list li {
-      margin-bottom: 0.4em;
-      padding-left: 0.3em;
+      font-size: 1.4rem;
+      margin-bottom: 0.6em;
+      line-height: 1.5;
     }
 
-    .tips-list .tip-number {
-      display: inline-block;
-      width: 36px;
-      height: 36px;
-      line-height: 36px;
-      text-align: center;
-      background: var(--slide-primary);
-      color: #fff;
-      border-radius: 50%;
-      font-size: 1rem;
-      font-weight: 700;
-      margin-right: 10px;
-      vertical-align: middle;
-    }
-
-    /* Analogy box */
+    /* Concept box */
     .concept-box {
       background: rgba(79, 110, 247, 0.08);
       border-radius: 14px;
@@ -165,6 +293,20 @@
       line-height: 1.6;
       color: var(--slide-text);
     }
+
+    /* Mission checklist */
+    .mission-checklist {
+      list-style: none;
+      text-align: left;
+      display: inline-block;
+      font-size: 1.3rem;
+      margin-top: 16px;
+    }
+
+    .mission-checklist li {
+      margin-bottom: 0.5em;
+      padding-left: 0.2em;
+    }
   </style>
 </head>
 <body>
@@ -173,155 +315,272 @@
 
       <!-- Slide 1: Title -->
       <section>
-        <p class="slide-big-emoji">&#x1F3A8;</p>
-        <h1 class="slide-title">AI Artist</h1>
-        <p>Today: We paint with WORDS!</p>
+        <p class="slide-big-emoji">&#x1F3AC;&#x1F3B5;</p>
+        <h1 class="slide-title">AI Media</h1>
+        <p style="font-size: 1.8rem;">Sound, Scene, Action!</p>
         <p style="margin-top: 12px; font-size: 1.1rem; color: var(--slide-muted);">AI Creator Lab &middot; Lesson 03</p>
       </section>
 
-      <!-- Slide 2: Guessing Game -->
+      <!-- Slide 2: "Real or AI?" music guessing game -->
       <section>
-        <h2>Can You Tell Which Are AI? &#x1F50D;</h2>
-        <div class="image-grid-2x2">
-          <div class="image-box">
-            <div class="box-label">Image A</div>
-            <div class="box-desc">Landscape photo of mountains at sunrise</div>
-          </div>
-          <div class="image-box">
-            <div class="box-label">Image B</div>
-            <div class="box-desc">Portrait painting of a girl with pearl earring</div>
-          </div>
-          <div class="image-box">
-            <div class="box-label">Image C</div>
-            <div class="box-desc">Street photo of a busy city at night</div>
-          </div>
-          <div class="image-box">
-            <div class="box-label">Image D</div>
-            <div class="box-desc">Fantasy castle floating in the clouds</div>
-          </div>
-        </div>
-        <p style="margin-top: 24px; font-size: 1.3rem;">&#x1F914; Which ones did AI make?</p>
+        <h2>Real Musician or AI? &#x1F914;</h2>
+        <ul class="song-guess-list">
+          <li>
+            <span class="song-label">Song 1</span>
+            <span>___</span>
+            <div class="guess-options">
+              <label class="guess-option"><input type="checkbox"> Real</label>
+              <label class="guess-option"><input type="checkbox"> AI</label>
+            </div>
+          </li>
+          <li>
+            <span class="song-label">Song 2</span>
+            <span>___</span>
+            <div class="guess-options">
+              <label class="guess-option"><input type="checkbox"> Real</label>
+              <label class="guess-option"><input type="checkbox"> AI</label>
+            </div>
+          </li>
+          <li>
+            <span class="song-label">Song 3</span>
+            <span>___</span>
+            <div class="guess-options">
+              <label class="guess-option"><input type="checkbox"> Real</label>
+              <label class="guess-option"><input type="checkbox"> AI</label>
+            </div>
+          </li>
+        </ul>
+        <p style="margin-top: 20px; font-size: 1.3rem; color: var(--slide-muted);">
+          &#x1F3A7; Teacher plays 3 clips &mdash; vote for each one!
+        </p>
       </section>
 
-      <!-- Slide 3: Reveal -->
+      <!-- Slide 3: How AI makes music -->
       <section>
-        <h2>Surprise! &#x1F389;</h2>
-        <div class="image-grid-2x2">
-          <div class="image-box">
-            <div class="box-label">Image A &#x2014; Human &#x1F4F7;</div>
-            <div class="box-desc">Real photograph</div>
-          </div>
-          <div class="image-box ai-made">
-            <div class="box-label">Image B &#x2014; AI &#x1F916;</div>
-            <div class="box-desc">AI-generated painting</div>
-          </div>
-          <div class="image-box">
-            <div class="box-label">Image C &#x2014; Human &#x1F4F7;</div>
-            <div class="box-desc">Real photograph</div>
-          </div>
-          <div class="image-box ai-made">
-            <div class="box-label">Image D &#x2014; AI &#x1F916;</div>
-            <div class="box-desc">AI-generated scene</div>
-          </div>
-        </div>
-        <p style="margin-top: 24px; font-size: 1.6rem; font-weight: 650;">Could you tell the difference?</p>
-      </section>
-
-      <!-- Slide 4: How it works -->
-      <section>
-        <h2>How Does AI Make Images?</h2>
+        <h2>How Does AI Make Music?</h2>
         <div class="concept-box">
-          Just like last week &mdash; you <strong>DESCRIBE</strong> what you want,<br>AI <strong>CREATES</strong> it.
+          Same idea as before: you <strong>DESCRIBE</strong> what you want<br>
+          &rarr; AI <strong>CREATES</strong> it!
         </div>
-        <p style="font-size: 1.6rem; margin-top: 28px;">But this time, instead of words...<br>you get <strong style="color: var(--slide-secondary);">PICTURES</strong> &#x1F5BC;&#xFE0F;</p>
+        <p style="font-size: 1.6rem; margin-top: 28px;">
+          Description &rarr; Genre &rarr; Melody &rarr; <strong style="color: var(--slide-secondary);">Full Song &#x1F3B6;</strong>
+        </p>
       </section>
 
-      <!-- Slide 5: The power of details -->
+      <!-- Slide 4: Music genre showcase -->
       <section>
-        <h2>Details Make the Difference</h2>
-        <div class="prompt-compare">
-          <div class="compare-side side-basic">
-            <div class="prompt-text">&ldquo;a cat&rdquo;</div>
-            <div class="arrow">&#x2B07;&#xFE0F;</div>
-            <div class="result-text" style="color: #ef4444;">Basic result &#x1F63E;</div>
-            <p style="font-size: 1rem; color: var(--slide-muted); margin-top: 8px;">AI has to guess everything</p>
+        <h2>Music Genres &#x1F3B6;</h2>
+        <div class="genre-showcase">
+          <div class="genre-item">
+            <div class="genre-emoji">&#x1F3B5;</div>
+            <div class="genre-name">Pop</div>
+            <div class="genre-desc">Catchy &amp; fun</div>
           </div>
-          <div class="compare-side side-detailed">
-            <div class="prompt-text">&ldquo;a fluffy orange cat wearing a tiny top hat, sitting on a velvet cushion, watercolor style&rdquo;</div>
-            <div class="arrow">&#x2B07;&#xFE0F;</div>
-            <div class="result-text" style="color: #22c55e;">Amazing result &#x1F929;</div>
-            <p style="font-size: 1rem; color: var(--slide-muted); margin-top: 8px;">AI knows exactly what you want</p>
+          <div class="genre-item">
+            <div class="genre-emoji">&#x1F3A4;</div>
+            <div class="genre-name">Hip-Hop</div>
+            <div class="genre-desc">Rhythmic &amp; bold</div>
+          </div>
+          <div class="genre-item">
+            <div class="genre-emoji">&#x1F3BB;</div>
+            <div class="genre-name">Classical</div>
+            <div class="genre-desc">Elegant &amp; timeless</div>
+          </div>
+          <div class="genre-item">
+            <div class="genre-emoji">&#x1F3B9;</div>
+            <div class="genre-name">Electronic</div>
+            <div class="genre-desc">Danceable &amp; modern</div>
+          </div>
+          <div class="genre-item">
+            <div class="genre-emoji">&#x1F3B7;</div>
+            <div class="genre-name">Jazz</div>
+            <div class="genre-desc">Smooth &amp; cool</div>
+          </div>
+          <div class="genre-item">
+            <div class="genre-emoji">&#x1F3B8;</div>
+            <div class="genre-name">Rock</div>
+            <div class="genre-desc">Powerful &amp; bold</div>
           </div>
         </div>
       </section>
 
-      <!-- Slide 6: Style matters -->
+      <!-- Slide 5: How to describe music to AI -->
       <section>
-        <h2>Same Prompt, Different Style</h2>
-        <p style="font-size: 1.3rem; color: var(--slide-muted); margin-bottom: 8px;">Prompt: &ldquo;a castle on a hill&rdquo;</p>
-        <div class="style-grid">
-          <div class="style-item">
-            <div class="style-emoji">&#x1F4F8;</div>
-            <div class="style-name">Realistic</div>
-            <div class="style-desc">Like a photograph</div>
-          </div>
-          <div class="style-item">
-            <div class="style-emoji">&#x1F3A8;</div>
-            <div class="style-name">Cartoon</div>
-            <div class="style-desc">Bright &amp; playful</div>
-          </div>
-          <div class="style-item">
-            <div class="style-emoji">&#x1F58C;&#xFE0F;</div>
-            <div class="style-name">Watercolor</div>
-            <div class="style-desc">Soft &amp; dreamy</div>
-          </div>
-          <div class="style-item">
-            <div class="style-emoji">&#x1F47E;</div>
-            <div class="style-name">Pixel Art</div>
-            <div class="style-desc">Retro &amp; blocky</div>
-          </div>
+        <h2>How to Describe Music to AI &#x1F4DD;</h2>
+        <div class="formula-box">
+          <div class="formula-item mood">&#x1F60A; Mood<br><small>happy, epic, chill</small></div>
+          <span class="formula-plus">+</span>
+          <div class="formula-item genre">&#x1F3B6; Genre<br><small>pop, rock, lo-fi</small></div>
+          <span class="formula-plus">+</span>
+          <div class="formula-item instruments">&#x1F3B8; Instruments<br><small>guitar, piano, synth</small></div>
+          <span class="formula-plus">+</span>
+          <div class="formula-item theme">&#x1F4AD; Theme<br><small>summer, adventure</small></div>
         </div>
-        <p style="margin-top: 20px; font-size: 1.3rem;">Style completely changes the feel!</p>
+        <p style="margin-top: 24px; font-size: 1.3rem;">
+          Example: &ldquo;<strong>upbeat pop</strong> with <strong>acoustic guitar</strong>, happy <strong>summer</strong> vibes&rdquo;
+        </p>
       </section>
 
-      <!-- Slide 7: Prompt tips -->
+      <!-- Slide 6: What makes a great movie? -->
       <section>
-        <h2>Prompt Tips for Images &#x1F4DD;</h2>
+        <h2>What Makes a Great Movie? &#x1F3AC;</h2>
+        <div class="movie-elements">
+          <div class="element-item">
+            <div class="element-emoji">&#x1F4D6;</div>
+            <div class="element-name">Story</div>
+            <div class="element-desc">The plot &amp; characters</div>
+          </div>
+          <div class="element-item">
+            <div class="element-emoji">&#x1F5BC;&#xFE0F;</div>
+            <div class="element-name">Visuals</div>
+            <div class="element-desc">What you see on screen</div>
+          </div>
+          <div class="element-item">
+            <div class="element-emoji">&#x1F3B5;</div>
+            <div class="element-name">Music</div>
+            <div class="element-desc">The soundtrack &amp; mood</div>
+          </div>
+          <div class="element-item">
+            <div class="element-emoji">&#x23F1;&#xFE0F;</div>
+            <div class="element-name">Pacing</div>
+            <div class="element-desc">How the story flows</div>
+          </div>
+        </div>
+        <p style="margin-top: 24px; font-size: 1.3rem;">A great film combines ALL of these!</p>
+      </section>
+
+      <!-- Slide 7: Review all tools -->
+      <section>
+        <h2>Tools We Have Learned</h2>
+        <div class="tools-review">
+          <div class="tool-card card-text">
+            <div class="tool-emoji">&#x1F4DD;</div>
+            <div class="tool-name">Text AI</div>
+            <div class="tool-desc">Stories, lyrics, scripts</div>
+          </div>
+          <div class="tool-card card-image">
+            <div class="tool-emoji">&#x1F3A8;</div>
+            <div class="tool-name">Image AI</div>
+            <div class="tool-desc">Illustrations, scenes</div>
+          </div>
+          <div class="tool-card card-music">
+            <div class="tool-emoji">&#x1F3B5;</div>
+            <div class="tool-name">Music AI</div>
+            <div class="tool-desc">Songs, soundtracks</div>
+          </div>
+        </div>
+        <p style="margin-top: 28px; font-size: 1.6rem;">
+          Today we combine <strong style="color: var(--slide-secondary);">ALL THREE</strong> into one project!
+        </p>
+      </section>
+
+      <!-- Slide 8: Storyboard concept -->
+      <section>
+        <h2>What is a Storyboard? &#x1F4CB;</h2>
+        <div class="concept-box">
+          A <strong>storyboard</strong> is a visual plan for a film.<br>
+          It breaks the story into <strong>scenes</strong> &mdash; like a comic strip!
+        </div>
+        <div class="storyboard-grid" style="margin-top: 20px;">
+          <div class="storyboard-cell">
+            <div class="cell-num">Scene 1</div>
+            <div class="cell-icon">&#x1F680;</div>
+            <div class="cell-text">Kid finds a rocket</div>
+          </div>
+          <div class="storyboard-cell">
+            <div class="cell-num">Scene 2</div>
+            <div class="cell-icon">&#x1F30C;</div>
+            <div class="cell-text">Blasts off to space</div>
+          </div>
+          <div class="storyboard-cell">
+            <div class="cell-num">Scene 3</div>
+            <div class="cell-icon">&#x1FA90;</div>
+            <div class="cell-text">Discovers a planet</div>
+          </div>
+          <div class="storyboard-cell">
+            <div class="cell-num">Scene 4</div>
+            <div class="cell-icon">&#x1F47E;</div>
+            <div class="cell-text">Meets friendly aliens</div>
+          </div>
+          <div class="storyboard-cell">
+            <div class="cell-num">Scene 5</div>
+            <div class="cell-icon">&#x1F389;</div>
+            <div class="cell-text">Space dance party!</div>
+          </div>
+          <div class="storyboard-cell">
+            <div class="cell-num">Scene 6</div>
+            <div class="cell-icon">&#x1F30D;</div>
+            <div class="cell-text">Flies home happy</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 9: Workflow -->
+      <section>
+        <h2>Your Workflow Today</h2>
+        <div class="workflow-steps">
+          <div class="workflow-step step-lyrics">
+            <div class="step-emoji">&#x270D;&#xFE0F;</div>
+            <div class="step-label">Lyrics</div>
+          </div>
+          <span class="workflow-arrow">&rarr;</span>
+          <div class="workflow-step step-music">
+            <div class="step-emoji">&#x1F3B5;</div>
+            <div class="step-label">Music</div>
+          </div>
+          <span class="workflow-arrow">&rarr;</span>
+          <div class="workflow-step step-script">
+            <div class="step-emoji">&#x1F4DD;</div>
+            <div class="step-label">Script</div>
+          </div>
+          <span class="workflow-arrow">&rarr;</span>
+          <div class="workflow-step step-images">
+            <div class="step-emoji">&#x1F3A8;</div>
+            <div class="step-label">Images</div>
+          </div>
+          <span class="workflow-arrow">&rarr;</span>
+          <div class="workflow-step step-combine">
+            <div class="step-emoji">&#x1F3AC;</div>
+            <div class="step-label">Film!</div>
+          </div>
+        </div>
+        <p style="margin-top: 28px; font-size: 1.3rem;">
+          Part 1: Make music &rarr; Part 2: Make a film combining everything!
+        </p>
+      </section>
+
+      <!-- Slide 10: Tips for great scene descriptions -->
+      <section>
+        <h2>Tips for Great Scene Images &#x1F3A8;</h2>
         <ul class="tips-list">
-          <li><span class="tip-number">1</span> <strong>What</strong> is in the picture?</li>
-          <li><span class="tip-number">2</span> What <strong>style</strong>?</li>
-          <li><span class="tip-number">3</span> What <strong>mood / colors</strong>?</li>
-          <li><span class="tip-number">4</span> Any <strong>special details</strong>?</li>
+          <li>&#x2705; Be <strong>specific</strong> &mdash; &ldquo;a golden sunset over a mountain lake&rdquo; beats &ldquo;nature&rdquo;</li>
+          <li>&#x2705; Include <strong>mood</strong> &mdash; &ldquo;mysterious dark forest&rdquo; or &ldquo;bright cheerful kitchen&rdquo;</li>
+          <li>&#x2705; Mention <strong>characters</strong> &mdash; &ldquo;a brave kid in a red cape&rdquo;</li>
+          <li>&#x2705; Think <strong>cinematic</strong> &mdash; imagine it on a movie screen!</li>
         </ul>
       </section>
 
-      <!-- Slide 8: Today's mission -->
+      <!-- Slide 11: Your mission -->
       <section>
-        <p class="slide-big-emoji">&#x1F5BC;&#xFE0F;</p>
-        <h2>Today's Mission</h2>
-        <p style="font-size: 1.8rem; margin-top: 16px;">Create your own <strong style="color: var(--slide-secondary);">AI Art Exhibition</strong>!</p>
-        <div class="concept-box" style="margin-top: 24px; font-size: 1.3rem;">
-          &#x2705; Make at least 3 artworks in different styles<br>
-          &#x2705; Try the Challenge Mode<br>
-          &#x2705; Pick your best work and give it a title
+        <p class="slide-big-emoji">&#x1F3AC;&#x1F3B5;</p>
+        <h2>Your Mission</h2>
+        <div class="concept-box" style="margin-top: 16px; font-size: 1.2rem;">
+          <strong>Part 1 &mdash; AI Musician</strong><br>
+          &#x2705; Write lyrics with AI &rarr; Create a song on Suno<br><br>
+          <strong>Part 2 &mdash; AI Director</strong><br>
+          &#x2705; Write a 4-6 scene story<br>
+          &#x2705; Generate an image for each scene<br>
+          &#x2705; Add your soundtrack<br>
+          &#x2705; Preview and export your film!
         </div>
+        <p style="font-size: 2rem; margin-top: 24px;">&#x1F449; Open <strong>Lesson 3</strong> and start creating!</p>
       </section>
 
-      <!-- Slide 9: Challenge preview -->
+      <!-- Slide 12: Lights, camera, AI! -->
       <section>
-        <h2>Challenge Mode &#x1F3AF;</h2>
-        <p style="font-size: 1.7rem; margin-top: 16px;">Can you make AI create<br><strong>exactly</strong> what you imagine?</p>
-        <div class="concept-box" style="margin-top: 24px; font-size: 1.25rem;">
-          You'll get a description &mdash; then write a prompt to match it.<br>
-          Three challenges, getting harder each time!
-        </div>
-      </section>
-
-      <!-- Slide 10: Let's go! -->
-      <section>
-        <h2>Open your laptops!</h2>
-        <p style="font-size: 2rem; margin-top: 24px;">&#x1F449; Go to the <strong>Lesson 3</strong> page</p>
-        <p style="font-size: 2.5rem; margin-top: 32px;">Let's go! &#x1F680;</p>
+        <p class="slide-big-emoji">&#x1F3AC;</p>
+        <h2 style="font-size: 3rem;">Lights, Camera, AI!</h2>
+        <p style="font-size: 2rem; margin-top: 24px;">Let's go! &#x1F680;</p>
       </section>
 
     </div>

@@ -1,247 +1,261 @@
-# Lesson 4: AI Picture Book — Teacher Script
-# 第四课：AI 绘本 — 教师逐字稿
+# Lesson 4: AI Code -- Build and Play -- Teacher Script
+# 第四课：AI 编程 -- 创造与游戏 -- 教师逐字稿
 
-**Duration / 时长**: 43–45 minutes / 分钟
+**Duration / 时长**: 60 minutes / 分钟
 **Materials / 材料**: Slides (`slides.html`), Interactive webpage (`index.html`), Student laptops
-**Goal / 目标**: Students combine text AI and image AI to create an illustrated picture book, learning how text and images work together to tell a story.
-**目标**: 学生将文字 AI 和图片 AI 结合，创建一本有插画的绘本，学习文字和图片如何共同讲述一个故事。
+**Goal / 目标**: Students learn that AI can turn plain-language descriptions into working programs, then apply that skill to design and build a playable game.
+**目标**: 学生了解 AI 可以将自然语言描述转化为可运行的程序，然后运用这项技能设计并构建一个可玩的游戏。
 
 ---
 
 ## Pre-Class Preparation / 课前准备
 
 > **Important / 重要:**
-> - Test the lesson page: make sure /api/chat and /api/image endpoints are working.
-> - Optionally bring a real children's picture book to show during the warm-up, or have a few examples in mind (e.g., *Where the Wild Things Are*, *The Giving Tree*).
-> - Be prepared for image generation to take 10-15 seconds per image. Plan activities for wait times.
+> - Test the lesson page: make sure the `/api/code` endpoint is working. Try generating a simple program (e.g., "a red button") and verify the preview iframe shows the result.
+> - This is a 60-minute merged lesson. Part 1 (coding challenges) and Part 2 (game design) are on the SAME page with two separate CodePlayground instances.
+> - Prepare to show the page on the projector for the warm-up demo.
+> - If internet is slow, the code generation may take 5-10 seconds per request. Encourage students to start describing their next challenge while waiting.
 >
-> - 测试课程页面：确保 /api/chat 和 /api/image 接口正常工作。
-> - 可以带一本真正的儿童绘本在热身时展示，或者心里准备几个例子（如《野兽国》、《爱心树》）。
-> - 准备好图片生成可能需要 10-15 秒。为等待时间规划活动。
+> - 测试课程页面：确保 `/api/code` 接口正常工作。尝试生成一个简单程序（如"一个红色按钮"），验证预览框显示结果。
+> - 这是一节 60 分钟的合并课程。第一部分（编程挑战）和第二部分（游戏设计）在同一个页面上，有两个独立的 CodePlayground 实例。
+> - 准备在投影仪上展示页面进行热身演示。
+> - 如果网速慢，代码生成可能每次需要 5-10 秒。鼓励学生在等待时开始描述下一个挑战。
 
 ---
 
-## Warm-up / 概念热身 (8 minutes / 分钟)
+## Warm-up / 概念热身 (12 minutes / 分钟)
 
-### [SLIDE 1 — Title] *(0:00)*
+### [SLIDE 1 -- Title] *(0:00)*
 
-EN: "Welcome back! Last week you became AI Artists — you learned to make AI create pictures from words. And before that, you used AI to write stories. Today we're going to combine BOTH of those skills. Today we're making AI picture books."
+EN: "Welcome to today's lesson! Today is special -- you're going to become both a programmer AND a game designer, all in one class. And the best part? You don't need to know ANY code. Zero. None."
 
-CN: "欢迎回来！上周你们成为了 AI 艺术家——你们学会了用文字让 AI 创造图片。在那之前，你们用 AI 写了故事。今天我们要把这两项技能结合起来。今天我们要制作 AI 绘本。"
-
----
-
-### [SLIDE 2 — What Makes a Picture Book?] *(0:01)*
-
-**[If you have a physical picture book, hold it up and flip through it / 如果你有一本实体绘本，举起来翻一翻]**
-
-EN: "Before we start, let's think about what makes a picture book. It's not just pictures, and it's not just text. A picture book has a cover with the title and author, then pages that each have text AND a picture, and it ends with a closing page."
-
-CN: "在我们开始之前，想想什么是绘本。它不只是图片，也不只是文字。绘本有一个封面，上面有标题和作者名，然后每一页都有文字和图片，最后有一个结束页。"
-
-EN: "The key thing is that the words and pictures work TOGETHER. The picture shows what the words describe. They match in mood, in feeling, in energy. If the story is exciting, the pictures should be exciting too."
-
-CN: "关键是文字和图片要协同工作。图片展示文字所描述的内容。它们在氛围、感觉和能量上是匹配的。如果故事是激动人心的，图片也应该是激动人心的。"
+CN: "欢迎来到今天的课程！今天很特别——你们将在一节课里同时成为程序员和游戏设计师。最棒的是？你们不需要知道任何代码。零。完全不需要。"
 
 ---
 
-### [SLIDE 3 — The Workflow] *(0:03)*
+### [SLIDE 2 -- What does coding feel like?] *(0:01)*
 
-EN: "Here's our plan for today. Four steps. Step 1: Write a story — you can write your own or let AI help you. Step 2: Split it into pages — AI will help you figure out where to break the story. Step 3: Add pictures — for each page, you'll write an image prompt and generate an illustration. Step 4: Preview and share — see your whole book put together and download it!"
+EN: "Let me ask you: what do you think coding looks like? Most people imagine something like this -- scary symbols, brackets, weird words like 'ctx.beginPath'. Looks intimidating, right?"
 
-CN: "这是我们今天的计划。四个步骤。第一步：写一个故事——你可以自己写，也可以让 AI 帮你。第二步：分成页面——AI 会帮你确定在哪里分割故事。第三步：添加图片——为每一页写图片提示词并生成插画。第四步：预览和分享——看看你的整本书组合在一起，然后下载它！"
+CN: "让我问你们：你们觉得编程是什么样的？大多数人想象的是这样——吓人的符号、括号、奇怪的词，比如 'ctx.beginPath'。看起来很吓人，对吧？"
 
----
+EN: "But look at the right side. 'Make a colorful ball that bounces around the screen.' That's just normal English! And here's the amazing thing: both of these produce the EXACT same result. A bouncing ball on your screen."
 
-### [SLIDE 4 — Key Tip] *(0:04)*
-
-EN: "Before we start, there's one really important tip. When you write your image prompts, they need to match the MOOD of your story. If your story is about a big adventure, your images should feel adventurous — exciting, colorful, dynamic. If your story is calm and peaceful, your images should be soft and gentle."
-
-CN: "在我们开始之前，有一个非常重要的提示。当你写图片提示词时，它们需要匹配你故事的氛围。如果你的故事是关于一次大冒险，你的图片应该感觉像冒险——刺激的、色彩丰富的、充满动感的。如果你的故事是平静安宁的，你的图片应该是柔和温和的。"
+CN: "但看看右边。'制作一个在屏幕上弹跳的彩色球。'这只是普通的英语！而且令人惊奇的是：这两个产生的结果完全一样。一个在你屏幕上弹跳的球。"
 
 ---
 
-### [SLIDE 5 — Good Match] *(0:05)*
+### [SLIDE 3 -- The magic] *(0:03)*
 
-EN: "Look at this example. The story says 'The brave knight charged into the dragon's cave, sword gleaming in the firelight.' So the image prompt asks for something exciting and dramatic — a knight with a glowing sword, fire, an epic adventure scene. The mood matches perfectly."
+EN: "This is the magic of AI coding. You describe what you want in regular words. AI writes all the complicated code. And you see your creation come to life instantly. No memorizing code, no confusing symbols -- just your ideas turned into real, working programs."
 
-CN: "看这个例子。故事说'勇敢的骑士冲进了龙穴，剑在火光中闪闪发光。'所以图片提示词要求一些激动人心和戏剧性的东西——一个拿着发光剑的骑士、火焰、一个史诗般的冒险场景。氛围完美匹配。"
-
----
-
-### [SLIDE 6 — Bad Match] *(0:06)*
-
-EN: "Now look at what happens when the mood doesn't match. The story is funny — a cat knocking over plants and pretending nothing happened. But the image came out scary and dark! That feels totally wrong, right? A funny story needs funny, light-hearted images."
-
-CN: "现在看看当氛围不匹配时会发生什么。故事是搞笑的——一只猫打翻了所有植物然后假装什么都没发生。但是图片生成出来却是恐怖和黑暗的！感觉完全不对，对吧？搞笑的故事需要搞笑的、轻松的图片。"
-
-EN: "So when you write image prompts later, ask yourself: does this prompt match the feeling of my story?"
-
-CN: "所以当你稍后写图片提示词时，问自己：这个提示词和我故事的感觉匹配吗？"
+CN: "这就是 AI 编程的魔力。你用普通的语言描述你想要什么。AI 写出所有复杂的代码。然后你立刻看到你的创作活过来。不用记忆代码，不用看令人困惑的符号——只是你的想法变成真正可运行的程序。"
 
 ---
 
-### [SLIDE 7 — Today's Mission] *(0:07)*
+### [SLIDE 4 -- How it works] *(0:04)*
 
-EN: "Your mission: create your own AI-powered picture book. Write or generate a story, split it into 4 to 6 pages, generate an illustration for each page, and add a title. At the end you'll be able to preview your whole book and download it!"
+EN: "Here's how it works, in three steps. Step one: YOU describe what you want. 'Make a button that counts clicks.' Step two: AI writes the code -- HTML for the structure, CSS for the styling, and JavaScript for the action. Step three: you see it live, working, right in your browser. And if you want to change something? Just tell it! 'Make the button bigger' -- and it updates instantly."
 
-CN: "你的任务：创建你自己的 AI 绘本。写或生成一个故事，分成 4 到 6 页，为每一页生成一张插画，然后加一个标题。最后你可以预览你的整本书并下载它！"
-
----
-
-### [SLIDE 8 — Let's Go!] *(0:08)*
-
-EN: "Alright, open your laptops and go to the Lesson 4 page!"
-
-CN: "好了，打开电脑，进入第四课的页面！"
+CN: "它是这样工作的，三个步骤。第一步：你描述你想要什么。'制作一个计数点击的按钮。'第二步：AI 写代码——HTML 用于结构，CSS 用于样式，JavaScript 用于行为。第三步：你在浏览器中直接看到它运行。如果你想改什么？告诉它！'把按钮变大'——它会立即更新。"
 
 ---
 
-## Hands-on Project / 动手项目 (30 minutes / 分钟)
+### [SLIDE 5 -- Be specific] *(0:06)*
 
-### Phase 1: Story Writing & Generation (8 min) *(0:08–0:16)*
+EN: "But there's one important secret to making this work well: be SPECIFIC. Look at the left side: 'Make a button.' That's too vague! AI doesn't know what kind of button, what color, what it does. Now look at the right side: 'A big red button that changes to a random color when I click it.' That's specific! AI knows exactly what to build."
+
+CN: "但有一个重要的秘诀能让它效果很好：要具体。看左边：'做一个按钮。'这太模糊了！AI 不知道什么样的按钮、什么颜色、做什么。现在看右边：'一个大红色按钮，点击时变成随机颜色。'这很具体！AI 确切知道要构建什么。"
+
+EN: "The rule is: tell AI what it LOOKS like, and what HAPPENS when you interact with it. The more details, the better the result."
+
+CN: "规则是：告诉 AI 它看起来是什么样的，以及当你与它互动时会发生什么。细节越多，结果越好。"
+
+---
+
+### [SLIDE 6 -- Part 1 challenges] *(0:08)*
+
+EN: "Alright, Part 1! You're going to tackle coding challenges -- five of them, from easy to hard. Color Clicker and Click Counter are easy, perfect for warming up. Bouncing Ball and Drawing Canvas are medium. And Mini Game is hard -- for the adventurous ones! You don't have to do them in order, but I recommend starting easy to build confidence."
+
+CN: "好了，第一部分！你们要挑战编程任务——五个，从简单到困难。Color Clicker 和 Click Counter 是简单的，非常适合热身。Bouncing Ball 和 Drawing Canvas 是中等。Mini Game 是困难的——给勇于冒险的同学！你们不必按顺序做，但我建议从简单的开始来建立信心。"
+
+EN: "Open your laptops and go to the Lesson 4 page. You'll see the challenge cards at the top -- click any card and its description loads right into the playground. Then click 'Generate'!"
+
+CN: "打开你们的电脑，进入第四课的页面。你会在顶部看到挑战卡片——点击任何卡片，它的描述就会加载到编程操场中。然后点击'Generate'！"
+
+---
+
+## Part 1: Coding Challenges / 编程挑战 (18 minutes / 分钟)
+
+### Hands-on Work *(0:12--0:30)*
 
 **[Switch from slides to monitoring student screens / 从幻灯片切换到巡视学生屏幕]**
 
-EN: "You should see Step 1: Write Your Story. You have two options. You can write your own story in the text box — just start typing! Or if you want help, click the 'Generate a story with AI' button. It'll ask you what your story is about and what genre you want — like fantasy, adventure, or funny — and AI will write one for you."
+EN: "Go ahead and start! Click a challenge card, then click Generate to see what AI builds. Try the easy ones first -- Color Clicker is a great starting point."
 
-CN: "你应该看到第一步：写你的故事。你有两个选择。你可以在文本框里写你自己的故事——直接开始打字！或者如果你想要帮助，点击'用 AI 生成故事'按钮。它会问你故事是关于什么的和你想要什么类型——比如奇幻、冒险或搞笑——然后 AI 会为你写一个。"
+CN: "开始吧！点击一个挑战卡片，然后点击 Generate 看 AI 构建了什么。先试简单的——Color Clicker 是一个很好的起点。"
 
-EN: "Either way, you can edit the story after. Aim for about 150 to 250 words — that's a good length for a picture book with 4 to 6 pages."
+**[Give students 18 minutes total for Part 1 / 给学生第一部分总共 18 分钟]**
 
-CN: "不管哪种方式，你之后都可以编辑故事。目标大约 150 到 250 个词——对于一本 4 到 6 页的绘本来说，这是一个好长度。"
+> **Walk around and help / 走动并帮助 (first 5 min):**
+> EN: "Did your first program work? Great! Now try clicking the 'What to change?' box and type something like 'Make the button bigger' or 'Add more colors.' See what happens!"
+> CN: "你的第一个程序成功了吗？太好了！现在试试点击'What to change?'框，输入类似'Make the button bigger'或'Add more colors'的内容。看看会发生什么！"
 
-**[Give students 8 minutes / 给学生 8 分钟]**
-
-> **Walk around and help with story ideas / 走动并帮助故事创意:**
-> EN: "What kind of story do you like? Do you like adventures? Funny stories? Mystery? Think about your favorite books or movies — what kind of world would you want to create?"
-> CN: "你喜欢什么类型的故事？你喜欢冒险的？搞笑的？神秘的？想想你最喜欢的书或电影——你想创造什么样的世界？"
-
-> **Contingency / 应对方案:**
-> EN: If a student generates a story that's too long: "That's a great story, but it might be too long for a picture book. Can you pick the best parts? Try keeping it under 250 words — shorter stories work better with illustrations."
-> CN: 如果学生生成的故事太长："这是个很好的故事，但对绘本来说可能太长了。你能挑出最好的部分吗？试着保持在 250 个词以内——较短的故事配插画效果更好。"
+> **Encourage exploration / 鼓励探索 (after 8 min):**
+> EN: "If you've done two challenges, try a medium one! Bouncing Ball is really fun to watch. And you can modify it -- 'add more balls,' 'make them different colors,' 'make them leave trails.'"
+> CN: "如果你已经做了两个挑战，试试中等的！Bouncing Ball 看起来很有趣。而且你可以修改它——'加更多球'、'让它们变成不同颜色'、'让它们留下轨迹'。"
 
 > **Contingency / 应对方案:**
-> EN: If a student's story is too short (less than 4 sentences): "This is a good start! Can you add more details? What happens next? Where does this take place? Adding a few more sentences will give us enough for 4 pages."
-> CN: 如果学生的故事太短（少于 4 句话）："这是个好的开始！你能加更多细节吗？接下来发生了什么？这发生在哪里？再加几句话就够我们做 4 页了。"
+> EN: If a student's code doesn't look right: "Don't worry -- try describing it more specifically. Instead of just 'make a game,' say exactly what should happen step by step. Or try clicking Generate again -- AI might give you a different result."
+> CN: 如果学生的代码看起来不对："别担心——试着更具体地描述。不要只说'做一个游戏'，要一步一步说清楚应该发生什么。或者再点一次 Generate——AI 可能会给你不同的结果。"
+
+> **Contingency / 应对方案:**
+> EN: If a student finishes all 5 quickly: "Amazing speed! Try inventing your OWN program. What's something you've always wanted to build? A calculator? An animation? A drawing tool? Describe it and see if AI can build it!"
+> CN: 如果学生很快完成了所有 5 个："速度惊人！试着发明你自己的程序。你一直想建什么？一个计算器？一个动画？一个绘画工具？描述它，看看 AI 能不能构建出来！"
 
 ---
 
-### Phase 2: Page Splitting (5 min) *(0:16–0:21)*
+### Vibe Coding Techniques *(0:28)*
 
-EN: "Great, now click 'Next: Split into Pages.' AI will automatically split your story into separate pages. Each page should have one or two sentences — just enough for one illustration."
+**[SLIDE 7 -- Vibe Coding Techniques]**
 
-CN: "很好，现在点击'下一步：分成页面'。AI 会自动把你的故事分成独立的页面。每页应该有一两句话——刚好配一张插画。"
+EN: "Before we move on to games, I want to teach you some PRO techniques. This is called 'vibe coding' -- and real developers actually use this every day. Let me scroll down to the Vibe Coding section on the page."
 
-EN: "Look at how it split your story. Does each page feel like its own moment or scene? You can edit the text on any page, move pages up or down, add new pages, or remove pages that don't work."
+CN: "在我们开始做游戏之前，我想教你们一些专业技巧。这叫做'vibe coding'——真正的开发者每天都在用这个。让我在页面上滚动到 Vibe Coding 部分。"
 
-CN: "看看它是怎么分割你的故事的。每一页是否感觉像是它自己的一个时刻或场景？你可以编辑任何一页的文字，上移或下移页面，添加新页面，或删除不合适的页面。"
+**[Scroll to the Vibe Coding section on the lesson page / 在课程页面上滚动到 Vibe Coding 部分]**
 
-**[Give students 5 minutes / 给学生 5 分钟]**
+EN: "Five key techniques. Number one: Start Simple, Then Iterate. Don't try to describe the perfect program all at once. Start basic, then add features one by one. Number two: Debug by Describing. When something breaks, don't say 'fix it' -- tell AI EXACTLY what went wrong. Number three: Read the Code. Even a little! Look for words you recognize like 'score' or 'color'. Number four: Chain Your Prompts -- each change builds on the last, like giving directions one turn at a time. Number five: Combine ideas from different programs you've built."
 
-> **Walk around and check splits / 走动并检查分割:**
-> EN: Look for pages that are too long (3+ sentences) or too short (just a few words). Help students rebalance: "This page has a lot of text — maybe split it into two pages? And this one is very short — could you merge it with the one before it?"
-> CN: 注意页面太长（3 句以上）或太短（只有几个词）。帮助学生重新平衡："这一页文字太多了——也许把它分成两页？而这一页太短了——能把它和前一页合并吗？"
+CN: "五个关键技巧。第一：从简单开始，然后迭代。不要一次性描述完美的程序。从基础开始，然后逐个添加功能。第二：通过描述来调试。当出问题时，不要说'修好它'——告诉 AI 到底哪里出错了。第三：读代码。哪怕只是一点点！寻找你认识的词，比如 'score' 或 'color'。第四：链接你的提示——每次修改都建立在上一次的基础上，就像一步一步给方向。第五：把不同程序的创意组合起来。"
+
+EN: "There are also three challenges at the bottom of this section -- 3-Step Rocket, Bug Hunter, and Frankenstein Build. Try one if you have time during the game design part!"
+
+CN: "这个部分底部还有三个挑战——3-Step Rocket、Bug Hunter 和 Frankenstein Build。如果你在游戏设计部分有时间，试试其中一个！"
 
 ---
 
-### Phase 3: Illustration (12 min) *(0:21–0:33)*
+### Transition to Part 2 *(0:30)*
 
-EN: "This is the fun part! Click 'Next: Add Illustrations.' You'll see each page with its text on the left and an image area on the right. AI has already suggested an image prompt for each page based on your text."
+EN: "Great work, everyone! Now we're going to level up -- in Part 2, we're going to use these vibe coding skills to design and build REAL GAMES."
 
-CN: "这是最有趣的部分！点击'下一步：添加插画'。你会看到每一页，左边是文字，右边是图片区域。AI 已经根据你的文字为每一页建议了一个图片提示词。"
+CN: "大家做得太好了！现在我们要升级——在第二部分，我们要用这些 vibe coding 技能来设计和构建真正的游戏。"
 
-EN: "Look at the suggested prompt — does it match your page? You can edit it if you want. Then pick a style — I recommend 'Cartoon / Anime' or 'Watercolor' for picture books, they look great. Then click 'Generate'!"
+**[Show slides 8-12 quickly, about 2 minutes total / 快速展示幻灯片 8-12，大约总共 2 分钟]**
 
-CN: "看看建议的提示词——它和你的页面匹配吗？如果你想的话可以编辑它。然后选一个风格——我推荐'卡通/动漫'或'水彩'用于绘本，它们看起来很棒。然后点击'生成'！"
+---
 
-EN: "While your first image is generating, look at the next page's prompt and get it ready. That way you can keep working while waiting."
+### [SLIDE 8 -- What makes a game?] *(0:30)*
 
-CN: "当你的第一张图片正在生成时，看看下一页的提示词并准备好。这样你可以在等待的时候继续工作。"
+EN: "What makes something a GAME and not just a program? Four things: Goals -- what are you trying to do? Rules -- what can and can't you do? Challenge -- what makes it hard? And Fun -- what makes you want to keep playing? When you design your game, think about all four."
 
-**[Give students 12 minutes — this is the longest phase / 给学生 12 分钟——这是最长的阶段]**
+CN: "什么让一个东西成为游戏而不只是一个程序？四个要素：目标——你要做什么？规则——什么能做什么不能做？挑战——什么让它困难？还有乐趣——什么让你想继续玩？当你设计游戏时，想想这四个要素。"
 
-> **Important: Help manage wait times / 重要：帮助管理等待时间:**
-> EN: Image generation takes 10-15 seconds. While waiting: "Great, your image is generating! While we wait, go ahead and check the next page's prompt. Does it match the mood of your story?"
-> CN: 图片生成需要 10-15 秒。等待时："很好，你的图片正在生成！在我们等待的时候，继续检查下一页的提示词。它和你故事的氛围匹配吗？"
+---
+
+### [SLIDE 9 -- Game types] *(0:31)*
+
+EN: "You have four game types to choose from. Quiz Game is the easiest to start with. Catch Game uses your mouse. Maze Runner uses arrow keys. And Whack-a-Mole is all about clicking fast. Each one has a detailed prompt ready for you -- just click the card!"
+
+CN: "你有四种游戏类型可以选择。Quiz Game 最容易上手。Catch Game 用鼠标。Maze Runner 用方向键。Whack-a-Mole 全靠快速点击。每个都有详细的提示词准备好了——只需点击卡片！"
+
+---
+
+### [SLIDE 10 -- Design loop] *(0:31)*
+
+EN: "Here's the key to making a great game: the design loop. Describe, Generate, Play, Improve -- and REPEAT. Every time you go around the loop, your game gets better. Real game designers do this hundreds of times!"
+
+CN: "这是制作一个好游戏的关键：设计循环。描述、生成、游戏、改进——然后重复。每次你经历这个循环，你的游戏就会变得更好。真正的游戏设计师这样做几百次！"
+
+---
+
+### [SLIDE 11 -- How to describe a game] *(0:32)*
+
+EN: "When describing your game to AI, include the rules, the controls, the scoring system, and the look and feel. The more specific you are, the better your game will be!"
+
+CN: "当你向 AI 描述你的游戏时，包括规则、控制方式、计分系统，以及外观和感觉。你越具体，你的游戏就越好！"
+
+---
+
+### [SLIDE 12 -- Part 2 mission] *(0:32)*
+
+EN: "Your Part 2 mission: scroll down on the page to the Game Designer section. Pick a game type, generate it, play-test it, make at least 2 improvements using the Level Up tips, and export your game!"
+
+CN: "你的第二部分任务：在页面上向下滚动到游戏设计师部分。选择一种游戏类型，生成它，试玩它，使用 Level Up 提示至少做 2 次改进，然后导出你的游戏！"
+
+---
+
+## Part 2: Game Design / 游戏设计 (20 minutes / 分钟)
+
+### Hands-on Work *(0:32--0:52)*
+
+**[Students scroll down to Part 2 section / 学生向下滚动到第二部分]**
+
+EN: "Scroll down past the Part 1 playground and you'll see the big purple divider that says 'Part 2: AI Game Designer.' Below that are four game type cards. Click one you like! Its prompt will load into the game builder. Then click Generate and wait for your game to appear!"
+
+CN: "向下滚动过第一部分的编程操场，你会看到紫色的大分隔条写着 'Part 2: AI Game Designer'。下面有四张游戏类型卡片。点击一个你喜欢的！它的提示词会加载到游戏构建器中。然后点击 Generate，等待你的游戏出现！"
+
+**[Give students 20 minutes for Part 2 / 给学生第二部分 20 分钟]**
+
+> **First 8 min -- Game generation / 前 8 分钟 -- 游戏生成:**
+> EN: "Your game is loading! While you wait, try playing the preview as soon as it appears. Does everything work? Can you play it? Is it fun?"
+> CN: "你的游戏正在加载！在等待的时候，一旦它出现就试着玩预览。所有功能都工作吗？你能玩吗？有趣吗？"
+
+> **After first game generates / 第一个游戏生成后:**
+> EN: "Now the fun part -- improving your game! Scroll down a little to the 'Level Up Your Game' section. You'll see tip cards like 'Change the theme,' 'Add sound effects,' 'Add difficulty levels.' Click a tip and it automatically fills in the 'What to change?' box. Then click Update! Try to make at least 2 improvements."
+> CN: "现在是有趣的部分——改进你的游戏！向下滚动一点到'Level Up Your Game'部分。你会看到提示卡片，比如'Change the theme'、'Add sound effects'、'Add difficulty levels'。点击一个提示，它会自动填写'What to change?'框。然后点击 Update！尝试至少做 2 次改进。"
 
 > **Contingency / 应对方案:**
-> EN: If an image doesn't match the text: "Hmm, that picture doesn't quite match your story. What's different? Let's think about what words we could add to the prompt. Remember, tell AI the mood, the colors, and the action."
-> CN: 如果图片和文字不匹配："嗯，那张图片和你的故事不太匹配。有什么不同？让我们想想可以在提示词中加什么词。记住，告诉 AI 氛围、颜色和动作。"
+> EN: If a game doesn't work properly: "Sometimes AI doesn't get it perfect on the first try. That's OK! Try clicking Generate again, or be more specific in your description. You can also try a different game type -- Quiz Game is the most reliable one."
+> CN: 如果游戏不能正常工作："有时 AI 第一次做不到完美。没关系！试着再点一次 Generate，或者在你的描述中更具体。你也可以试试不同的游戏类型——Quiz Game 是最可靠的一个。"
 
 > **Contingency / 应对方案:**
-> EN: If a student wants to redo everything (story, pages, images): "I understand you want it perfect, but let's focus on making the parts that need work better. You don't have to start over — just fix the pages or images that don't feel right. That's what real authors do too!"
-> CN: 如果学生想全部重做（故事、页面、图片）："我理解你想要完美，但让我们专注于改进需要改进的部分。你不必从头开始——只需修复感觉不对的页面或图片。真正的作者也是这样做的！"
+> EN: If students are stuck on improvements: "Here's an easy one to try: click 'Change the theme' and your game will get a whole new look! Or try 'Add animations' to make it feel more polished. You can also write your own improvements -- like 'make the game harder as the score goes up.'"
+> CN: 如果学生对改进感到困惑："试试这个简单的：点击'Change the theme'，你的游戏会得到全新的外观！或者试试'Add animations'让它感觉更精致。你也可以写自己的改进——比如'随着分数增加让游戏变难。'"
 
-> **Contingency / 应对方案:**
-> EN: If image generation fails or is slow: "Sometimes the AI image service gets busy. If it fails, just try again in a moment. You can also work on other pages while waiting."
-> CN: 如果图片生成失败或很慢："有时候 AI 图片服务会很忙。如果失败了，等一会儿再试。你也可以在等待的时候做其他页面。"
-
----
-
-### Phase 4: Preview & Title (5 min) *(0:33–0:38)*
-
-EN: "Almost done! Click 'Next: Preview' to see your whole picture book. The first thing you'll see is the cover — type in a title for your book and your name as the author."
-
-CN: "快完成了！点击'下一步：预览'来看你的整本绘本。你首先会看到封面——为你的书输入一个标题和你作为作者的名字。"
-
-EN: "Then click 'Next' to flip through your pages. How does it look? If anything feels off, you can go back and fix it."
-
-CN: "然后点击'下一步'翻阅你的页面。看起来怎么样？如果有什么感觉不对的，你可以返回去修改。"
-
-EN: "When you're happy with it, click the download button to save your picture book as an HTML file. You can open it in any browser and even share it with your family!"
-
-CN: "当你满意了，点击下载按钮把你的绘本保存为 HTML 文件。你可以在任何浏览器中打开它，甚至可以和家人分享！"
-
-**[Give students 5 minutes / 给学生 5 分钟]**
+> **Last 3 minutes of Part 2 / 第二部分最后 3 分钟:**
+> EN: "If you're happy with your game, scroll down to 'Save Your Game' and click the download button! This saves it as an HTML file you can open in any browser and share with anyone."
+> CN: "如果你对你的游戏满意了，向下滚动到'Save Your Game'，点击下载按钮！这会把它保存为一个 HTML 文件，你可以在任何浏览器中打开，和任何人分享。"
 
 ---
 
-## Show & Share / 展示分享 (5 minutes / 分钟) *(0:38–0:43)*
+## Share / 分享与试玩 (8 minutes / 分钟) *(0:52--1:00)*
 
-EN: "Time to share! Who wants to 'read' their picture book to us? You can flip through the preview and tell us your story."
+EN: "Time to play each other's games! Find a partner -- swap laptops or share screens. Play each other's games for 2 minutes."
 
-CN: "分享时间到！谁想给我们'读'一下他们的绘本？你可以翻阅预览页面并给我们讲你的故事。"
+CN: "互相试玩游戏的时间到了！找一个搭档——交换电脑或共享屏幕。花 2 分钟互相试玩对方的游戏。"
 
-**[Wait for a volunteer / 等待志愿者]**
+**[Give students 3-4 minutes for pair play / 给学生 3-4 分钟互相试玩]**
 
-EN: "Go ahead — flip through your book page by page. Read us the text and show us the pictures."
+EN: "OK, who wants to show their game to the whole class? Come up and we'll project it!"
 
-CN: "开始吧——一页一页翻你的书。给我们读文字并展示图片。"
+CN: "好的，谁想把自己的游戏展示给全班看？上来，我们投影出来！"
 
-**[Student 1 presents / 学生 1 展示]**
+**[1-2 volunteers demo their games / 1-2 个志愿者展示他们的游戏]**
 
-EN: "Great story! I love how the pictures match the mood. Now let's hear the other one!"
+EN: "Let's play this game! What kind of game did you build? What improvements did you make?"
 
-CN: "很棒的故事！我喜欢图片和氛围的匹配。现在让我们听另一个！"
+CN: "让我们玩这个游戏！你做的是什么类型的游戏？你做了什么改进？"
 
-**[Student 2 presents / 学生 2 展示]**
+**[After demos / 展示后]**
 
-EN: "Awesome work! Both of you created real picture books using AI. Let me ask you: what was the hardest part? Writing the story, splitting pages, or getting the images right?"
+EN: "Great work! Let me ask: what was easier -- writing the description, or knowing what to change to make it better? That second part -- knowing HOW to improve something -- is what real game designers spend most of their time doing."
 
-CN: "做得太好了！你们俩都用 AI 创造了真正的绘本。让我问你们：最难的部分是什么？写故事、分页面，还是让图片正确？"
-
-**[Wait for responses / 等待回答]**
-
-EN: "Right — getting the images to match the story is actually the creative challenge. That's where YOUR ideas matter most."
-
-CN: "没错——让图片和故事匹配其实是创造性的挑战。这就是你的想法最重要的地方。"
+CN: "做得好！让我问：什么更容易——写描述，还是知道如何改进来让它更好？第二部分——知道如何改进某样东西——才是真正的游戏设计师花大部分时间做的事情。"
 
 ---
 
-## Wrap-up / 课程总结 (2 minutes / 分钟) *(0:43–0:45)*
+## Wrap-up / 课程总结 (2 minutes / 分钟) *(1:00)*
 
-EN: "Today you combined two AI skills — text generation and image generation — to create something bigger: a picture book. You learned that the text and images need to work together, and that matching the mood is really important."
+**[SLIDE 13 -- optional, or just speak]**
 
-CN: "今天你们结合了两项 AI 技能——文字生成和图片生成——来创造更大的东西：一本绘本。你们学到了文字和图片需要协同工作，而且匹配氛围真的很重要。"
+EN: "Today you did two things. In Part 1, you learned that describing things clearly to AI gives you real, working programs -- no coding needed. In Part 2, you used that skill to design actual games, and you learned the design loop: describe, generate, play, improve, repeat."
 
-EN: "This is what real creative work with AI looks like — you're not just pressing buttons. You're directing the AI, making choices about what fits and what doesn't, and putting the pieces together into something that tells a story."
+CN: "今天你们做了两件事。在第一部分，你们学到了清楚地向 AI 描述事物可以给你真正可运行的程序——不需要编程。在第二部分，你们用这项技能设计了真正的游戏，并且学到了设计循环：描述、生成、试玩、改进、重复。"
 
-CN: "这就是用 AI 进行真正的创意工作的样子——你不只是按按钮。你在指导 AI，做出什么合适什么不合适的选择，把各个部分组合成一个讲述故事的作品。"
+EN: "The programs you built today are REAL. You can open those HTML files on any computer, on any phone. You're now creators of interactive things that other people can actually use and play. See you next time!"
 
-EN: "Next week, we're going to try something completely different — AI and music! See you then."
-
-CN: "下周我们要尝试完全不同的东西——AI 和音乐！下次见。"
+CN: "你们今天构建的程序是真实的。你可以在任何电脑、任何手机上打开那些 HTML 文件。你们现在是创造互动内容的创造者，别人可以真正使用和玩你们的作品。下次见！"
 
 ---
 
@@ -249,15 +263,15 @@ CN: "下周我们要尝试完全不同的东西——AI 和音乐！下次见。
 
 | Time / 时间 | Section / 环节 | Activity / 活动 |
 |---|---|---|
-| 0:00–0:01 | Welcome | Slide 1 — Title & introduction |
-| 0:01–0:03 | Picture Book Structure | Slide 2 — Cover, pages, ending |
-| 0:03–0:04 | Workflow | Slide 3 — Four-step process |
-| 0:04–0:06 | Mood Matching | Slides 4–5 — Good match example |
-| 0:06–0:07 | Bad Match | Slide 6 — Mismatched mood example |
-| 0:07–0:08 | Mission | Slides 7–8 — Today's task & launch |
-| 0:08–0:16 | Story Writing | Step 1: Write or generate story (8 min) |
-| 0:16–0:21 | Page Splitting | Step 2: Split into pages (5 min) |
-| 0:21–0:33 | Illustration | Step 3: Generate images (12 min) |
-| 0:33–0:38 | Preview & Title | Step 4: Preview, title, download (5 min) |
-| 0:38–0:43 | Share | Students read each other's books |
-| 0:43–0:45 | Wrap-up | Recap key ideas, preview next lesson |
+| 0:00--0:01 | Welcome | Slide 1 -- Title & intro |
+| 0:01--0:03 | Coding intimidation | Slide 2 -- Scary code vs friendly description |
+| 0:03--0:04 | The magic | Slide 3 -- You describe, AI codes, you see it |
+| 0:04--0:06 | How it works | Slide 4 -- Describe, Generate, See (3-step flow) |
+| 0:06--0:08 | Be specific | Slide 5 -- Vague vs specific examples |
+| 0:08--0:12 | Part 1 launch | Slide 6 -- 5 challenges; students open laptops |
+| 0:12--0:28 | Part 1 work | Students build programs from challenge cards (16 min) |
+| 0:28--0:30 | Vibe Coding | Slide 7 -- 5 pro techniques for AI coding |
+| 0:30--0:32 | Transition | Slides 8--12 -- What makes a game, game types, design loop |
+| 0:32--0:52 | Part 2 work | Students design and build games (20 min) |
+| 0:52--1:00 | Share & play | Swap games, volunteers demo, discussion (8 min) |
+| 1:00 | Wrap-up | Recap key ideas (2 min) |

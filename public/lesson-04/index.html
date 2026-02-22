@@ -3,538 +3,495 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Lesson 4: AI Picture Book - AI Creator Lab</title>
+  <title>Lesson 4: AI Code — Build and Play - AI Creator Lab</title>
   <link rel="stylesheet" href="/shared/styles.css">
   <style>
-    /* Wizard step navigation */
-    .wizard-nav {
-      display: flex;
-      gap: var(--space-xs);
-      margin-bottom: var(--space-lg);
-      padding-bottom: var(--space-md);
-      border-bottom: 2px solid var(--color-border);
+    /* Section dividers */
+    .lesson-section {
+      margin-bottom: var(--space-xl);
+      padding-bottom: var(--space-xl);
+      border-bottom: 1px solid var(--color-border);
     }
 
-    .wizard-step-btn {
+    .lesson-section:last-child {
+      border-bottom: none;
+    }
+
+    .section-heading {
+      font-size: var(--text-xl);
+      font-weight: 650;
+      margin-bottom: var(--space-lg);
       display: flex;
       align-items: center;
       gap: var(--space-sm);
-      padding: 0.5em 1em;
-      font-size: var(--text-sm);
-      font-weight: 600;
-      font-family: inherit;
-      border: 2px solid var(--color-border);
-      background: var(--color-surface);
+    }
+
+    /* Part divider */
+    .part-divider {
+      text-align: center;
+      padding: var(--space-xl) 0;
+      border-top: 3px solid var(--color-primary);
+      border-bottom: 3px solid var(--color-primary);
+      margin: var(--space-xl) 0;
+      background: linear-gradient(135deg, var(--color-primary-light), var(--color-secondary-light));
+      border-radius: var(--radius-lg);
+    }
+
+    .part-divider h2 {
+      font-size: var(--text-2xl);
+      margin-bottom: var(--space-xs);
+    }
+
+    .part-divider p {
       color: var(--color-text-muted);
-      border-radius: var(--radius-md);
-      cursor: pointer;
-      transition: all var(--transition-fast);
-      white-space: nowrap;
-    }
-
-    .wizard-step-btn:hover {
-      border-color: var(--color-primary);
-      color: var(--color-text);
-    }
-
-    .wizard-step-btn.active {
-      background: var(--color-primary);
-      border-color: var(--color-primary);
-      color: #ffffff;
-    }
-
-    .wizard-step-btn.completed {
-      background: var(--color-success-light);
-      border-color: var(--color-success);
-      color: #16a34a;
-    }
-
-    .wizard-step-btn .step-num {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 24px;
-      height: 24px;
-      border-radius: 50%;
-      font-size: var(--text-xs);
-      font-weight: 700;
-      background: rgba(255, 255, 255, 0.2);
-    }
-
-    .wizard-step-btn.active .step-num {
-      background: rgba(255, 255, 255, 0.3);
-    }
-
-    .wizard-step-btn.completed .step-num {
-      background: var(--color-success);
-      color: #ffffff;
-    }
-
-    .wizard-panel {
-      display: none;
-    }
-
-    .wizard-panel.active {
-      display: block;
-    }
-
-    /* Step navigation buttons */
-    .step-actions {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-top: var(--space-xl);
-      padding-top: var(--space-lg);
-      border-top: 1px solid var(--color-border);
-    }
-
-    /* Step 1: Story writing */
-    .story-textarea {
-      width: 100%;
-      min-height: 250px;
-      padding: var(--space-md);
       font-size: var(--text-md);
-      font-family: inherit;
-      line-height: 1.7;
-      border: 1.5px solid var(--color-border);
-      border-radius: var(--radius-md);
-      resize: vertical;
-      transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
     }
 
-    .story-textarea:focus {
-      outline: none;
+    /* Welcome banner */
+    .welcome-banner {
+      background: linear-gradient(135deg, var(--color-primary-light), var(--color-secondary-light));
+      border-radius: var(--radius-lg);
+      padding: var(--space-xl);
+      text-align: center;
+      margin-bottom: var(--space-xl);
+    }
+
+    .welcome-banner h2 {
+      margin-bottom: var(--space-sm);
+    }
+
+    .welcome-banner p {
+      color: var(--color-text-muted);
+      font-size: var(--text-md);
+      max-width: 600px;
+      margin-inline: auto;
+      line-height: 1.6;
+    }
+
+    /* Challenge cards grid */
+    .challenge-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: var(--space-md);
+      margin-bottom: var(--space-lg);
+    }
+
+    .challenge-card {
+      background: var(--color-surface);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-sm);
+      padding: var(--space-lg);
+      border: 2px solid var(--color-border);
+      text-align: center;
+      cursor: pointer;
+      transition: box-shadow var(--transition-normal),
+                  transform var(--transition-normal),
+                  border-color var(--transition-normal);
+    }
+
+    .challenge-card:hover {
+      box-shadow: var(--shadow-md);
+      transform: translateY(-2px);
+    }
+
+    .challenge-card.card-selected {
       border-color: var(--color-primary);
       box-shadow: 0 0 0 3px var(--color-primary-light);
     }
 
-    .story-word-count {
-      font-size: var(--text-sm);
-      color: var(--color-text-muted);
-      text-align: right;
-      margin-top: var(--space-xs);
+    .challenge-card .challenge-emoji {
+      font-size: 2.5rem;
+      margin-bottom: var(--space-sm);
     }
 
-    /* AI Generate modal */
-    .generate-modal-overlay {
-      position: fixed;
+    .challenge-card .challenge-name {
+      font-size: var(--text-md);
+      font-weight: 650;
+      margin-bottom: var(--space-xs);
+    }
+
+    .challenge-card .challenge-desc {
+      font-size: var(--text-sm);
+      color: var(--color-text-muted);
+      line-height: 1.4;
+    }
+
+    .challenge-card .difficulty {
+      display: inline-block;
+      margin-top: var(--space-sm);
+      font-size: var(--text-xs);
+      font-weight: 700;
+      padding: 0.2em 0.6em;
+      border-radius: var(--radius-full);
+    }
+
+    .difficulty-easy {
+      background: var(--color-success-light);
+      color: #16a34a;
+    }
+
+    .difficulty-medium {
+      background: var(--color-warning-light);
+      color: #b45309;
+    }
+
+    .difficulty-hard {
+      background: var(--color-secondary-light);
+      color: var(--color-secondary);
+    }
+
+    /* Game type selector grid */
+    .game-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: var(--space-lg);
+    }
+
+    .game-card {
+      background: var(--color-surface);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
+      padding: var(--space-xl) var(--space-lg);
+      border: 2px solid var(--color-border);
+      text-align: center;
+      cursor: pointer;
+      transition: box-shadow var(--transition-normal),
+                  transform var(--transition-normal),
+                  border-color var(--transition-normal);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .game-card::before {
+      content: "";
+      position: absolute;
       inset: 0;
-      background: rgba(0, 0, 0, 0.5);
-      z-index: 1000;
+      background: linear-gradient(135deg, transparent 50%, rgba(79, 110, 247, 0.04) 100%);
+      pointer-events: none;
+    }
+
+    .game-card:hover {
+      box-shadow: var(--shadow-md);
+      transform: translateY(-4px);
+    }
+
+    .game-card.card-selected {
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px var(--color-primary-light);
+    }
+
+    .game-card .game-emoji {
+      font-size: 3rem;
+      margin-bottom: var(--space-sm);
+      display: block;
+    }
+
+    .game-card .game-name {
+      font-size: var(--text-lg);
+      font-weight: 700;
+      margin-bottom: var(--space-xs);
+      color: var(--color-text);
+    }
+
+    .game-card .game-desc {
+      font-size: var(--text-sm);
+      color: var(--color-text-muted);
+      line-height: 1.5;
+    }
+
+    .game-card .game-tag {
+      display: inline-block;
+      margin-top: var(--space-sm);
+      padding: 0.15em 0.6em;
+      border-radius: var(--radius-full);
+      font-size: var(--text-xs);
+      font-weight: 600;
+      background: var(--color-primary-light);
+      color: var(--color-primary);
+    }
+
+    .quick-start {
+      position: absolute;
+      top: var(--space-sm);
+      right: var(--space-sm);
+      background: var(--color-warning);
+      color: #ffffff;
+      font-size: var(--text-xs);
+      font-weight: 700;
+      padding: 0.15em 0.55em;
+      border-radius: var(--radius-full);
+    }
+
+    /* Iteration tips */
+    .tips-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: var(--space-md);
+    }
+
+    .tip-card {
+      background: var(--color-surface);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--color-border);
+      padding: var(--space-md) var(--space-lg);
+      transition: box-shadow var(--transition-normal),
+                  transform var(--transition-normal);
+      cursor: pointer;
+    }
+
+    .tip-card:hover {
+      box-shadow: var(--shadow-sm);
+      transform: translateY(-2px);
+    }
+
+    .tip-card .tip-emoji {
+      font-size: 1.8rem;
+      margin-bottom: var(--space-xs);
+    }
+
+    .tip-card .tip-title {
+      font-size: var(--text-md);
+      font-weight: 650;
+      margin-bottom: var(--space-xs);
+    }
+
+    .tip-card .tip-desc {
+      font-size: var(--text-sm);
+      color: var(--color-text-muted);
+      line-height: 1.5;
+    }
+
+    /* Playground containers */
+    #playground-part1 {
+      min-height: 500px;
+    }
+
+    .playground-wrapper {
+      min-height: 500px;
+    }
+
+    .playground-wrapper .flex {
+      flex-wrap: wrap;
+    }
+
+    /* Tips box */
+    .tips-box {
+      background: var(--color-accent-light);
+      border-radius: var(--radius-md);
+      padding: var(--space-lg);
+      margin-top: var(--space-md);
+    }
+
+    .tips-box h4 {
+      margin-bottom: var(--space-sm);
+      color: var(--color-accent-hover);
+    }
+
+    .tips-box ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .tips-box li {
+      padding: var(--space-xs) 0;
+      font-size: var(--text-sm);
+      line-height: 1.6;
+    }
+
+    .tips-box li::before {
+      content: "\2728 ";
+    }
+
+    /* Export section */
+    .export-section {
+      background: var(--color-success-light);
+      border-radius: var(--radius-md);
+      padding: var(--space-lg);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-md);
+      flex-wrap: wrap;
+    }
+
+    .export-section .export-info {
+      flex: 1;
+      min-width: 200px;
+    }
+
+    .export-section .export-info h3 {
+      margin-bottom: var(--space-xs);
+    }
+
+    .export-section .export-info p {
+      font-size: var(--text-sm);
+      color: var(--color-text-muted);
+    }
+
+    /* Vibe Coding section */
+    .vibe-steps {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-lg);
+      margin-bottom: var(--space-xl);
+    }
+
+    .vibe-step {
+      display: flex;
+      gap: var(--space-md);
+      align-items: flex-start;
+    }
+
+    .vibe-step-num {
+      flex-shrink: 0;
+      width: 2.5rem;
+      height: 2.5rem;
+      border-radius: var(--radius-full);
+      background: var(--color-primary);
+      color: #fff;
+      font-weight: 800;
+      font-size: var(--text-lg);
       display: flex;
       align-items: center;
       justify-content: center;
     }
 
-    .generate-modal {
-      background: var(--color-surface);
-      border-radius: var(--radius-lg);
-      box-shadow: var(--shadow-lg);
-      padding: var(--space-xl);
-      width: 90%;
-      max-width: 500px;
+    .vibe-step-content {
+      flex: 1;
     }
 
-    .generate-modal h3 {
-      margin-bottom: var(--space-lg);
+    .vibe-step-content h3 {
+      font-size: var(--text-md);
+      font-weight: 700;
+      margin-bottom: var(--space-xs);
     }
 
-    .genre-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: var(--space-sm);
-      margin-bottom: var(--space-lg);
-    }
-
-    .genre-option {
-      padding: 0.6em 0.8em;
-      border: 2px solid var(--color-border);
-      border-radius: var(--radius-md);
-      text-align: center;
-      cursor: pointer;
-      font-family: inherit;
+    .vibe-step-content > p {
       font-size: var(--text-sm);
-      font-weight: 600;
-      background: var(--color-surface);
-      transition: all var(--transition-fast);
-    }
-
-    .genre-option:hover {
-      border-color: var(--color-primary);
-    }
-
-    .genre-option.selected {
-      border-color: var(--color-primary);
-      background: var(--color-primary-light);
-      color: var(--color-primary);
-    }
-
-    .modal-actions {
-      display: flex;
-      gap: var(--space-sm);
-      justify-content: flex-end;
-    }
-
-    /* Step 2: Page splitting */
-    .page-cards-list {
-      display: flex;
-      flex-direction: column;
-      gap: var(--space-md);
-    }
-
-    .page-card {
-      background: var(--color-surface);
-      border: 1.5px solid var(--color-border);
-      border-radius: var(--radius-md);
-      padding: var(--space-lg);
-      transition: box-shadow var(--transition-normal);
-    }
-
-    .page-card:hover {
-      box-shadow: var(--shadow-md);
-    }
-
-    .page-card-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+      color: var(--color-text-muted);
+      line-height: 1.5;
       margin-bottom: var(--space-sm);
     }
 
-    .page-card-label {
-      font-weight: 700;
-      font-size: var(--text-md);
-      color: var(--color-primary);
-    }
-
-    .page-card-actions {
+    .vibe-example {
       display: flex;
-      gap: var(--space-xs);
+      flex-direction: column;
+      gap: var(--space-sm);
     }
 
-    .page-card-actions button {
-      padding: 0.25em 0.5em;
+    .vibe-example-bad,
+    .vibe-example-good {
+      padding: var(--space-sm) var(--space-md);
+      border-radius: var(--radius-sm);
       font-size: var(--text-sm);
-      font-family: inherit;
-      border: 1px solid var(--color-border);
-      background: var(--color-surface);
-      border-radius: var(--radius-sm);
-      cursor: pointer;
-      color: var(--color-text-muted);
-      transition: all var(--transition-fast);
+      line-height: 1.5;
     }
 
-    .page-card-actions button:hover {
-      border-color: var(--color-primary);
-      color: var(--color-primary);
+    .vibe-example-bad {
+      background: var(--color-error-light);
+      border-left: 3px solid var(--color-error);
     }
 
-    .page-card-actions button.delete-btn:hover {
-      border-color: var(--color-error);
-      color: var(--color-error);
+    .vibe-example-good {
+      background: var(--color-success-light);
+      border-left: 3px solid var(--color-success);
     }
 
-    .page-card textarea {
-      width: 100%;
-      min-height: 80px;
-      padding: var(--space-sm);
-      font-size: var(--text-md);
-      font-family: inherit;
-      line-height: 1.6;
-      border: 1px solid var(--color-border);
-      border-radius: var(--radius-sm);
-      resize: vertical;
+    .vibe-example-bad strong,
+    .vibe-example-good strong {
+      display: block;
+      font-size: var(--text-xs);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.15em;
     }
 
-    .page-card textarea:focus {
-      outline: none;
-      border-color: var(--color-primary);
-      box-shadow: 0 0 0 2px var(--color-primary-light);
-    }
-
-    .page-card-footer {
-      display: flex;
-      justify-content: flex-end;
+    .vibe-example-good em {
+      display: block;
       margin-top: var(--space-xs);
       font-size: var(--text-xs);
       color: var(--color-text-muted);
     }
 
-    .add-page-btn {
-      width: 100%;
-      padding: var(--space-md);
-      border: 2px dashed var(--color-border);
-      border-radius: var(--radius-md);
-      background: transparent;
+    .vibe-example-good code {
+      background: rgba(0,0,0,0.06);
+      padding: 0.1em 0.3em;
+      border-radius: 3px;
+      font-size: 0.9em;
+    }
+
+    .vibe-challenge {
+      background: linear-gradient(135deg, var(--color-primary-light), var(--color-secondary-light));
+      border-radius: var(--radius-lg);
+      padding: var(--space-xl);
+    }
+
+    .vibe-challenge h3 {
+      font-size: var(--text-lg);
+      margin-bottom: var(--space-xs);
+    }
+
+    .vibe-challenge > p {
+      font-size: var(--text-sm);
       color: var(--color-text-muted);
-      font-size: var(--text-md);
-      font-weight: 600;
-      font-family: inherit;
-      cursor: pointer;
-      transition: all var(--transition-fast);
-    }
-
-    .add-page-btn:hover {
-      border-color: var(--color-primary);
-      color: var(--color-primary);
-      background: var(--color-primary-light);
-    }
-
-    /* Step 3: Illustration */
-    .illustration-list {
-      display: flex;
-      flex-direction: column;
-      gap: var(--space-xl);
-    }
-
-    .illustration-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: var(--space-lg);
-      background: var(--color-surface);
-      border: 1.5px solid var(--color-border);
-      border-radius: var(--radius-md);
-      padding: var(--space-lg);
-    }
-
-    @media (max-width: 767px) {
-      .illustration-row {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    .illust-text-side h4 {
-      color: var(--color-primary);
-      margin-bottom: var(--space-sm);
-    }
-
-    .illust-text-content {
-      font-size: var(--text-sm);
-      line-height: 1.6;
-      color: var(--color-text);
-      padding: var(--space-sm);
-      background: var(--color-bg);
-      border-radius: var(--radius-sm);
       margin-bottom: var(--space-md);
-    }
-
-    .illust-prompt-input {
-      width: 100%;
-      min-height: 60px;
-      padding: var(--space-sm);
-      font-size: var(--text-sm);
-      font-family: inherit;
       line-height: 1.5;
-      border: 1px solid var(--color-border);
-      border-radius: var(--radius-sm);
-      resize: vertical;
-      margin-bottom: var(--space-sm);
     }
 
-    .illust-prompt-input:focus {
-      outline: none;
-      border-color: var(--color-primary);
-      box-shadow: 0 0 0 2px var(--color-primary-light);
-    }
-
-    .illust-style-row {
-      display: flex;
-      gap: var(--space-sm);
-      align-items: center;
-      margin-bottom: var(--space-sm);
-      flex-wrap: wrap;
-    }
-
-    .illust-style-row label {
-      font-size: var(--text-sm);
-      font-weight: 600;
-      white-space: nowrap;
-    }
-
-    .illust-style-select {
-      flex: 1;
-      padding: 0.4em 0.7em;
-      font-size: var(--text-sm);
-      font-family: inherit;
-      border: 1px solid var(--color-border);
-      border-radius: var(--radius-sm);
-      background: var(--color-surface);
-      appearance: none;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236b7280' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
-      background-repeat: no-repeat;
-      background-position: right 0.5em center;
-      padding-right: 1.8em;
-    }
-
-    .illust-btn-row {
-      display: flex;
-      gap: var(--space-sm);
-    }
-
-    .illust-image-side {
+    .vibe-challenge-list {
       display: flex;
       flex-direction: column;
-      align-items: center;
-      justify-content: center;
+      gap: var(--space-sm);
     }
 
-    .illust-image-placeholder {
-      width: 100%;
-      aspect-ratio: 1 / 1;
-      background: var(--color-bg);
-      border: 2px dashed var(--color-border);
-      border-radius: var(--radius-md);
+    .vibe-challenge-item {
       display: flex;
       align-items: center;
-      justify-content: center;
-      color: var(--color-text-muted);
-      font-size: var(--text-sm);
-      text-align: center;
-      padding: var(--space-md);
-    }
-
-    .illust-image-placeholder img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      border-radius: var(--radius-sm);
-    }
-
-    .illust-image-placeholder.has-image {
-      border-style: solid;
-      border-color: var(--color-success);
-      padding: 0;
-      overflow: hidden;
-    }
-
-    /* Step 4: Preview */
-    .book-preview {
-      max-width: 700px;
-      margin: 0 auto;
-    }
-
-    .book-cover {
-      background: linear-gradient(135deg, #1e2330, #2d3352);
-      color: #ffffff;
-      border-radius: var(--radius-lg);
-      padding: var(--space-xl) var(--space-lg);
-      text-align: center;
-      margin-bottom: var(--space-lg);
-    }
-
-    .book-cover-image {
-      width: 100%;
-      max-width: 400px;
-      margin: var(--space-lg) auto;
-      border-radius: var(--radius-md);
-      overflow: hidden;
-    }
-
-    .book-cover-image img {
-      width: 100%;
-      display: block;
-    }
-
-    .book-cover-title {
-      font-size: var(--text-2xl);
-      font-weight: 700;
-      margin-bottom: var(--space-sm);
-    }
-
-    .book-cover-title input {
-      background: transparent;
-      border: 1px dashed rgba(255, 255, 255, 0.3);
-      color: #ffffff;
-      font-size: var(--text-2xl);
-      font-weight: 700;
-      font-family: inherit;
-      text-align: center;
-      width: 100%;
-      padding: 0.2em;
-      border-radius: var(--radius-sm);
-    }
-
-    .book-cover-title input:focus {
-      outline: none;
-      border-color: rgba(255, 255, 255, 0.6);
-    }
-
-    .book-cover-title input::placeholder {
-      color: rgba(255, 255, 255, 0.4);
-    }
-
-    .book-cover-author input {
-      background: transparent;
-      border: 1px dashed rgba(255, 255, 255, 0.2);
-      color: rgba(255, 255, 255, 0.8);
-      font-size: var(--text-lg);
-      font-family: inherit;
-      text-align: center;
-      width: 80%;
-      padding: 0.2em;
-      border-radius: var(--radius-sm);
-    }
-
-    .book-cover-author input:focus {
-      outline: none;
-      border-color: rgba(255, 255, 255, 0.5);
-    }
-
-    .book-cover-author input::placeholder {
-      color: rgba(255, 255, 255, 0.3);
-    }
-
-    .book-page-display {
+      gap: var(--space-md);
       background: var(--color-surface);
-      border: 1.5px solid var(--color-border);
-      border-radius: var(--radius-lg);
-      padding: var(--space-xl);
-      margin-bottom: var(--space-md);
-      min-height: 400px;
-    }
-
-    .book-page-display img {
-      width: 100%;
-      max-width: 500px;
-      margin: 0 auto var(--space-lg);
       border-radius: var(--radius-md);
-      display: block;
+      padding: var(--space-md) var(--space-lg);
+      border: 1px solid var(--color-border);
+      cursor: pointer;
+      transition: box-shadow var(--transition-normal), transform var(--transition-normal);
     }
 
-    .book-page-display .page-text {
-      font-size: var(--text-lg);
-      line-height: 1.8;
-      text-align: center;
-      max-width: 600px;
-      margin: 0 auto;
+    .vibe-challenge-item:hover {
+      box-shadow: var(--shadow-sm);
+      transform: translateY(-1px);
     }
 
-    .book-page-nav {
+    .vibe-challenge-icon {
+      font-size: 1.8rem;
+      flex-shrink: 0;
+    }
+
+    .vibe-challenge-item div {
       display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: var(--space-lg);
-      margin-bottom: var(--space-xl);
+      flex-direction: column;
+      gap: 0.15em;
     }
 
-    .book-page-nav .page-counter {
+    .vibe-challenge-item strong {
       font-size: var(--text-md);
-      font-weight: 600;
-      color: var(--color-text-muted);
     }
 
-    .book-end-page {
-      text-align: center;
-      padding: var(--space-xl);
-      font-size: var(--text-xl);
-      font-weight: 700;
+    .vibe-challenge-item span {
+      font-size: var(--text-sm);
       color: var(--color-text-muted);
+      line-height: 1.4;
     }
 
-    .download-section {
-      display: flex;
-      justify-content: center;
-      margin-top: var(--space-lg);
+    /* Responsive */
+    @media (max-width: 767px) {
+      #playground-part1 .flex,
+      .playground-wrapper .flex {
+        flex-direction: column;
+      }
+
+      .challenge-grid {
+        grid-template-columns: 1fr 1fr;
+      }
     }
   </style>
 </head>
@@ -544,7 +501,7 @@
   <header class="lesson-header">
     <div class="lesson-badge">
       <span class="lesson-number">04</span>
-      <span class="lesson-title">AI Picture Book</span>
+      <span class="lesson-title">AI Code &mdash; Build and Play</span>
     </div>
     <a href="/" class="back-link">&larr; Back to all lessons</a>
   </header>
@@ -555,91 +512,208 @@
     <!-- Main Content Area -->
     <main class="lesson-main" id="main-content">
 
-      <!-- Wizard Navigation -->
-      <nav class="wizard-nav" id="wizard-nav">
-        <button class="wizard-step-btn active" data-step="1">
-          <span class="step-num">1</span> Write Story
-        </button>
-        <button class="wizard-step-btn" data-step="2">
-          <span class="step-num">2</span> Split Pages
-        </button>
-        <button class="wizard-step-btn" data-step="3">
-          <span class="step-num">3</span> Illustrate
-        </button>
-        <button class="wizard-step-btn" data-step="4">
-          <span class="step-num">4</span> Preview
-        </button>
-      </nav>
+      <!-- ===== PART 1: AI Coder ===== -->
 
-      <!-- Step 1: Write Your Story -->
-      <div class="wizard-panel active" id="step-1">
-        <h2>Write Your Story</h2>
-        <p style="color: var(--color-text-muted); margin-bottom: var(--space-lg);">
-          Write your own story or let AI help you generate one. A good picture book story is around 150&ndash;250 words.
+      <!-- Welcome Banner -->
+      <div class="welcome-banner">
+        <h2>&#x1F4BB; Welcome to AI Coder!</h2>
+        <p>
+          No experience needed &mdash; just describe what you want to build, and AI will write the code for you. You are in charge of the ideas!
         </p>
+      </div>
 
-        <button class="btn btn-secondary mb-md" id="ai-story-btn">
-          &#x2728; Generate a story with AI
-        </button>
-
-        <div class="form-group">
-          <label for="story-input">Your story</label>
-          <textarea class="story-textarea" id="story-input" placeholder="Once upon a time..."></textarea>
-          <div class="story-word-count" id="story-word-count">0 words</div>
-        </div>
-
-        <div class="step-actions">
-          <div></div>
-          <button class="btn btn-primary" id="to-step-2">Next: Split into Pages &#x2192;</button>
+      <!-- Challenge Cards -->
+      <div class="lesson-section">
+        <h2 class="section-heading">&#x1F3AF; Pick a Challenge</h2>
+        <p class="mb-md" style="color: var(--color-text-muted); font-size: var(--text-sm);">
+          Click any challenge below to load its description into the playground. Start easy and work your way up!
+        </p>
+        <div class="challenge-grid" id="challenge-grid">
+          <!-- Rendered by JS -->
         </div>
       </div>
 
-      <!-- Step 2: Split into Pages -->
-      <div class="wizard-panel" id="step-2">
-        <h2>Split into Pages</h2>
-        <p style="color: var(--color-text-muted); margin-bottom: var(--space-lg);">
-          Your story has been split into pages. You can edit the text, reorder, add, or remove pages.
-        </p>
+      <!-- Code Playground Part 1 -->
+      <div class="lesson-section">
+        <h2 class="section-heading">&#x1F6E0;&#xFE0F; Code Playground</h2>
+        <div id="playground-part1"></div>
 
-        <div class="page-cards-list" id="page-cards-list"></div>
-
-        <button class="add-page-btn mt-md" id="add-page-btn">+ Add Page</button>
-
-        <div class="step-actions">
-          <button class="btn btn-secondary" id="back-to-1">&#x2190; Back to Story</button>
-          <button class="btn btn-primary" id="to-step-3">Next: Add Illustrations &#x2192;</button>
+        <div class="tips-box">
+          <h4>&#x1F4A1; Tips for Great Descriptions</h4>
+          <ul>
+            <li>Be specific! "A big red button" is better than "a button"</li>
+            <li>Describe the behavior: "When I click it, the number goes up by 1"</li>
+            <li>Start simple, then use "What to change?" to add features</li>
+            <li>If something doesn't work, try describing it differently</li>
+            <li>You can always click "Generate" again to start over</li>
+          </ul>
         </div>
       </div>
 
-      <!-- Step 3: Illustrate -->
-      <div class="wizard-panel" id="step-3">
-        <h2>Add Illustrations</h2>
-        <p style="color: var(--color-text-muted); margin-bottom: var(--space-lg);">
-          Generate an illustration for each page. AI will suggest a prompt based on your text &mdash; you can edit it before generating.
+      <!-- ===== VIBE CODING TECHNIQUES ===== -->
+      <div class="lesson-section">
+        <h2 class="section-heading">&#x1F3B8; Vibe Coding — Pro Techniques</h2>
+        <p style="margin-bottom: var(--space-md); color: var(--color-text-muted); max-width: 700px; line-height: 1.6;">
+          <strong>Vibe coding</strong> means building software by describing what you want in plain language, then guiding AI step-by-step. Here are the techniques real developers use every day:
         </p>
 
-        <div class="illustration-list" id="illustration-list"></div>
+        <div class="vibe-steps" id="vibe-steps">
+          <div class="vibe-step">
+            <div class="vibe-step-num">1</div>
+            <div class="vibe-step-content">
+              <h3>Start Simple, Then Iterate</h3>
+              <p>Don't describe everything at once. Start with the basics, then add features one at a time.</p>
+              <div class="vibe-example">
+                <div class="vibe-example-bad">
+                  <strong>Too much at once:</strong>
+                  <span>"Make a quiz game with 10 questions, a timer, score tracking, animations, sound effects, difficulty levels, and a leaderboard"</span>
+                </div>
+                <div class="vibe-example-good">
+                  <strong>Start simple:</strong>
+                  <span>"Make a quiz with 3 questions and show the score at the end"</span>
+                  <em>Then iterate: "Now add a timer" &rarr; "Now add sound effects" &rarr; ...</em>
+                </div>
+              </div>
+            </div>
+          </div>
 
-        <div class="step-actions">
-          <button class="btn btn-secondary" id="back-to-2">&#x2190; Back to Pages</button>
-          <button class="btn btn-primary" id="to-step-4">Next: Preview &#x2192;</button>
+          <div class="vibe-step">
+            <div class="vibe-step-num">2</div>
+            <div class="vibe-step-content">
+              <h3>Debug by Describing the Problem</h3>
+              <p>When something doesn't work, tell AI exactly what's wrong. Be a detective!</p>
+              <div class="vibe-example">
+                <div class="vibe-example-bad">
+                  <strong>Vague:</strong>
+                  <span>"It's broken, fix it"</span>
+                </div>
+                <div class="vibe-example-good">
+                  <strong>Specific:</strong>
+                  <span>"The score goes up by 2 instead of 1 when I click the button. Also the color doesn't change back after 1 second like I asked."</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="vibe-step">
+            <div class="vibe-step-num">3</div>
+            <div class="vibe-step-content">
+              <h3>Read the Code (Even a Little)</h3>
+              <p>You don't need to understand everything, but try to find the parts that match your description. Look for words you recognize!</p>
+              <div class="vibe-example">
+                <div class="vibe-example-good">
+                  <strong>Try this:</strong>
+                  <span>Look at the generated code and find where it says <code>score</code>, <code>color</code>, or <code>click</code>. If you asked for "the background turns blue when clicked", can you spot the line that does it?</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="vibe-step">
+            <div class="vibe-step-num">4</div>
+            <div class="vibe-step-content">
+              <h3>Chain Your Prompts</h3>
+              <p>Each "What to change?" builds on the last version. Think of it like giving directions one turn at a time, not all at once.</p>
+              <div class="vibe-example">
+                <div class="vibe-example-good">
+                  <strong>Good chain:</strong>
+                  <span>Generate: "A bouncing ball" &rarr; Change: "Make 3 balls" &rarr; Change: "Each ball is a different color" &rarr; Change: "When balls collide they swap colors"</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="vibe-step">
+            <div class="vibe-step-num">5</div>
+            <div class="vibe-step-content">
+              <h3>Combine Ideas from Different Generations</h3>
+              <p>If you generated something cool before, you can describe it to add it into your current project!</p>
+              <div class="vibe-example">
+                <div class="vibe-example-good">
+                  <strong>Mix and match:</strong>
+                  <span>"Take my current game and add a drawing canvas (like my earlier program) where the player can draw their own character before playing"</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Vibe Coding Challenge -->
+        <div class="vibe-challenge" id="vibe-challenge">
+          <h3>&#x1F3AF; Vibe Coding Challenge</h3>
+          <p>Put your new skills to the test! Pick one challenge below and complete it using <strong>only</strong> the Part 1 playground above:</p>
+          <div class="vibe-challenge-list">
+            <div class="vibe-challenge-item" data-steps="3">
+              <span class="vibe-challenge-icon">&#x1F680;</span>
+              <div>
+                <strong>3-Step Rocket</strong>
+                <span>Start with "a red circle" &rarr; in 3 iterations, turn it into a mini-game with scoring</span>
+              </div>
+            </div>
+            <div class="vibe-challenge-item" data-steps="4">
+              <span class="vibe-challenge-icon">&#x1F41B;</span>
+              <div>
+                <strong>Bug Hunter</strong>
+                <span>Generate any program, then ask for a feature that breaks it. Debug it using "describe the problem" technique</span>
+              </div>
+            </div>
+            <div class="vibe-challenge-item" data-steps="5">
+              <span class="vibe-challenge-icon">&#x1F9E9;</span>
+              <div>
+                <strong>Frankenstein Build</strong>
+                <span>Generate 2 different programs. Then create a third that combines the best features of both</span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
-      <!-- Step 4: Preview -->
-      <div class="wizard-panel" id="step-4">
-        <h2>Preview Your Picture Book</h2>
-        <p style="color: var(--color-text-muted); margin-bottom: var(--space-lg);">
-          Add a title and author name, then flip through your book!
+      <!-- ===== PART 2 DIVIDER ===== -->
+      <div class="part-divider">
+        <h2>&#x1F3AE; Part 2: AI Game Designer</h2>
+        <p>Design, build, and play your own web game &mdash; powered by AI!</p>
+      </div>
+
+      <!-- Game Type Selector -->
+      <div class="lesson-section">
+        <h2 class="section-heading">&#x1F579;&#xFE0F; Choose Your Game</h2>
+        <p style="margin-bottom: var(--space-lg); color: var(--color-text-muted);">
+          Pick a game type to get started. Clicking a card will load a starter prompt into the game builder below.
         </p>
+        <div class="game-grid" id="game-grid">
+          <!-- Game cards rendered by JS -->
+        </div>
+      </div>
 
-        <div class="book-preview" id="book-preview"></div>
+      <!-- Code Playground Part 2 (Game) -->
+      <div class="lesson-section">
+        <h2 class="section-heading">&#x1F6E0;&#xFE0F; Build Your Game</h2>
+        <p style="margin-bottom: var(--space-lg); color: var(--color-text-muted);">
+          Describe your game in plain English. AI will generate the code. Play-test it in the preview, then tell AI what to change!
+        </p>
+        <div class="playground-wrapper" id="playground-part2"></div>
+      </div>
 
-        <div class="download-section" id="download-section"></div>
+      <!-- Level Up Tips -->
+      <div class="lesson-section">
+        <h2 class="section-heading">&#x1F4A1; Level Up Your Game</h2>
+        <p style="margin-bottom: var(--space-lg); color: var(--color-text-muted);">
+          Already have a working game? Click a tip below to copy an improvement idea into the "What to change?" box.
+        </p>
+        <div class="tips-grid" id="tips-grid">
+          <!-- Tip cards rendered by JS -->
+        </div>
+      </div>
 
-        <div class="step-actions">
-          <button class="btn btn-secondary" id="back-to-3">&#x2190; Back to Illustrations</button>
-          <div></div>
+      <!-- Export -->
+      <div class="lesson-section">
+        <h2 class="section-heading">&#x1F4E6; Save Your Game</h2>
+        <div class="export-section">
+          <div class="export-info">
+            <h3>Download your game as an HTML file</h3>
+            <p>You can open it in any browser and share it with friends and family!</p>
+          </div>
+          <div id="export-btn"></div>
         </div>
       </div>
 
@@ -655,971 +729,365 @@
   <script src="/shared/components.js"></script>
   <script>
     // =============================================
-    // State
+    // Challenge Data (Part 1)
     // =============================================
-    var storyText = '';
-    var pages = [];          // Array of { text: string }
-    var illustrations = [];  // Array of { prompt: string, style: string, url: string|null }
-    var bookTitle = '';
-    var bookAuthor = '';
-    var currentStep = 1;
-    var previewPageIndex = -1; // -1 = cover, pages.length = "The End"
-
-    var imageStyles = [
-      { label: 'Cartoon / Anime', value: 'cartoon anime style, colorful, children\'s book illustration' },
-      { label: 'Watercolor', value: 'watercolor painting style, soft colors, children\'s book illustration' },
-      { label: 'Realistic Photo', value: 'realistic photograph, high detail' },
-      { label: 'Pixel Art', value: 'pixel art style, 8-bit retro' },
-      { label: 'Oil Painting', value: 'oil painting style, classical, picture book' },
-      { label: '3D Render', value: '3D rendered, studio lighting, children\'s book' },
+    var challenges = [
+      {
+        emoji: '\uD83C\uDFA8',
+        name: 'Color Clicker',
+        desc: 'A button that changes to a random color when clicked',
+        difficulty: 'easy',
+        prompt: 'Make a page with a big button in the center. When I click the button, it should change to a random background color. The button should say "Click me!" and be large and rounded.'
+      },
+      {
+        emoji: '\uD83D\uDD22',
+        name: 'Click Counter',
+        desc: 'A page that counts how many times you click a button',
+        difficulty: 'easy',
+        prompt: 'Make a page that counts how many times I click a button. Show the count in a big number in the center. The button should say "Click!" below the number. Make it look clean and colorful.'
+      },
+      {
+        emoji: '\u26BD',
+        name: 'Bouncing Ball',
+        desc: 'A ball that bounces around the screen',
+        difficulty: 'medium',
+        prompt: 'Create an animation of a colorful ball that bounces around the screen. The ball should bounce off all four walls. Make the ball a bright color and give it a smooth animation. The ball should move on its own as soon as the page loads.'
+      },
+      {
+        emoji: '\u270F\uFE0F',
+        name: 'Drawing Canvas',
+        desc: 'A canvas where you can draw with the mouse',
+        difficulty: 'medium',
+        prompt: 'Make a drawing canvas that fills most of the page. When I hold down the mouse button and move, it should draw a colorful line. Add a few color buttons at the top to pick different drawing colors (red, blue, green, black), and a "Clear" button to erase everything.'
+      },
+      {
+        emoji: '\uD83C\uDFAE',
+        name: 'Mini Game',
+        desc: 'A simple clicking game with a score',
+        difficulty: 'hard',
+        prompt: 'Create a simple clicking game. A circle should appear at a random position on the screen. When I click on it, my score goes up by 1 and the circle moves to a new random position. Show the score at the top. Add a 30-second timer that counts down, and when time runs out show "Game Over!" with the final score and a "Play Again" button.'
+      }
     ];
 
     // =============================================
-    // Wizard Navigation
+    // Game Type Data (Part 2)
     // =============================================
-    var wizardBtns = document.querySelectorAll('.wizard-step-btn');
-    var wizardPanels = document.querySelectorAll('.wizard-panel');
-
-    function goToStep(step) {
-      currentStep = step;
-
-      wizardBtns.forEach(function (btn) {
-        var s = parseInt(btn.getAttribute('data-step'), 10);
-        btn.classList.remove('active');
-        if (s === step) btn.classList.add('active');
-      });
-
-      wizardPanels.forEach(function (panel) {
-        panel.classList.remove('active');
-      });
-      document.getElementById('step-' + step).classList.add('active');
-
-      // Trigger step-specific rendering
-      if (step === 2) renderPageCards();
-      if (step === 3) renderIllustrations();
-      if (step === 4) renderPreview();
-
-      // Scroll to top
-      document.getElementById('main-content').scrollTop = 0;
-      window.scrollTo(0, 0);
-    }
-
-    wizardBtns.forEach(function (btn) {
-      btn.addEventListener('click', function () {
-        goToStep(parseInt(btn.getAttribute('data-step'), 10));
-      });
-    });
-
-    // Step nav buttons
-    document.getElementById('to-step-2').addEventListener('click', function () {
-      var text = document.getElementById('story-input').value.trim();
-      if (!text) {
-        alert('Please write or generate a story first!');
-        return;
+    var gameTypes = [
+      {
+        emoji: '\u2753',
+        name: 'Quiz Game',
+        desc: 'Create a trivia quiz with score tracking',
+        tag: 'Beginner-friendly',
+        quickStart: true,
+        prompt: 'Create a fun trivia quiz game with HTML, CSS, and JavaScript. The quiz should have 5 multiple-choice questions about random fun facts (animals, space, food, etc.). Show one question at a time with 4 answer buttons. When the player clicks an answer, highlight it green if correct or red if wrong, then automatically move to the next question after 1 second. Keep track of the score and show a final results screen with a fun message based on how many they got right. Use bright, colorful styling with rounded buttons and a clean layout. Make it look exciting and fun for a 12-year-old!'
+      },
+      {
+        emoji: '\u2B50',
+        name: 'Catch Game',
+        desc: 'Make a game where you catch falling objects',
+        tag: 'Uses mouse/touch',
+        quickStart: false,
+        prompt: 'Create a catching game with HTML, CSS, and JavaScript using a canvas element. Objects (use emoji like stars, fruits, or coins) fall from the top of the screen at random horizontal positions. The player moves a basket or character at the bottom using the mouse (track mouse X position). When a falling object reaches the basket, the score goes up. If an object hits the ground, the player loses a life (start with 3 lives). Objects should fall faster as the score increases. Show the score and lives at the top. When all lives are lost, show a "Game Over" screen with the final score and a "Play Again" button. Use colorful, fun styling!'
+      },
+      {
+        emoji: '\uD83E\uDDE9',
+        name: 'Maze Runner',
+        desc: 'Build a maze game with keyboard controls',
+        tag: 'Arrow keys',
+        quickStart: false,
+        prompt: 'Create a maze game with HTML, CSS, and JavaScript. Draw a simple maze on screen using a grid of cells (around 10x10). The player is a colored circle or emoji character that starts in the top-left corner. The goal (shown as a star or flag) is in the bottom-right corner. The player moves with arrow keys. Walls should block movement. Include a move counter and a simple timer that counts seconds. When the player reaches the goal, show a congratulations message with their time and number of moves, and a "Play Again" button that generates the same maze. Use bright colors: walls are dark, the path is light, and the player stands out.'
+      },
+      {
+        emoji: '\uD83D\uDC39',
+        name: 'Whack-a-Mole',
+        desc: 'Create a clicking speed game',
+        tag: 'Fast clicks',
+        quickStart: false,
+        prompt: 'Create a whack-a-mole style game with HTML, CSS, and JavaScript. Show a 3x3 grid of holes (styled as circles or squares). A mole (use a fun emoji like a hamster or gopher) randomly pops up in one hole at a time and stays for a short duration before hiding. The player clicks/taps the mole to score a point. The game lasts 30 seconds with a visible countdown timer. Moles should appear faster as time goes on. Show the current score prominently. When time runs out, show the final score with a rating (e.g., "Nice!" for 10+, "Amazing!" for 20+, "LEGENDARY!" for 30+) and a "Play Again" button. Make it colorful and bouncy with fun animations!'
       }
-      storyText = text;
-      taskCards.setComplete('write-story', true);
+    ];
 
-      // Auto-split on first entry if no pages yet
-      if (pages.length === 0) {
-        splitStoryWithAI(text);
+    // =============================================
+    // Iteration Tips Data (Part 2)
+    // =============================================
+    var iterationTips = [
+      {
+        emoji: '\uD83C\uDFA8',
+        title: 'Change the theme',
+        desc: 'Switch colors, change emojis, or pick a new visual style (space, ocean, jungle...)',
+        mod: 'Change the visual theme: use a space theme with dark background, stars, and space-related emojis. Update all colors to match.'
+      },
+      {
+        emoji: '\uD83D\uDD14',
+        title: 'Add sound effects',
+        desc: 'Make your game beep, ding, or buzz when things happen!',
+        mod: 'Add simple sound effects using the Web Audio API (oscillator beeps, no external files). Add a short high-pitched beep when scoring a point, a low buzz when losing, and a victory jingle when winning.'
+      },
+      {
+        emoji: '\uD83D\uDCCA',
+        title: 'Add difficulty levels',
+        desc: 'Let players choose Easy, Medium, or Hard before starting',
+        mod: 'Add a difficulty selector at the start of the game with three buttons: Easy, Medium, and Hard. Easy should be slower and more forgiving. Hard should be faster and more challenging. Show which difficulty is selected.'
+      },
+      {
+        emoji: '\u23F1\uFE0F',
+        title: 'Add a timer',
+        desc: 'Challenge players to finish before time runs out!',
+        mod: 'Add a countdown timer to the game. Give the player 60 seconds to get the highest score possible. Show the timer prominently at the top. When time runs out, show the final score and a "Try Again" button.'
+      },
+      {
+        emoji: '\uD83C\uDFC6',
+        title: 'High score board',
+        desc: 'Save top scores so players can try to beat their best',
+        mod: 'Add a high score feature using localStorage. After each game, check if the score is a new personal best. Show the top 5 scores on the game-over screen. Highlight the current score if it made the list.'
+      },
+      {
+        emoji: '\u2728',
+        title: 'Add animations',
+        desc: 'Make things bounce, spin, fade, or explode!',
+        mod: 'Add fun CSS animations: make items bounce when they appear, add a pulsing glow effect on the score, show a confetti-like particle burst when the player scores, and add a smooth fade transition between screens.'
+      },
+      {
+        emoji: '\uD83D\uDC64',
+        title: 'Player name',
+        desc: 'Let the player type their name and show it in the game',
+        mod: 'Add a start screen where the player can type their name. Show "Welcome, [name]!" during the game and include their name on the game-over screen with their score.'
+      },
+      {
+        emoji: '\uD83C\uDF1F',
+        title: 'Power-ups',
+        desc: 'Add special items that give bonus points or extra lives',
+        mod: 'Add power-up items that occasionally appear in the game. Include a golden star worth bonus points and a heart that gives an extra life. Power-ups should look different from regular items and have a special animation when collected.'
+      }
+    ];
+
+    // =============================================
+    // Part 1: Challenge Cards
+    // =============================================
+    var challengeGrid = document.getElementById('challenge-grid');
+
+    challenges.forEach(function (challenge) {
+      var card = document.createElement('div');
+      card.className = 'challenge-card';
+
+      var emojiEl = document.createElement('div');
+      emojiEl.className = 'challenge-emoji';
+      emojiEl.textContent = challenge.emoji;
+
+      var nameEl = document.createElement('div');
+      nameEl.className = 'challenge-name';
+      nameEl.textContent = challenge.name;
+
+      var descEl = document.createElement('div');
+      descEl.className = 'challenge-desc';
+      descEl.textContent = challenge.desc;
+
+      var diffLabel = document.createElement('span');
+      diffLabel.className = 'difficulty';
+      if (challenge.difficulty === 'easy') {
+        diffLabel.classList.add('difficulty-easy');
+        diffLabel.textContent = 'Easy';
+      } else if (challenge.difficulty === 'medium') {
+        diffLabel.classList.add('difficulty-medium');
+        diffLabel.textContent = 'Medium';
       } else {
-        goToStep(2);
+        diffLabel.classList.add('difficulty-hard');
+        diffLabel.textContent = 'Hard';
       }
-    });
 
-    document.getElementById('to-step-3').addEventListener('click', function () {
-      if (pages.length === 0) {
-        alert('You need at least one page!');
-        return;
-      }
-      // Save page edits
-      savePageEdits();
-      taskCards.setComplete('split-pages', true);
+      card.appendChild(emojiEl);
+      card.appendChild(nameEl);
+      card.appendChild(descEl);
+      card.appendChild(diffLabel);
 
-      // Sync illustrations array to match pages
-      syncIllustrations();
-      goToStep(3);
-    });
+      card.addEventListener('click', function () {
+        // Deselect all challenge cards
+        var allCards = challengeGrid.querySelectorAll('.challenge-card');
+        allCards.forEach(function (c) { c.classList.remove('card-selected'); });
+        // Select this one
+        card.classList.add('card-selected');
 
-    document.getElementById('to-step-4').addEventListener('click', function () {
-      goToStep(4);
-    });
-
-    document.getElementById('back-to-1').addEventListener('click', function () { goToStep(1); });
-    document.getElementById('back-to-2').addEventListener('click', function () { goToStep(2); });
-    document.getElementById('back-to-3').addEventListener('click', function () { goToStep(3); });
-
-    // =============================================
-    // Step 1: Story Writing
-    // =============================================
-    var storyInput = document.getElementById('story-input');
-    var wordCountEl = document.getElementById('story-word-count');
-
-    storyInput.addEventListener('input', function () {
-      var words = storyInput.value.trim().split(/\s+/).filter(function (w) { return w.length > 0; });
-      wordCountEl.textContent = words.length + ' words';
-    });
-
-    // AI Story Generation modal
-    document.getElementById('ai-story-btn').addEventListener('click', function () {
-      showGenerateModal();
-    });
-
-    function showGenerateModal() {
-      var overlay = document.createElement('div');
-      overlay.className = 'generate-modal-overlay';
-
-      var modal = document.createElement('div');
-      modal.className = 'generate-modal';
-
-      var title = document.createElement('h3');
-      title.textContent = 'Generate a Story with AI';
-      modal.appendChild(title);
-
-      // Prompt input
-      var promptGroup = document.createElement('div');
-      promptGroup.className = 'form-group mb-md';
-
-      var promptLabel = document.createElement('label');
-      promptLabel.textContent = 'What\'s your story about?';
-
-      var promptInput = document.createElement('input');
-      promptInput.className = 'input';
-      promptInput.type = 'text';
-      promptInput.placeholder = 'e.g. A rabbit who discovers a magic garden...';
-
-      promptGroup.appendChild(promptLabel);
-      promptGroup.appendChild(promptInput);
-      modal.appendChild(promptGroup);
-
-      // Genre selector
-      var genreLabel = document.createElement('label');
-      genreLabel.textContent = 'Pick a genre';
-      genreLabel.style.fontWeight = '600';
-      genreLabel.style.fontSize = 'var(--text-sm)';
-      genreLabel.style.display = 'block';
-      genreLabel.style.marginBottom = 'var(--space-sm)';
-      modal.appendChild(genreLabel);
-
-      var genres = ['Fantasy', 'Adventure', 'Funny', 'Mystery', 'Sci-Fi'];
-      var selectedGenre = 'Fantasy';
-
-      var genreGrid = document.createElement('div');
-      genreGrid.className = 'genre-grid';
-
-      var genreBtns = [];
-      genres.forEach(function (genre, idx) {
-        var btn = document.createElement('button');
-        btn.className = 'genre-option' + (idx === 0 ? ' selected' : '');
-        btn.textContent = genre;
-        btn.addEventListener('click', function () {
-          genreBtns.forEach(function (b) { b.classList.remove('selected'); });
-          btn.classList.add('selected');
-          selectedGenre = genre;
-        });
-        genreBtns.push(btn);
-        genreGrid.appendChild(btn);
-      });
-
-      modal.appendChild(genreGrid);
-
-      // Action buttons
-      var actions = document.createElement('div');
-      actions.className = 'modal-actions';
-
-      var cancelBtn = document.createElement('button');
-      cancelBtn.className = 'btn btn-secondary';
-      cancelBtn.textContent = 'Cancel';
-      cancelBtn.addEventListener('click', function () { overlay.remove(); });
-
-      var generateBtn = document.createElement('button');
-      generateBtn.className = 'btn btn-primary';
-      generateBtn.textContent = 'Generate';
-
-      actions.appendChild(cancelBtn);
-      actions.appendChild(generateBtn);
-      modal.appendChild(actions);
-
-      overlay.appendChild(modal);
-
-      // Close on overlay click
-      overlay.addEventListener('click', function (e) {
-        if (e.target === overlay) overlay.remove();
-      });
-
-      document.body.appendChild(overlay);
-      promptInput.focus();
-
-      // Generate handler
-      generateBtn.addEventListener('click', async function () {
-        var idea = promptInput.value.trim();
-        if (!idea) {
-          promptInput.style.borderColor = 'var(--color-error)';
-          return;
+        // Load prompt into Part 1 playground's generate textarea
+        var genTextarea = document.querySelector('#playground-part1 textarea');
+        if (genTextarea) {
+          genTextarea.value = challenge.prompt;
+          genTextarea.focus();
         }
 
-        generateBtn.disabled = true;
-        generateBtn.textContent = 'Generating...';
+        // Scroll to playground
+        document.getElementById('playground-part1').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
 
-        try {
-          var res = await fetch('/api/chat', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              system: 'You are a creative children\'s story writer. Write engaging, age-appropriate stories for children aged 10-13. Keep the story around 200 words. Just output the story text, no titles or meta-commentary.',
-              messages: [
-                { role: 'user', content: 'Write a ' + selectedGenre.toLowerCase() + ' children\'s story about: ' + idea }
-              ]
-            })
-          });
+      challengeGrid.appendChild(card);
+    });
 
-          var data = await res.json();
+    // =============================================
+    // Part 1: Code Playground
+    // =============================================
+    var playgroundPart1Container = document.getElementById('playground-part1');
+    var part1GenCount = 0;
 
-          if (!res.ok) {
-            alert(data.error || 'Something went wrong. Please try again.');
-            generateBtn.disabled = false;
-            generateBtn.textContent = 'Generate';
-            return;
+    var playgroundPart1 = window.CodePlayground(playgroundPart1Container, {
+      onRun: function (code) {
+        if (code && code.length > 50) {
+          taskCards.setComplete('build-first', true);
+          part1GenCount++;
+          if (part1GenCount >= 3) {
+            taskCards.setComplete('complete-three', true);
           }
-
-          storyInput.value = data.response || '';
-          storyInput.dispatchEvent(new Event('input'));
-          // Reset pages so they'll be re-split
-          pages = [];
-          illustrations = [];
-          overlay.remove();
-        } catch (err) {
-          alert('Could not reach the AI service. Please try again.');
-          generateBtn.disabled = false;
-          generateBtn.textContent = 'Generate';
         }
-      });
-    }
-
-    // =============================================
-    // Step 2: Split Pages
-    // =============================================
-    async function splitStoryWithAI(text) {
-      // Show loading
-      var list = document.getElementById('page-cards-list');
-      clearChildren(list);
-
-      var spinnerWrapper = document.createElement('div');
-      spinnerWrapper.className = 'flex-center p-lg';
-      var spinner = document.createElement('div');
-      spinner.className = 'loading-spinner';
-      spinnerWrapper.appendChild(spinner);
-
-      var loadingText = document.createElement('p');
-      loadingText.textContent = 'AI is splitting your story into pages...';
-      loadingText.style.color = 'var(--color-text-muted)';
-      loadingText.style.textAlign = 'center';
-      loadingText.style.marginTop = 'var(--space-md)';
-
-      list.appendChild(spinnerWrapper);
-      list.appendChild(loadingText);
-
-      goToStep(2);
-
-      try {
-        var res = await fetch('/api/chat', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            system: 'You split stories into picture book pages. Return ONLY the page text, with each page separated by exactly "---PAGE---". Split into 4-6 pages. Each page should be 1-3 sentences that work well with an illustration. Do not include page numbers or labels, just the text for each page separated by ---PAGE---.',
-            messages: [
-              { role: 'user', content: 'Split this story into 4-6 pages for a picture book:\n\n' + text }
-            ]
-          })
-        });
-
-        var data = await res.json();
-
-        if (!res.ok) {
-          clearChildren(list);
-          pages = text.split(/\n\n+/).filter(function (p) { return p.trim().length > 0; });
-          if (pages.length < 2) {
-            // Rough split by sentences
-            var sentences = text.match(/[^.!?]+[.!?]+/g) || [text];
-            var perPage = Math.ceil(sentences.length / 5);
-            pages = [];
-            for (var i = 0; i < sentences.length; i += perPage) {
-              pages.push({ text: sentences.slice(i, i + perPage).join(' ').trim() });
-            }
-          } else {
-            pages = pages.map(function (p) { return { text: p.trim() }; });
-          }
-          renderPageCards();
-          return;
-        }
-
-        var responseText = data.response || '';
-        var splits = responseText.split('---PAGE---').map(function (s) { return s.trim(); }).filter(function (s) { return s.length > 0; });
-
-        if (splits.length < 2) {
-          // Fallback: try splitting by double newlines or "Page X"
-          splits = responseText.split(/\n\s*\n|Page\s+\d+[:\.]?\s*/i).map(function (s) { return s.trim(); }).filter(function (s) { return s.length > 0; });
-        }
-
-        pages = splits.map(function (s) {
-          // Remove leading "Page X:" labels if present
-          return { text: s.replace(/^Page\s+\d+[:\.\-]?\s*/i, '').trim() };
-        });
-
-        if (pages.length === 0) {
-          pages = [{ text: text }];
-        }
-
-        syncIllustrations();
-        renderPageCards();
-      } catch (err) {
-        clearChildren(list);
-        // Fallback: basic paragraph split
-        var paras = text.split(/\n\n+/).filter(function (p) { return p.trim().length > 0; });
-        pages = paras.length >= 2 ? paras.map(function (p) { return { text: p.trim() }; }) : [{ text: text }];
-        renderPageCards();
-      }
-    }
-
-    function renderPageCards() {
-      var list = document.getElementById('page-cards-list');
-      clearChildren(list);
-
-      pages.forEach(function (page, index) {
-        var card = document.createElement('div');
-        card.className = 'page-card';
-
-        // Header
-        var header = document.createElement('div');
-        header.className = 'page-card-header';
-
-        var label = document.createElement('span');
-        label.className = 'page-card-label';
-        label.textContent = 'Page ' + (index + 1);
-
-        var actions = document.createElement('div');
-        actions.className = 'page-card-actions';
-
-        if (index > 0) {
-          var upBtn = document.createElement('button');
-          upBtn.textContent = '\u2191';
-          upBtn.title = 'Move up';
-          upBtn.addEventListener('click', function () {
-            savePageEdits();
-            var temp = pages[index];
-            pages[index] = pages[index - 1];
-            pages[index - 1] = temp;
-            // Also swap illustrations
-            if (illustrations[index] && illustrations[index - 1]) {
-              var tempIll = illustrations[index];
-              illustrations[index] = illustrations[index - 1];
-              illustrations[index - 1] = tempIll;
-            }
-            renderPageCards();
-          });
-          actions.appendChild(upBtn);
-        }
-
-        if (index < pages.length - 1) {
-          var downBtn = document.createElement('button');
-          downBtn.textContent = '\u2193';
-          downBtn.title = 'Move down';
-          downBtn.addEventListener('click', function () {
-            savePageEdits();
-            var temp = pages[index];
-            pages[index] = pages[index + 1];
-            pages[index + 1] = temp;
-            if (illustrations[index] && illustrations[index + 1]) {
-              var tempIll = illustrations[index];
-              illustrations[index] = illustrations[index + 1];
-              illustrations[index + 1] = tempIll;
-            }
-            renderPageCards();
-          });
-          actions.appendChild(downBtn);
-        }
-
-        if (pages.length > 1) {
-          var delBtn = document.createElement('button');
-          delBtn.className = 'delete-btn';
-          delBtn.textContent = '\u2715';
-          delBtn.title = 'Remove page';
-          delBtn.addEventListener('click', function () {
-            savePageEdits();
-            pages.splice(index, 1);
-            illustrations.splice(index, 1);
-            renderPageCards();
-          });
-          actions.appendChild(delBtn);
-        }
-
-        header.appendChild(label);
-        header.appendChild(actions);
-        card.appendChild(header);
-
-        // Textarea
-        var textarea = document.createElement('textarea');
-        textarea.className = 'page-edit-textarea';
-        textarea.value = page.text;
-        textarea.setAttribute('data-page-index', index);
-        card.appendChild(textarea);
-
-        // Word count
-        var footer = document.createElement('div');
-        footer.className = 'page-card-footer';
-        var wc = page.text.trim().split(/\s+/).filter(function (w) { return w.length > 0; }).length;
-        footer.textContent = wc + ' words';
-        textarea.addEventListener('input', function () {
-          var words = textarea.value.trim().split(/\s+/).filter(function (w) { return w.length > 0; });
-          footer.textContent = words.length + ' words';
-        });
-        card.appendChild(footer);
-
-        list.appendChild(card);
-      });
-    }
-
-    function savePageEdits() {
-      var textareas = document.querySelectorAll('.page-edit-textarea');
-      textareas.forEach(function (ta) {
-        var idx = parseInt(ta.getAttribute('data-page-index'), 10);
-        if (pages[idx]) {
-          pages[idx].text = ta.value.trim();
-        }
-      });
-    }
-
-    // Add page button
-    document.getElementById('add-page-btn').addEventListener('click', function () {
-      savePageEdits();
-      pages.push({ text: '' });
-      illustrations.push({ prompt: '', style: imageStyles[0].value, url: null });
-      renderPageCards();
-      // Scroll to the new card
-      var list = document.getElementById('page-cards-list');
-      list.lastElementChild.scrollIntoView({ behavior: 'smooth' });
-    });
-
-    // =============================================
-    // Step 3: Illustration
-    // =============================================
-    function syncIllustrations() {
-      // Ensure illustrations array matches pages array length
-      while (illustrations.length < pages.length) {
-        illustrations.push({ prompt: '', style: imageStyles[0].value, url: null });
-      }
-      while (illustrations.length > pages.length) {
-        illustrations.pop();
-      }
-    }
-
-    function renderIllustrations() {
-      savePageEdits();
-      syncIllustrations();
-      var list = document.getElementById('illustration-list');
-      clearChildren(list);
-
-      pages.forEach(function (page, index) {
-        var row = document.createElement('div');
-        row.className = 'illustration-row';
-
-        // Text side
-        var textSide = document.createElement('div');
-        textSide.className = 'illust-text-side';
-
-        var pageLabel = document.createElement('h4');
-        pageLabel.textContent = 'Page ' + (index + 1);
-        textSide.appendChild(pageLabel);
-
-        var textContent = document.createElement('div');
-        textContent.className = 'illust-text-content';
-        textContent.textContent = page.text || '(empty page)';
-        textSide.appendChild(textContent);
-
-        // Prompt label
-        var promptLabel = document.createElement('label');
-        promptLabel.textContent = 'Image prompt';
-        promptLabel.style.fontWeight = '600';
-        promptLabel.style.fontSize = 'var(--text-sm)';
-        promptLabel.style.display = 'block';
-        promptLabel.style.marginBottom = 'var(--space-xs)';
-        textSide.appendChild(promptLabel);
-
-        // Prompt input
-        var promptInput = document.createElement('textarea');
-        promptInput.className = 'illust-prompt-input';
-        promptInput.placeholder = 'Describe the illustration...';
-        promptInput.value = illustrations[index].prompt || '';
-        promptInput.setAttribute('data-illust-index', index);
-        textSide.appendChild(promptInput);
-
-        // Auto-suggest button
-        var suggestBtn = document.createElement('button');
-        suggestBtn.className = 'btn btn-secondary';
-        suggestBtn.style.fontSize = 'var(--text-sm)';
-        suggestBtn.style.marginBottom = 'var(--space-sm)';
-        suggestBtn.textContent = '\u2728 Suggest prompt';
-        suggestBtn.addEventListener('click', function () {
-          autoSuggestPrompt(index, promptInput, suggestBtn);
-        });
-        textSide.appendChild(suggestBtn);
-
-        // Style selector
-        var styleRow = document.createElement('div');
-        styleRow.className = 'illust-style-row';
-
-        var styleLabel = document.createElement('label');
-        styleLabel.textContent = 'Style:';
-        styleRow.appendChild(styleLabel);
-
-        var styleSelect = document.createElement('select');
-        styleSelect.className = 'illust-style-select';
-        styleSelect.setAttribute('data-style-index', index);
-
-        imageStyles.forEach(function (style) {
-          var option = document.createElement('option');
-          option.value = style.value;
-          option.textContent = style.label;
-          if (illustrations[index].style === style.value) {
-            option.selected = true;
-          }
-          styleSelect.appendChild(option);
-        });
-
-        styleSelect.addEventListener('change', function () {
-          illustrations[index].style = styleSelect.value;
-        });
-
-        styleRow.appendChild(styleSelect);
-        textSide.appendChild(styleRow);
-
-        // Buttons
-        var btnRow = document.createElement('div');
-        btnRow.className = 'illust-btn-row';
-
-        var genBtn = document.createElement('button');
-        genBtn.className = 'btn btn-primary';
-        genBtn.style.fontSize = 'var(--text-sm)';
-        genBtn.textContent = 'Generate';
-
-        var regenBtn = document.createElement('button');
-        regenBtn.className = 'btn btn-secondary';
-        regenBtn.style.fontSize = 'var(--text-sm)';
-        regenBtn.textContent = 'Regenerate';
-        if (!illustrations[index].url) {
-          regenBtn.style.display = 'none';
-        }
-
-        btnRow.appendChild(genBtn);
-        btnRow.appendChild(regenBtn);
-        textSide.appendChild(btnRow);
-
-        row.appendChild(textSide);
-
-        // Image side
-        var imageSide = document.createElement('div');
-        imageSide.className = 'illust-image-side';
-
-        var imagePlaceholder = document.createElement('div');
-        imagePlaceholder.className = 'illust-image-placeholder';
-
-        if (illustrations[index].url) {
-          imagePlaceholder.classList.add('has-image');
-          var img = document.createElement('img');
-          img.src = illustrations[index].url;
-          img.alt = 'Illustration for page ' + (index + 1);
-          imagePlaceholder.appendChild(img);
-        } else {
-          imagePlaceholder.textContent = 'No illustration yet.\nGenerate one!';
-          imagePlaceholder.style.whiteSpace = 'pre-line';
-        }
-
-        imageSide.appendChild(imagePlaceholder);
-        row.appendChild(imageSide);
-
-        list.appendChild(row);
-
-        // Generate/regenerate handler
-        function doGenerate() {
-          var prompt = promptInput.value.trim();
-          if (!prompt) {
-            alert('Please write or suggest an image prompt first.');
-            return;
-          }
-
-          illustrations[index].prompt = prompt;
-          illustrations[index].style = styleSelect.value;
-
-          var fullPrompt = prompt + ', ' + styleSelect.value;
-
-          genBtn.disabled = true;
-          regenBtn.disabled = true;
-          genBtn.textContent = 'Generating...';
-
-          // Show spinner in image area
-          clearChildren(imagePlaceholder);
-          imagePlaceholder.className = 'illust-image-placeholder';
-          var spinnerW = document.createElement('div');
-          spinnerW.className = 'loading-spinner';
-          imagePlaceholder.appendChild(spinnerW);
-
-          fetch('/api/image', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ prompt: fullPrompt })
-          })
-          .then(function (res) { return res.json().then(function (d) { return { ok: res.ok, data: d }; }); })
-          .then(function (result) {
-            clearChildren(imagePlaceholder);
-
-            if (!result.ok || !result.data.url) {
-              imagePlaceholder.className = 'illust-image-placeholder';
-              imagePlaceholder.textContent = result.data.error || 'Failed to generate. Try again.';
-              return;
-            }
-
-            illustrations[index].url = result.data.url;
-            imagePlaceholder.classList.add('has-image');
-            var img = document.createElement('img');
-            img.src = result.data.url;
-            img.alt = 'Illustration for page ' + (index + 1);
-            imagePlaceholder.appendChild(img);
-            regenBtn.style.display = '';
-
-            // Check if all pages have illustrations
-            checkIllustrationProgress();
-          })
-          .catch(function () {
-            clearChildren(imagePlaceholder);
-            imagePlaceholder.className = 'illust-image-placeholder';
-            imagePlaceholder.textContent = 'Could not reach the image service. Try again.';
-          })
-          .finally(function () {
-            genBtn.disabled = false;
-            regenBtn.disabled = false;
-            genBtn.textContent = 'Generate';
-          });
-        }
-
-        genBtn.addEventListener('click', doGenerate);
-        regenBtn.addEventListener('click', doGenerate);
-
-        // Auto-suggest on first render if prompt is empty and page has text
-        if (!illustrations[index].prompt && page.text) {
-          autoSuggestPrompt(index, promptInput, suggestBtn);
-        }
-      });
-    }
-
-    function autoSuggestPrompt(index, promptInput, suggestBtn) {
-      var text = pages[index] ? pages[index].text : '';
-      if (!text) return;
-
-      suggestBtn.disabled = true;
-      suggestBtn.textContent = 'Suggesting...';
-
-      fetch('/api/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          system: 'You are an image prompt writer for a children\'s picture book. Given a page of text, suggest a short, vivid image generation prompt (1-2 sentences). Focus on the visual scene, characters, and mood. Do NOT include art style in the prompt. Just output the prompt text, nothing else.',
-          messages: [
-            { role: 'user', content: 'Based on this picture book page text, suggest a short image generation prompt:\n\n' + text }
-          ]
-        })
+      },
+      guidedTasks: challenges.map(function (c) {
+        return {
+          title: c.emoji + ' ' + c.name,
+          description: c.desc,
+          prompt: c.prompt
+        };
       })
-      .then(function (res) { return res.json(); })
-      .then(function (data) {
-        if (data.response) {
-          promptInput.value = data.response.trim();
-          illustrations[index].prompt = data.response.trim();
-        }
-      })
-      .catch(function () {
-        // Silent fail — user can type manually
-      })
-      .finally(function () {
-        suggestBtn.disabled = false;
-        suggestBtn.textContent = '\u2728 Suggest prompt';
-      });
-    }
-
-    function checkIllustrationProgress() {
-      var count = illustrations.filter(function (ill) { return ill.url; }).length;
-      if (count > 0) {
-        taskCards.setComplete('illustrate', true);
-      }
-    }
+    });
 
     // =============================================
-    // Step 4: Preview
+    // Part 2: Game Type Selector
     // =============================================
-    function renderPreview() {
-      var preview = document.getElementById('book-preview');
-      clearChildren(preview);
+    var gameGrid = document.getElementById('game-grid');
 
-      previewPageIndex = -1; // start at cover
+    gameTypes.forEach(function (game) {
+      var card = document.createElement('div');
+      card.className = 'game-card';
 
-      // Cover
-      var cover = document.createElement('div');
-      cover.className = 'book-cover';
-      cover.id = 'book-cover';
-
-      // Cover image
-      var firstIllUrl = null;
-      for (var i = 0; i < illustrations.length; i++) {
-        if (illustrations[i].url) { firstIllUrl = illustrations[i].url; break; }
-      }
-      if (firstIllUrl) {
-        var coverImgDiv = document.createElement('div');
-        coverImgDiv.className = 'book-cover-image';
-        var coverImg = document.createElement('img');
-        coverImg.src = firstIllUrl;
-        coverImg.alt = 'Cover illustration';
-        coverImgDiv.appendChild(coverImg);
-        cover.appendChild(coverImgDiv);
+      if (game.quickStart) {
+        var badge = document.createElement('span');
+        badge.className = 'quick-start';
+        badge.textContent = 'Easy Start';
+        card.appendChild(badge);
       }
 
-      var titleDiv = document.createElement('div');
-      titleDiv.className = 'book-cover-title';
-      var titleInput = document.createElement('input');
-      titleInput.type = 'text';
-      titleInput.value = bookTitle;
-      titleInput.placeholder = 'Your Book Title';
-      titleInput.addEventListener('input', function () {
-        bookTitle = titleInput.value;
-        if (bookTitle.trim()) taskCards.setComplete('title', true);
-      });
-      titleDiv.appendChild(titleInput);
-      cover.appendChild(titleDiv);
+      var emojiEl = document.createElement('span');
+      emojiEl.className = 'game-emoji';
+      emojiEl.textContent = game.emoji;
 
-      var authorDiv = document.createElement('div');
-      authorDiv.className = 'book-cover-author';
-      var authorInput = document.createElement('input');
-      authorInput.type = 'text';
-      authorInput.value = bookAuthor;
-      authorInput.placeholder = 'By Your Name';
-      authorInput.addEventListener('input', function () {
-        bookAuthor = authorInput.value;
-        if (bookAuthor.trim()) taskCards.setComplete('author', true);
-      });
-      authorDiv.appendChild(authorInput);
-      cover.appendChild(authorDiv);
+      var nameEl = document.createElement('div');
+      nameEl.className = 'game-name';
+      nameEl.textContent = game.name;
 
-      preview.appendChild(cover);
+      var descEl = document.createElement('div');
+      descEl.className = 'game-desc';
+      descEl.textContent = game.desc;
 
-      // Page display area
-      var pageDisplay = document.createElement('div');
-      pageDisplay.className = 'book-page-display';
-      pageDisplay.id = 'book-page-display';
-      preview.appendChild(pageDisplay);
+      var tagEl = document.createElement('span');
+      tagEl.className = 'game-tag';
+      tagEl.textContent = game.tag;
 
-      // Navigation
-      var nav = document.createElement('div');
-      nav.className = 'book-page-nav';
+      card.appendChild(emojiEl);
+      card.appendChild(nameEl);
+      card.appendChild(descEl);
+      card.appendChild(tagEl);
 
-      var prevBtn = document.createElement('button');
-      prevBtn.className = 'btn btn-secondary';
-      prevBtn.textContent = '\u2190 Previous';
-      prevBtn.id = 'preview-prev';
+      card.addEventListener('click', function () {
+        // Deselect all game cards
+        var allCards = gameGrid.querySelectorAll('.game-card');
+        allCards.forEach(function (c) { c.classList.remove('card-selected'); });
 
-      var counter = document.createElement('span');
-      counter.className = 'page-counter';
-      counter.id = 'preview-counter';
+        // Select this one
+        card.classList.add('card-selected');
 
-      var nextBtn = document.createElement('button');
-      nextBtn.className = 'btn btn-primary';
-      nextBtn.textContent = 'Next \u2192';
-      nextBtn.id = 'preview-next';
-
-      nav.appendChild(prevBtn);
-      nav.appendChild(counter);
-      nav.appendChild(nextBtn);
-      preview.appendChild(nav);
-
-      // Navigation event handlers
-      prevBtn.addEventListener('click', function () {
-        if (previewPageIndex > -1) {
-          previewPageIndex--;
-          showPreviewPage();
+        // Pre-fill the Part 2 playground prompt
+        var promptArea = document.querySelector('#playground-part2 textarea');
+        if (promptArea) {
+          promptArea.value = game.prompt;
+          promptArea.focus();
+          document.getElementById('playground-part2').scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
+
+        taskCards.setComplete('choose-game', true);
       });
 
-      nextBtn.addEventListener('click', function () {
-        if (previewPageIndex < pages.length) {
-          previewPageIndex++;
-          showPreviewPage();
+      gameGrid.appendChild(card);
+    });
+
+    // =============================================
+    // Part 2: Code Playground (Game)
+    // =============================================
+    var playgroundPart2Container = document.getElementById('playground-part2');
+    var gameGenCount = 0;
+
+    var playgroundPart2 = window.CodePlayground(playgroundPart2Container, {
+      onRun: function (code) {
+        gameGenCount++;
+        if (gameGenCount >= 1) {
+          taskCards.setComplete('choose-game', true);
+        }
+        if (gameGenCount >= 2) {
+          taskCards.setComplete('playtest', true);
+        }
+      }
+    });
+
+    // =============================================
+    // Part 2: Iteration Tips
+    // =============================================
+    var tipsGrid = document.getElementById('tips-grid');
+    var tipClickCount = 0;
+
+    iterationTips.forEach(function (tip) {
+      var card = document.createElement('div');
+      card.className = 'tip-card';
+
+      var emojiEl = document.createElement('div');
+      emojiEl.className = 'tip-emoji';
+      emojiEl.textContent = tip.emoji;
+
+      var titleEl = document.createElement('div');
+      titleEl.className = 'tip-title';
+      titleEl.textContent = tip.title;
+
+      var descEl = document.createElement('div');
+      descEl.className = 'tip-desc';
+      descEl.textContent = tip.desc;
+
+      card.appendChild(emojiEl);
+      card.appendChild(titleEl);
+      card.appendChild(descEl);
+
+      card.addEventListener('click', function () {
+        // Find the modification textarea in Part 2 playground (second textarea)
+        var textareas = document.querySelectorAll('#playground-part2 textarea');
+        if (textareas.length >= 2) {
+          textareas[1].value = tip.mod;
+          textareas[1].focus();
+          document.getElementById('playground-part2').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        tipClickCount++;
+        if (tipClickCount >= 2) {
+          taskCards.setComplete('playtest', true);
         }
       });
 
-      showPreviewPage();
-      taskCards.setComplete('preview', true);
-    }
-
-    function showPreviewPage() {
-      var display = document.getElementById('book-page-display');
-      var counter = document.getElementById('preview-counter');
-      var prevBtn = document.getElementById('preview-prev');
-      var nextBtn = document.getElementById('preview-next');
-      var cover = document.getElementById('book-cover');
-
-      if (!display) return;
-
-      clearChildren(display);
-
-      if (previewPageIndex === -1) {
-        // Show cover, hide page display
-        cover.style.display = '';
-        display.style.display = 'none';
-        counter.textContent = 'Cover';
-        prevBtn.disabled = true;
-        nextBtn.disabled = false;
-        return;
-      }
-
-      cover.style.display = 'none';
-      display.style.display = '';
-
-      if (previewPageIndex >= pages.length) {
-        // "The End" page
-        var endPage = document.createElement('div');
-        endPage.className = 'book-end-page';
-        endPage.textContent = 'The End';
-        display.appendChild(endPage);
-        counter.textContent = 'The End';
-        prevBtn.disabled = false;
-        nextBtn.disabled = true;
-        return;
-      }
-
-      // Regular page
-      var page = pages[previewPageIndex];
-      var ill = illustrations[previewPageIndex];
-
-      if (ill && ill.url) {
-        var img = document.createElement('img');
-        img.src = ill.url;
-        img.alt = 'Illustration for page ' + (previewPageIndex + 1);
-        display.appendChild(img);
-      }
-
-      var textEl = document.createElement('div');
-      textEl.className = 'page-text';
-      textEl.textContent = page.text;
-      display.appendChild(textEl);
-
-      counter.textContent = 'Page ' + (previewPageIndex + 1) + ' of ' + pages.length;
-      prevBtn.disabled = false;
-      nextBtn.disabled = false;
-    }
+      tipsGrid.appendChild(card);
+    });
 
     // =============================================
-    // Download Picture Book
+    // Part 2: Export Button
     // =============================================
-    var downloadContainer = document.getElementById('download-section');
+    var exportContainer = document.getElementById('export-btn');
 
-    window.ExportButton(downloadContainer, {
-      label: 'Download Picture Book',
-      filename: 'my-ai-picture-book.html',
-      format: 'html',
+    window.ExportButton(exportContainer, {
+      label: 'Download My Game',
       getData: function () {
-        taskCards.setComplete('download', true);
-        var lines = [];
-        lines.push('<!DOCTYPE html>');
-        lines.push('<html lang="en">');
-        lines.push('<head>');
-        lines.push('<meta charset="UTF-8">');
-        lines.push('<meta name="viewport" content="width=device-width, initial-scale=1.0">');
-
-        var safeTitle = escapeHtml(bookTitle || 'My AI Picture Book');
-        lines.push('<title>' + safeTitle + '</title>');
-        lines.push('<style>');
-        lines.push('* { box-sizing: border-box; margin: 0; padding: 0; }');
-        lines.push('body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #f8f9fc; color: #1e2330; }');
-        lines.push('.book { max-width: 700px; margin: 0 auto; padding: 40px 20px; }');
-        lines.push('.cover { background: linear-gradient(135deg, #1e2330, #2d3352); color: #fff; border-radius: 16px; padding: 48px 32px; text-align: center; margin-bottom: 32px; }');
-        lines.push('.cover img { max-width: 400px; width: 100%; border-radius: 12px; margin-bottom: 24px; }');
-        lines.push('.cover h1 { font-size: 2rem; margin-bottom: 8px; }');
-        lines.push('.cover .author { font-size: 1.2rem; opacity: 0.8; }');
-        lines.push('.page { background: #fff; border: 1px solid #e2e5ee; border-radius: 16px; padding: 40px; margin-bottom: 24px; text-align: center; }');
-        lines.push('.page img { max-width: 500px; width: 100%; border-radius: 12px; margin-bottom: 24px; }');
-        lines.push('.page .text { font-size: 1.25rem; line-height: 1.8; max-width: 600px; margin: 0 auto; }');
-        lines.push('.page .page-num { font-size: 0.85rem; color: #6b7280; margin-top: 16px; }');
-        lines.push('.end { text-align: center; padding: 48px; font-size: 1.5rem; font-weight: 700; color: #6b7280; }');
-        lines.push('.nav { display: flex; justify-content: center; gap: 16px; margin-bottom: 32px; flex-wrap: wrap; }');
-        lines.push('.nav a { display: inline-block; padding: 8px 16px; background: #4f6ef7; color: #fff; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 0.9rem; }');
-        lines.push('.nav a:hover { background: #3b5ae0; }');
-        lines.push('.section { display: none; }');
-        lines.push('.section.active { display: block; }');
-        lines.push('</style>');
-        lines.push('</head>');
-        lines.push('<body>');
-        lines.push('<div class="book">');
-
-        // Navigation
-        lines.push('<div class="nav" id="nav">');
-        lines.push('<a href="#" onclick="showPage(-1); return false;">Cover</a>');
-        for (var i = 0; i < pages.length; i++) {
-          lines.push('<a href="#" onclick="showPage(' + i + '); return false;">Page ' + (i + 1) + '</a>');
+        var code = playgroundPart2.getCode();
+        if (!code) {
+          // Fall back to Part 1 code if no game was built
+          code = playgroundPart1.getCode();
         }
-        lines.push('<a href="#" onclick="showPage(' + pages.length + '); return false;">The End</a>');
-        lines.push('</div>');
-
-        // Cover
-        var firstUrl = '';
-        for (var j = 0; j < illustrations.length; j++) {
-          if (illustrations[j].url) { firstUrl = illustrations[j].url; break; }
+        if (!code) {
+          return '<!-- No code generated yet! Go back and build something first. -->';
         }
-
-        lines.push('<div class="section active" id="page--1">');
-        lines.push('<div class="cover">');
-        if (firstUrl) {
-          lines.push('<img src="' + escapeHtml(firstUrl) + '" alt="Cover">');
-        }
-        lines.push('<h1>' + safeTitle + '</h1>');
-        lines.push('<div class="author">' + escapeHtml(bookAuthor || 'Anonymous') + '</div>');
-        lines.push('</div>');
-        lines.push('</div>');
-
-        // Pages
-        for (var k = 0; k < pages.length; k++) {
-          lines.push('<div class="section" id="page-' + k + '">');
-          lines.push('<div class="page">');
-          if (illustrations[k] && illustrations[k].url) {
-            lines.push('<img src="' + escapeHtml(illustrations[k].url) + '" alt="Page ' + (k + 1) + '">');
-          }
-          lines.push('<div class="text">' + escapeHtml(pages[k].text) + '</div>');
-          lines.push('<div class="page-num">Page ' + (k + 1) + ' of ' + pages.length + '</div>');
-          lines.push('</div>');
-          lines.push('</div>');
-        }
-
-        // The End
-        lines.push('<div class="section" id="page-' + pages.length + '">');
-        lines.push('<div class="end">The End</div>');
-        lines.push('</div>');
-
-        lines.push('</div>');
-
-        // Script for navigation
-        lines.push('<script>');
-        lines.push('var current = -1;');
-        lines.push('function showPage(n) {');
-        lines.push('  document.querySelectorAll(".section").forEach(function(s) { s.classList.remove("active"); });');
-        lines.push('  var el = document.getElementById("page-" + n);');
-        lines.push('  if (el) { el.classList.add("active"); current = n; }');
-        lines.push('}');
-        lines.push('document.addEventListener("keydown", function(e) {');
-        lines.push('  if (e.key === "ArrowRight") { showPage(current + 1); }');
-        lines.push('  if (e.key === "ArrowLeft") { showPage(current - 1); }');
-        lines.push('});');
-        lines.push('</' + 'script>');
-        lines.push('</body>');
-        lines.push('</html>');
-
-        return lines.join('\n');
-      }
+        taskCards.setComplete('export-game', true);
+        return code;
+      },
+      filename: 'my-ai-game.html',
+      format: 'html'
     });
 
     // =============================================
@@ -1628,30 +1096,24 @@
     var taskSidebar = document.getElementById('task-sidebar');
 
     var taskCards = window.TaskCards(taskSidebar, [
-      { id: 'write-story', title: 'Write or generate your story', description: 'Create a story for your picture book' },
-      { id: 'split-pages', title: 'Split into 4-6 pages', description: 'Break your story into picture book pages' },
-      { id: 'illustrate', title: 'Generate illustrations', description: 'Create an image for each page' },
-      { id: 'preview', title: 'Preview your picture book', description: 'See how it all comes together' },
-      { id: 'title', title: 'Add title and author name', description: 'Give your book a name' },
-      { id: 'download', title: 'Download your picture book', description: 'Save your creation as HTML' }
+      { id: 'build-first', title: 'Build your first program', description: 'Generate any program using the Part 1 playground' },
+      { id: 'complete-three', title: 'Complete 3 coding challenges', description: 'Try at least 3 different challenges in Part 1' },
+      { id: 'vibe-challenge', title: 'Try a Vibe Coding challenge', description: 'Complete one of the 3 vibe coding challenges' },
+      { id: 'choose-game', title: 'Choose and generate a game', description: 'Pick a game type and generate it in Part 2' },
+      { id: 'playtest', title: 'Play-test and improve 2 times', description: 'Use tips or your own ideas to iterate' },
+      { id: 'export-game', title: 'Export your game', description: 'Download your game as an HTML file' }
     ]);
 
     // =============================================
-    // Utility
+    // Vibe Challenge click handlers
     // =============================================
-    function clearChildren(el) {
-      while (el.firstChild) {
-        el.removeChild(el.firstChild);
-      }
-    }
-
-    function escapeHtml(str) {
-      return str
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;');
-    }
+    var vibeChallengeItems = document.querySelectorAll('.vibe-challenge-item');
+    vibeChallengeItems.forEach(function (item) {
+      item.addEventListener('click', function () {
+        taskCards.setComplete('vibe-challenge', true);
+        document.getElementById('playground-part1').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    });
   </script>
 
 </body>

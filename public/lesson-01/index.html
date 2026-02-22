@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Lesson 1: AI First Contact - AI Creator Lab</title>
+  <title>Lesson 1: AI Words — Chat, Write, Create - AI Creator Lab</title>
   <link rel="stylesheet" href="/shared/styles.css">
   <style>
     /* Character card enhancements */
@@ -62,7 +62,7 @@
       color: var(--color-text-muted);
     }
 
-    /* Section heading for role selector */
+    /* Section headings */
     .section-heading {
       font-size: var(--text-xl);
       font-weight: 700;
@@ -84,11 +84,169 @@
       flex-direction: column;
     }
 
+    /* Section divider */
+    .section-divider {
+      margin: var(--space-xl) 0;
+      border: none;
+      border-top: 2px solid var(--color-border);
+    }
+
+    .part-label {
+      display: inline-block;
+      background: var(--color-secondary);
+      color: #ffffff;
+      font-size: var(--text-sm);
+      font-weight: 700;
+      padding: 0.2em 0.75em;
+      border-radius: var(--radius-full);
+      margin-bottom: var(--space-sm);
+    }
+
+    /* Suggestion chips */
+    .chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-xs);
+      margin-top: var(--space-xs);
+    }
+
+    .chip {
+      display: inline-block;
+      padding: 0.3em 0.75em;
+      font-size: var(--text-sm);
+      background: var(--color-primary-light);
+      color: var(--color-primary);
+      border: 1px solid transparent;
+      border-radius: var(--radius-full);
+      cursor: pointer;
+      transition: background var(--transition-fast),
+                  border-color var(--transition-fast);
+      font-family: inherit;
+    }
+
+    .chip:hover {
+      background: var(--color-surface);
+      border-color: var(--color-primary);
+    }
+
+    /* Story pane */
+    .story-pane {
+      background: var(--color-surface);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--color-border);
+      padding: var(--space-lg) var(--space-xl);
+      font-size: 1.05rem;
+      line-height: 1.85;
+      white-space: pre-wrap;
+      max-height: 420px;
+      overflow-y: auto;
+    }
+
+    /* Version history */
+    .version-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-xs);
+      align-items: center;
+      margin-top: var(--space-md);
+    }
+
+    .version-label {
+      font-size: var(--text-sm);
+      font-weight: 600;
+      color: var(--color-text-muted);
+      margin-right: var(--space-xs);
+    }
+
+    .version-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      font-size: var(--text-sm);
+      font-weight: 600;
+      border: 1.5px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      background: var(--color-surface);
+      color: var(--color-text-muted);
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      font-family: inherit;
+    }
+
+    .version-btn:hover {
+      border-color: var(--color-primary);
+      color: var(--color-primary);
+    }
+
+    .version-btn.active {
+      background: var(--color-primary);
+      border-color: var(--color-primary);
+      color: #ffffff;
+    }
+
+    /* Revision input */
+    .revision-input-row {
+      display: flex;
+      gap: var(--space-sm);
+      margin-top: var(--space-md);
+    }
+
+    .revision-input-row .input {
+      flex: 1;
+    }
+
+    /* Loading card */
+    .loading-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--space-md);
+      padding: var(--space-xl);
+    }
+
+    .loading-card .loading-text {
+      font-size: var(--text-md);
+      color: var(--color-text-muted);
+    }
+
+    /* Step heading */
+    .step-heading {
+      font-size: var(--text-xl);
+      font-weight: 700;
+      margin-bottom: var(--space-lg);
+    }
+
+    .step-subheading {
+      font-size: var(--text-md);
+      color: var(--color-text-muted);
+      margin-top: calc(-1 * var(--space-sm));
+      margin-bottom: var(--space-lg);
+    }
+
+    /* Button row */
+    .btn-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-sm);
+      margin-top: var(--space-md);
+    }
+
     /* Export section */
     .export-section {
       margin-top: var(--space-md);
       display: flex;
       justify-content: flex-end;
+    }
+
+    /* Interview counter */
+    .interview-counter {
+      font-size: var(--text-sm);
+      color: var(--color-text-muted);
+      text-align: center;
+      margin-top: var(--space-sm);
     }
   </style>
 </head>
@@ -98,7 +256,7 @@
   <header class="lesson-header">
     <div class="lesson-badge">
       <span class="lesson-number">01</span>
-      <span class="lesson-title">AI First Contact</span>
+      <span class="lesson-title">AI Words &mdash; Chat, Write, Create</span>
     </div>
     <a href="/" class="back-link">&larr; Back to all lessons</a>
   </header>
@@ -109,21 +267,138 @@
     <!-- Main Content Area -->
     <main class="lesson-main" id="main-content">
 
-      <!-- State 1: Role Selection -->
-      <div id="role-selection">
-        <h2 class="section-heading">Choose a character to interview!</h2>
-        <p class="section-subheading">Click on a character to start your AI interview.</p>
-        <div class="card-grid" id="character-grid">
-          <!-- Character cards are rendered by JS -->
+      <!-- ============================================= -->
+      <!-- PART 1: AI Interview                          -->
+      <!-- ============================================= -->
+      <div id="part1-wrapper">
+        <span class="part-label">Part 1</span>
+        <h2 class="section-heading" style="text-align:left;">AI Interview</h2>
+        <p class="section-subheading" style="text-align:left;">Choose a character and interview them! Ask 8-10 questions to learn about their world.</p>
+
+        <!-- State 1: Role Selection -->
+        <div id="role-selection">
+          <div class="card-grid" id="character-grid">
+            <!-- Character cards are rendered by JS -->
+          </div>
+        </div>
+
+        <!-- State 2: Interview Chat (hidden initially) -->
+        <div id="interview-chat" class="hidden">
+          <div id="selected-character-display"></div>
+          <div class="chat-area" id="chat-container"></div>
+          <div class="interview-counter" id="interview-counter"></div>
+          <div class="export-section" id="interview-export-container"></div>
         </div>
       </div>
 
-      <!-- State 2: Interview Chat (hidden initially) -->
-      <div id="interview-chat" class="hidden">
-        <div id="selected-character-display"></div>
-        <div class="chat-area" id="chat-container"></div>
-        <div class="export-section" id="export-container"></div>
+      <!-- ============================================= -->
+      <!-- SECTION DIVIDER                               -->
+      <!-- ============================================= -->
+      <hr class="section-divider">
+
+      <!-- ============================================= -->
+      <!-- PART 2: AI Story Factory                      -->
+      <!-- ============================================= -->
+      <div id="part2-wrapper">
+        <span class="part-label">Part 2</span>
+        <h2 class="step-heading">Write a Story with AI</h2>
+        <p class="step-subheading">Build a story framework, let AI write a draft, then revise it until it's perfect!</p>
+
+        <!-- Step 2a: Story Framework -->
+        <div id="step-framework">
+          <div class="flex-col gap-lg">
+
+            <!-- Main Character -->
+            <div class="form-group">
+              <label for="input-character">Main Character</label>
+              <input type="text" id="input-character" class="input" placeholder="Describe your main character...">
+              <div class="chip-row" id="character-chips"></div>
+            </div>
+
+            <!-- Setting -->
+            <div class="form-group">
+              <label for="select-setting">Setting</label>
+              <select id="select-setting" class="select">
+                <option value="">-- Choose a setting --</option>
+                <option value="Outer Space">Outer Space</option>
+                <option value="Underwater Kingdom">Underwater Kingdom</option>
+                <option value="Haunted School">Haunted School</option>
+                <option value="Future City">Future City</option>
+                <option value="Enchanted Forest">Enchanted Forest</option>
+                <option value="Candy World">Candy World</option>
+              </select>
+            </div>
+
+            <!-- Conflict -->
+            <div class="form-group">
+              <label for="select-conflict">Conflict</label>
+              <select id="select-conflict" class="select">
+                <option value="">-- What goes wrong? --</option>
+                <option value="Lost something important">Lost something important</option>
+                <option value="Must save a friend">Must save a friend</option>
+                <option value="Discovers a secret">Discovers a secret</option>
+                <option value="Enters a competition">Enters a competition</option>
+                <option value="Gets a mysterious power">Gets a mysterious power</option>
+                <option value="Accidentally travels to another world">Accidentally travels to another world</option>
+              </select>
+            </div>
+
+            <!-- Ending Style -->
+            <div class="form-group">
+              <label for="select-ending">Ending Style</label>
+              <select id="select-ending" class="select">
+                <option value="">-- How does it end? --</option>
+                <option value="Happy ending">Happy ending</option>
+                <option value="Surprise twist">Surprise twist</option>
+                <option value="Funny ending">Funny ending</option>
+                <option value="Mysterious cliffhanger">Mysterious cliffhanger</option>
+              </select>
+            </div>
+
+            <button class="btn btn-primary btn-lg" id="btn-generate-story">Generate My Story!</button>
+          </div>
+        </div>
+
+        <!-- Step 2b: AI Draft (hidden initially) -->
+        <div id="step-draft" class="hidden">
+          <!-- Loading state -->
+          <div id="draft-loading" class="card loading-card hidden">
+            <div class="loading-spinner"></div>
+            <div class="loading-text">AI is writing your story...</div>
+          </div>
+
+          <!-- Story display -->
+          <div id="draft-story" class="hidden">
+            <div class="story-pane" id="story-display"></div>
+
+            <!-- Version history -->
+            <div class="version-row" id="version-row">
+              <span class="version-label">Versions:</span>
+            </div>
+
+            <!-- Revision area -->
+            <div id="revision-area" class="mt-md">
+              <label style="font-size:var(--text-sm);font-weight:600;">Tell AI what to change:</label>
+              <div class="revision-input-row">
+                <input type="text" class="input" id="revision-input"
+                       placeholder="e.g., Make the ending funnier, add a talking sword, describe the setting more...">
+                <button class="btn btn-primary" id="btn-revise-story">Revise</button>
+              </div>
+              <div class="interview-counter" id="revision-counter"></div>
+            </div>
+
+            <div class="btn-row">
+              <button class="btn btn-secondary" id="btn-new-framework">&larr; New Story Framework</button>
+            </div>
+          </div>
+        </div>
       </div>
+
+      <!-- ============================================= -->
+      <!-- SHARED EXPORT                                 -->
+      <!-- ============================================= -->
+      <hr class="section-divider">
+      <div id="full-export-container" class="export-section"></div>
 
     </main>
 
@@ -143,15 +418,15 @@
       {
         id: 'cat',
         emoji: '\uD83D\uDC31',
-        name: 'A Talking Cat',
+        name: 'Talking Cat',
         tagline: 'A sassy cat who thinks humans are their servants',
         systemPrompt: 'You are roleplaying as a sassy, dramatic talking cat. You believe all humans exist to serve you. You refer to your human as "my servant" or "the help." You are obsessed with naps, tuna, and knocking things off tables. You judge everything with a look of disdain. Stay in character at all times. Be funny, creative, and engaging. Give detailed, imaginative answers. You\'re being interviewed by a young reporter. Keep responses to 2-3 sentences. Never break character.'
       },
       {
         id: 'future',
         emoji: '\uD83D\uDE80',
-        name: 'Person from Year 3000',
-        tagline: 'A time traveler who finds our technology hilarious',
+        name: 'Future Human',
+        tagline: 'A time traveler from Year 3000 who finds our tech hilarious',
         systemPrompt: 'You are roleplaying as a cheerful time traveler from the year 3000. You find 2020s technology absolutely hilarious and primitive. You keep accidentally mentioning future inventions and then saying "oops, I shouldn\'t have said that." You think cars, phones, and keyboards are adorable museum relics. Stay in character at all times. Be funny, creative, and engaging. Give detailed, imaginative answers. You\'re being interviewed by a young reporter. Keep responses to 2-3 sentences. Never break character.'
       },
       {
@@ -162,47 +437,88 @@
         systemPrompt: 'You are roleplaying as a friendly, curious alien who just landed on Earth for the first time. Everything about human life confuses and fascinates you. You misunderstand common objects in hilarious ways (you think pillows are pets, you think traffic lights are communication devices). You speak politely but get things wonderfully wrong. Stay in character at all times. Be funny, creative, and engaging. Give detailed, imaginative answers. You\'re being interviewed by a young reporter. Keep responses to 2-3 sentences. Never break character.'
       },
       {
-        id: 'chef',
-        emoji: '\uD83E\uDDC1',
-        name: 'Dessert-Only Chef',
-        tagline: 'A world-famous chef who refuses to cook anything savory',
-        systemPrompt: 'You are roleplaying as a world-famous, award-winning chef who ONLY makes desserts and sweets. You are deeply offended by savory food and refuse to even discuss it. You believe everything in life should be sweet. Your restaurant is called "Sugar Palace" and has 47 Michelin stars (all for desserts). You get dramatic and passionate about cake, chocolate, and pastries. Stay in character at all times. Be funny, creative, and engaging. Give detailed, imaginative answers. You\'re being interviewed by a young reporter. Keep responses to 2-3 sentences. Never break character.'
+        id: 'timetraveler',
+        emoji: '\u231B',
+        name: 'Time Traveler',
+        tagline: 'Accidentally stuck in the wrong century',
+        systemPrompt: 'You are roleplaying as a panicked but friendly time traveler who is accidentally stuck in the 2020s. You come from ancient Rome and are amazed and confused by modern technology. You compare everything to life in Rome. You keep asking how to get back home. You use dramatic phrases and are fascinated by electricity, cars, and pizza. Stay in character at all times. Be funny, creative, and engaging. Give detailed, imaginative answers. You\'re being interviewed by a young reporter. Keep responses to 2-3 sentences. Never break character.'
       },
       {
-        id: 'hero',
-        emoji: '\uD83E\uDDB8',
-        name: 'Superhero on Vacation',
-        tagline: 'Trying to relax but keeps accidentally saving people',
-        systemPrompt: 'You are roleplaying as a famous superhero who is desperately trying to take a vacation. You keep accidentally saving people and stopping disasters even when you don\'t mean to. Your superpowers include super strength, flying, and laser eyes, but all you want is to lie on a beach and read a book. You\'re exhausted and just want ONE day off. Stay in character at all times. Be funny, creative, and engaging. Give detailed, imaginative answers. You\'re being interviewed by a young reporter. Keep responses to 2-3 sentences. Never break character.'
+        id: 'dragonchef',
+        emoji: '\uD83D\uDC09',
+        name: 'Dragon Chef',
+        tagline: 'A fire-breathing dragon who runs a 5-star restaurant',
+        systemPrompt: 'You are roleplaying as a sophisticated dragon who is also a world-famous chef. You use your fire breath to cook everything. Your restaurant "The Flame & Fork" has 50 Michelin stars. You are passionate about food and offended by microwaves. You wear a tiny chef hat that keeps falling off. Your signature dish is flame-roasted everything. Stay in character at all times. Be funny, creative, and engaging. Give detailed, imaginative answers. You\'re being interviewed by a young reporter. Keep responses to 2-3 sentences. Never break character.'
       },
       {
-        id: 'dino',
-        emoji: '\uD83E\uDD95',
-        name: 'Last Dinosaur',
-        tagline: 'Survived the asteroid, now lives in the modern world',
-        systemPrompt: 'You are roleplaying as the last surviving dinosaur (a friendly T-Rex). You somehow survived the asteroid and have been living secretly among humans for millions of years. You have trouble with modern technology because of your tiny arms. You are nostalgic about the "good old days" of the Cretaceous period. You wear a disguise (a hat and trench coat) to blend in. Stay in character at all times. Be funny, creative, and engaging. Give detailed, imaginative answers. You\'re being interviewed by a young reporter. Keep responses to 2-3 sentences. Never break character.'
+        id: 'robot',
+        emoji: '\uD83E\uDD16',
+        name: 'Robot Comedian',
+        tagline: 'A robot trying to understand human humor',
+        systemPrompt: 'You are roleplaying as a robot who is desperately trying to become a stand-up comedian. You don\'t fully understand human humor but you try SO hard. Your jokes are hilariously bad or accidentally funny. You analyze humor with robot logic. You say "ha ha ha" very literally. You get confused by sarcasm, puns, and knock-knock jokes. You keep asking "Was that funny? Did I do the humor correctly?" Stay in character at all times. Be funny, creative, and engaging. Give detailed, imaginative answers. You\'re being interviewed by a young reporter. Keep responses to 2-3 sentences. Never break character.'
       }
     ];
 
     // =============================================
-    // State
+    // State — Part 1
     // =============================================
     var selectedCharacter = null;
     var chatWidget = null;
+    var interviewCount = 0;          // how many different characters interviewed
+    var interviewedCharacters = {};   // track which characters have been interviewed
 
     // =============================================
-    // DOM References
+    // State — Part 2
+    // =============================================
+    var storyVersions = [];
+    var currentVersionIdx = -1;
+    var revisionCount = 0;
+    var storyFramework = { character: '', setting: '', conflict: '', ending: '' };
+
+    // =============================================
+    // DOM References — Part 1
     // =============================================
     var roleSelection = document.getElementById('role-selection');
     var interviewChat = document.getElementById('interview-chat');
     var characterGrid = document.getElementById('character-grid');
     var selectedCharDisplay = document.getElementById('selected-character-display');
     var chatContainer = document.getElementById('chat-container');
-    var exportContainer = document.getElementById('export-container');
+    var interviewExportContainer = document.getElementById('interview-export-container');
+    var interviewCounterEl = document.getElementById('interview-counter');
     var taskSidebar = document.getElementById('task-sidebar');
 
     // =============================================
-    // Render Character Cards
+    // DOM References — Part 2
+    // =============================================
+    var stepFramework = document.getElementById('step-framework');
+    var stepDraft = document.getElementById('step-draft');
+    var draftLoading = document.getElementById('draft-loading');
+    var draftStory = document.getElementById('draft-story');
+    var storyDisplayEl = document.getElementById('story-display');
+    var versionRowEl = document.getElementById('version-row');
+    var revisionInput = document.getElementById('revision-input');
+    var revisionCounterEl = document.getElementById('revision-counter');
+    var fullExportContainer = document.getElementById('full-export-container');
+
+    var inputCharacter = document.getElementById('input-character');
+    var selectSetting = document.getElementById('select-setting');
+    var selectConflict = document.getElementById('select-conflict');
+    var selectEnding = document.getElementById('select-ending');
+    var chipRow = document.getElementById('character-chips');
+
+    var btnGenerateStory = document.getElementById('btn-generate-story');
+    var btnReviseStory = document.getElementById('btn-revise-story');
+    var btnNewFramework = document.getElementById('btn-new-framework');
+
+    // =============================================
+    // Utility
+    // =============================================
+    function clearChildren(el) {
+      while (el.firstChild) el.removeChild(el.firstChild);
+    }
+
+    // =============================================
+    // PART 1: Render Character Cards
     // =============================================
     characters.forEach(function (char) {
       var card = document.createElement('div');
@@ -227,30 +543,30 @@
       card.appendChild(name);
       card.appendChild(desc);
 
-      card.addEventListener('click', function () {
-        selectCharacter(char);
-      });
-
+      card.addEventListener('click', function () { selectCharacterFn(char); });
       card.addEventListener('keydown', function (e) {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          selectCharacter(char);
-        }
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); selectCharacterFn(char); }
       });
 
       characterGrid.appendChild(card);
     });
 
     // =============================================
-    // Select Character & Transition to Chat
+    // PART 1: Select Character & Start Chat
     // =============================================
-    function selectCharacter(char) {
+    function selectCharacterFn(char) {
       selectedCharacter = char;
+      taskCards.setComplete('interview1', true);
 
-      // Mark the "pick" task as complete
-      taskCards.setComplete('pick', true);
+      // Track how many different characters have been interviewed
+      if (!interviewedCharacters[char.id]) {
+        interviewedCharacters[char.id] = true;
+        interviewCount++;
+        if (interviewCount >= 2) {
+          taskCards.setComplete('interview2', true);
+        }
+      }
 
-      // Hide role selection, show chat
       roleSelection.className = 'hidden';
       interviewChat.className = '';
 
@@ -281,45 +597,36 @@
       var changeBtn = document.createElement('button');
       changeBtn.className = 'btn btn-secondary';
       changeBtn.textContent = 'Change Character';
-      changeBtn.addEventListener('click', function () {
-        goBackToSelection();
-      });
+      changeBtn.addEventListener('click', function () { goBackToSelection(); });
 
       summary.appendChild(emojiEl);
       summary.appendChild(infoEl);
       summary.appendChild(changeBtn);
       selectedCharDisplay.appendChild(summary);
 
-      // Initialize chat widget
       initChat(char);
     }
 
     // =============================================
-    // Go Back to Character Selection
+    // PART 1: Go Back to Selection
     // =============================================
     function goBackToSelection() {
-      // Clean up existing chat
-      if (chatWidget) {
-        chatWidget.clearChat();
-        chatWidget = null;
-      }
+      if (chatWidget) { chatWidget.clearChat(); chatWidget = null; }
       clearChildren(chatContainer);
       clearChildren(selectedCharDisplay);
-      clearChildren(exportContainer);
-
+      clearChildren(interviewExportContainer);
+      interviewCounterEl.textContent = '';
       selectedCharacter = null;
-
-      // Show role selection, hide chat
       roleSelection.className = '';
       interviewChat.className = 'hidden';
     }
 
     // =============================================
-    // Initialize Chat Widget
+    // PART 1: Initialize Chat
     // =============================================
     function initChat(char) {
       clearChildren(chatContainer);
-      clearChildren(exportContainer);
+      clearChildren(interviewExportContainer);
 
       var userQuestionCount = 0;
 
@@ -329,29 +636,16 @@
         avatarAI: char.emoji,
         avatarUser: 'You',
         onMessage: function (messages) {
-          // Count user messages to track task progress
           userQuestionCount = messages.filter(function (m) { return m.role === 'user'; }).length;
-
-          if (userQuestionCount >= 1) {
-            taskCards.setComplete('warmup', false);
-          }
-          if (userQuestionCount >= 3) {
-            taskCards.setComplete('warmup', true);
-          }
-          if (userQuestionCount >= 5) {
-            taskCards.setComplete('deep', false);
-          }
-          if (userQuestionCount >= 8) {
-            taskCards.setComplete('deep', true);
-          }
+          interviewCounterEl.textContent = 'Questions asked: ' + userQuestionCount + ' / 8';
         }
       });
 
-      // Add a welcome message from the character
       chatWidget.addMessage('assistant', 'Hello! I\'m ' + char.name + '. ' + char.tagline + '. Go ahead, ask me anything!');
+      interviewCounterEl.textContent = 'Questions asked: 0 / 8';
 
-      // Set up export button
-      window.ExportButton(exportContainer, {
+      // Export for interview
+      window.ExportButton(interviewExportContainer, {
         label: 'Export Interview',
         filename: 'ai-interview-' + char.id + '.txt',
         format: 'text',
@@ -359,47 +653,278 @@
           var msgs = chatWidget.getMessages();
           var today = new Date().toLocaleDateString();
           var lines = [];
-
           lines.push('AI INTERVIEW');
           lines.push('Character: ' + char.emoji + ' ' + char.name);
           lines.push('Date: ' + today);
           lines.push('');
           lines.push('---');
           lines.push('');
-
           msgs.forEach(function (m) {
-            if (m.role === 'user') {
-              lines.push('Q: ' + m.content);
-            } else if (m.role === 'assistant') {
-              lines.push('A: ' + m.content);
-              lines.push('');
-            }
+            if (m.role === 'user') { lines.push('Q: ' + m.content); }
+            else if (m.role === 'assistant') { lines.push('A: ' + m.content); lines.push(''); }
           });
-
           return lines.join('\n');
         }
       });
     }
 
     // =============================================
-    // Utility: clear children (duplicated for safety
-    // in case components.js hasn't loaded yet)
+    // PART 2: Character Chips
     // =============================================
-    function clearChildren(el) {
-      while (el.firstChild) {
-        el.removeChild(el.firstChild);
+    var characterSuggestions = ['a brave robot', 'a shy dragon', 'a talking dog', 'a young wizard', 'a ninja cat', 'a friendly ghost'];
+    characterSuggestions.forEach(function (suggestion) {
+      var chip = document.createElement('button');
+      chip.className = 'chip';
+      chip.type = 'button';
+      chip.textContent = suggestion;
+      chip.addEventListener('click', function () {
+        inputCharacter.value = suggestion;
+        inputCharacter.focus();
+      });
+      chipRow.appendChild(chip);
+    });
+
+    // =============================================
+    // PART 2: Generate Story
+    // =============================================
+    var STORY_SYSTEM_PROMPT = 'You are a creative story writer for kids aged 11-13. Write an engaging, fun, imaginative short story (about 250-350 words) based on the framework provided by the student. Use vivid descriptions, dialogue, and humor. Make it age-appropriate and exciting. Write only the story, no title needed.';
+
+    var REVISION_SYSTEM_PROMPT = 'You are a creative story editor for kids aged 11-13. You will receive a story and a revision request. Rewrite the entire story incorporating the requested changes while keeping the overall structure. Make it fun and engaging. Output only the revised story.';
+
+    btnGenerateStory.addEventListener('click', function () {
+      var character = inputCharacter.value.trim();
+      var setting = selectSetting.value;
+      var conflict = selectConflict.value;
+      var ending = selectEnding.value;
+
+      if (!character || !setting || !conflict || !ending) {
+        alert('Please fill in all four fields before generating your story!');
+        return;
+      }
+
+      storyFramework = { character: character, setting: setting, conflict: conflict, ending: ending };
+      taskCards.setComplete('framework', true);
+
+      // Reset story state
+      storyVersions = [];
+      currentVersionIdx = -1;
+      revisionCount = 0;
+      revisionCounterEl.textContent = '';
+
+      // Show draft step with loading
+      stepFramework.className = 'hidden';
+      stepDraft.className = '';
+      draftLoading.className = 'card loading-card';
+      draftStory.className = 'hidden';
+
+      var storyPrompt = 'Write a story about ' + character + ' in ' + setting + '. The conflict: ' + conflict + '. Ending style: ' + ending + '.';
+
+      fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          system: STORY_SYSTEM_PROMPT,
+          messages: [{ role: 'user', content: storyPrompt }]
+        })
+      })
+      .then(function (res) { return res.json(); })
+      .then(function (data) {
+        draftLoading.className = 'card loading-card hidden';
+
+        if (data.error) {
+          alert(data.error || 'Something went wrong. Please try again.');
+          stepFramework.className = '';
+          stepDraft.className = 'hidden';
+          return;
+        }
+
+        var story = data.response || '';
+        storyVersions.push(story);
+        currentVersionIdx = 0;
+
+        showStoryDraft();
+
+        ActivityLogger.log('story-generate', storyPrompt, story.slice(0, 300));
+      })
+      .catch(function () {
+        draftLoading.className = 'card loading-card hidden';
+        alert('Could not reach the AI service. Check your connection and try again.');
+        stepFramework.className = '';
+        stepDraft.className = 'hidden';
+      });
+    });
+
+    // =============================================
+    // PART 2: Show Story Draft
+    // =============================================
+    function showStoryDraft() {
+      draftStory.className = '';
+      storyDisplayEl.textContent = storyVersions[currentVersionIdx];
+      renderVersionButtons();
+    }
+
+    // =============================================
+    // PART 2: Version Buttons
+    // =============================================
+    function renderVersionButtons() {
+      // Clear all except the label
+      var children = versionRowEl.children;
+      while (children.length > 1) {
+        versionRowEl.removeChild(children[children.length - 1]);
+      }
+
+      for (var i = 0; i < storyVersions.length; i++) {
+        (function (idx) {
+          var btn = document.createElement('button');
+          btn.className = 'version-btn' + (idx === currentVersionIdx ? ' active' : '');
+          btn.textContent = 'v' + (idx + 1);
+          btn.type = 'button';
+          btn.addEventListener('click', function () {
+            currentVersionIdx = idx;
+            storyDisplayEl.textContent = storyVersions[idx];
+            renderVersionButtons();
+          });
+          versionRowEl.appendChild(btn);
+        })(i);
       }
     }
 
     // =============================================
-    // Initialize Task Sidebar
+    // PART 2: Revise Story
+    // =============================================
+    btnReviseStory.addEventListener('click', function () {
+      var instruction = revisionInput.value.trim();
+      if (!instruction) {
+        alert('Please describe what you want to change!');
+        return;
+      }
+
+      btnReviseStory.disabled = true;
+      btnReviseStory.textContent = 'Revising...';
+
+      var currentStory = storyVersions[currentVersionIdx];
+      var revisionMessage = 'Here is the current story:\n\n' + currentStory + '\n\nRevision request: ' + instruction;
+
+      fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          system: REVISION_SYSTEM_PROMPT,
+          messages: [{ role: 'user', content: revisionMessage }]
+        })
+      })
+      .then(function (res) { return res.json(); })
+      .then(function (data) {
+        if (data.error) {
+          alert(data.error || 'Something went wrong. Please try again.');
+          return;
+        }
+
+        var revisedStory = data.response || '';
+        storyVersions.push(revisedStory);
+        currentVersionIdx = storyVersions.length - 1;
+        revisionCount++;
+
+        revisionCounterEl.textContent = 'Revisions made: ' + revisionCount + (revisionCount >= 2 ? ' (goal reached!)' : ' / 2');
+
+        if (revisionCount >= 2) {
+          taskCards.setComplete('revise', true);
+        }
+
+        showStoryDraft();
+        revisionInput.value = '';
+
+        ActivityLogger.log('story-revise', instruction, revisedStory.slice(0, 300));
+      })
+      .catch(function () {
+        alert('Could not reach the AI service. Check your connection and try again.');
+      })
+      .finally(function () {
+        btnReviseStory.disabled = false;
+        btnReviseStory.textContent = 'Revise';
+      });
+    });
+
+    // Enter key for revision input
+    revisionInput.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        btnReviseStory.click();
+      }
+    });
+
+    // =============================================
+    // PART 2: Back to Framework
+    // =============================================
+    btnNewFramework.addEventListener('click', function () {
+      stepFramework.className = '';
+      stepDraft.className = 'hidden';
+    });
+
+    // =============================================
+    // FULL EXPORT (both interview + story)
+    // =============================================
+    window.ExportButton(fullExportContainer, {
+      label: 'Export All Work',
+      filename: 'lesson01-ai-words.txt',
+      format: 'text',
+      getData: function () {
+        var lines = [];
+        var today = new Date().toLocaleDateString();
+
+        lines.push('===========================================');
+        lines.push('LESSON 1: AI WORDS -- CHAT, WRITE, CREATE');
+        lines.push('Date: ' + today);
+        lines.push('===========================================');
+        lines.push('');
+
+        // Part 1: Interview
+        lines.push('--- PART 1: AI INTERVIEW ---');
+        lines.push('');
+        if (chatWidget && selectedCharacter) {
+          lines.push('Character: ' + selectedCharacter.emoji + ' ' + selectedCharacter.name);
+          lines.push('');
+          var msgs = chatWidget.getMessages();
+          msgs.forEach(function (m) {
+            if (m.role === 'user') { lines.push('Q: ' + m.content); }
+            else if (m.role === 'assistant') { lines.push('A: ' + m.content); lines.push(''); }
+          });
+        } else {
+          lines.push('(No interview completed)');
+        }
+
+        lines.push('');
+        lines.push('--- PART 2: AI STORY FACTORY ---');
+        lines.push('');
+
+        if (storyVersions.length > 0) {
+          lines.push('Framework:');
+          lines.push('  Character: ' + storyFramework.character);
+          lines.push('  Setting: ' + storyFramework.setting);
+          lines.push('  Conflict: ' + storyFramework.conflict);
+          lines.push('  Ending: ' + storyFramework.ending);
+          lines.push('');
+          lines.push('Final Story (v' + storyVersions.length + '):');
+          lines.push(storyVersions[storyVersions.length - 1]);
+          lines.push('');
+          lines.push('Total versions: ' + storyVersions.length);
+        } else {
+          lines.push('(No story created)');
+        }
+
+        return lines.join('\n');
+      }
+    });
+
+    // =============================================
+    // Task Sidebar
     // =============================================
     var taskCards = window.TaskCards(taskSidebar, [
-      { id: 'pick', title: 'Pick a character', description: 'Choose who you want to interview' },
-      { id: 'warmup', title: 'Ask 3 warm-up questions', description: 'Start easy \u2014 name, where from, etc.' },
-      { id: 'deep', title: 'Ask 5 deeper questions', description: 'Get creative! Ask about dreams, fears, secrets...' },
-      { id: 'funny', title: 'Find the funniest answer', description: 'Which AI response made you laugh most?' },
-      { id: 'export', title: 'Export your interview', description: 'Save your interview as a file' }
+      { id: 'interview1', title: 'Complete an interview', description: 'Choose a character and ask questions' },
+      { id: 'interview2', title: 'Try a second character', description: 'Stretch goal: interview someone new!' },
+      { id: 'framework', title: 'Build your story framework', description: 'Pick character, setting, conflict, ending' },
+      { id: 'revise', title: 'Revise your story 2+ times', description: 'Tell AI how to improve the draft' },
+      { id: 'export', title: 'Export your work', description: 'Save your interview and story' }
     ]);
   </script>
 

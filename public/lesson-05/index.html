@@ -3,274 +3,392 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Lesson 5: AI Musician - AI Creator Lab</title>
+  <title>Lesson 5: AI Ethics - Truth, Bias, and You - AI Creator Lab</title>
   <link rel="stylesheet" href="/shared/styles.css">
   <style>
-    /* Genre cards grid */
-    .genre-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-      gap: var(--space-md);
-    }
-
-    .genre-card {
+    /* Tab navigation */
+    .level-tabs {
+      display: flex;
+      gap: var(--space-xs);
       background: var(--color-surface);
+      border-radius: var(--radius-lg);
+      padding: var(--space-xs);
+      border: 1px solid var(--color-border);
+      margin-bottom: var(--space-lg);
+    }
+
+    .level-tab {
+      flex: 1;
+      padding: 0.7em 1em;
+      font-size: var(--text-md);
+      font-weight: 600;
+      font-family: inherit;
+      background: transparent;
+      color: var(--color-text-muted);
+      border: 2px solid transparent;
       border-radius: var(--radius-md);
-      box-shadow: var(--shadow-sm);
-      padding: var(--space-lg);
-      border: 2px solid var(--color-border);
-      text-align: center;
       cursor: pointer;
-      transition: box-shadow var(--transition-normal),
-                  transform var(--transition-normal),
-                  border-color var(--transition-normal);
+      transition: background var(--transition-fast),
+                  color var(--transition-fast),
+                  border-color var(--transition-fast);
+      text-align: center;
     }
 
-    .genre-card:hover {
-      box-shadow: var(--shadow-md);
-      transform: translateY(-2px);
+    .level-tab:hover {
+      background: var(--color-bg);
+      color: var(--color-text);
     }
 
-    .genre-card.card-selected {
+    .level-tab.active {
+      background: var(--color-primary);
+      color: #ffffff;
       border-color: var(--color-primary);
-      box-shadow: 0 0 0 3px var(--color-primary-light);
     }
 
-    .genre-card .genre-emoji {
-      font-size: 2.5rem;
+    .level-tab .tab-label {
+      display: block;
+      font-size: var(--text-sm);
+      font-weight: 500;
+      margin-top: 2px;
+    }
+
+    .level-tab.completed {
+      position: relative;
+    }
+
+    .level-tab.completed::after {
+      content: "\2713";
+      position: absolute;
+      top: 4px;
+      right: 8px;
+      font-size: var(--text-xs);
+      color: var(--color-success);
+      font-weight: 700;
+    }
+
+    .level-tab.active.completed::after {
+      color: #ffffff;
+    }
+
+    /* Level panels */
+    .level-panel {
+      display: none;
+    }
+
+    .level-panel.active {
+      display: block;
+    }
+
+    /* Score tracker bar */
+    .score-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: linear-gradient(135deg, #1e2330 0%, #2d3352 100%);
+      color: #ffffff;
+      border-radius: var(--radius-lg);
+      padding: var(--space-md) var(--space-lg);
+      margin-bottom: var(--space-lg);
+    }
+
+    .score-bar .score-label {
+      font-size: var(--text-sm);
+      font-weight: 500;
+      opacity: 0.8;
+    }
+
+    .score-bar .score-value {
+      font-size: var(--text-xl);
+      font-weight: 700;
+    }
+
+    .score-bar .score-section {
+      text-align: center;
+    }
+
+    /* Quiz card */
+    .quiz-card {
+      background: var(--color-surface);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--color-border);
+      padding: var(--space-xl);
+      margin-bottom: var(--space-lg);
+      transition: border-color var(--transition-normal);
+    }
+
+    .quiz-card.answered-correct {
+      border-color: var(--color-success);
+      background: var(--color-success-light);
+    }
+
+    .quiz-card.answered-wrong {
+      border-color: var(--color-error);
+      background: var(--color-error-light);
+    }
+
+    .quiz-number {
+      font-size: var(--text-sm);
+      font-weight: 700;
+      color: var(--color-primary);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
       margin-bottom: var(--space-sm);
     }
 
-    .genre-card .genre-name {
+    .quiz-question {
       font-size: var(--text-lg);
+      font-weight: 600;
+      margin-bottom: var(--space-lg);
+      line-height: 1.5;
+    }
+
+    .quiz-content {
+      background: var(--color-bg);
+      border-radius: var(--radius-md);
+      padding: var(--space-lg);
+      margin-bottom: var(--space-lg);
+      font-size: var(--text-md);
+      line-height: 1.7;
+      border-left: 4px solid var(--color-primary-light);
+    }
+
+    .quiz-content em {
+      color: var(--color-text-muted);
+      font-size: var(--text-sm);
+      display: block;
+      margin-top: var(--space-sm);
+    }
+
+    /* Answer buttons */
+    .answer-buttons {
+      display: flex;
+      gap: var(--space-md);
+      margin-bottom: var(--space-md);
+    }
+
+    .answer-btn {
+      flex: 1;
+      padding: 0.8em 1.5em;
+      font-size: var(--text-md);
       font-weight: 650;
+      font-family: inherit;
+      border: 2px solid var(--color-border);
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      background: var(--color-surface);
+      color: var(--color-text);
+    }
+
+    .answer-btn:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .answer-btn.btn-real:hover:not(:disabled) {
+      border-color: var(--color-success);
+      background: var(--color-success-light);
+      color: #166534;
+    }
+
+    .answer-btn.btn-ai:hover:not(:disabled) {
+      border-color: var(--color-secondary);
+      background: var(--color-secondary-light);
+      color: #5b21b6;
+    }
+
+    .answer-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .answer-btn.selected-correct {
+      border-color: var(--color-success);
+      background: var(--color-success);
+      color: #ffffff;
+    }
+
+    .answer-btn.selected-wrong {
+      border-color: var(--color-error);
+      background: var(--color-error);
+      color: #ffffff;
+    }
+
+    .answer-btn.was-correct {
+      border-color: var(--color-success);
+      background: var(--color-success-light);
+    }
+
+    /* Explanation box */
+    .explanation {
+      display: none;
+      padding: var(--space-md) var(--space-lg);
+      border-radius: var(--radius-md);
+      font-size: var(--text-sm);
+      line-height: 1.6;
+      margin-top: var(--space-md);
+    }
+
+    .explanation.visible {
+      display: block;
+    }
+
+    .explanation.correct {
+      background: var(--color-success-light);
+      border: 1px solid var(--color-success);
+    }
+
+    .explanation.wrong {
+      background: var(--color-error-light);
+      border: 1px solid var(--color-error);
+    }
+
+    .explanation .explanation-title {
+      font-weight: 700;
+      font-size: var(--text-md);
       margin-bottom: var(--space-xs);
     }
 
-    .genre-card .genre-desc {
-      font-size: var(--text-sm);
-      color: var(--color-text-muted);
-    }
-
-    /* Suno launch section */
-    .launch-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: var(--space-sm);
-      padding: 0.8em 2em;
-      font-size: var(--text-xl);
-      font-weight: 700;
-      font-family: inherit;
-      background: linear-gradient(135deg, var(--color-secondary), var(--color-primary));
-      color: #ffffff;
-      border: none;
+    /* Level completion card */
+    .level-complete {
+      display: none;
+      background: linear-gradient(135deg, var(--color-primary-light) 0%, var(--color-secondary-light) 100%);
       border-radius: var(--radius-lg);
-      cursor: pointer;
-      transition: transform var(--transition-fast), box-shadow var(--transition-fast);
-      text-decoration: none;
+      padding: var(--space-xl);
+      text-align: center;
+      margin-top: var(--space-lg);
     }
 
-    .launch-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: var(--shadow-lg);
-      color: #ffffff;
+    .level-complete.visible {
+      display: block;
     }
 
-    .launch-btn:active {
-      transform: scale(0.97);
+    .level-complete .complete-emoji {
+      font-size: 3rem;
+      margin-bottom: var(--space-sm);
     }
 
-    /* Steps card */
-    .steps-card {
+    .level-complete h3 {
+      font-size: var(--text-xl);
+      margin-bottom: var(--space-sm);
+    }
+
+    .level-complete .complete-score {
+      font-size: var(--text-lg);
+      font-weight: 600;
+      color: var(--color-primary);
+      margin-bottom: var(--space-md);
+    }
+
+    .level-complete .complete-message {
+      font-size: var(--text-md);
+      color: var(--color-text-muted);
+      margin-bottom: var(--space-lg);
+    }
+
+    /* Bias experiment */
+    .experiment-setup {
       background: var(--color-surface);
       border-radius: var(--radius-lg);
       border: 1px solid var(--color-border);
       padding: var(--space-xl);
+      margin-bottom: var(--space-lg);
+    }
+
+    .experiment-prompt-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-md);
+      margin-top: var(--space-md);
+    }
+
+    .experiment-prompt-card {
+      background: var(--color-bg);
+      border-radius: var(--radius-md);
+      padding: var(--space-md);
+      border: 2px solid var(--color-border);
+      cursor: pointer;
+      transition: all var(--transition-fast);
+    }
+
+    .experiment-prompt-card:hover {
+      border-color: var(--color-primary);
+      box-shadow: var(--shadow-sm);
+      transform: translateY(-1px);
+    }
+
+    .experiment-prompt-card.card-selected {
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px var(--color-primary-light);
+    }
+
+    .experiment-prompt-card .prompt-label {
+      font-size: var(--text-sm);
+      font-weight: 700;
+      color: var(--color-primary);
+      margin-bottom: var(--space-xs);
+    }
+
+    .experiment-prompt-card .prompt-pair {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-xs);
+    }
+
+    .experiment-prompt-card .prompt-pair span {
+      background: var(--color-surface);
+      padding: var(--space-xs) var(--space-sm);
+      border-radius: var(--radius-sm);
+      font-size: var(--text-sm);
+    }
+
+    .chat-section {
       margin-top: var(--space-lg);
     }
 
-    .steps-card h3 {
+    .chat-section h3 {
       margin-bottom: var(--space-md);
     }
 
-    .steps-list {
-      list-style: none;
-      padding: 0;
-      counter-reset: step-counter;
+    .observations-area {
+      margin-top: var(--space-lg);
     }
 
-    .steps-list li {
-      counter-increment: step-counter;
-      display: flex;
-      align-items: flex-start;
-      gap: var(--space-md);
-      padding: var(--space-sm) 0;
-      font-size: var(--text-md);
-      line-height: 1.6;
-    }
-
-    .steps-list li::before {
-      content: counter(step-counter);
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 28px;
-      height: 28px;
-      min-width: 28px;
-      background: var(--color-primary);
-      color: #ffffff;
-      border-radius: 50%;
-      font-size: var(--text-sm);
-      font-weight: 700;
-    }
-
-    /* Tips box */
-    .tips-box {
-      background: var(--color-accent-light);
-      border-radius: var(--radius-md);
-      padding: var(--space-lg);
-      margin-top: var(--space-md);
-    }
-
-    .tips-box h4 {
-      margin-bottom: var(--space-sm);
-      color: var(--color-accent-hover);
-    }
-
-    .tips-box ul {
-      list-style: none;
-      padding: 0;
-    }
-
-    .tips-box li {
-      padding: var(--space-xs) 0;
-      font-size: var(--text-sm);
-      line-height: 1.6;
-    }
-
-    .tips-box li::before {
-      content: "\2728 ";
-    }
-
-    /* Song collection */
-    .song-entry {
-      background: var(--color-surface);
-      border-radius: var(--radius-md);
-      border: 1px solid var(--color-border);
-      padding: var(--space-md);
-      display: flex;
-      align-items: center;
-      gap: var(--space-md);
-      margin-bottom: var(--space-sm);
-    }
-
-    .song-entry .song-info {
-      flex: 1;
-      display: flex;
-      gap: var(--space-md);
-      flex-wrap: wrap;
-    }
-
-    .song-entry .song-title {
-      font-weight: 650;
-      font-size: var(--text-md);
-    }
-
-    .song-entry .song-style {
-      color: var(--color-text-muted);
-      font-size: var(--text-sm);
-    }
-
-    .song-entry .song-notes {
-      color: var(--color-text-muted);
-      font-size: var(--text-sm);
-      font-style: italic;
-    }
-
-    .song-entry .hit-toggle {
-      display: flex;
-      align-items: center;
-      gap: var(--space-xs);
-      cursor: pointer;
-      font-size: var(--text-sm);
-      user-select: none;
-      white-space: nowrap;
-    }
-
-    .song-entry .hit-toggle input {
-      accent-color: var(--color-warning);
-    }
-
-    .song-entry .hit-star {
-      font-size: 1.2rem;
-    }
-
-    .song-entry .hit-star.active {
-      color: var(--color-warning);
-    }
-
-    .song-entry .delete-btn {
-      background: none;
-      border: none;
-      font-size: var(--text-md);
-      color: var(--color-text-muted);
-      cursor: pointer;
-      padding: var(--space-xs);
-      border-radius: var(--radius-sm);
-    }
-
-    .song-entry .delete-btn:hover {
-      color: var(--color-error);
-      background: var(--color-error-light);
-    }
-
-    /* Add song form */
-    .add-song-form {
-      display: flex;
-      gap: var(--space-sm);
-      align-items: flex-end;
-      flex-wrap: wrap;
-      margin-top: var(--space-md);
-    }
-
-    .add-song-form .form-group {
-      flex: 1;
-      min-width: 120px;
-    }
-
-    /* Lyrics area */
-    .lyrics-area {
-      margin-top: var(--space-md);
-    }
-
-    .lyrics-area label {
+    .observations-area label {
       display: block;
-      font-size: var(--text-sm);
       font-weight: 600;
       margin-bottom: var(--space-xs);
     }
 
-    .copy-btn {
-      margin-top: var(--space-sm);
+    .discussion-prompts {
+      background: var(--color-accent-light);
+      border-radius: var(--radius-md);
+      padding: var(--space-lg);
+      margin-top: var(--space-lg);
     }
 
-    .copy-btn.copied {
-      background: var(--color-success);
-      border-color: var(--color-success);
-      color: #ffffff;
+    .discussion-prompts h4 {
+      color: var(--color-accent-hover);
+      margin-bottom: var(--space-sm);
     }
 
-    /* Section spacing */
-    .lesson-section {
-      margin-bottom: var(--space-xl);
-      padding-bottom: var(--space-xl);
-      border-bottom: 1px solid var(--color-border);
+    .discussion-prompts ul {
+      list-style: none;
+      padding: 0;
     }
 
-    .lesson-section:last-child {
-      border-bottom: none;
+    .discussion-prompts li {
+      padding: var(--space-xs) 0;
+      font-size: var(--text-md);
+      line-height: 1.6;
     }
 
+    .discussion-prompts li::before {
+      content: "\1F4AC ";
+    }
+
+    /* Section heading */
     .section-heading {
       font-size: var(--text-xl);
       font-weight: 650;
@@ -280,12 +398,213 @@
       gap: var(--space-sm);
     }
 
-    /* Empty state */
-    .empty-state {
-      text-align: center;
-      padding: var(--space-xl);
-      color: var(--color-text-muted);
+    /* Intro box */
+    .level-intro {
+      background: var(--color-bg);
+      border-radius: var(--radius-md);
+      padding: var(--space-lg);
+      margin-bottom: var(--space-lg);
+      font-size: var(--text-md);
+      line-height: 1.6;
+    }
+
+    .level-intro strong {
+      color: var(--color-primary);
+    }
+
+    /* ====== Part 3: Guidelines ====== */
+    .guideline-category {
+      background: var(--color-surface);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--color-border);
+      padding: var(--space-lg);
+      margin-bottom: var(--space-lg);
+      transition: border-color var(--transition-normal);
+    }
+
+    .guideline-category:hover {
+      border-color: var(--color-primary-light);
+    }
+
+    .guideline-category .cat-header {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      margin-bottom: var(--space-sm);
+    }
+
+    .guideline-category .cat-icon {
+      font-size: 1.5rem;
+    }
+
+    .guideline-category .cat-title {
+      font-size: var(--text-lg);
+      font-weight: 650;
+    }
+
+    .guideline-category .cat-starter {
       font-size: var(--text-sm);
+      color: var(--color-text-muted);
+      margin-bottom: var(--space-sm);
+      font-style: italic;
+      line-height: 1.5;
+    }
+
+    .guideline-category textarea {
+      width: 100%;
+      min-height: 80px;
+      padding: var(--space-sm) var(--space-md);
+      font-size: var(--text-md);
+      font-family: inherit;
+      color: var(--color-text);
+      background: var(--color-bg);
+      border: 1.5px solid var(--color-border);
+      border-radius: var(--radius-md);
+      resize: vertical;
+      transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+      box-sizing: border-box;
+    }
+
+    .guideline-category textarea:focus {
+      outline: none;
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px var(--color-primary-light);
+    }
+
+    /* Pledge / certificate */
+    .pledge-section {
+      background: var(--color-surface);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--color-border);
+      padding: var(--space-xl);
+      margin-top: var(--space-lg);
+    }
+
+    .pledge-section h3 {
+      text-align: center;
+      margin-bottom: var(--space-lg);
+    }
+
+    .pledge-input-row {
+      display: flex;
+      align-items: center;
+      gap: var(--space-md);
+      margin-bottom: var(--space-lg);
+      justify-content: center;
+    }
+
+    .pledge-input-row label {
+      font-weight: 600;
+      font-size: var(--text-md);
+    }
+
+    .pledge-input-row input {
+      padding: 0.55em 0.85em;
+      font-size: var(--text-md);
+      font-family: inherit;
+      color: var(--color-text);
+      background: var(--color-surface);
+      border: 1.5px solid var(--color-border);
+      border-radius: var(--radius-md);
+      width: 240px;
+      transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+    }
+
+    .pledge-input-row input:focus {
+      outline: none;
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px var(--color-primary-light);
+    }
+
+    .certificate {
+      display: none;
+      background: linear-gradient(135deg, #f8f9fc 0%, #eef1fb 60%, #f0edfb 100%);
+      border: 3px solid var(--color-primary);
+      border-radius: var(--radius-lg);
+      padding: var(--space-xl) var(--space-lg);
+      text-align: center;
+      max-width: 560px;
+      margin: 0 auto;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .certificate.visible {
+      display: block;
+    }
+
+    .certificate .cert-badge {
+      font-size: 3rem;
+      margin-bottom: var(--space-sm);
+    }
+
+    .certificate .cert-title {
+      font-size: var(--text-xl);
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: var(--space-xs);
+    }
+
+    .certificate .cert-subtitle {
+      font-size: var(--text-md);
+      color: var(--color-text-muted);
+      margin-bottom: var(--space-lg);
+    }
+
+    .certificate .cert-name {
+      font-size: var(--text-2xl);
+      font-weight: 800;
+      color: var(--color-text);
+      margin-bottom: var(--space-sm);
+      border-bottom: 2px solid var(--color-primary);
+      display: inline-block;
+      padding-bottom: var(--space-xs);
+    }
+
+    .certificate .cert-text {
+      font-size: var(--text-md);
+      line-height: 1.6;
+      color: var(--color-text-muted);
+      margin-top: var(--space-md);
+    }
+
+    .certificate .cert-date {
+      font-size: var(--text-sm);
+      color: var(--color-text-muted);
+      margin-top: var(--space-lg);
+    }
+
+    .export-row {
+      display: flex;
+      gap: var(--space-md);
+      justify-content: center;
+      margin-top: var(--space-lg);
+    }
+
+    /* Responsive */
+    @media (max-width: 767px) {
+      .level-tabs {
+        flex-direction: column;
+      }
+
+      .answer-buttons {
+        flex-direction: column;
+      }
+
+      .experiment-prompt-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .score-bar {
+        flex-direction: column;
+        gap: var(--space-sm);
+      }
+
+      .pledge-input-row {
+        flex-direction: column;
+      }
     }
   </style>
 </head>
@@ -295,7 +614,7 @@
   <header class="lesson-header">
     <div class="lesson-badge">
       <span class="lesson-number">05</span>
-      <span class="lesson-title">AI Musician</span>
+      <span class="lesson-title">AI Ethics &mdash; Truth, Bias, and You</span>
     </div>
     <a href="/" class="back-link">&larr; Back to all lessons</a>
   </header>
@@ -306,76 +625,226 @@
     <!-- Main Content Area -->
     <main class="lesson-main" id="main-content">
 
-      <!-- Section 1: Lyrics Workshop -->
-      <div class="lesson-section">
-        <h2 class="section-heading">&#x270D;&#xFE0F; Write Your Song Lyrics</h2>
-        <div id="lyrics-chat"></div>
-        <div class="lyrics-area">
-          <button class="btn btn-secondary copy-btn" id="copy-lyrics-btn">&#x1F4CB; Copy Lyrics</button>
+      <!-- Score Tracker -->
+      <div class="score-bar" id="score-bar">
+        <div class="score-section">
+          <div class="score-label">Images</div>
+          <div class="score-value" id="score-level1">0/8</div>
         </div>
-        <div class="lyrics-area">
-          <label for="final-lyrics">Your Final Lyrics</label>
-          <textarea id="final-lyrics" class="textarea" placeholder="Paste and edit your lyrics here..."></textarea>
+        <div class="score-section">
+          <div class="score-label">Text</div>
+          <div class="score-value" id="score-level2">0/6</div>
         </div>
-      </div>
-
-      <!-- Section 2: Music Style Explorer -->
-      <div class="lesson-section">
-        <h2 class="section-heading">&#x1F3B6; Explore Music Styles</h2>
-        <div class="genre-grid" id="genre-grid">
-          <!-- Genre cards rendered by JS -->
+        <div class="score-section">
+          <div class="score-label">Total Score</div>
+          <div class="score-value" id="score-total">0/14</div>
         </div>
       </div>
 
-      <!-- Section 3: Suno Launch Pad -->
-      <div class="lesson-section">
-        <h2 class="section-heading">&#x1F3A4; Create Your Music on Suno</h2>
-        <div class="text-center">
-          <a href="https://suno.com/create" target="_blank" rel="noopener noreferrer" class="launch-btn">
-            &#x1F3B5; Open Suno Music Studio &rarr;
-          </a>
+      <!-- Tab Navigation -->
+      <div class="level-tabs" id="level-tabs">
+        <button class="level-tab active" data-level="1">
+          Part 1a
+          <span class="tab-label">Real or AI?</span>
+        </button>
+        <button class="level-tab" data-level="2">
+          Part 1b
+          <span class="tab-label">Who Wrote This?</span>
+        </button>
+        <button class="level-tab" data-level="3">
+          Part 2
+          <span class="tab-label">Bias Lab</span>
+        </button>
+        <button class="level-tab" data-level="4">
+          Part 3
+          <span class="tab-label">My AI Guidelines</span>
+        </button>
+        <button class="level-tab" data-level="results">
+          Results
+          <span class="tab-label">Final Score</span>
+        </button>
+      </div>
+
+      <!-- ================================================ -->
+      <!-- PART 1a: Real or AI? Image Challenge             -->
+      <!-- ================================================ -->
+      <div class="level-panel active" id="panel-level1">
+        <h2 class="section-heading">Part 1a: Real Photo or AI-Generated?</h2>
+        <div class="level-intro">
+          AI can now create incredibly realistic images. Can you tell the difference?
+          Read each description and decide: is this describing a <strong>real photograph</strong>
+          or an <strong>AI-generated image</strong>?
+        </div>
+        <div id="level1-questions"></div>
+        <div class="level-complete" id="level1-complete">
+          <div class="complete-emoji">&#x1F50D;</div>
+          <h3>Part 1a Complete!</h3>
+          <div class="complete-score" id="level1-final-score"></div>
+          <div class="complete-message" id="level1-message"></div>
+          <button class="btn btn-primary btn-lg" onclick="switchLevel('2')">Continue to Part 1b &rarr;</button>
+        </div>
+      </div>
+
+      <!-- ================================================ -->
+      <!-- PART 1b: Who Wrote This? Text Challenge          -->
+      <!-- ================================================ -->
+      <div class="level-panel" id="panel-level2">
+        <h2 class="section-heading">Part 1b: Human or AI Writing?</h2>
+        <div class="level-intro">
+          AI can write essays, stories, and social media posts that sound very human.
+          Read each text snippet and decide: was this written by a <strong>human</strong>
+          or by <strong>AI</strong>? Look for clues!
+        </div>
+        <div id="level2-questions"></div>
+        <div class="level-complete" id="level2-complete">
+          <div class="complete-emoji">&#x270D;&#xFE0F;</div>
+          <h3>Part 1b Complete!</h3>
+          <div class="complete-score" id="level2-final-score"></div>
+          <div class="complete-message" id="level2-message"></div>
+          <button class="btn btn-primary btn-lg" onclick="switchLevel('3')">Continue to Part 2: Bias Lab &rarr;</button>
+        </div>
+      </div>
+
+      <!-- ================================================ -->
+      <!-- PART 2: AI Bias Lab                              -->
+      <!-- ================================================ -->
+      <div class="level-panel" id="panel-level3">
+        <h2 class="section-heading">Part 2: AI Bias Lab</h2>
+        <div class="level-intro">
+          AI learns from huge amounts of text written by people. But people have biases --
+          unfair assumptions about groups of people. So AI can pick up those same biases!
+          <strong>Your mission:</strong> test the AI to see if it shows bias. Try at least 2 experiments.
         </div>
 
-        <div class="steps-card">
-          <h3>Step-by-Step Guide</h3>
-          <ol class="steps-list">
-            <li>Click "Create" on the Suno page</li>
-            <li>Toggle "Custom" mode on</li>
-            <li>Paste your lyrics (or leave empty for instrumental)</li>
-            <li>Type your style (e.g., "upbeat pop" or "chill lo-fi")</li>
-            <li>Click "Create" and wait for your song!</li>
-            <li>Try at least 2-3 different styles</li>
-          </ol>
+        <div class="experiment-setup">
+          <h3>Choose an Experiment</h3>
+          <p style="color: var(--color-text-muted); margin-bottom: var(--space-sm);">
+            Click a card below, then use the chat to ask both prompts. Compare the answers!
+          </p>
+          <div class="experiment-prompt-grid" id="experiment-prompts">
+            <!-- Rendered by JS -->
+          </div>
         </div>
 
-        <div class="tips-box">
-          <h4>&#x1F4A1; Tips</h4>
+        <div class="chat-section">
+          <h3>Ask the AI</h3>
+          <p style="color: var(--color-text-muted); margin-bottom: var(--space-md);">
+            Type or paste the prompts from your chosen experiment. Try both versions and compare the responses.
+          </p>
+          <div id="bias-chat"></div>
+        </div>
+
+        <div class="observations-area">
+          <label for="observations-text">What did you notice? Write your observations:</label>
+          <textarea id="observations-text" class="textarea"
+            placeholder="What differences did you see between the two AI responses? Did anything surprise you? Did the AI make any assumptions?"></textarea>
+        </div>
+
+        <div class="discussion-prompts">
+          <h4>Think About It</h4>
           <ul>
-            <li>Style keywords that work well: upbeat, chill, epic, dreamy, funky, acoustic</li>
-            <li>Try combining styles: "jazz pop" or "electronic rock"</li>
-            <li>Don't like it? Just create again with different keywords!</li>
+            <li>Did the AI describe people differently based on the job title or role?</li>
+            <li>Did the AI make assumptions about gender, age, or background?</li>
+            <li>Where do you think these biases come from?</li>
+            <li>If an AI is used to hire people or grade tests, why would bias be a problem?</li>
           </ul>
         </div>
+
+        <div style="text-align: center; margin-top: var(--space-lg);">
+          <button class="btn btn-primary btn-lg" onclick="switchLevel('4')">Continue to Part 3: My AI Guidelines &rarr;</button>
+        </div>
       </div>
 
-      <!-- Section 4: My Music Collection -->
-      <div class="lesson-section">
-        <h2 class="section-heading">&#x1F3B5; My Songs</h2>
-        <div id="song-list"></div>
-        <div class="add-song-form" id="add-song-form">
-          <div class="form-group">
-            <label>Song Title</label>
-            <input type="text" class="input" id="song-title-input" placeholder="My Song">
+      <!-- ================================================ -->
+      <!-- PART 3: My AI Guidelines                         -->
+      <!-- ================================================ -->
+      <div class="level-panel" id="panel-level4">
+        <h2 class="section-heading">Part 3: My AI Guidelines</h2>
+        <div class="level-intro">
+          Now that you have seen how AI can deceive and show bias, it is time to think about
+          how <strong>you</strong> want to use AI responsibly. Write your own set of rules --
+          your personal "AI User Guidelines." Think about what matters most to you.
+        </div>
+
+        <div id="guideline-categories">
+          <!-- Rendered by JS -->
+        </div>
+
+        <!-- Sign Your Pledge -->
+        <div class="pledge-section">
+          <h3>Sign Your AI Ethics Pledge</h3>
+          <div class="pledge-input-row">
+            <label for="pledge-name">Your Name:</label>
+            <input type="text" id="pledge-name" placeholder="Enter your name...">
+            <button class="btn btn-primary" id="sign-pledge-btn">Sign Pledge</button>
           </div>
-          <div class="form-group">
-            <label>Style</label>
-            <input type="text" class="input" id="song-style-input" placeholder="e.g., upbeat pop">
+
+          <div class="certificate" id="pledge-certificate">
+            <div class="cert-badge">&#x1F3C5;</div>
+            <div class="cert-title">Responsible AI User Certificate</div>
+            <div class="cert-subtitle">AI Creator Lab &middot; Lesson 05</div>
+            <div class="cert-name" id="cert-name-display"></div>
+            <div class="cert-text">
+              has completed the AI Ethics Challenge, explored AI bias,
+              and created a personal set of AI Guidelines.
+              This person pledges to use AI thoughtfully, honestly, and fairly.
+            </div>
+            <div class="cert-date" id="cert-date"></div>
           </div>
-          <div class="form-group">
-            <label>Notes</label>
-            <input type="text" class="input" id="song-notes-input" placeholder="How did it turn out?">
+
+          <div class="export-row" id="export-row" style="display: none;">
+            <div id="export-btn-container"></div>
           </div>
-          <button class="btn btn-primary" id="add-song-btn">Add Song</button>
+        </div>
+      </div>
+
+      <!-- ================================================ -->
+      <!-- FINAL RESULTS                                    -->
+      <!-- ================================================ -->
+      <div class="level-panel" id="panel-results">
+        <div id="final-results">
+          <div style="text-align: center;">
+            <div style="font-size: 4rem; margin-bottom: var(--space-md);" id="results-emoji">&#x1F3C6;</div>
+            <h2>Challenge Complete!</h2>
+            <div style="font-size: 2.5rem; font-weight: 800; color: var(--color-primary); margin: var(--space-md) 0;" id="final-total-score">0 / 14</div>
+            <div style="display: flex; justify-content: center; gap: var(--space-lg); margin: var(--space-lg) 0;">
+              <div style="text-align: center;">
+                <div style="font-size: var(--text-xl); font-weight: 700;" id="final-l1-score">0/8</div>
+                <div style="font-size: var(--text-sm); color: var(--color-text-muted);">Part 1a: Images</div>
+              </div>
+              <div style="text-align: center;">
+                <div style="font-size: var(--text-xl); font-weight: 700;" id="final-l2-score">0/6</div>
+                <div style="font-size: var(--text-sm); color: var(--color-text-muted);">Part 1b: Text</div>
+              </div>
+            </div>
+            <p id="final-rating" style="font-size: var(--text-lg); font-weight: 600; color: var(--color-secondary);"></p>
+          </div>
+
+          <div style="background: var(--color-bg); border-radius: var(--radius-lg); padding: var(--space-xl); max-width: 600px; margin: var(--space-lg) auto 0; text-align: left;">
+            <h3 style="text-align: center; margin-bottom: var(--space-md);">Key Takeaways</h3>
+            <ul style="list-style: none; padding: 0;">
+              <li style="padding: var(--space-sm) 0; display: flex; align-items: flex-start; gap: var(--space-sm);">
+                <span style="color: var(--color-success); font-weight: 700; flex-shrink: 0;">&#x2714;</span>
+                AI-generated images often have subtle errors: extra fingers, warped text, oddly smooth skin, or inconsistent backgrounds.
+              </li>
+              <li style="padding: var(--space-sm) 0; display: flex; align-items: flex-start; gap: var(--space-sm);">
+                <span style="color: var(--color-success); font-weight: 700; flex-shrink: 0;">&#x2714;</span>
+                AI-written text tends to be overly polished, uses many lists, and avoids strong personal opinions or messy emotions.
+              </li>
+              <li style="padding: var(--space-sm) 0; display: flex; align-items: flex-start; gap: var(--space-sm);">
+                <span style="color: var(--color-success); font-weight: 700; flex-shrink: 0;">&#x2714;</span>
+                AI can reflect biases from its training data. It might make unfair assumptions about gender, culture, or appearance.
+              </li>
+              <li style="padding: var(--space-sm) 0; display: flex; align-items: flex-start; gap: var(--space-sm);">
+                <span style="color: var(--color-success); font-weight: 700; flex-shrink: 0;">&#x2714;</span>
+                Always think critically about content you see online. Ask: Who made this? Why? Could it be AI-generated?
+              </li>
+              <li style="padding: var(--space-sm) 0; display: flex; align-items: flex-start; gap: var(--space-sm);">
+                <span style="color: var(--color-success); font-weight: 700; flex-shrink: 0;">&#x2714;</span>
+                You have the power to use AI responsibly. Your guidelines are your personal commitment to ethical AI use.
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
 
@@ -391,267 +860,718 @@
   <script src="/shared/components.js"></script>
   <script>
     // =============================================
-    // Section 1: Lyrics Workshop (ChatWidget)
+    // Data: Level 1 Questions (Real or AI Image?)
     // =============================================
-    var lyricsChat = document.getElementById('lyrics-chat');
-
-    var lyricsChatWidget = window.ChatWidget(lyricsChat, {
-      systemPrompt: "You are a fun, creative songwriting assistant for kids aged 12-13. Help them write song lyrics. Keep lyrics clean, fun, and catchy. When they describe what the song should be about, write 1-2 verses and a chorus. Keep it short (8-16 lines total). Use simple, relatable language. If they want changes, modify the lyrics accordingly.",
-      placeholder: "Describe your song idea... (e.g., 'a happy song about summer vacation')"
-    });
-
-    // Copy Lyrics button
-    var copyBtn = document.getElementById('copy-lyrics-btn');
-    copyBtn.addEventListener('click', function () {
-      var messages = lyricsChatWidget.getMessages();
-      // Find the latest assistant message
-      var latestLyrics = '';
-      for (var i = messages.length - 1; i >= 0; i--) {
-        if (messages[i].role === 'assistant') {
-          latestLyrics = messages[i].content;
-          break;
-        }
+    var level1Data = [
+      {
+        id: 'l1q1',
+        description: 'A photograph of a cat sitting on a windowsill, looking outside at the rain. The reflection in the glass shows a slightly blurry version of the room behind. There is a small chip in the corner of the windowsill.',
+        answer: 'real',
+        explanation: 'This is a real photo. The small imperfections -- like the chipped windowsill and the slightly blurry reflection -- are natural details real photographs capture. AI images tend to make everything look too "perfect."'
+      },
+      {
+        id: 'l1q2',
+        description: 'A portrait of an elderly woman with kind eyes, wearing a hand-knit sweater. Her skin is remarkably smooth and glowing. Each strand of her silver hair is perfectly placed. The background is a softly blurred garden with no identifiable plants.',
+        answer: 'ai',
+        explanation: 'This is AI-generated. The "too perfect" quality gives it away: unrealistically smooth skin for an elderly person, every hair perfectly placed, and a generic blurred background. Real photos show natural skin texture, stray hairs, and specific details.'
+      },
+      {
+        id: 'l1q3',
+        description: 'A street food vendor in Bangkok at night, illuminated by the warm glow of a single bare lightbulb. Smoke rises from a grill. A hand-written price sign in Thai script is slightly crooked, and a plastic stool has a crack down the middle.',
+        answer: 'real',
+        explanation: 'This is a real photo. The crooked handwritten sign, the cracked stool, and the specific cultural details point to a genuine photograph. AI often struggles with text in other languages and rarely includes "ugly" imperfections like cracked furniture.'
+      },
+      {
+        id: 'l1q4',
+        description: 'A group of six friends at a beach bonfire, all smiling at the camera. Everyone has perfectly white teeth. One person in the back has a hand with six fingers. The sand around the fire looks slightly melted, like plastic.',
+        answer: 'ai',
+        explanation: 'This is AI-generated. The classic giveaway: a hand with six fingers! AI models frequently struggle with the correct number of fingers. The "too perfect" teeth and unnatural sand texture are also common AI artifacts.'
+      },
+      {
+        id: 'l1q5',
+        description: 'A golden retriever mid-jump catching a frisbee in a park. The dog is slightly blurry because it is moving fast. The frisbee has a small logo that is partially readable. Grass stains are visible on the dog\'s belly.',
+        answer: 'real',
+        explanation: 'This is a real photo. Motion blur, partially readable logos, and grass stains are messy, specific details from real-world photography. AI images tend to freeze action perfectly and avoid brand logos or readable text.'
+      },
+      {
+        id: 'l1q6',
+        description: 'An astronaut standing on what appears to be Mars, looking at a sunset. The helmet visor perfectly reflects a stunning Martian landscape. The spacesuit has no visible brand markings or national flags. The sky transitions perfectly from orange to purple.',
+        answer: 'ai',
+        explanation: 'This is AI-generated. No human has been to Mars yet! The perfect visor reflection, the missing identifying marks on the suit, and the overly smooth color transition in the sky are hallmarks of AI generation.'
+      },
+      {
+        id: 'l1q7',
+        description: 'A classroom of students during a science experiment. One student is laughing while another looks confused at a beaker of bubbling liquid. The whiteboard in the background has partially erased equations. A backpack strap hangs off a chair.',
+        answer: 'real',
+        explanation: 'This is a real photo. The natural, candid emotions, the partially erased whiteboard, and small details like a dangling backpack strap are signs of a genuine moment. AI tends to pose everyone nicely and make scenes look "staged."'
+      },
+      {
+        id: 'l1q8',
+        description: 'A cozy coffee shop interior with exposed brick walls. A latte sits on a wooden table with beautiful foam art. The menu board on the wall has text, but the words don\'t actually form real English -- they look like letters jumbled together.',
+        answer: 'ai',
+        explanation: 'This is AI-generated. The biggest clue is the jumbled, unreadable text on the menu board. AI models are notoriously bad at generating real, readable text in images. Everything else looks "right" -- which makes it a convincing fake at first glance!'
       }
-      if (!latestLyrics) {
-        copyBtn.textContent = '\u274C No lyrics yet!';
-        setTimeout(function () {
-          copyBtn.textContent = '\uD83D\uDCCB Copy Lyrics';
-          copyBtn.classList.remove('copied');
-        }, 2000);
-        return;
-      }
-      navigator.clipboard.writeText(latestLyrics).then(function () {
-        copyBtn.textContent = '\u2705 Copied!';
-        copyBtn.classList.add('copied');
-        // Also paste into the final lyrics textarea
-        document.getElementById('final-lyrics').value = latestLyrics;
-        taskCards.setComplete('write-lyrics', true);
-        setTimeout(function () {
-          copyBtn.textContent = '\uD83D\uDCCB Copy Lyrics';
-          copyBtn.classList.remove('copied');
-        }, 2000);
-      }).catch(function () {
-        // Fallback: put into textarea at minimum
-        document.getElementById('final-lyrics').value = latestLyrics;
-        copyBtn.textContent = '\u2705 Pasted into textarea!';
-        taskCards.setComplete('write-lyrics', true);
-        setTimeout(function () {
-          copyBtn.textContent = '\uD83D\uDCCB Copy Lyrics';
-          copyBtn.classList.remove('copied');
-        }, 2000);
-      });
-    });
-
-    // =============================================
-    // Section 2: Music Style Explorer
-    // =============================================
-    var genres = [
-      { emoji: '\uD83C\uDFB5', name: 'Pop', desc: 'Catchy, upbeat, radio-friendly' },
-      { emoji: '\uD83C\uDFA4', name: 'Hip-Hop', desc: 'Rhythmic, energetic, beat-driven' },
-      { emoji: '\uD83C\uDFB8', name: 'Rock', desc: 'Guitar-heavy, powerful, bold' },
-      { emoji: '\uD83C\uDFBB', name: 'Classical', desc: 'Orchestral, elegant, timeless' },
-      { emoji: '\uD83C\uDFB7', name: 'Jazz', desc: 'Smooth, improvisational, cool' },
-      { emoji: '\uD83C\uDFB9', name: 'Electronic', desc: 'Synth-powered, danceable, modern' },
-      { emoji: '\uD83E\uDD20', name: 'Country', desc: 'Storytelling, acoustic, warm' },
-      { emoji: '\uD83C\uDFA7', name: 'Lo-fi', desc: 'Relaxed, cozy, chill beats' }
     ];
 
-    var genreGrid = document.getElementById('genre-grid');
-    var selectedGenre = null;
+    // =============================================
+    // Data: Level 2 Questions (Human or AI Text?)
+    // =============================================
+    var level2Data = [
+      {
+        id: 'l2q1',
+        text: 'My dog ate my homework yesterday. I know that sounds like the oldest excuse ever, but I literally watched him chew through my math worksheet while I was getting a snack. I even have teeth marks on what\'s left of it. Mrs. Patterson is NOT going to believe me lol.',
+        answer: 'human',
+        explanation: 'Written by a human. The casual tone ("NOT," "lol"), the specific and slightly embarrassing detail, and the worry about the teacher\'s reaction are all very natural. AI tends to write more polished, less awkward text.'
+      },
+      {
+        id: 'l2q2',
+        text: 'Dogs are wonderful companions that bring joy and happiness to millions of families around the world. They are known for their loyalty, their playful nature, and their ability to provide comfort during difficult times. Whether big or small, dogs have a unique ability to form deep bonds with their human companions.',
+        answer: 'ai',
+        explanation: 'Written by AI. Notice how generic and "safe" this is -- no personal stories, no specific details, and every sentence is perfectly structured. The language is correct but feels like a textbook, not a real person talking.'
+      },
+      {
+        id: 'l2q3',
+        text: 'ok so i just learned that octopuses have THREE hearts and BLUE blood?? like what?? how did i go 12 years without knowing this. also apparently they can change color AND texture. im sorry but thats basically a superpower. nature is wild.',
+        answer: 'human',
+        explanation: 'Written by a human. The lack of capitalization, the use of "??" the genuine surprise, and the exaggerated reactions are all very natural texting style. AI almost never writes this informally or with this kind of genuine enthusiasm.'
+      },
+      {
+        id: 'l2q4',
+        text: 'The ocean is a fascinating ecosystem that covers approximately 71% of the Earth\'s surface. It plays a crucial role in regulating the planet\'s climate, supporting biodiversity, and providing resources for human communities. From the smallest plankton to the largest whales, the ocean is home to an incredible diversity of life forms.',
+        answer: 'ai',
+        explanation: 'Written by AI. The precise statistic (71%), the perfectly organized structure (climate, biodiversity, resources), and the "from smallest to largest" comparison are typical AI patterns. It reads like a report but has no personality.'
+      },
+      {
+        id: 'l2q5',
+        text: 'I tried making pancakes this morning and somehow set off the smoke alarm twice. The first batch looked like hockey pucks. My sister said they could be used as actual weapons. The second batch was better but I put way too much syrup on them and now my hands are sticky and I have a math test in an hour. Great morning.',
+        answer: 'human',
+        explanation: 'Written by a human. The messy real-life storytelling with one thing going wrong after another, the sister\'s sarcastic comment, and the unrelated math test stress are all signs of genuine, unpolished human writing.'
+      },
+      {
+        id: 'l2q6',
+        text: 'Here are five effective strategies for improving your study habits:\n\n1. Create a dedicated study space free from distractions\n2. Break your study sessions into 25-minute focused blocks\n3. Use active recall techniques rather than passive re-reading\n4. Get adequate sleep to consolidate your learning\n5. Review material at spaced intervals for better retention\n\nBy implementing these strategies, you can significantly enhance your academic performance.',
+        answer: 'ai',
+        explanation: 'Written by AI. The numbered list format, the formal vocabulary ("implementing," "consolidate"), and the tidy conclusion are classic AI writing patterns. A real student giving study advice would be way more casual and include personal experience.'
+      }
+    ];
 
-    genres.forEach(function (genre) {
+    // =============================================
+    // Data: Bias Experiments
+    // =============================================
+    var biasExperiments = [
+      {
+        id: 'exp1',
+        label: 'Job Descriptions',
+        promptA: 'Describe what a typical nurse looks like and does during a workday.',
+        promptB: 'Describe what a typical engineer looks like and does during a workday.',
+        lookFor: 'Does the AI assume the nurse is female and the engineer is male? Does it describe their appearance differently?'
+      },
+      {
+        id: 'exp2',
+        label: 'Food & Culture',
+        promptA: 'Describe a typical family dinner in the United States.',
+        promptB: 'Describe a typical family dinner in India.',
+        lookFor: 'Does the AI use more "normal"-sounding language for one country? Does it describe one as more exotic or unusual?'
+      },
+      {
+        id: 'exp3',
+        label: 'Neighborhoods',
+        promptA: 'Describe a neighborhood where wealthy people live.',
+        promptB: 'Describe a neighborhood where people with less money live.',
+        lookFor: 'Does the AI use positive words for one and negative words for the other? Does it make assumptions about the people who live there?'
+      },
+      {
+        id: 'exp4',
+        label: 'Leaders & Role Models',
+        promptA: 'Describe a powerful world leader.',
+        promptB: 'Describe a caring schoolteacher.',
+        lookFor: 'Does the AI default to a specific gender for each role? What words does it use for "powerful" vs "caring"?'
+      }
+    ];
+
+    // =============================================
+    // Data: Guideline Categories
+    // =============================================
+    var guidelineCategories = [
+      {
+        id: 'truth',
+        iconText: '\uD83D\uDD0D',
+        title: 'Truth & Verification',
+        starter: 'When I see content online, I will... (think about how you will check if something is real or AI-made)',
+        placeholder: 'e.g., "I will always check 2 different sources before believing something I see online..."'
+      },
+      {
+        id: 'fairness',
+        iconText: '\u2696\uFE0F',
+        title: 'Fairness & Bias',
+        starter: 'When AI shows bias, I will... (think about what you learned in the Bias Lab)',
+        placeholder: 'e.g., "I will remember that AI can have unfair stereotypes and not assume its answers are always fair..."'
+      },
+      {
+        id: 'privacy',
+        iconText: '\uD83D\uDD12',
+        title: 'Privacy',
+        starter: 'When using AI tools, I will protect privacy by... (think about what personal information is safe to share)',
+        placeholder: 'e.g., "I will never share my home address, phone number, or passwords with an AI chatbot..."'
+      },
+      {
+        id: 'credit',
+        iconText: '\uD83C\uDFA8',
+        title: 'Creative Credit',
+        starter: 'When AI helps me create something, I will... (think about honesty in school and creative work)',
+        placeholder: 'e.g., "I will always be honest about which parts were my ideas and which parts AI helped with..."'
+      },
+      {
+        id: 'safety',
+        iconText: '\uD83D\uDEE1\uFE0F',
+        title: 'Safety',
+        starter: 'To stay safe with AI, I will... (think about what you would do if AI generated something wrong or harmful)',
+        placeholder: 'e.g., "I will tell a trusted adult if an AI ever says something that makes me uncomfortable..."'
+      }
+    ];
+
+    // =============================================
+    // State
+    // =============================================
+    var level1Score = 0;
+    var level1Answered = 0;
+    var level2Score = 0;
+    var level2Answered = 0;
+
+    // =============================================
+    // Tab Switching
+    // =============================================
+    var tabs = document.querySelectorAll('.level-tab');
+    tabs.forEach(function (tab) {
+      tab.addEventListener('click', function () {
+        switchLevel(tab.dataset.level);
+      });
+    });
+
+    function switchLevel(level) {
+      tabs.forEach(function (t) { t.classList.remove('active'); });
+      var targetTab = document.querySelector('.level-tab[data-level="' + level + '"]');
+      if (targetTab) targetTab.classList.add('active');
+
+      var panels = document.querySelectorAll('.level-panel');
+      panels.forEach(function (p) { p.classList.remove('active'); });
+
+      var targetPanel = document.getElementById('panel-level' + level);
+      if (!targetPanel) targetPanel = document.getElementById('panel-' + level);
+      if (targetPanel) targetPanel.classList.add('active');
+
+      if (level === 'results') {
+        updateFinalResults();
+      }
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // =============================================
+    // Render Level 1 Questions
+    // =============================================
+    var level1Container = document.getElementById('level1-questions');
+
+    level1Data.forEach(function (q, index) {
       var card = document.createElement('div');
-      card.className = 'genre-card';
+      card.className = 'quiz-card';
+      card.id = 'card-' + q.id;
 
-      var emojiEl = document.createElement('div');
-      emojiEl.className = 'genre-emoji';
-      emojiEl.textContent = genre.emoji;
+      var number = document.createElement('div');
+      number.className = 'quiz-number';
+      number.textContent = 'Question ' + (index + 1) + ' of ' + level1Data.length;
 
-      var nameEl = document.createElement('div');
-      nameEl.className = 'genre-name';
-      nameEl.textContent = genre.name;
+      var question = document.createElement('div');
+      question.className = 'quiz-question';
+      question.textContent = 'Is this describing a real photo or an AI-generated image?';
 
-      var descEl = document.createElement('div');
-      descEl.className = 'genre-desc';
-      descEl.textContent = genre.desc;
+      var content = document.createElement('div');
+      content.className = 'quiz-content';
+      content.textContent = q.description;
 
-      card.appendChild(emojiEl);
-      card.appendChild(nameEl);
-      card.appendChild(descEl);
+      var buttons = document.createElement('div');
+      buttons.className = 'answer-buttons';
 
-      card.addEventListener('click', function () {
-        // Deselect all
-        var allCards = genreGrid.querySelectorAll('.genre-card');
-        allCards.forEach(function (c) { c.classList.remove('card-selected'); });
-        // Select this one
-        card.classList.add('card-selected');
-        selectedGenre = genre.name;
-        taskCards.setComplete('pick-style', true);
+      var btnReal = document.createElement('button');
+      btnReal.className = 'answer-btn btn-real';
+      btnReal.textContent = 'Real Photo';
+
+      var btnAi = document.createElement('button');
+      btnAi.className = 'answer-btn btn-ai';
+      btnAi.textContent = 'AI-Generated';
+
+      var explanation = document.createElement('div');
+      explanation.className = 'explanation';
+
+      btnReal.addEventListener('click', function () {
+        handleAnswer(q, 'real', btnReal, btnAi, card, explanation);
       });
 
-      genreGrid.appendChild(card);
+      btnAi.addEventListener('click', function () {
+        handleAnswer(q, 'ai', btnAi, btnReal, card, explanation);
+      });
+
+      buttons.appendChild(btnReal);
+      buttons.appendChild(btnAi);
+
+      card.appendChild(number);
+      card.appendChild(question);
+      card.appendChild(content);
+      card.appendChild(buttons);
+      card.appendChild(explanation);
+
+      level1Container.appendChild(card);
     });
 
     // =============================================
-    // Section 4: My Music Collection
+    // Render Level 2 Questions
     // =============================================
-    var songs = [];
-    var songListEl = document.getElementById('song-list');
-    var songTitleInput = document.getElementById('song-title-input');
-    var songStyleInput = document.getElementById('song-style-input');
-    var songNotesInput = document.getElementById('song-notes-input');
-    var addSongBtn = document.getElementById('add-song-btn');
+    var level2Container = document.getElementById('level2-questions');
 
-    // Load from localStorage
-    var songStorageKey = 'songs_' + window.location.pathname;
+    level2Data.forEach(function (q, index) {
+      var card = document.createElement('div');
+      card.className = 'quiz-card';
+      card.id = 'card-' + q.id;
+
+      var number = document.createElement('div');
+      number.className = 'quiz-number';
+      number.textContent = 'Question ' + (index + 1) + ' of ' + level2Data.length;
+
+      var question = document.createElement('div');
+      question.className = 'quiz-question';
+      question.textContent = 'Was this written by a human or by AI?';
+
+      var content = document.createElement('div');
+      content.className = 'quiz-content';
+      q.text.split('\n').forEach(function (line, i) {
+        if (i > 0) content.appendChild(document.createElement('br'));
+        content.appendChild(document.createTextNode(line));
+      });
+
+      var buttons = document.createElement('div');
+      buttons.className = 'answer-buttons';
+
+      var btnHuman = document.createElement('button');
+      btnHuman.className = 'answer-btn btn-real';
+      btnHuman.textContent = 'Human';
+
+      var btnAi2 = document.createElement('button');
+      btnAi2.className = 'answer-btn btn-ai';
+      btnAi2.textContent = 'AI';
+
+      var explanation = document.createElement('div');
+      explanation.className = 'explanation';
+
+      btnHuman.addEventListener('click', function () {
+        handleAnswer2(q, 'human', btnHuman, btnAi2, card, explanation);
+      });
+
+      btnAi2.addEventListener('click', function () {
+        handleAnswer2(q, 'ai', btnAi2, btnHuman, card, explanation);
+      });
+
+      buttons.appendChild(btnHuman);
+      buttons.appendChild(btnAi2);
+
+      card.appendChild(number);
+      card.appendChild(question);
+      card.appendChild(content);
+      card.appendChild(buttons);
+      card.appendChild(explanation);
+
+      level2Container.appendChild(card);
+    });
+
+    // =============================================
+    // Answer Handlers
+    // =============================================
+    function handleAnswer(q, chosen, chosenBtn, otherBtn, card, explanationEl) {
+      chosenBtn.disabled = true;
+      otherBtn.disabled = true;
+
+      var correct = chosen === q.answer;
+
+      if (correct) {
+        level1Score++;
+        chosenBtn.classList.add('selected-correct');
+        card.classList.add('answered-correct');
+        explanationEl.className = 'explanation visible correct';
+      } else {
+        chosenBtn.classList.add('selected-wrong');
+        otherBtn.classList.add('was-correct');
+        card.classList.add('answered-wrong');
+        explanationEl.className = 'explanation visible wrong';
+      }
+
+      var title = document.createElement('div');
+      title.className = 'explanation-title';
+      title.textContent = correct ? 'Correct!' : 'Not quite!';
+
+      var text = document.createElement('div');
+      text.textContent = q.explanation;
+
+      explanationEl.appendChild(title);
+      explanationEl.appendChild(text);
+
+      level1Answered++;
+      updateScores();
+
+      ActivityLogger.log('quiz-answer', 'L1 Q' + (level1Data.indexOf(q) + 1) + ': ' + chosen, correct ? 'correct' : 'wrong');
+
+      if (level1Answered === level1Data.length) {
+        completeLevel1();
+      }
+    }
+
+    function handleAnswer2(q, chosen, chosenBtn, otherBtn, card, explanationEl) {
+      chosenBtn.disabled = true;
+      otherBtn.disabled = true;
+
+      var correct = chosen === q.answer;
+
+      if (correct) {
+        level2Score++;
+        chosenBtn.classList.add('selected-correct');
+        card.classList.add('answered-correct');
+        explanationEl.className = 'explanation visible correct';
+      } else {
+        chosenBtn.classList.add('selected-wrong');
+        otherBtn.classList.add('was-correct');
+        card.classList.add('answered-wrong');
+        explanationEl.className = 'explanation visible wrong';
+      }
+
+      var title = document.createElement('div');
+      title.className = 'explanation-title';
+      title.textContent = correct ? 'Correct!' : 'Not quite!';
+
+      var text = document.createElement('div');
+      text.textContent = q.explanation;
+
+      explanationEl.appendChild(title);
+      explanationEl.appendChild(text);
+
+      level2Answered++;
+      updateScores();
+
+      ActivityLogger.log('quiz-answer', 'L2 Q' + (level2Data.indexOf(q) + 1) + ': ' + chosen, correct ? 'correct' : 'wrong');
+
+      if (level2Answered === level2Data.length) {
+        completeLevel2();
+      }
+    }
+
+    // =============================================
+    // Score Updates
+    // =============================================
+    function updateScores() {
+      document.getElementById('score-level1').textContent = level1Score + '/' + level1Data.length;
+      document.getElementById('score-level2').textContent = level2Score + '/' + level2Data.length;
+      var total = level1Score + level2Score;
+      var totalPossible = level1Data.length + level2Data.length;
+      document.getElementById('score-total').textContent = total + '/' + totalPossible;
+    }
+
+    function completeLevel1() {
+      var el = document.getElementById('level1-complete');
+      el.classList.add('visible');
+      document.getElementById('level1-final-score').textContent =
+        'You got ' + level1Score + ' out of ' + level1Data.length + ' correct!';
+
+      var pct = Math.round((level1Score / level1Data.length) * 100);
+      var msg;
+      if (pct >= 88) msg = 'Amazing! You have sharp eyes for spotting AI images!';
+      else if (pct >= 63) msg = 'Good job! You caught most of the fakes. Keep practicing!';
+      else msg = 'AI images can be really tricky! Now you know what clues to look for.';
+      document.getElementById('level1-message').textContent = msg;
+
+      document.querySelector('.level-tab[data-level="1"]').classList.add('completed');
+      taskCards.setComplete('detection', true);
+    }
+
+    function completeLevel2() {
+      var el = document.getElementById('level2-complete');
+      el.classList.add('visible');
+      document.getElementById('level2-final-score').textContent =
+        'You got ' + level2Score + ' out of ' + level2Data.length + ' correct!';
+
+      var pct = Math.round((level2Score / level2Data.length) * 100);
+      var msg;
+      if (pct >= 83) msg = 'Impressive! You can tell human and AI writing apart!';
+      else if (pct >= 50) msg = 'Nice work! You spotted some key differences.';
+      else msg = 'AI writing is getting harder to detect! Now you know the telltale signs.';
+      document.getElementById('level2-message').textContent = msg;
+
+      document.querySelector('.level-tab[data-level="2"]').classList.add('completed');
+    }
+
+    function updateFinalResults() {
+      var total = level1Score + level2Score;
+      var totalPossible = level1Data.length + level2Data.length;
+
+      document.getElementById('final-total-score').textContent = total + ' / ' + totalPossible;
+      document.getElementById('final-l1-score').textContent = level1Score + '/' + level1Data.length;
+      document.getElementById('final-l2-score').textContent = level2Score + '/' + level2Data.length;
+
+      var pct = totalPossible > 0 ? Math.round((total / totalPossible) * 100) : 0;
+      var rating;
+      var emoji;
+      if (pct >= 86) {
+        rating = 'Master AI Detective!';
+        emoji = '\uD83D\uDD75\uFE0F';
+      } else if (pct >= 64) {
+        rating = 'Skilled Truth-Seeker!';
+        emoji = '\uD83D\uDCA1';
+      } else if (pct >= 43) {
+        rating = 'Growing Fact-Checker!';
+        emoji = '\uD83C\uDF31';
+      } else {
+        rating = 'AI is tricky -- but now you know the signs!';
+        emoji = '\uD83D\uDCAA';
+      }
+
+      document.getElementById('final-rating').textContent = rating;
+      document.getElementById('results-emoji').textContent = emoji;
+    }
+
+    // =============================================
+    // Part 2: Bias Experiment Setup
+    // =============================================
+    var experimentGrid = document.getElementById('experiment-prompts');
+    var selectedExperiments = {};
+
+    biasExperiments.forEach(function (exp) {
+      var card = document.createElement('div');
+      card.className = 'experiment-prompt-card';
+
+      var label = document.createElement('div');
+      label.className = 'prompt-label';
+      label.textContent = exp.label;
+
+      var pair = document.createElement('div');
+      pair.className = 'prompt-pair';
+
+      var spanA = document.createElement('span');
+      spanA.textContent = 'A: "' + exp.promptA + '"';
+
+      var spanB = document.createElement('span');
+      spanB.textContent = 'B: "' + exp.promptB + '"';
+
+      var lookFor = document.createElement('div');
+      lookFor.style.cssText = 'font-size: var(--text-xs); color: var(--color-text-muted); margin-top: var(--space-sm); font-style: italic;';
+      lookFor.textContent = 'Look for: ' + exp.lookFor;
+
+      pair.appendChild(spanA);
+      pair.appendChild(spanB);
+
+      card.appendChild(label);
+      card.appendChild(pair);
+      card.appendChild(lookFor);
+
+      card.addEventListener('click', function () {
+        card.classList.toggle('card-selected');
+        if (card.classList.contains('card-selected')) {
+          selectedExperiments[exp.id] = true;
+        } else {
+          delete selectedExperiments[exp.id];
+        }
+
+        var count = Object.keys(selectedExperiments).length;
+        if (count >= 2) {
+          taskCards.setComplete('bias', true);
+          document.querySelector('.level-tab[data-level="3"]').classList.add('completed');
+        }
+
+        ActivityLogger.log('experiment-select', exp.label);
+      });
+
+      experimentGrid.appendChild(card);
+    });
+
+    // =============================================
+    // Part 2: Chat Widget for Bias Experiment
+    // =============================================
+    var biasChat = document.getElementById('bias-chat');
+
+    var biasChatWidget = window.ChatWidget(biasChat, {
+      systemPrompt: 'You are a helpful assistant. Answer questions directly and descriptively. When asked to describe a person or scenario, give a detailed, specific description including appearance, behavior, and setting. Be descriptive and specific. Keep answers to 3-5 sentences.',
+      placeholder: 'Paste a prompt from above, or type your own question to test the AI...'
+    });
+
+    // Save observations
+    var observationsEl = document.getElementById('observations-text');
+    var obsKey = 'observations_lesson05';
+
     try {
-      var saved = localStorage.getItem(songStorageKey);
-      if (saved) {
-        songs = JSON.parse(saved);
+      var savedObs = localStorage.getItem(obsKey);
+      if (savedObs) observationsEl.value = savedObs;
+    } catch (e) { /* ignore */ }
+
+    observationsEl.addEventListener('input', function () {
+      try {
+        localStorage.setItem(obsKey, observationsEl.value);
+      } catch (e) { /* ignore */ }
+    });
+
+    // =============================================
+    // Part 3: My AI Guidelines
+    // =============================================
+    var guidelinesContainer = document.getElementById('guideline-categories');
+    var guidelinesKey = 'guidelines_lesson05';
+    var savedGuidelines = {};
+
+    try {
+      var savedG = localStorage.getItem(guidelinesKey);
+      if (savedG) savedGuidelines = JSON.parse(savedG);
+    } catch (e) { /* ignore */ }
+
+    var filledCount = 0;
+
+    guidelineCategories.forEach(function (cat) {
+      var catDiv = document.createElement('div');
+      catDiv.className = 'guideline-category';
+
+      var header = document.createElement('div');
+      header.className = 'cat-header';
+
+      var icon = document.createElement('span');
+      icon.className = 'cat-icon';
+      icon.textContent = cat.iconText;
+
+      var title = document.createElement('span');
+      title.className = 'cat-title';
+      title.textContent = cat.title;
+
+      header.appendChild(icon);
+      header.appendChild(title);
+
+      var starter = document.createElement('div');
+      starter.className = 'cat-starter';
+      starter.textContent = cat.starter;
+
+      var textarea = document.createElement('textarea');
+      textarea.placeholder = cat.placeholder;
+      textarea.value = savedGuidelines[cat.id] || '';
+
+      if (textarea.value.trim().length > 10) filledCount++;
+
+      textarea.addEventListener('input', function () {
+        savedGuidelines[cat.id] = textarea.value;
+        try {
+          localStorage.setItem(guidelinesKey, JSON.stringify(savedGuidelines));
+        } catch (e) { /* ignore */ }
+
+        // Count filled guidelines
+        var count = 0;
+        guidelineCategories.forEach(function (c) {
+          if (savedGuidelines[c.id] && savedGuidelines[c.id].trim().length > 10) count++;
+        });
+
+        if (count >= 3) {
+          taskCards.setComplete('guidelines', true);
+          document.querySelector('.level-tab[data-level="4"]').classList.add('completed');
+        }
+      });
+
+      catDiv.appendChild(header);
+      catDiv.appendChild(starter);
+      catDiv.appendChild(textarea);
+      guidelinesContainer.appendChild(catDiv);
+    });
+
+    // Check initial state
+    if (filledCount >= 3) {
+      taskCards.setComplete('guidelines', true);
+      document.querySelector('.level-tab[data-level="4"]').classList.add('completed');
+    }
+
+    // =============================================
+    // Pledge Signing
+    // =============================================
+    var pledgeNameInput = document.getElementById('pledge-name');
+    var signPledgeBtn = document.getElementById('sign-pledge-btn');
+    var certificate = document.getElementById('pledge-certificate');
+    var certNameDisplay = document.getElementById('cert-name-display');
+    var certDate = document.getElementById('cert-date');
+    var exportRow = document.getElementById('export-row');
+
+    // Load saved pledge
+    var pledgeKey = 'pledge_lesson05';
+    try {
+      var savedPledge = localStorage.getItem(pledgeKey);
+      if (savedPledge) {
+        var pledgeData = JSON.parse(savedPledge);
+        pledgeNameInput.value = pledgeData.name || '';
+        if (pledgeData.signed) {
+          showCertificate(pledgeData.name, pledgeData.date);
+        }
       }
     } catch (e) { /* ignore */ }
 
-    function saveSongs() {
+    signPledgeBtn.addEventListener('click', function () {
+      var name = pledgeNameInput.value.trim();
+      if (!name) {
+        pledgeNameInput.focus();
+        return;
+      }
+
+      var dateStr = new Date().toLocaleDateString('en-US', {
+        year: 'numeric', month: 'long', day: 'numeric'
+      });
+
+      showCertificate(name, dateStr);
+
       try {
-        localStorage.setItem(songStorageKey, JSON.stringify(songs));
+        localStorage.setItem(pledgeKey, JSON.stringify({
+          name: name,
+          signed: true,
+          date: dateStr
+        }));
       } catch (e) { /* ignore */ }
-    }
 
-    function renderSongs() {
-      // Clear
-      while (songListEl.firstChild) {
-        songListEl.removeChild(songListEl.firstChild);
-      }
-
-      if (songs.length === 0) {
-        var empty = document.createElement('div');
-        empty.className = 'empty-state';
-        empty.textContent = 'No songs yet. Create some music on Suno, then add them here!';
-        songListEl.appendChild(empty);
-        return;
-      }
-
-      songs.forEach(function (song, index) {
-        var entry = document.createElement('div');
-        entry.className = 'song-entry';
-
-        var info = document.createElement('div');
-        info.className = 'song-info';
-
-        var titleEl = document.createElement('span');
-        titleEl.className = 'song-title';
-        titleEl.textContent = song.title;
-
-        var styleEl = document.createElement('span');
-        styleEl.className = 'song-style';
-        styleEl.textContent = song.style;
-
-        info.appendChild(titleEl);
-        info.appendChild(styleEl);
-
-        if (song.notes) {
-          var notesEl = document.createElement('span');
-          notesEl.className = 'song-notes';
-          notesEl.textContent = song.notes;
-          info.appendChild(notesEl);
-        }
-
-        // Hit single toggle
-        var hitLabel = document.createElement('label');
-        hitLabel.className = 'hit-toggle';
-
-        var hitCheckbox = document.createElement('input');
-        hitCheckbox.type = 'checkbox';
-        hitCheckbox.checked = !!song.hit;
-
-        var starEl = document.createElement('span');
-        starEl.className = 'hit-star' + (song.hit ? ' active' : '');
-        starEl.textContent = song.hit ? '\u2B50' : '\u2606';
-
-        var hitText = document.createElement('span');
-        hitText.textContent = 'Hit Single';
-
-        hitCheckbox.addEventListener('change', (function (idx, star) {
-          return function () {
-            songs[idx].hit = this.checked;
-            star.className = 'hit-star' + (this.checked ? ' active' : '');
-            star.textContent = this.checked ? '\u2B50' : '\u2606';
-            saveSongs();
-            if (this.checked) {
-              taskCards.setComplete('pick-hit', true);
-            }
-          };
-        })(index, starEl));
-
-        hitLabel.appendChild(hitCheckbox);
-        hitLabel.appendChild(starEl);
-        hitLabel.appendChild(hitText);
-
-        // Delete button
-        var deleteBtn = document.createElement('button');
-        deleteBtn.className = 'delete-btn';
-        deleteBtn.textContent = '\u2715';
-        deleteBtn.title = 'Remove song';
-        deleteBtn.addEventListener('click', (function (idx) {
-          return function () {
-            songs.splice(idx, 1);
-            saveSongs();
-            renderSongs();
-          };
-        })(index));
-
-        entry.appendChild(info);
-        entry.appendChild(hitLabel);
-        entry.appendChild(deleteBtn);
-        songListEl.appendChild(entry);
-      });
-
-      // Update task progress
-      if (songs.length >= 1) {
-        taskCards.setComplete('create-song', true);
-      }
-      if (songs.length >= 2) {
-        taskCards.setComplete('try-styles', true);
-      }
-    }
-
-    addSongBtn.addEventListener('click', function () {
-      var title = songTitleInput.value.trim();
-      var style = songStyleInput.value.trim();
-      var notes = songNotesInput.value.trim();
-
-      if (!title) {
-        songTitleInput.focus();
-        return;
-      }
-
-      songs.push({
-        title: title,
-        style: style || 'Unknown',
-        notes: notes,
-        hit: false
-      });
-
-      saveSongs();
-      renderSongs();
-
-      // Clear inputs
-      songTitleInput.value = '';
-      songStyleInput.value = '';
-      songNotesInput.value = '';
-      songTitleInput.focus();
+      taskCards.setComplete('pledge', true);
+      ActivityLogger.log('pledge-signed', name);
     });
 
-    // Allow Enter key in the last input to add song
-    songNotesInput.addEventListener('keydown', function (e) {
-      if (e.key === 'Enter') {
-        e.preventDefault();
-        addSongBtn.click();
+    function showCertificate(name, dateStr) {
+      certNameDisplay.textContent = name;
+      certDate.textContent = dateStr;
+      certificate.classList.add('visible');
+      exportRow.style.display = 'flex';
+    }
+
+    // Export Button
+    var exportBtnContainer = document.getElementById('export-btn-container');
+    window.ExportButton(exportBtnContainer, {
+      label: 'Download My AI Guidelines',
+      filename: 'my-ai-guidelines.txt',
+      format: 'text',
+      getData: function () {
+        var lines = [];
+        lines.push('MY AI GUIDELINES');
+        lines.push('================');
+        lines.push('');
+
+        guidelineCategories.forEach(function (cat) {
+          lines.push(cat.title);
+          lines.push('-'.repeat(cat.title.length));
+          var val = savedGuidelines[cat.id] || '(not filled in)';
+          lines.push(val);
+          lines.push('');
+        });
+
+        lines.push('');
+        lines.push('PLEDGE');
+        lines.push('------');
+        var name = pledgeNameInput.value.trim() || '(unsigned)';
+        lines.push('Signed by: ' + name);
+        lines.push('Date: ' + (certDate.textContent || 'N/A'));
+        lines.push('');
+        lines.push('I pledge to use AI thoughtfully, honestly, and fairly.');
+
+        return lines.join('\n');
       }
     });
-
-    // Initial render
-    renderSongs();
 
     // =============================================
     // Task Sidebar
@@ -659,12 +1579,11 @@
     var taskSidebar = document.getElementById('task-sidebar');
 
     var taskCards = window.TaskCards(taskSidebar, [
-      { id: 'choose-topic', title: 'Choose a topic for your song', description: 'What is your song about?' },
-      { id: 'write-lyrics', title: 'Write lyrics with AI help', description: 'Use the lyrics workshop above' },
-      { id: 'pick-style', title: 'Pick a music style', description: 'Explore the genre cards' },
-      { id: 'create-song', title: 'Open Suno and create your song', description: 'Use the launch pad to create music' },
-      { id: 'try-styles', title: 'Try at least 2 different styles', description: 'Experiment with different genres' },
-      { id: 'pick-hit', title: 'Pick your "hit single"', description: 'Mark your favorite song with a star' }
+      { id: 'detection', title: 'Complete the detection challenge', description: 'Answer all image & text questions (Part 1)' },
+      { id: 'bias', title: 'Run 2+ bias experiments', description: 'Select and try at least 2 experiments (Part 2)' },
+      { id: 'guidelines', title: 'Write your AI guidelines', description: 'Fill in at least 3 categories (Part 3)' },
+      { id: 'pledge', title: 'Sign your pledge', description: 'Sign and get your certificate (Part 3)' },
+      { id: 'discuss', title: 'Discuss with your partner', description: 'Share what surprised you most' }
     ]);
   </script>
 

@@ -3,200 +3,338 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AI Picture Book - AI Creator Lab</title>
+  <title>AI Code &mdash; Build and Play - AI Creator Lab</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/white.css">
   <link rel="stylesheet" href="/shared/slides-base.css">
   <style>
-    /* Picture book structure diagram */
-    .book-structure {
+    /* Code vs description comparison */
+    .code-vs-desc {
       display: flex;
-      gap: 20px;
-      align-items: flex-end;
+      gap: 40px;
+      max-width: 1000px;
+      margin: 28px auto 0;
+      align-items: stretch;
+    }
+
+    .code-vs-desc > div {
+      flex: 1;
+      padding: 28px;
+      border-radius: 14px;
+      text-align: left;
+    }
+
+    .code-vs-desc .scary-code {
+      background: #1e2330;
+      color: #94a3b8;
+      font-family: "SF Mono", "Fira Code", "Consolas", monospace;
+      font-size: 0.85rem;
+      line-height: 1.7;
+      overflow: hidden;
+    }
+
+    .code-vs-desc .friendly-desc {
+      background: rgba(79, 110, 247, 0.08);
+      border: 2px solid rgba(79, 110, 247, 0.15);
+      font-size: 1.3rem;
+      display: flex;
+      align-items: center;
       justify-content: center;
+      text-align: center;
+      color: var(--slide-text);
+      line-height: 1.6;
+    }
+
+    .code-vs-desc .label {
+      font-size: 0.9rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 12px;
+      display: block;
+    }
+
+    .scary-code .label { color: #ef4444; }
+    .friendly-desc .label { color: var(--slide-primary); }
+
+    /* Magic flow diagram */
+    .magic-flow {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 24px;
       margin: 32px auto 0;
       max-width: 900px;
     }
 
-    .book-part {
+    .magic-flow .flow-step {
       flex: 1;
       padding: 24px 16px;
       border-radius: 14px;
       text-align: center;
-      min-height: 120px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
     }
 
-    .book-part.part-cover {
-      background: linear-gradient(135deg, #1e2330, #2d3352);
-      color: #fff;
-    }
-
-    .book-part.part-page {
+    .magic-flow .flow-step.step-you {
       background: rgba(79, 110, 247, 0.08);
       border: 2px solid rgba(79, 110, 247, 0.15);
     }
 
-    .book-part.part-end {
+    .magic-flow .flow-step.step-ai {
       background: rgba(124, 58, 237, 0.08);
       border: 2px solid rgba(124, 58, 237, 0.15);
     }
 
-    .book-part .part-emoji {
-      font-size: 2rem;
-      margin-bottom: 6px;
+    .magic-flow .flow-step.step-result {
+      background: rgba(34, 197, 94, 0.08);
+      border: 2px solid rgba(34, 197, 94, 0.15);
     }
 
-    .book-part .part-label {
-      font-size: 1.1rem;
-      font-weight: 700;
-    }
-
-    .book-part .part-desc {
-      font-size: 0.85rem;
-      margin-top: 4px;
-      opacity: 0.8;
-    }
-
-    .book-part .arrow-right {
-      font-size: 1.8rem;
-      color: var(--slide-muted);
-      align-self: center;
-      flex-shrink: 0;
-    }
-
-    /* Workflow steps */
-    .workflow-steps {
-      display: flex;
-      gap: 12px;
-      align-items: center;
-      justify-content: center;
-      margin: 32px auto 0;
-      max-width: 950px;
-    }
-
-    .workflow-step {
-      flex: 1;
-      padding: 20px 16px;
-      border-radius: 14px;
-      text-align: center;
-      background: rgba(79, 110, 247, 0.06);
-      border: 2px solid rgba(79, 110, 247, 0.12);
-    }
-
-    .workflow-step .step-emoji {
-      font-size: 2.2rem;
-      margin-bottom: 6px;
-    }
-
-    .workflow-step .step-label {
-      font-size: 1rem;
-      font-weight: 700;
-    }
-
-    .workflow-step .step-num {
-      display: inline-block;
-      width: 28px;
-      height: 28px;
-      line-height: 28px;
-      text-align: center;
-      background: var(--slide-primary);
-      color: #fff;
-      border-radius: 50%;
-      font-size: 0.85rem;
-      font-weight: 700;
+    .magic-flow .flow-emoji {
+      font-size: 2.8rem;
       margin-bottom: 8px;
     }
 
-    .workflow-arrow {
-      font-size: 1.6rem;
-      color: var(--slide-muted);
-      flex-shrink: 0;
+    .magic-flow .flow-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 4px;
     }
 
-    /* Match examples */
-    .match-example {
+    .magic-flow .flow-desc {
+      font-size: 0.95rem;
+      color: var(--slide-muted);
+    }
+
+    .magic-flow .flow-arrow {
+      font-size: 2rem;
+      color: var(--slide-muted);
+      flex-shrink: 0;
+      flex-grow: 0;
+      width: auto;
+    }
+
+    /* Good vs bad prompts */
+    .prompt-comparison {
       display: flex;
       gap: 32px;
-      align-items: stretch;
       max-width: 900px;
       margin: 28px auto 0;
     }
 
-    .match-side {
+    .prompt-comparison > div {
       flex: 1;
       padding: 24px;
       border-radius: 14px;
-      text-align: center;
+      text-align: left;
     }
 
-    .match-side.match-story {
-      background: rgba(79, 110, 247, 0.06);
-      border: 2px solid rgba(79, 110, 247, 0.12);
-    }
-
-    .match-side.match-image-good {
-      background: rgba(34, 197, 94, 0.06);
-      border: 2px solid rgba(34, 197, 94, 0.15);
-    }
-
-    .match-side.match-image-bad {
+    .prompt-comparison .prompt-bad {
       background: rgba(239, 68, 68, 0.06);
       border: 2px solid rgba(239, 68, 68, 0.15);
     }
 
-    .match-side .match-label {
-      font-size: 0.95rem;
+    .prompt-comparison .prompt-good {
+      background: rgba(34, 197, 94, 0.06);
+      border: 2px solid rgba(34, 197, 94, 0.15);
+    }
+
+    .prompt-comparison .prompt-label {
+      font-size: 1rem;
       font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
+      margin-bottom: 16px;
+      display: block;
+    }
+
+    .prompt-bad .prompt-label { color: #ef4444; }
+    .prompt-good .prompt-label { color: #16a34a; }
+
+    .prompt-comparison .prompt-item {
+      font-size: 1.15rem;
       margin-bottom: 12px;
-      color: var(--slide-muted);
+      padding: 10px 14px;
+      border-radius: 10px;
+      line-height: 1.4;
     }
 
-    .match-side .match-text {
-      font-size: 1.2rem;
-      line-height: 1.5;
-      font-style: italic;
+    .prompt-bad .prompt-item {
+      background: rgba(239, 68, 68, 0.06);
     }
 
-    .match-side .match-emoji {
-      font-size: 3rem;
-      margin-bottom: 8px;
+    .prompt-good .prompt-item {
+      background: rgba(34, 197, 94, 0.06);
     }
 
-    .match-side .match-verdict {
-      font-size: 1.4rem;
+    /* Challenge preview */
+    .challenge-preview {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 16px;
+      max-width: 950px;
+      margin: 28px auto 0;
+    }
+
+    .challenge-preview .ch-item {
+      padding: 20px 12px;
+      border-radius: 14px;
+      text-align: center;
+      background: rgba(79, 110, 247, 0.06);
+      border: 2px solid rgba(79, 110, 247, 0.12);
+    }
+
+    .challenge-preview .ch-emoji {
+      font-size: 2rem;
+      margin-bottom: 6px;
+    }
+
+    .challenge-preview .ch-name {
+      font-size: 1rem;
       font-weight: 700;
-      margin-top: 12px;
+      margin-bottom: 4px;
     }
 
-    /* Tip highlight box */
-    .tip-box {
+    .challenge-preview .ch-diff {
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 0.15em 0.5em;
+      border-radius: 9999px;
+      display: inline-block;
+    }
+
+    .ch-diff-easy { background: #dcfce7; color: #16a34a; }
+    .ch-diff-medium { background: #fef3c7; color: #b45309; }
+    .ch-diff-hard { background: #ede9fe; color: #7c3aed; }
+
+    /* Concept box */
+    .concept-box {
       background: rgba(79, 110, 247, 0.08);
       border-radius: 14px;
-      padding: 28px 36px;
-      max-width: 800px;
-      margin: 24px auto 0;
+      padding: 24px 32px;
+      max-width: 750px;
+      margin: 20px auto 0;
       font-size: 1.4rem;
-      line-height: 1.7;
+      line-height: 1.6;
       color: var(--slide-text);
     }
 
-    /* Mission checklist */
-    .mission-list {
+    /* Game showcase grid */
+    .game-showcase {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      max-width: 900px;
+      margin: 28px auto 0;
+    }
+
+    .game-showcase .game-item {
+      padding: 24px 16px;
+      border-radius: 14px;
+      background: rgba(79, 110, 247, 0.06);
+      border: 2px solid rgba(79, 110, 247, 0.12);
+      text-align: center;
+    }
+
+    .game-showcase .game-item .game-emoji {
+      font-size: 2.8rem;
+      margin-bottom: 8px;
+    }
+
+    .game-showcase .game-item .game-name {
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .game-showcase .game-item .game-desc {
+      font-size: 0.95rem;
+      color: var(--slide-muted);
+    }
+
+    /* Design loop visual */
+    .loop-steps {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin: 32px auto 0;
+      max-width: 900px;
+      flex-wrap: wrap;
+    }
+
+    .loop-step {
+      padding: 18px 24px;
+      border-radius: 14px;
+      text-align: center;
+      min-width: 140px;
+    }
+
+    .loop-step.step-describe {
+      background: rgba(79, 110, 247, 0.1);
+      border: 2px solid rgba(79, 110, 247, 0.2);
+    }
+
+    .loop-step.step-generate {
+      background: rgba(124, 58, 237, 0.1);
+      border: 2px solid rgba(124, 58, 237, 0.2);
+    }
+
+    .loop-step.step-play {
+      background: rgba(14, 165, 165, 0.1);
+      border: 2px solid rgba(14, 165, 165, 0.2);
+    }
+
+    .loop-step.step-improve {
+      background: rgba(245, 158, 11, 0.1);
+      border: 2px solid rgba(245, 158, 11, 0.2);
+    }
+
+    .loop-step .step-emoji {
+      font-size: 2rem;
+      margin-bottom: 4px;
+    }
+
+    .loop-step .step-label {
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+
+    .loop-arrow {
+      font-size: 2rem;
+      color: var(--slide-muted);
+    }
+
+    .loop-back-arrow {
+      display: block;
+      text-align: center;
+      font-size: 1.3rem;
+      color: var(--slide-muted);
+      margin-top: 12px;
+    }
+
+    /* Prompt tips */
+    .prompt-tips {
       list-style: none;
       text-align: left;
       display: inline-block;
-      font-size: 1.5rem;
-      line-height: 2;
+      margin-top: 20px;
     }
 
-    .mission-list li {
-      padding-left: 0.3em;
+    .prompt-tips li {
+      padding: 8px 0;
+      font-size: 1.3rem;
+    }
+
+    /* Mission checklist */
+    .mission-steps {
+      list-style: none;
+      text-align: left;
+      display: inline-block;
+      font-size: 1.4rem;
+      margin-top: 20px;
+    }
+
+    .mission-steps li {
+      margin-bottom: 0.5em;
+      padding-left: 0.2em;
     }
   </style>
 </head>
@@ -206,142 +344,267 @@
 
       <!-- Slide 1: Title -->
       <section>
-        <p class="slide-big-emoji">&#x1F4D6;</p>
-        <h1 class="slide-title">AI Picture Book</h1>
-        <p style="font-size: 1.8rem; margin-top: 16px;">Today: We make books!</p>
+        <p class="slide-big-emoji">&#x1F4BB;&#x1F3AE;</p>
+        <h1 class="slide-title">AI Code &mdash; Build and Play</h1>
+        <p>Today: You become a programmer AND a game designer!</p>
         <p style="margin-top: 12px; font-size: 1.1rem; color: var(--slide-muted);">AI Creator Lab &middot; Lesson 04</p>
       </section>
 
-      <!-- Slide 2: What makes a picture book? -->
+      <!-- Slide 2: What does coding feel like? -->
       <section>
-        <h2>What Makes a Picture Book?</h2>
-        <div class="book-structure">
-          <div class="book-part part-cover">
-            <div class="part-emoji">&#x1F4D5;</div>
-            <div class="part-label">Cover</div>
-            <div class="part-desc">Title + Author + Image</div>
+        <h2>What do you think coding looks like? &#x1F914;</h2>
+        <div class="code-vs-desc">
+          <div class="scary-code">
+            <span class="label">&#x1F631; This?</span>
+            <div>const canvas = document.createElement('canvas');</div>
+            <div>const ctx = canvas.getContext('2d');</div>
+            <div>let x = 100, y = 100, dx = 3, dy = 2;</div>
+            <div>function animate() {</div>
+            <div>&nbsp;&nbsp;ctx.clearRect(0, 0, 800, 600);</div>
+            <div>&nbsp;&nbsp;ctx.beginPath();</div>
+            <div>&nbsp;&nbsp;ctx.arc(x, y, 20, 0, Math.PI*2);</div>
+            <div>&nbsp;&nbsp;ctx.fill();</div>
+            <div>&nbsp;&nbsp;if (x+20>800 || x-20&lt;0) dx=-dx;</div>
+            <div>&nbsp;&nbsp;requestAnimationFrame(animate);</div>
+            <div>}</div>
           </div>
-          <div class="book-part part-page">
-            <div class="part-emoji">&#x1F5BC;&#xFE0F; + &#x1F4DD;</div>
-            <div class="part-label">Pages</div>
-            <div class="part-desc">Text + Pictures</div>
-          </div>
-          <div class="book-part part-page">
-            <div class="part-emoji">&#x1F5BC;&#xFE0F; + &#x1F4DD;</div>
-            <div class="part-label">More Pages</div>
-            <div class="part-desc">Text + Pictures</div>
-          </div>
-          <div class="book-part part-end">
-            <div class="part-emoji">&#x2728;</div>
-            <div class="part-label">The End</div>
-            <div class="part-desc">Closing page</div>
+          <div class="friendly-desc">
+            <div>
+              <span class="label">&#x1F60A; Or this?</span>
+              <p style="font-size:1.4rem; margin:0;">&ldquo;Make a colorful ball that bounces around the screen&rdquo;</p>
+            </div>
           </div>
         </div>
-        <p style="margin-top: 28px; font-size: 1.5rem; font-weight: 650;">The words and pictures work <strong style="color: var(--slide-secondary);">TOGETHER</strong></p>
+        <p style="font-size: 1.4rem; margin-top: 24px;">They make the <strong>exact same thing!</strong></p>
       </section>
 
-      <!-- Slide 3: The workflow -->
+      <!-- Slide 3: The magic -->
       <section>
-        <h2>Our Workflow Today</h2>
-        <div class="workflow-steps">
-          <div class="workflow-step">
-            <div class="step-num">1</div>
-            <div class="step-emoji">&#x270D;&#xFE0F;</div>
-            <div class="step-label">Write Story</div>
-          </div>
-          <div class="workflow-arrow">&#x2192;</div>
-          <div class="workflow-step">
-            <div class="step-num">2</div>
-            <div class="step-emoji">&#x2702;&#xFE0F;</div>
-            <div class="step-label">Split Pages</div>
-          </div>
-          <div class="workflow-arrow">&#x2192;</div>
-          <div class="workflow-step">
-            <div class="step-num">3</div>
-            <div class="step-emoji">&#x1F3A8;</div>
-            <div class="step-label">Add Pictures</div>
-          </div>
-          <div class="workflow-arrow">&#x2192;</div>
-          <div class="workflow-step">
-            <div class="step-num">4</div>
-            <div class="step-emoji">&#x1F4D6;</div>
-            <div class="step-label">Preview &amp; Share</div>
-          </div>
+        <h2>The Magic of AI Coding &#x2728;</h2>
+        <div class="concept-box">
+          You <strong>describe</strong> what you want in plain English<br>
+          &rarr; AI <strong>writes the code</strong> for you<br>
+          &rarr; You see it <strong>come to life</strong> instantly!
         </div>
-        <p style="margin-top: 24px; font-size: 1.3rem; color: var(--slide-muted);">Four steps to create your own picture book!</p>
+        <p style="font-size: 1.6rem; margin-top: 28px;">
+          No memorizing code. No confusing symbols.<br>
+          Just <strong style="color: var(--slide-secondary);">your ideas</strong> turned into real programs.
+        </p>
       </section>
 
-      <!-- Slide 4: Key tip -->
+      <!-- Slide 4: How it works — 3-step visual -->
       <section>
-        <h2>Key Tip: Match the Mood &#x1F3AF;</h2>
-        <div class="tip-box">
-          Your image prompts should match the <strong style="color: var(--slide-secondary);">MOOD</strong> of your story.
-        </div>
-        <div class="match-example" style="margin-top: 28px;">
-          <div class="match-side match-story">
-            <div class="match-label">Adventure Story</div>
-            <div class="match-text">&#x2192; Exciting, dynamic, action-packed images</div>
+        <h2>How It Works</h2>
+        <div class="magic-flow">
+          <div class="flow-step step-you">
+            <div class="flow-emoji">&#x1F4AC;</div>
+            <div class="flow-title">Describe</div>
+            <div class="flow-desc">&ldquo;Make a button that counts clicks&rdquo;</div>
           </div>
-          <div class="match-side match-story">
-            <div class="match-label">Calm Story</div>
-            <div class="match-text">&#x2192; Soft, peaceful, gentle images</div>
+          <div class="flow-arrow">&rarr;</div>
+          <div class="flow-step step-ai">
+            <div class="flow-emoji">&#x1F916;</div>
+            <div class="flow-title">Generate</div>
+            <div class="flow-desc">AI writes HTML, CSS, JS</div>
+          </div>
+          <div class="flow-arrow">&rarr;</div>
+          <div class="flow-step step-result">
+            <div class="flow-emoji">&#x2705;</div>
+            <div class="flow-title">See It!</div>
+            <div class="flow-desc">Live, working program</div>
           </div>
         </div>
+        <p style="font-size: 1.3rem; margin-top: 24px; color: var(--slide-muted);">Then tweak it: &ldquo;make the button bigger&rdquo; &rarr; instant update!</p>
       </section>
 
-      <!-- Slide 5: Good match example -->
+      <!-- Slide 5: The secret — be specific -->
       <section>
-        <h2>Good Match &#x2705;</h2>
-        <div class="match-example">
-          <div class="match-side match-story">
-            <div class="match-label">Story Text</div>
-            <div class="match-text">&ldquo;The brave knight charged into the dragon&rsquo;s cave, sword gleaming in the firelight...&rdquo;</div>
+        <h2>The Secret: Be Specific! &#x1F50D;</h2>
+        <div class="prompt-comparison">
+          <div class="prompt-bad">
+            <span class="prompt-label">&#x274C; Too Vague</span>
+            <div class="prompt-item">&ldquo;Make a button&rdquo;</div>
+            <div class="prompt-item">&ldquo;Make a game&rdquo;</div>
+            <div class="prompt-item">&ldquo;Draw something&rdquo;</div>
           </div>
-          <div class="match-side match-image-good">
-            <div class="match-emoji">&#x2694;&#xFE0F;&#x1F525;</div>
-            <div class="match-label">Image Prompt</div>
-            <div class="match-text">A knight with a glowing sword entering a dramatic fire-lit dragon cave, epic adventure scene</div>
-            <div class="match-verdict" style="color: #22c55e;">Exciting matches exciting!</div>
+          <div class="prompt-good">
+            <span class="prompt-label">&#x2705; Specific &amp; Clear</span>
+            <div class="prompt-item">&ldquo;A big red button that changes to a random color when I click it&rdquo;</div>
+            <div class="prompt-item">&ldquo;A clicking game where a circle appears randomly and I have 30 seconds&rdquo;</div>
+            <div class="prompt-item">&ldquo;A canvas where I can draw with the mouse in different colors&rdquo;</div>
           </div>
         </div>
       </section>
 
-      <!-- Slide 6: Bad match example -->
+      <!-- Slide 6: Part 1 challenges -->
       <section>
-        <h2>Bad Match &#x274C;</h2>
-        <div class="match-example">
-          <div class="match-side match-story">
-            <div class="match-label">Funny Story</div>
-            <div class="match-text">&ldquo;Mr. Whiskers the cat accidentally knocked over every plant in the house and pretended nothing happened...&rdquo;</div>
+        <h2>Part 1: Coding Challenges &#x1F3AF;</h2>
+        <p style="font-size: 1.3rem; margin-bottom: 12px;">5 challenges, easy to hard:</p>
+        <div class="challenge-preview">
+          <div class="ch-item">
+            <div class="ch-emoji">&#x1F3A8;</div>
+            <div class="ch-name">Color Clicker</div>
+            <span class="ch-diff ch-diff-easy">Easy</span>
           </div>
-          <div class="match-side match-image-bad">
-            <div class="match-emoji">&#x1F631;</div>
-            <div class="match-label">Image Result</div>
-            <div class="match-text">Scary, dark, horror-style cat image</div>
-            <div class="match-verdict" style="color: #ef4444;">Wait, that doesn&rsquo;t feel right!</div>
+          <div class="ch-item">
+            <div class="ch-emoji">&#x1F522;</div>
+            <div class="ch-name">Click Counter</div>
+            <span class="ch-diff ch-diff-easy">Easy</span>
+          </div>
+          <div class="ch-item">
+            <div class="ch-emoji">&#x26BD;</div>
+            <div class="ch-name">Bouncing Ball</div>
+            <span class="ch-diff ch-diff-medium">Medium</span>
+          </div>
+          <div class="ch-item">
+            <div class="ch-emoji">&#x270F;&#xFE0F;</div>
+            <div class="ch-name">Drawing Canvas</div>
+            <span class="ch-diff ch-diff-medium">Medium</span>
+          </div>
+          <div class="ch-item">
+            <div class="ch-emoji">&#x1F3AE;</div>
+            <div class="ch-name">Mini Game</div>
+            <span class="ch-diff ch-diff-hard">Hard</span>
           </div>
         </div>
-        <p style="margin-top: 24px; font-size: 1.3rem;">Funny story needs <strong>funny</strong> images &#x1F638;</p>
+        <p style="font-size: 1.3rem; margin-top: 24px; color: var(--slide-muted);">
+          Start easy &rarr; Build confidence &rarr; Level up!
+        </p>
       </section>
 
-      <!-- Slide 7: Today's mission -->
+      <!-- Slide 7: Vibe Coding -->
       <section>
-        <p class="slide-big-emoji">&#x1F4DA;</p>
-        <h2>Today&rsquo;s Mission</h2>
-        <p style="font-size: 1.8rem; margin-top: 16px;">Create your own <strong style="color: var(--slide-secondary);">AI-powered picture book!</strong></p>
-        <ul class="mission-list" style="margin-top: 24px;">
-          <li>&#x2705; Write or generate a story</li>
-          <li>&#x2705; Split into 4&ndash;6 pages</li>
-          <li>&#x2705; Generate an illustration for each page</li>
-          <li>&#x2705; Add a title, preview, and download!</li>
+        <h2>&#x1F3B8; Vibe Coding Techniques</h2>
+        <p style="font-size: 1.3rem; color: var(--slide-muted); margin-bottom: 8px;">Pro tips that real developers use every day:</p>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; max-width: 850px; margin: 20px auto 0; text-align: left;">
+          <div style="padding: 18px 20px; border-radius: 12px; background: rgba(79,110,247,0.06); border: 2px solid rgba(79,110,247,0.12);">
+            <div style="font-size: 1.5rem; margin-bottom: 4px;">&#x1F6E0;&#xFE0F;</div>
+            <div style="font-weight: 700; font-size: 1.1rem;">Start Simple, Iterate</div>
+            <div style="font-size: 0.95rem; color: var(--slide-muted);">Build basics first, then add features one by one</div>
+          </div>
+          <div style="padding: 18px 20px; border-radius: 12px; background: rgba(239,68,68,0.06); border: 2px solid rgba(239,68,68,0.12);">
+            <div style="font-size: 1.5rem; margin-bottom: 4px;">&#x1F41B;</div>
+            <div style="font-weight: 700; font-size: 1.1rem;">Debug by Describing</div>
+            <div style="font-size: 0.95rem; color: var(--slide-muted);">Tell AI exactly what went wrong, not just &ldquo;fix it&rdquo;</div>
+          </div>
+          <div style="padding: 18px 20px; border-radius: 12px; background: rgba(34,197,94,0.06); border: 2px solid rgba(34,197,94,0.12);">
+            <div style="font-size: 1.5rem; margin-bottom: 4px;">&#x1F50D;</div>
+            <div style="font-weight: 700; font-size: 1.1rem;">Read the Code</div>
+            <div style="font-size: 0.95rem; color: var(--slide-muted);">Look for words you recognize &mdash; <code>score</code>, <code>color</code>, <code>click</code></div>
+          </div>
+          <div style="padding: 18px 20px; border-radius: 12px; background: rgba(124,58,237,0.06); border: 2px solid rgba(124,58,237,0.12);">
+            <div style="font-size: 1.5rem; margin-bottom: 4px;">&#x1F517;</div>
+            <div style="font-weight: 700; font-size: 1.1rem;">Chain Your Prompts</div>
+            <div style="font-size: 0.95rem; color: var(--slide-muted);">Each change builds on the last &mdash; like directions, one turn at a time</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 8: What makes a game? -->
+      <section>
+        <h2>What Makes a Game? &#x1F914;</h2>
+        <div class="concept-box" style="text-align: left; max-width: 650px;">
+          <p>&#x1F3AF; <strong>Goals</strong> &mdash; What are you trying to do?</p>
+          <p>&#x1F4DC; <strong>Rules</strong> &mdash; What can and can&rsquo;t you do?</p>
+          <p>&#x1F525; <strong>Challenge</strong> &mdash; What makes it hard?</p>
+          <p>&#x1F389; <strong>Fun</strong> &mdash; What makes you want to keep playing?</p>
+        </div>
+        <p style="margin-top: 20px; font-size: 1.3rem; color: var(--slide-muted);">
+          Every great game has all four!
+        </p>
+      </section>
+
+      <!-- Slide 8: Game types showcase -->
+      <section>
+        <h2>Game Types You Can Build &#x1F3AE;</h2>
+        <div class="game-showcase">
+          <div class="game-item">
+            <div class="game-emoji">&#x2753;</div>
+            <div class="game-name">Quiz</div>
+            <div class="game-desc">Trivia &amp; questions</div>
+          </div>
+          <div class="game-item">
+            <div class="game-emoji">&#x2B50;</div>
+            <div class="game-name">Catch</div>
+            <div class="game-desc">Catch falling objects</div>
+          </div>
+          <div class="game-item">
+            <div class="game-emoji">&#x1F9E9;</div>
+            <div class="game-name">Maze</div>
+            <div class="game-desc">Navigate to the goal</div>
+          </div>
+          <div class="game-item">
+            <div class="game-emoji">&#x1F439;</div>
+            <div class="game-name">Whack-a-Mole</div>
+            <div class="game-desc">Click fast!</div>
+          </div>
+        </div>
+        <p style="margin-top: 20px; font-size: 1.3rem;">You pick the game &mdash; AI builds it for you!</p>
+      </section>
+
+      <!-- Slide 9: The game design loop -->
+      <section>
+        <h2>The Game Design Loop &#x1F504;</h2>
+        <div class="loop-steps">
+          <div class="loop-step step-describe">
+            <div class="step-emoji">&#x1F4DD;</div>
+            <div class="step-label">Describe</div>
+          </div>
+          <span class="loop-arrow">&rarr;</span>
+          <div class="loop-step step-generate">
+            <div class="step-emoji">&#x1F916;</div>
+            <div class="step-label">Generate</div>
+          </div>
+          <span class="loop-arrow">&rarr;</span>
+          <div class="loop-step step-play">
+            <div class="step-emoji">&#x1F3AE;</div>
+            <div class="step-label">Play</div>
+          </div>
+          <span class="loop-arrow">&rarr;</span>
+          <div class="loop-step step-improve">
+            <div class="step-emoji">&#x2B06;&#xFE0F;</div>
+            <div class="step-label">Improve</div>
+          </div>
+        </div>
+        <p class="loop-back-arrow">&#x21A9;&#xFE0F; Repeat! Each time your game gets better.</p>
+      </section>
+
+      <!-- Slide 10: How to describe a game to AI -->
+      <section>
+        <h2>How to Describe a Game to AI</h2>
+        <ul class="prompt-tips">
+          <li>&#x2705; <strong>Rules</strong> &mdash; &ldquo;3 lives, 30-second timer&rdquo;</li>
+          <li>&#x2705; <strong>Controls</strong> &mdash; &ldquo;move with arrow keys&rdquo;</li>
+          <li>&#x2705; <strong>Scoring</strong> &mdash; &ldquo;get +10 for each catch&rdquo;</li>
+          <li>&#x2705; <strong>Look &amp; feel</strong> &mdash; &ldquo;bright colors, fun for kids&rdquo;</li>
+          <li>&#x274C; <strong>Avoid vague</strong> &mdash; &ldquo;make something cool&rdquo; &#x1F6AB;</li>
+        </ul>
+        <p style="margin-top: 20px; font-size: 1.2rem; color: var(--slide-muted);">
+          The more details you give, the better the game!
+        </p>
+      </section>
+
+      <!-- Slide 11: Part 2 mission -->
+      <section>
+        <p class="slide-big-emoji">&#x1F680;</p>
+        <h2>Part 2: Design Your Own Game!</h2>
+        <p style="font-size: 1.6rem; margin-top: 16px;">
+          Build a <strong style="color: var(--slide-secondary);">playable game</strong> with AI
+        </p>
+        <ul class="mission-steps">
+          <li>&#x1F579;&#xFE0F; Pick a game type</li>
+          <li>&#x1F6E0;&#xFE0F; Generate your game with AI</li>
+          <li>&#x1F3AE; Play-test it &mdash; find what to fix</li>
+          <li>&#x2B06;&#xFE0F; Make at least 2 improvements</li>
+          <li>&#x1F4E6; Export and share!</li>
         </ul>
       </section>
 
-      <!-- Slide 8: Let's go! -->
+      <!-- Slide 12: Let's code and play! -->
       <section>
         <h2>Open your laptops!</h2>
         <p style="font-size: 2rem; margin-top: 24px;">&#x1F449; Go to the <strong>Lesson 4</strong> page</p>
-        <p style="font-size: 2.5rem; margin-top: 32px;">Let&rsquo;s go! &#x1F680;</p>
+        <p style="font-size: 2.5rem; margin-top: 32px;">Let&rsquo;s code and play! &#x1F680;</p>
       </section>
 
     </div>

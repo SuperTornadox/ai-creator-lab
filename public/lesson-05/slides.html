@@ -3,155 +3,389 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AI Musician - AI Creator Lab</title>
+  <title>AI Ethics: Truth, Bias, and You - AI Creator Lab</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/white.css">
   <link rel="stylesheet" href="/shared/slides-base.css">
   <style>
-    /* Guessing game: 3 song rows */
-    .song-guess-list {
-      list-style: none;
-      text-align: left;
-      display: inline-block;
-      margin-top: 24px;
-    }
-
-    .song-guess-list li {
-      display: flex;
-      align-items: center;
-      gap: 20px;
-      padding: 16px 24px;
-      margin-bottom: 12px;
-      background: rgba(79, 110, 247, 0.06);
-      border-radius: 14px;
-      border: 2px solid rgba(79, 110, 247, 0.12);
-      font-size: 1.4rem;
-    }
-
-    .song-guess-list .song-label {
-      font-weight: 700;
-      color: var(--slide-primary);
-      min-width: 100px;
-    }
-
-    .song-guess-list .guess-options {
-      display: flex;
-      gap: 16px;
-    }
-
-    .song-guess-list .guess-option {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 1.2rem;
-      cursor: pointer;
-    }
-
-    .song-guess-list .guess-option input[type="checkbox"] {
-      width: 20px;
-      height: 20px;
-      accent-color: var(--slide-primary);
-    }
-
-    /* Genre showcase grid */
-    .genre-showcase {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 20px;
-      max-width: 900px;
-      margin: 28px auto 0;
-    }
-
-    .genre-showcase .genre-item {
-      padding: 24px 16px;
-      border-radius: 14px;
-      background: rgba(79, 110, 247, 0.06);
-      border: 2px solid rgba(79, 110, 247, 0.12);
-      text-align: center;
-    }
-
-    .genre-showcase .genre-item .genre-emoji {
-      font-size: 2.8rem;
-      margin-bottom: 8px;
-    }
-
-    .genre-showcase .genre-item .genre-name {
-      font-size: 1.2rem;
-      font-weight: 700;
-      margin-bottom: 4px;
-    }
-
-    .genre-showcase .genre-item .genre-desc {
-      font-size: 0.95rem;
-      color: var(--slide-muted);
-    }
-
-    /* Two-column tools layout */
-    .tools-columns {
+    /* Poll options */
+    .poll-options {
       display: flex;
       gap: 40px;
-      max-width: 900px;
-      margin: 28px auto 0;
-      align-items: stretch;
+      justify-content: center;
+      margin-top: 32px;
     }
 
-    .tools-columns .tool-col {
+    .poll-option {
+      padding: 28px 40px;
+      border-radius: 14px;
+      font-size: 1.6rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .poll-option:hover {
+      transform: scale(1.05);
+    }
+
+    .poll-yes {
+      background: rgba(34, 197, 94, 0.12);
+      border: 3px solid rgba(34, 197, 94, 0.3);
+      color: #166534;
+    }
+
+    .poll-maybe {
+      background: rgba(245, 158, 11, 0.12);
+      border: 3px solid rgba(245, 158, 11, 0.3);
+      color: #92400e;
+    }
+
+    .poll-no {
+      background: rgba(239, 68, 68, 0.12);
+      border: 3px solid rgba(239, 68, 68, 0.3);
+      color: #991b1b;
+    }
+
+    /* Three-column topic cards */
+    .topic-cards {
+      display: flex;
+      gap: 28px;
+      max-width: 950px;
+      margin: 28px auto 0;
+    }
+
+    .topic-card {
       flex: 1;
-      padding: 28px;
+      padding: 28px 20px;
       border-radius: 14px;
       text-align: center;
     }
 
-    .tools-columns .tool-col.col-page {
+    .topic-card.card-deepfakes {
+      background: rgba(239, 68, 68, 0.08);
+      border: 2px solid rgba(239, 68, 68, 0.2);
+    }
+
+    .topic-card.card-text {
       background: rgba(79, 110, 247, 0.08);
       border: 2px solid rgba(79, 110, 247, 0.15);
     }
 
-    .tools-columns .tool-col.col-suno {
+    .topic-card.card-bias {
       background: rgba(124, 58, 237, 0.08);
       border: 2px solid rgba(124, 58, 237, 0.15);
     }
 
-    .tools-columns .tool-col .tool-emoji {
+    .topic-card .card-emoji {
       font-size: 3rem;
       margin-bottom: 12px;
     }
 
-    .tools-columns .tool-col .tool-title {
+    .topic-card .card-title {
       font-size: 1.3rem;
       font-weight: 700;
       margin-bottom: 8px;
     }
 
-    .tools-columns .tool-col .tool-desc {
-      font-size: 1.1rem;
+    .topic-card .card-desc {
+      font-size: 1rem;
       color: var(--slide-muted);
     }
 
-    /* Mission checklist */
-    .mission-steps {
-      list-style: none;
-      text-align: left;
-      display: inline-block;
-      font-size: 1.5rem;
-      margin-top: 20px;
-    }
-
-    .mission-steps li {
-      margin-bottom: 0.5em;
-      padding-left: 0.2em;
-    }
-
-    /* Concept box (reused from base patterns) */
+    /* Concept box */
     .concept-box {
       background: rgba(79, 110, 247, 0.08);
       border-radius: 14px;
       padding: 24px 32px;
-      max-width: 750px;
-      margin: 20px auto 0;
+      max-width: 800px;
+      margin: 24px auto 0;
       font-size: 1.4rem;
       line-height: 1.6;
       color: var(--slide-text);
+    }
+
+    /* Warning box */
+    .warning-box {
+      background: rgba(239, 68, 68, 0.08);
+      border-radius: 14px;
+      padding: 24px 32px;
+      max-width: 800px;
+      margin: 24px auto 0;
+      font-size: 1.3rem;
+      line-height: 1.6;
+      border: 2px solid rgba(239, 68, 68, 0.2);
+    }
+
+    /* Clue list */
+    .clue-list {
+      text-align: left;
+      display: inline-block;
+      margin-top: 24px;
+    }
+
+    .clue-list li {
+      padding: 10px 0;
+      font-size: 1.4rem;
+    }
+
+    .clue-list li strong {
+      color: var(--slide-primary);
+    }
+
+    /* Two-column comparison */
+    .compare-cols {
+      display: flex;
+      gap: 32px;
+      max-width: 900px;
+      margin: 24px auto 0;
+      align-items: stretch;
+    }
+
+    .compare-col {
+      flex: 1;
+      padding: 24px;
+      border-radius: 14px;
+      text-align: left;
+    }
+
+    .compare-col.col-human {
+      background: rgba(34, 197, 94, 0.08);
+      border: 2px solid rgba(34, 197, 94, 0.2);
+    }
+
+    .compare-col.col-ai {
+      background: rgba(124, 58, 237, 0.08);
+      border: 2px solid rgba(124, 58, 237, 0.2);
+    }
+
+    .compare-col h3 {
+      text-align: center;
+      margin-bottom: 16px;
+      font-size: 1.3rem;
+    }
+
+    .compare-col p {
+      font-size: 1.1rem !important;
+      line-height: 1.5;
+    }
+
+    /* Real-world example cards */
+    .example-cards {
+      display: flex;
+      gap: 24px;
+      max-width: 900px;
+      margin: 28px auto 0;
+    }
+
+    .example-card {
+      flex: 1;
+      padding: 24px;
+      border-radius: 14px;
+      text-align: center;
+    }
+
+    .example-card.card-news {
+      background: rgba(239, 68, 68, 0.06);
+      border: 2px solid rgba(239, 68, 68, 0.15);
+    }
+
+    .example-card.card-social {
+      background: rgba(245, 158, 11, 0.06);
+      border: 2px solid rgba(245, 158, 11, 0.15);
+    }
+
+    .example-card.card-scam {
+      background: rgba(124, 58, 237, 0.06);
+      border: 2px solid rgba(124, 58, 237, 0.15);
+    }
+
+    .example-card .ex-emoji {
+      font-size: 2.5rem;
+      margin-bottom: 8px;
+    }
+
+    .example-card .ex-title {
+      font-weight: 700;
+      font-size: 1.15rem;
+      margin-bottom: 6px;
+    }
+
+    .example-card .ex-desc {
+      font-size: 1rem;
+      color: var(--slide-muted);
+    }
+
+    /* Bias diagram */
+    .bias-flow {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      margin: 32px auto;
+      max-width: 850px;
+    }
+
+    .bias-flow-step {
+      padding: 20px 28px;
+      border-radius: 14px;
+      text-align: center;
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+
+    .bias-flow-step.step-data {
+      background: rgba(245, 158, 11, 0.12);
+      border: 2px solid rgba(245, 158, 11, 0.3);
+    }
+
+    .bias-flow-step.step-ai {
+      background: rgba(79, 110, 247, 0.1);
+      border: 2px solid rgba(79, 110, 247, 0.2);
+    }
+
+    .bias-flow-step.step-output {
+      background: rgba(239, 68, 68, 0.1);
+      border: 2px solid rgba(239, 68, 68, 0.2);
+    }
+
+    .bias-flow-arrow {
+      font-size: 2rem;
+      color: var(--slide-muted);
+    }
+
+    /* Impact cards */
+    .impact-cards {
+      display: flex;
+      gap: 24px;
+      max-width: 900px;
+      margin: 28px auto 0;
+    }
+
+    .impact-card {
+      flex: 1;
+      padding: 24px;
+      border-radius: 14px;
+      background: rgba(239, 68, 68, 0.06);
+      border: 2px solid rgba(239, 68, 68, 0.15);
+      text-align: center;
+    }
+
+    .impact-card .impact-emoji {
+      font-size: 2.5rem;
+      margin-bottom: 8px;
+    }
+
+    .impact-card .impact-title {
+      font-weight: 700;
+      font-size: 1.15rem;
+      margin-bottom: 6px;
+    }
+
+    .impact-card .impact-desc {
+      font-size: 1rem;
+      color: var(--slide-muted);
+    }
+
+    /* Principles list */
+    .principles-list {
+      text-align: left;
+      display: inline-block;
+      margin-top: 20px;
+    }
+
+    .principles-list li {
+      padding: 12px 0;
+      font-size: 1.5rem;
+    }
+
+    /* Mission levels */
+    .mission-levels {
+      display: flex;
+      gap: 24px;
+      max-width: 900px;
+      margin: 28px auto 0;
+    }
+
+    .mission-level {
+      flex: 1;
+      padding: 24px 20px;
+      border-radius: 14px;
+      text-align: center;
+    }
+
+    .mission-level.ml-1 {
+      background: rgba(34, 197, 94, 0.08);
+      border: 2px solid rgba(34, 197, 94, 0.2);
+    }
+
+    .mission-level.ml-2 {
+      background: rgba(79, 110, 247, 0.08);
+      border: 2px solid rgba(79, 110, 247, 0.15);
+    }
+
+    .mission-level.ml-3 {
+      background: rgba(124, 58, 237, 0.08);
+      border: 2px solid rgba(124, 58, 237, 0.15);
+    }
+
+    .mission-level .ml-number {
+      font-size: 2.4rem;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .mission-level .ml-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .mission-level .ml-desc {
+      font-size: 0.95rem;
+      color: var(--slide-muted);
+    }
+
+    /* Guidelines preview */
+    .guidelines-preview {
+      display: flex;
+      gap: 16px;
+      max-width: 900px;
+      margin: 24px auto 0;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .guideline-tag {
+      padding: 14px 22px;
+      border-radius: 12px;
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+
+    .guideline-tag.tag-truth {
+      background: rgba(34, 197, 94, 0.1);
+      border: 2px solid rgba(34, 197, 94, 0.25);
+    }
+
+    .guideline-tag.tag-fairness {
+      background: rgba(79, 110, 247, 0.1);
+      border: 2px solid rgba(79, 110, 247, 0.2);
+    }
+
+    .guideline-tag.tag-privacy {
+      background: rgba(245, 158, 11, 0.1);
+      border: 2px solid rgba(245, 158, 11, 0.25);
+    }
+
+    .guideline-tag.tag-credit {
+      background: rgba(124, 58, 237, 0.1);
+      border: 2px solid rgba(124, 58, 237, 0.2);
+    }
+
+    .guideline-tag.tag-safety {
+      background: rgba(239, 68, 68, 0.1);
+      border: 2px solid rgba(239, 68, 68, 0.2);
     }
   </style>
 </head>
@@ -161,133 +395,259 @@
 
       <!-- Slide 1: Title -->
       <section>
-        <p class="slide-big-emoji">&#x1F3B5;</p>
-        <h1 class="slide-title">AI Musician</h1>
-        <p>Today: We make MUSIC with AI!</p>
+        <p class="slide-big-emoji">&#x2696;&#xFE0F;</p>
+        <h1 class="slide-title">AI Ethics</h1>
+        <p style="font-size: 1.8rem;">Truth, Bias, and You</p>
         <p style="margin-top: 12px; font-size: 1.1rem; color: var(--slide-muted);">AI Creator Lab &middot; Lesson 05</p>
       </section>
 
-      <!-- Slide 2: Guessing Game -->
+      <!-- Slide 2: Quick poll -->
       <section>
-        <h2>Real Musician or AI? &#x1F914;</h2>
-        <ul class="song-guess-list">
-          <li>
-            <span class="song-label">Song 1</span>
-            <span>___</span>
-            <div class="guess-options">
-              <label class="guess-option"><input type="checkbox"> Real</label>
-              <label class="guess-option"><input type="checkbox"> AI</label>
-            </div>
-          </li>
-          <li>
-            <span class="song-label">Song 2</span>
-            <span>___</span>
-            <div class="guess-options">
-              <label class="guess-option"><input type="checkbox"> Real</label>
-              <label class="guess-option"><input type="checkbox"> AI</label>
-            </div>
-          </li>
-          <li>
-            <span class="song-label">Song 3</span>
-            <span>___</span>
-            <div class="guess-options">
-              <label class="guess-option"><input type="checkbox"> Real</label>
-              <label class="guess-option"><input type="checkbox"> AI</label>
-            </div>
-          </li>
-        </ul>
-      </section>
-
-      <!-- Slide 3: Reveal -->
-      <section>
-        <h2>AI Music Is Getting REALLY Good! &#x1F92F;</h2>
-        <div class="concept-box">
-          AI can now create <strong>full songs</strong> with<br>
-          vocals, instruments, everything!
+        <h2>Quick Poll</h2>
+        <p class="slide-question">Can you ALWAYS tell if something was made by AI?</p>
+        <div class="poll-options">
+          <div class="poll-option poll-yes">Yes, always</div>
+          <div class="poll-option poll-maybe">Sometimes</div>
+          <div class="poll-option poll-no">Not really</div>
         </div>
-        <p style="font-size: 1.5rem; margin-top: 28px; color: var(--slide-muted);">
-          Could you tell the difference?
+        <p style="margin-top: 28px; font-size: 1.2rem; color: var(--slide-muted);">
+          Raise your hand for your answer!
         </p>
       </section>
 
-      <!-- Slide 4: How it works -->
+      <!-- Slide 3: What are deepfakes? -->
       <section>
-        <h2>Same Idea as Before</h2>
+        <h2>What Are Deepfakes? &#x1F3AD;</h2>
         <div class="concept-box">
-          You <strong>DESCRIBE</strong> what you want<br>
-          &rarr; AI <strong>CREATES</strong> it
+          <strong>Deepfakes</strong> are images, videos, or audio created by AI
+          that look and sound <em style="color: var(--slide-primary);">incredibly real</em> &mdash;
+          but are completely fake.
         </div>
-        <p style="font-size: 1.8rem; margin-top: 28px;">
-          Genre + Mood + Lyrics = <strong style="color: var(--slide-secondary);">Your Song &#x1F3B6;</strong>
+        <div class="topic-cards" style="margin-top: 28px;">
+          <div class="topic-card card-deepfakes">
+            <div class="card-emoji">&#x1F4F8;</div>
+            <div class="card-title">Fake Photos</div>
+            <div class="card-desc">People who never existed, places that aren't real</div>
+          </div>
+          <div class="topic-card card-text">
+            <div class="card-emoji">&#x1F3A5;</div>
+            <div class="card-title">Fake Videos</div>
+            <div class="card-desc">Making someone appear to say things they never said</div>
+          </div>
+          <div class="topic-card card-bias">
+            <div class="card-emoji">&#x1F399;&#xFE0F;</div>
+            <div class="card-title">Fake Audio</div>
+            <div class="card-desc">Cloning someone's voice to say anything</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 4: How to spot fake images -->
+      <section>
+        <h2>Spotting Fake Images &#x1F5BC;&#xFE0F;</h2>
+        <p style="font-size: 1.4rem; margin-bottom: 16px;">AI images look real, but they leave clues:</p>
+        <ul class="clue-list">
+          <li>&#x1F590;&#xFE0F; <strong>Hands &amp; fingers</strong> &mdash; extra fingers, weird bending</li>
+          <li>&#x1F440; <strong>Eyes</strong> &mdash; different sizes, strange reflections</li>
+          <li>&#x1F4DD; <strong>Text in images</strong> &mdash; jumbled letters, nonsense words</li>
+          <li>&#x2728; <strong>Too perfect</strong> &mdash; impossibly smooth skin, no flaws</li>
+          <li>&#x1F5BC;&#xFE0F; <strong>Backgrounds</strong> &mdash; blurry, melting, or impossible shapes</li>
+        </ul>
+      </section>
+
+      <!-- Slide 5: How to spot AI writing -->
+      <section>
+        <h2>Spotting AI Writing &#x270D;&#xFE0F;</h2>
+        <div class="compare-cols">
+          <div class="compare-col col-human">
+            <h3>&#x1F9D1; Human Writing</h3>
+            <p>- Personal stories &amp; messy details<br>
+               - Casual language, slang<br>
+               - Strong opinions &amp; emotions<br>
+               - Small mistakes, typos<br>
+               - Unique voice &amp; personality</p>
+          </div>
+          <div class="compare-col col-ai">
+            <h3>&#x1F916; AI Writing</h3>
+            <p>- General facts, no personal touch<br>
+               - Formal, polished language<br>
+               - Balanced, avoids controversy<br>
+               - Perfect grammar always<br>
+               - Sounds like a textbook</p>
+          </div>
+        </div>
+        <p style="margin-top: 24px; font-size: 1.3rem; color: var(--slide-muted);">
+          AI text is <em>correct</em> but often <em>boring</em>.
         </p>
       </section>
 
-      <!-- Slide 5: Style Showcase -->
+      <!-- Slide 6: Real-world examples of AI deception -->
       <section>
-        <h2>Music Styles &#x1F3B6;</h2>
-        <div class="genre-showcase">
-          <div class="genre-item">
-            <div class="genre-emoji">&#x1F3B5;</div>
-            <div class="genre-name">Pop</div>
-            <div class="genre-desc">Catchy &amp; fun</div>
+        <h2>AI Deception in the Real World &#x26A0;&#xFE0F;</h2>
+        <p style="font-size: 1.3rem; margin-bottom: 8px;">This is already happening:</p>
+        <div class="example-cards">
+          <div class="example-card card-news">
+            <div class="ex-emoji">&#x1F4F0;</div>
+            <div class="ex-title">Fake News Articles</div>
+            <div class="ex-desc">AI writes entire news stories that never happened, and people share them</div>
           </div>
-          <div class="genre-item">
-            <div class="genre-emoji">&#x1F3B8;</div>
-            <div class="genre-name">Rock</div>
-            <div class="genre-desc">Powerful &amp; bold</div>
+          <div class="example-card card-social">
+            <div class="ex-emoji">&#x1F4F1;</div>
+            <div class="ex-title">Social Media Fakes</div>
+            <div class="ex-desc">AI-generated photos of fake people with thousands of followers</div>
           </div>
-          <div class="genre-item">
-            <div class="genre-emoji">&#x1F3A7;</div>
-            <div class="genre-name">Lo-fi</div>
-            <div class="genre-desc">Chill &amp; cozy</div>
-          </div>
-          <div class="genre-item">
-            <div class="genre-emoji">&#x1F3B9;</div>
-            <div class="genre-name">Electronic</div>
-            <div class="genre-desc">Danceable &amp; modern</div>
+          <div class="example-card card-scam">
+            <div class="ex-emoji">&#x1F4DE;</div>
+            <div class="ex-title">Voice Cloning Scams</div>
+            <div class="ex-desc">Criminals clone a family member's voice to trick people into sending money</div>
           </div>
         </div>
-        <p style="margin-top: 20px; font-size: 1.3rem;">Different genres = completely different vibes!</p>
+        <p style="margin-top: 24px; font-size: 1.3rem; font-weight: 600; color: var(--slide-secondary);">
+          This is why learning to spot fakes matters!
+        </p>
       </section>
 
-      <!-- Slide 6: Today's Tools -->
+      <!-- Slide 7: What is AI bias? -->
       <section>
-        <h2>Today's Tools</h2>
-        <div class="tools-columns">
-          <div class="tool-col col-page">
-            <div class="tool-emoji">&#x1F4DD;</div>
-            <div class="tool-title">Our Page</div>
-            <div class="tool-desc">Lyrics helper<br>+ Style explorer</div>
+        <h2>What Is AI Bias? &#x2696;&#xFE0F;</h2>
+        <div class="concept-box">
+          <strong>Bias</strong> means unfairly favoring or disfavoring
+          certain groups of people.<br><br>
+          AI can learn bias from the data it's trained on &mdash;
+          if the training data contains stereotypes,
+          the AI will repeat them!
+        </div>
+        <p style="margin-top: 24px; font-size: 1.4rem;">
+          Example: Ask AI to "describe a CEO" &mdash; does it always imagine a man?
+        </p>
+      </section>
+
+      <!-- Slide 8: Where does bias come from? -->
+      <section>
+        <h2>Where Does Bias Come From? &#x1F4DA;</h2>
+        <div class="bias-flow">
+          <div class="bias-flow-step step-data">
+            &#x1F4DA; Training Data<br>
+            <span style="font-size: 0.9rem; font-weight: 400;">billions of texts<br>written by people</span>
           </div>
-          <div class="tool-col col-suno">
-            <div class="tool-emoji">&#x1F3B5;</div>
-            <div class="tool-title">Suno</div>
-            <div class="tool-desc">Music generation<br>(the magic happens here!)</div>
+          <div class="bias-flow-arrow">&rarr;</div>
+          <div class="bias-flow-step step-ai">
+            &#x1F916; AI Learns<br>
+            <span style="font-size: 0.9rem; font-weight: 400;">patterns &amp; associations<br>(including stereotypes)</span>
           </div>
+          <div class="bias-flow-arrow">&rarr;</div>
+          <div class="bias-flow-step step-output">
+            &#x1F4AC; AI Output<br>
+            <span style="font-size: 0.9rem; font-weight: 400;">may repeat unfair<br>assumptions</span>
+          </div>
+        </div>
+        <div class="concept-box" style="font-size: 1.2rem; margin-top: 20px;">
+          If most books &amp; websites describe nurses as women and engineers as men,
+          the AI might do the same &mdash; even though <strong>anyone</strong> can be either!
         </div>
       </section>
 
-      <!-- Slide 7: Today's Mission -->
+      <!-- Slide 9: Bias in action -->
       <section>
-        <p class="slide-big-emoji">&#x1F3A4;</p>
-        <h2>Today's Mission</h2>
-        <p style="font-size: 1.8rem; margin-top: 16px;">Create your own <strong style="color: var(--slide-secondary);">original song!</strong></p>
-        <ul class="mission-steps">
-          <li>&#x270D;&#xFE0F; Write lyrics &rarr; &#x1F3B6; Choose style &rarr; &#x1F3B5; Generate on Suno</li>
+        <h2>Bias in Action: Real Examples &#x1F6A8;</h2>
+        <div class="impact-cards">
+          <div class="impact-card">
+            <div class="impact-emoji">&#x1F3E2;</div>
+            <div class="impact-title">Hiring Software</div>
+            <div class="impact-desc">An AI hiring tool rejected women's resumes because it learned from past (biased) hiring data</div>
+          </div>
+          <div class="impact-card">
+            <div class="impact-emoji">&#x1F50E;</div>
+            <div class="impact-title">Search Results</div>
+            <div class="impact-desc">Searching "doctor" mostly showed men; searching "nurse" mostly showed women</div>
+          </div>
+          <div class="impact-card">
+            <div class="impact-emoji">&#x1F3E5;</div>
+            <div class="impact-title">Healthcare</div>
+            <div class="impact-desc">An AI system gave less care to certain patients based on their background</div>
+          </div>
+        </div>
+        <p style="margin-top: 24px; font-size: 1.3rem; color: var(--slide-muted);">
+          AI bias is not just annoying &mdash; it can cause real harm to real people.
+        </p>
+      </section>
+
+      <!-- Slide 10: Why does this matter for YOU? -->
+      <section>
+        <h2>Why Does This Matter for YOU? &#x1F9D1;&#x200D;&#x1F4BB;</h2>
+        <div class="concept-box" style="font-size: 1.3rem;">
+          You already use AI every day:<br><br>
+          &#x1F50D; <strong>Search engines</strong> decide what you see<br>
+          &#x1F4F1; <strong>Social media</strong> algorithms choose your feed<br>
+          &#x1F4DD; <strong>AI tools</strong> help you write and create<br>
+          &#x1F3AE; <strong>Recommendation systems</strong> suggest what to watch
+        </div>
+        <p style="margin-top: 28px; font-size: 1.6rem; font-weight: 700; color: var(--slide-secondary);">
+          Knowing how AI works makes you<br>a smarter, safer digital citizen.
+        </p>
+      </section>
+
+      <!-- Slide 11: Being a responsible AI user -->
+      <section>
+        <h2>5 Principles for Responsible AI Use &#x1F4A1;</h2>
+        <ul class="principles-list">
+          <li>&#x1F50D; <strong>Verify</strong> &mdash; Don't believe everything; check the source</li>
+          <li>&#x2696;&#xFE0F; <strong>Question bias</strong> &mdash; AI can be unfair; think critically</li>
+          <li>&#x1F512; <strong>Protect privacy</strong> &mdash; Never share personal info with AI</li>
+          <li>&#x1F3A8; <strong>Give credit</strong> &mdash; Be honest about AI help in your work</li>
+          <li>&#x1F6E1;&#xFE0F; <strong>Stay safe</strong> &mdash; Tell an adult if AI does something wrong</li>
         </ul>
-        <div class="concept-box" style="margin-top: 20px; font-size: 1.2rem;">
-          &#x2705; Write lyrics with AI help<br>
-          &#x2705; Pick a music genre<br>
-          &#x2705; Create at least 2 songs on Suno<br>
-          &#x2705; Pick your "hit single"
+      </section>
+
+      <!-- Slide 12: Mission Part 1 -->
+      <section>
+        <p class="slide-big-emoji">&#x1F3AF;</p>
+        <h2>Your Mission (Part 1 &amp; 2)</h2>
+        <div class="mission-levels">
+          <div class="mission-level ml-1">
+            <div class="ml-number">1</div>
+            <div class="ml-title">Detection Challenge</div>
+            <div class="ml-desc">Spot AI images &amp; AI writing</div>
+          </div>
+          <div class="mission-level ml-2">
+            <div class="ml-number">2</div>
+            <div class="ml-title">Bias Lab</div>
+            <div class="ml-desc">Test the AI for hidden biases</div>
+          </div>
+        </div>
+        <p style="font-size: 1.4rem; margin-top: 28px; color: var(--slide-muted);">
+          Can you outsmart the AI?
+        </p>
+      </section>
+
+      <!-- Slide 13: Mission Part 2 -->
+      <section>
+        <p class="slide-big-emoji">&#x1F4DC;</p>
+        <h2>Your Mission (Part 3)</h2>
+        <p style="font-size: 1.5rem; margin-bottom: 20px;">Write YOUR own AI Guidelines!</p>
+        <div class="guidelines-preview">
+          <div class="guideline-tag tag-truth">&#x1F50D; Truth &amp; Verification</div>
+          <div class="guideline-tag tag-fairness">&#x2696;&#xFE0F; Fairness &amp; Bias</div>
+          <div class="guideline-tag tag-privacy">&#x1F512; Privacy</div>
+          <div class="guideline-tag tag-credit">&#x1F3A8; Creative Credit</div>
+          <div class="guideline-tag tag-safety">&#x1F6E1;&#xFE0F; Safety</div>
+        </div>
+        <div class="concept-box" style="margin-top: 28px; font-size: 1.2rem;">
+          Create your personal rules for using AI responsibly.<br>
+          Then <strong>sign your pledge</strong> and get your certificate!
         </div>
       </section>
 
-      <!-- Slide 8: Let's go! -->
+      <!-- Slide 14: Let's go! -->
       <section>
         <h2>Open your laptops!</h2>
         <p style="font-size: 2rem; margin-top: 24px;">&#x1F449; Go to the <strong>Lesson 5</strong> page</p>
-        <p style="font-size: 2.5rem; margin-top: 32px;">Let's go! &#x1F680;</p>
+        <p style="font-size: 1.4rem; margin-top: 16px; color: var(--slide-muted);">
+          Part 1: Detection Challenge (15 min)<br>
+          Part 2: Bias Lab (15 min)<br>
+          Part 3: Your AI Guidelines (10 min)
+        </p>
+        <p style="font-size: 2.5rem; margin-top: 32px;">Let's become AI detectives! &#x1F575;&#xFE0F;</p>
       </section>
 
     </div>

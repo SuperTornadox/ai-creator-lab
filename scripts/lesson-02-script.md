@@ -1,327 +1,363 @@
-# Lesson 2: AI Story Factory — Teacher Script
-# 第二课：AI 故事工厂 — 教师逐字稿
+# Lesson 2: AI Images — Paint with Words — Teacher Script
+# 第二课：AI 图像 — 用文字画画 — 教师逐字稿
 
-**Duration / 时长**: 40–45 minutes / 分钟
-**Materials / 材料**: Slides (`slides.html`), Interactive webpage (`index.html`), Student laptops
-**Goal / 目标**: Students learn what a prompt is, practice giving clear instructions to AI, and collaboratively write a short story using a framework + revision workflow.
-**目标**: 学生了解什么是提示词 (prompt)，练习给 AI 清晰的指令，并通过框架 + 修改工作流程与 AI 合写一篇短篇故事。
-
----
-
-## Warm-up / 概念热身 (8 minutes / 分钟)
-
-### [SLIDE 1 — Title]
-
-**⏱ 0:00**
-
-EN: "Welcome back to AI Creator Lab! Last week you had your first conversation with AI. Today we're going to do something even cooler — we're going to write stories WITH AI!"
-
-CN: "欢迎回到 AI 创造者实验室！上周你们和 AI 进行了第一次对话。今天我们要做更酷的事——我们要和 AI 一起写故事！"
+**Duration / 时长**: 60 minutes / 分钟
+**Materials / 材料**: Slides (`slides.html`), Interactive webpage (`index.html`), Student laptops, Pre-prepared AI vs. real images for guessing game (Slide 2)
+**Goal / 目标**: Students learn how AI generates images from text prompts, practice crafting effective image prompts with different styles, create a mini art exhibition, and then combine text + images to make an illustrated picture book.
+**目标**: 学生学习 AI 如何从文字提示生成图像，练习用不同风格创作有效的图像提示词，创建迷你艺术展，然后将文字和图像结合起来制作一本插图绘本。
 
 ---
 
-### [SLIDE 2 — Quick Review]
+## Pre-Class Preparation / 课前准备
 
-**⏱ 0:01**
-
-EN: "Quick question: last week you interviewed those AI characters — the cat, the alien, the dinosaur. Did the AI really understand you? Or was it doing something else?"
-
-CN: "快速提问：上周你们采访了那些 AI 角色——猫、外星人、恐龙。AI 真的理解你了吗？还是它在做别的什么事？"
-
-**[Wait for responses / 等待学生回答]**
-
-EN: "Right — AI doesn't really 'understand' the way we do. It's combining patterns from data to create responses that sound good. But here's the thing: if you give AI better instructions, you get better results. And that's exactly what we're learning today!"
-
-CN: "对——AI 并不像我们一样真正'理解'。它是把数据中的规律组合起来，创造出听起来不错的回答。但关键是：如果你给 AI 更好的指令，你就能得到更好的结果。这正是我们今天要学的！"
-
----
-
-### [SLIDE 3 — What's a Prompt?]
-
-**⏱ 0:03**
-
-EN: "So there's a word you're going to hear a lot in this course: PROMPT. A prompt is basically your instructions to AI. It's what you type in to tell AI what you want."
-
-CN: "有一个词你们在这门课会经常听到：PROMPT（提示词）。提示词基本上就是你给 AI 的指令。就是你输入的内容，告诉 AI 你想要什么。"
-
-EN: "Think of it like a recipe. If you tell someone 'make me food,' they might bring you anything — maybe a raw potato. But if you say 'make me a chocolate cake with strawberries on top,' you'll get exactly what you want."
-
-CN: "把它想象成一个食谱。如果你告诉别人'给我做食物'，他们可能给你任何东西——也许是个生土豆。但如果你说'给我做一个上面放草莓的巧克力蛋糕'，你就会得到你想要的。"
-
-EN: "Prompts work the same way. The clearer your recipe, the better AI cooks!"
-
-CN: "提示词也是同样的道理。你的食谱越清楚，AI 做出来的就越好！"
+> **Important / 重要:**
+> Before class, prepare 4 images for the guessing game (Slide 2):
+> - 2 real photographs (e.g., a landscape, a street scene)
+> - 2 AI-generated images (e.g., a portrait painting, a fantasy scene)
+>
+> Pick images where the AI ones are surprisingly realistic. Display them on your screen during the guessing game — the slide has placeholder text boxes that you'll supplement with the actual images.
+>
+> 课前准备 4 张图片用于猜测游戏（幻灯片 2）：
+> - 2 张真实照片（如风景照、街景照）
+> - 2 张 AI 生成的图片（如肖像画、奇幻场景）
+>
+> 选择 AI 生成的看起来很逼真的图片。在猜测游戏时在屏幕上展示——幻灯片上有占位文本框，你需要用实际图片来补充。
 
 ---
 
-### [SLIDE 4 — Vague vs. Specific Demo]
+## Warm-up / 概念热身 (12 minutes / 分钟)
 
-**⏱ 0:05**
+### [SLIDE 1 — Title] *(0:00)*
 
-EN: "Let me show you the difference. Watch this."
+EN: "Welcome to AI Creator Lab! Today we're going to do something amazing — we're going to make AI create PICTURES and even a whole PICTURE BOOK. That's right — you type words, and AI paints you a picture."
 
-CN: "让我给你们看看区别。看这里。"
-
-**[Point to the left side]**
-
-EN: "If I type 'Write me a story' — what do you think AI will give me? Probably something really boring and generic, right? Like a story about a boy who went to school. Yawn."
-
-CN: "如果我输入'给我写一个故事'——你们觉得 AI 会给我什么？可能是一些非常无聊和普通的东西，对吧？比如一个男孩去上学的故事。无聊。"
-
-**[Point to the right side]**
-
-EN: "But if I type 'Write a funny story about a shy dragon in candy world who accidentally gets superpowers' — now AI has specific things to work with! It knows the character, the place, the problem. And the result is way better."
-
-CN: "但如果我输入'写一个关于一条害羞的龙在糖果世界意外获得超能力的搞笑故事'——现在 AI 有了具体的素材可以用！它知道角色、地点、问题。结果就好得多。"
-
-> 💡 **Teacher tip / 教师提示:**
-> EN: If you have time, actually demo this live — type both prompts into the course chat page or ChatGPT and show the difference in results. The contrast is striking and memorable.
-> CN: 如果有时间，可以现场演示——在课程聊天页面或 ChatGPT 中输入两个提示词，展示结果的差异。对比非常鲜明，令人印象深刻。
+CN: "欢迎来到 AI 创造者实验室！今天我们要做一些很棒的事——我们要让 AI 创造图片，甚至一整本绘本。没错——你输入文字，AI 就给你画一幅画。"
 
 ---
 
-### [SLIDE 5 — The Story Framework]
+### [SLIDE 2 — Real or AI? Guessing Game] *(0:01)*
 
-**⏱ 0:06**
+**[Show pre-prepared images on your screen alongside this slide / 在屏幕上展示预先准备的图片]**
 
-EN: "So how do you write a great prompt for a story? Easy — use a framework! There are four key ingredients."
+EN: "But first, let's play a game. I'm going to show you four images. Two of them were made by real photographers or artists. And two were made entirely by AI. Your job: figure out which is which."
 
-CN: "那怎么为故事写一个好的提示词呢？很简单——用一个框架！有四个关键成分。"
+CN: "但首先，我们来玩个游戏。我要给你们看四张图片。其中两张是真人摄影师或艺术家拍的。另外两张完全是 AI 制作的。你们的任务：分辨哪些是哪些。"
 
-EN: "Number one: WHO is the main character? A brave robot? A shy dragon? A talking dog?"
+EN: "Take a good look at all four. Image A, B, C, and D. Talk to each other — which ones do you think AI made?"
 
-CN: "第一：主角是谁？一个勇敢的机器人？一条害羞的龙？一只会说话的狗？"
+CN: "仔细看这四张图。图片 A、B、C 和 D。互相讨论一下——你们觉得哪些是 AI 做的？"
 
-EN: "Number two: WHERE does it happen? Outer space? Underwater? A haunted school?"
+**[Give students 30-60 seconds to discuss / 给学生 30-60 秒讨论]**
 
-CN: "第二：故事发生在哪里？外太空？水下？一个闹鬼的学校？"
+EN: "Okay, let's vote! Raise your hand if you think Image A is AI. ...Image B? ...C? ...D?"
 
-EN: "Number three: WHAT goes wrong? Every good story has a problem. Maybe they lost something. Maybe they need to save a friend."
+CN: "好了，投票吧！如果你觉得图片 A 是 AI 的，举手。……图片 B？……C？……D？"
 
-CN: "第三：出了什么问题？每个好故事都有一个问题。也许他们丢了什么东西。也许他们需要拯救一个朋友。"
+**[Count hands for each / 数举手人数]**
 
-EN: "Number four: HOW does it end? Happy? Funny? Surprise twist?"
+EN: "The answer is... Images B and D were AI-generated! A lot of people can't tell the difference. AI has gotten incredibly good at making images."
 
-CN: "第四：结局怎样？快乐的？搞笑的？意外反转？"
-
-EN: "These four things together = your story framework. And this is what you'll give to AI today."
-
-CN: "这四样东西加在一起 = 你的故事框架。这就是你今天要给 AI 的。"
+CN: "答案是……图片 B 和 D 是 AI 生成的！很多人分辨不出来。AI 已经变得非常擅长制作图片了。"
 
 ---
 
-### [SLIDE 6 — Today's Mission]
+### [SLIDE 3 — How Does AI Make Images?] *(0:04)*
 
-**⏱ 0:07**
+EN: "So how does this work? It's a three-step process. First, you DESCRIBE what you want in words — that's your prompt. Then AI finds PATTERNS from millions of images it has studied. Finally, it CREATES a brand new image that matches your description. Your words are the paintbrush!"
 
-EN: "So here's the mission: you're going to write your own creative short story using AI. But you're not just clicking a button — you give the ideas, AI does the writing, and then YOU direct the revisions. You're the director!"
-
-CN: "所以任务是这样的：你要用 AI 写自己的创意短篇故事。但你不只是点个按钮——你提供创意，AI 来写作，然后由你来指导修改。你是导演！"
+CN: "那这是怎么做到的？这是一个三步过程。首先，你用文字描述你想要什么——这就是你的提示词。然后 AI 从它学过的数百万张图片中找到规律。最后，它创造一张全新的图片来匹配你的描述。你的文字就是画笔！"
 
 ---
 
-### [SLIDE 7 — The Process]
+### [SLIDE 4 — The Power of Prompts] *(0:06)*
 
-**⏱ 0:07:30**
+EN: "Look at this comparison. On the left, someone typed just 'a cat.' What do you think AI gives you? Something generic — just... a cat. Nothing special."
 
-EN: "Here's the process, step by step. Step 1: Build your story framework — pick your character, setting, conflict, and ending. Step 2: AI writes the first draft. Step 3: You read it and tell AI what to change. And the final result? Your perfect story!"
+CN: "看看这个对比。左边，有人只输入了'一只猫'。你觉得 AI 会给你什么？相当普通——就是……一只猫。没什么特别的。"
 
-CN: "这是一步一步的流程。第一步：建立你的故事框架——选择角色、场景、冲突和结局。第二步：AI 写出初稿。第三步：你读完后告诉 AI 要改什么。最终结果？你的完美故事！"
+EN: "But on the right? 'A fluffy orange cat wearing a tiny top hat, sitting on a velvet cushion, watercolor style.' Now AI knows EXACTLY what to paint — the color, the accessories, the pose, even the art style."
 
----
+CN: "但右边呢？'一只蓬松的橘猫戴着小礼帽，坐在天鹅绒垫子上，水彩画风格。'现在 AI 确切地知道要画什么——颜色、配饰、姿势，甚至艺术风格。"
 
-### [SLIDE 8 — Let's go!]
+EN: "The lesson: more details = better results."
 
-**⏱ 0:08**
-
-EN: "Alright — open your laptops and go to the Lesson 2 page! Let's make some stories!"
-
-CN: "好了——打开电脑，进入第二课的页面！让我们来写故事吧！"
+CN: "教训：细节越多 = 结果越好。"
 
 ---
 
-## Hands-on Project / 动手项目 (30 minutes / 分钟)
+### [SLIDE 5 — Style Matters: 6 Styles] *(0:08)*
+
+EN: "Here's another cool thing — you can paint the same subject in completely different art styles. Realistic looks like a photograph. Cartoon is bright and playful. Watercolor is soft and dreamy. Pixel Art is retro and blocky. Oil Painting is rich and textured. 3D Render is modern and polished."
+
+CN: "还有一个很酷的事——你可以用完全不同的艺术风格画同一个主题。写实风格像照片。卡通风格明亮有趣。水彩风格柔和梦幻。像素风格复古方块。油画风格丰富有质感。3D 渲染风格现代精致。"
+
+EN: "Same idea, six completely different results. You'll get to try all of these today."
+
+CN: "同一个想法，六种完全不同的结果。今天你们都可以尝试。"
+
+---
+
+### [SLIDE 6 — Anatomy of a Great Image Prompt] *(0:10)*
+
+EN: "Here's the formula for a great image prompt. Four ingredients:"
+
+CN: "这是一个好的图像提示词的公式。四个成分："
+
+EN: "Number 1: SUBJECT — What's in the picture? A robot? A dragon? A bowl of ramen?"
+
+CN: "第一：主题——图片里有什么？机器人？龙？一碗拉面？"
+
+EN: "Number 2: STYLE — Watercolor? Cartoon? Realistic? Pixel art?"
+
+CN: "第二：风格——水彩？卡通？写实？像素？"
+
+EN: "Number 3: MOOD — Warm golden sunset light? Dark and mysterious? Bright and cheerful?"
+
+CN: "第三：氛围——温暖的金色夕阳光？黑暗神秘？明亮欢快？"
+
+EN: "Number 4: DETAILS — Holding flowers, in a garden, wearing a scarf..."
+
+CN: "第四：细节——拿着花、在花园里、戴着围巾……"
+
+EN: "Subject + Style + Mood + Details = magic!"
+
+CN: "主题 + 风格 + 氛围 + 细节 = 魔法！"
+
+---
+
+### [SLIDE 7 — Part 1 Mission: Art Exhibition] *(0:11)*
+
+EN: "Alright, here's the plan. Part 1: you're going to create your own AI Art Exhibition. Make at least 3 artworks in different styles, try the style match challenge, and pick your best work to give it a title. You're the art director — you tell AI what to paint!"
+
+CN: "好了，计划是这样的。第一部分：你要创建自己的 AI 艺术展。用不同风格制作至少 3 件作品，尝试风格匹配挑战，然后选出最好的作品给它起个标题。你是艺术总监——你告诉 AI 要画什么！"
+
+EN: "Open your laptops and go to the Lesson 2 page. Start with Part 1 — the Art Studio at the top!"
+
+CN: "打开电脑，进入第 2 课页面。从第一部分开始——顶部的 AI 艺术工作室！"
+
+---
+
+## Part 1: AI Art Exhibition / 第一部分：AI 艺术展 (18 minutes / 分钟)
 
 **[Switch from slides to monitoring student screens / 从幻灯片切换到巡视学生屏幕]**
 
-### Phase 1: Building the Framework (5 min)
+### Phase 1A: Free Exploration (6 min) *(0:12–0:18)*
 
-**⏱ 0:08**
+**[SLIDE 12 — Let's Create! should be showing, or switch to monitoring]**
 
-EN: "You should see the Story Factory page with four fields to fill in. First, pick your main character. You can type anything you want, or click one of the suggestion chips if you like those ideas."
+EN: "You should see the Art Studio with a text box and style cards. Just type anything you want to see — your favorite animal, a dream place, something silly. Pick a style card and hit Generate!"
 
-CN: "你应该能看到故事工厂页面，有四个字段要填。首先，选择你的主角。你可以输入任何你想要的，或者点击下面的建议标签，如果你喜欢那些想法的话。"
+CN: "你应该看到艺术工作室，有一个文本框和风格卡片。输入你想看到的任何东西——你最喜欢的动物、梦想中的地方、或搞笑的东西。选一个风格卡片然后点生成！"
 
-**[Give students 1 minute to type a character / 给学生 1 分钟输入角色]**
+**[Give students 6 minutes for first images / 给学生 6 分钟生成第一批图片]**
 
-EN: "Now pick your setting — where does your story happen? Look at the dropdown options."
+> **Contingency / 应对方案:**
+> EN: If image generation is slow (>30 seconds): "While we wait for AI to paint, plan your next prompt! What else do you want to create? Remember the formula: subject + style + mood + details."
+> CN: 如果图片生成很慢（超过 30 秒）："在等 AI 画画的时候，计划你的下一个提示词！你还想创造什么？记住公式：主题 + 风格 + 氛围 + 细节。"
 
-CN: "现在选择你的场景——你的故事发生在哪里？看看下拉选项。"
+> **Contingency / 应对方案:**
+> EN: If a student can't think of ideas: "Try these: your dream pet, a fantasy landscape, your favorite food as a character, something from outer space, an underwater city, or a mashup of two animals!"
+> CN: 如果学生想不出来："试试这些：你梦想中的宠物、奇幻风景、你最喜欢的食物变成角色、太空中的东西、海底城市、或两种动物的混合体！"
 
-EN: "Next, pick the conflict — what goes wrong in your story?"
-
-CN: "接下来，选择冲突——你的故事里出了什么问题？"
-
-EN: "And finally, how should it end? Happy, surprising, funny, or mysterious?"
-
-CN: "最后，结局应该怎样？快乐的、意外的、搞笑的、还是神秘的？"
-
-**[Give students 2-3 minutes to complete the framework / 给学生 2-3 分钟完成框架]**
-
-> 💡 **If a student can't decide / 如果学生无法决定:**
-> EN: "Just pick whatever sounds fun! There's no wrong answer. You can always generate a new story later."
-> CN: "选听起来有趣的就行！没有错误答案。之后你随时可以生成新的故事。"
-
-EN: "Has everyone filled in all four fields? Great — now hit the big 'Generate My Story' button!"
-
-CN: "每个人都填好四个字段了吗？很好——现在点击大的'生成我的故事'按钮！"
+> **Walk around and encourage / 走动并鼓励:**
+> EN: Encourage students using basic prompts to add more details: "Try adding more! What color is it? What's happening in the background? What time of day?"
+> CN: 鼓励使用基本提示词的学生加更多细节："试着加更多！它是什么颜色？背景发生了什么？什么时候？"
 
 ---
 
-### Phase 2: Reading the First Draft (3 min)
+### Phase 1B: Style Exploration + Challenge (7 min) *(0:18–0:25)*
 
-**⏱ 0:13**
+EN: "Great start! Now try a mini-challenge: pick one subject and generate it in at least TWO different styles. Same description, different style card. See how the same idea looks completely different!"
 
-EN: "Give AI a moment to write... and there's your story! Take a minute to read through it."
+CN: "好的开始！现在试一个小挑战：选一个主题，用至少两种不同的风格生成。同样的描述，不同的风格卡片。看看同一个想法看起来完全不同！"
 
-CN: "给 AI 一点时间来写……你的故事出来了！花一分钟读一读。"
+EN: "After that, scroll down to the Challenges section. Try the Style Match challenge — there's a target description, and you need to write a prompt that matches it."
 
-**[Give students 2-3 minutes to read / 给学生 2-3 分钟阅读]**
+CN: "之后，向下滚动到挑战部分。试试风格匹配挑战——有一个目标描述，你需要写一个匹配它的提示词。"
 
-EN: "What do you think? Is it good? Funny? Is there anything you'd change?"
-
-CN: "你们觉得怎么样？好不好？搞笑吗？有什么你想改的吗？"
-
-**[Wait for brief responses / 等待简短回答]**
-
-> 💡 **If the story came out poorly / 如果故事效果不好:**
-> EN: "Sometimes the first draft isn't great — that's totally normal! Try clicking 'Generate a Different Version' to get a new story with the same framework. Or you can go back and change your framework."
-> CN: "有时候初稿不太好——这完全正常！试着点击'生成另一个版本'来用同样的框架获得新故事。或者你可以回去改你的框架。"
-
-EN: "Now here's where it gets really fun. You're going to become the editor. Click the 'Revise This Story' button."
-
-CN: "现在才是真正有趣的部分。你要变成编辑了。点击'修改这个故事'按钮。"
+**[Give students 7 minutes / 给学生 7 分钟]**
 
 ---
 
-### Phase 3: Revision Rounds (15 min)
+### Phase 1C: Title Your Art (5 min) *(0:25–0:30)*
 
-**⏱ 0:16**
+EN: "Okay, look at your gallery now. You should have at least a few images. Click on your FAVORITE one to give it a title — like a real art exhibition. Then scroll down to the 'Title Your Art' challenge and write a one-sentence artist statement about why you like it."
 
-EN: "Welcome to the Revision Studio! You can see your story in the text area at the top. You can edit it directly if you want to change a word or sentence. But the really cool part is the revision bar below."
+CN: "好的，现在看看你的画廊。你应该至少有几张图片了。点击你最喜欢的那张给它起一个标题——就像真正的艺术展。然后向下滚动到'Title Your Art'挑战，写一句话说明你为什么喜欢它。"
 
-CN: "欢迎来到修改工作室！你可以在上面的文本区看到你的故事。如果你想改一个词或一句话，可以直接编辑。但真正酷的部分是下面的修改栏。"
-
-EN: "Here's how it works: type what you want to change in the input box. For example, you could type 'Make the ending funnier' or 'Add a talking sword' or 'Make the villain more scary.' Then click 'Update Story' and AI will rewrite the story with your changes."
-
-CN: "用法是这样的：在输入框里输入你想改的内容。比如你可以输入'让结局更搞笑'或者'加一把会说话的剑'或者'让反派更可怕'。然后点击'更新故事'，AI 就会按照你的要求重写故事。"
-
-EN: "Your task is to make at least TWO revisions. So think about what could make your story even better!"
-
-CN: "你的任务是至少做两次修改。所以想想什么能让你的故事更好！"
-
-**[Give students 12-15 minutes to revise / 给学生 12-15 分钟修改]**
-
-> 💡 **Revision ideas if a student is stuck / 如果学生卡住了，修改建议:**
-> EN: Try these revision prompts:
-> - "Make the dialogue funnier"
-> - "Add a plot twist in the middle"
-> - "Describe the setting with more detail"
-> - "Add a sidekick character"
-> - "Make the ending more dramatic"
-> - "Add sound effects and action words"
->
-> CN: 试试这些修改提示：
-> - "让对话更搞笑"
-> - "在中间加一个剧情反转"
-> - "更详细地描述场景"
-> - "加一个搭档角色"
-> - "让结局更戏剧化"
-> - "加上音效和动作词"
-
-> 💡 **If a student finishes early / 如果学生提前完成:**
-> EN: "Try clicking on the version buttons (v1, v2, v3) to compare your story before and after revisions. Which version is best? You can also go back to the framework and create a completely different story!"
-> CN: "试试点击版本按钮（v1, v2, v3）来比较修改前后的故事。哪个版本最好？你也可以回到框架去创建一个完全不同的故事！"
-
-> 💡 **Walk around and check in / 走动并查看:**
-> EN: Look at each student's revisions. Encourage them to be specific in their revision requests rather than vague. "Make it better" is a weak revision; "Add a funny scene where the robot trips over a cat" is a strong one. This reinforces the prompt lesson.
-> CN: 看看每个学生的修改。鼓励他们在修改请求中具体而不是模糊。"让它更好"是一个弱修改；"加一个机器人被猫绊倒的搞笑场景"是一个强修改。这强化了提示词的课程内容。
+**[Give students 5 minutes / 给学生 5 分钟]**
 
 ---
 
-### Phase 4: Save and Finalize (5 min)
+## Transition to Part 2 / 过渡到第二部分 *(0:30)*
 
-**⏱ 0:31**
+EN: "Awesome art everyone! Now we're going to take it to the next level. You've learned to make images — now let's combine images WITH text to make a real picture book. Scroll down past the divider to Part 2: AI Picture Book."
 
-EN: "Okay, time to finalize! Read through your latest version one more time. If you're happy with it, click the 'Save Final Story' button to download it."
-
-CN: "好了，是时候定稿了！再读一遍你的最新版本。如果满意了，点击'保存最终故事'按钮来下载。"
-
-**[Give students 2-3 minutes / 给学生 2-3 分钟]**
-
-EN: "Make sure you've saved your file! You'll want to keep this — it's YOUR story."
-
-CN: "确保你已经保存了文件！你会想留着这个的——这是你自己的故事。"
-
-> 💡 **If export doesn't work / 如果导出不起作用:**
-> EN: "If the download doesn't work, you can select all the text in the story editor, copy it, and paste it into a document."
-> CN: "如果下载不起作用，你可以选中故事编辑器中的所有文本，复制并粘贴到一个文档中。"
+CN: "大家的艺术作品太棒了！现在我们要更上一层楼。你已经学会了制作图片——现在让我们把图片和文字结合起来做一本真正的绘本。向下滚动到分隔线，进入第二部分：AI 绘本。"
 
 ---
 
-## Show & Share / 展示分享 (5 minutes / 分钟)
+**[Show SLIDE 8 briefly / 简短展示幻灯片 8]**
 
-**⏱ 0:35**
+EN: "A picture book is simple: text tells the story, images bring it to life. Words and pictures work together."
 
-EN: "Awesome work everyone! Now let's hear your stories. Who wants to read theirs out loud first?"
+CN: "绘本很简单：文字讲述故事，图片让它活起来。文字和图片一起发挥作用。"
 
-CN: "大家做得太棒了！现在让我们听听你们的故事。谁想先朗读自己的？"
+**[Show SLIDE 9 briefly / 简短展示幻灯片 9]**
+
+EN: "Here's the workflow: Write a story, Split it into pages, Illustrate each page, then Preview your book."
+
+CN: "流程是这样的：写故事，分成页面，为每页配插图，然后预览你的书。"
+
+**[Show SLIDE 10 briefly / 简短展示幻灯片 10]**
+
+EN: "Quick tip: for consistent illustrations, describe your character the same way every time, pick one art style and stick with it, and use similar color descriptions."
+
+CN: "快速提示：为了让插图风格一致，每次用同样的方式描述你的角色，选一种艺术风格并坚持使用，使用类似的颜色描述。"
+
+**[Show SLIDE 11 / 展示幻灯片 11]**
+
+EN: "Now go to Part 2 on the page. Step 1: use the chat box to ask AI to write you a story, or write your own. Then paste or type it into the story text area below the chat."
+
+CN: "现在进入页面上的第二部分。第一步：用聊天框让 AI 给你写一个故事，或者自己写。然后把它粘贴或输入到聊天下面的故事文本区域。"
+
+---
+
+## Part 2: AI Picture Book / 第二部分：AI 绘本 (20 minutes / 分钟)
+
+### Phase 2A: Write Story (5 min) *(0:30–0:35)*
+
+EN: "In the chat box, try something like: 'Write a story about a rabbit who discovers a magic garden' or whatever you want! Once AI writes the story, copy the text and paste it into the story textarea below."
+
+CN: "在聊天框里，试试类似这样的：'写一个关于一只兔子发现魔法花园的故事'或者你想要的任何东西！AI 写好故事后，复制文字并粘贴到下面的故事文本区域。"
+
+**[Give students 5 minutes / 给学生 5 分钟]**
+
+> **Contingency / 应对方案:**
+> EN: If AI is slow or unavailable: "You can also write your own short story directly in the text area! Just make it 4-6 paragraphs, and make each paragraph describe something you can picture."
+> CN: 如果 AI 很慢或不可用："你也可以直接在文本区域写自己的短故事！就写 4-6 段，每段描述一些你能想象成画面的东西。"
+
+EN: "Got your story? Great! Click 'Next: Split into Pages'."
+
+CN: "故事写好了？很好！点击'Next: Split into Pages'。"
+
+---
+
+### Phase 2B: Split & Edit Pages (3 min) *(0:35–0:38)*
+
+EN: "AI will automatically split your story into pages. Take a moment to read through each page. You can edit the text, move pages up or down, delete a page, or add a new one. Make sure each page describes a scene you can illustrate."
+
+CN: "AI 会自动把你的故事分成页面。花一点时间读一读每页。你可以编辑文字、上下移动页面、删除页面或添加新页面。确保每页描述一个你可以配插图的场景。"
+
+**[Give students 3 minutes / 给学生 3 分钟]**
+
+EN: "Happy with your pages? Click 'Next: Add Illustrations'."
+
+CN: "对页面满意了？点击'Next: Add Illustrations'。"
+
+---
+
+### Phase 2C: Illustrate Pages (10 min) *(0:38–0:48)*
+
+EN: "Now for the fun part! Each page shows the text on the left and an illustration area on the right. AI will suggest a prompt for each page — you can edit it. Pick an art style from the dropdown. Then click Generate!"
+
+CN: "现在是有趣的部分！每页左边显示文字，右边是插图区域。AI 会为每页建议一个提示词——你可以编辑它。从下拉菜单中选择一种艺术风格。然后点击生成！"
+
+EN: "Remember our tip: keep the same style for all pages so your book looks consistent!"
+
+CN: "记住我们的提示：所有页面保持相同的风格，这样你的书看起来会很统一！"
+
+**[Give students 10 minutes / 给学生 10 分钟]**
+
+> **Walk around and help / 走动并帮助:**
+> EN: Help students edit prompts for better results. Encourage them: "Try adding your character's name and appearance to each prompt so they look consistent across pages."
+> CN: 帮助学生编辑提示词以获得更好的结果。鼓励他们："试着在每个提示词中加入角色的名字和外貌描述，这样在各页中看起来会更一致。"
+
+> **Contingency / 应对方案:**
+> EN: If image generation is very slow: "It's okay if you can't illustrate every page. Focus on the first page and the last page — those are the most important!"
+> CN: 如果图片生成非常慢："如果你不能为每页都配插图也没关系。专注于第一页和最后一页——那是最重要的！"
+
+> **If students finish early / 如果学生提前完成:**
+> EN: "Click 'Next: Preview' to flip through your book! Try regenerating any illustrations you're not happy with."
+> CN: "点击'Next: Preview'来翻阅你的书！试着重新生成你不满意的插图。"
+
+---
+
+### Phase 2D: Preview & Export (2 min) *(0:48–0:50)*
+
+EN: "Click 'Next: Preview' if you haven't already. Add a book title and your name as the author. Flip through your book using the Previous and Next buttons. If you're happy with it, click 'Download Picture Book' to save it!"
+
+CN: "如果还没有的话，点击'Next: Preview'。添加书名和你的作者名字。用上一页和下一页按钮翻阅你的书。如果满意的话，点击'Download Picture Book'来保存！"
+
+**[Give students 2 minutes / 给学生 2 分钟]**
+
+---
+
+## Show & Share / 展示分享 (8 minutes / 分钟) *(0:50–0:58)*
+
+EN: "Alright, time for our show! We have two things to share today. First, let's do a quick art exhibition — who wants to show their best artwork from Part 1?"
+
+CN: "好了，展示时间！今天有两样东西要分享。首先，快速艺术展——谁想展示第一部分中你最好的作品？"
 
 **[Wait for a volunteer / 等待志愿者]**
 
-**[Student 1 reads their story / 学生 1 朗读故事]**
+**[Student 1 shows their artwork / 学生 1 展示作品]**
 
-EN: "Great story! I love how [comment on a specific detail]. Now, what revisions did you make? What did you ask AI to change?"
+EN: "Show us the image. What's the title, and what prompt did you use?"
 
-CN: "很棒的故事！我喜欢 [评论一个具体细节]。那你做了什么修改？你让 AI 改了什么？"
+CN: "让我们看看图片。标题是什么，你用了什么提示词？"
 
-**[Student 1 describes their revisions / 学生 1 描述修改]**
+**[Student 1 presents / 学生 1 介绍]**
 
-EN: "Interesting! Now let's hear the other story."
+EN: "Love it! Anyone else want to show their art?"
 
-CN: "有意思！现在让我们听听另一个故事。"
+CN: "很棒！还有谁想展示自己的作品？"
 
-**[Student 2 reads their story / 学生 2 朗读故事]**
+**[1-2 more students share art / 再有 1-2 个学生分享作品]**
 
-EN: "Awesome! What revisions made the biggest difference for you?"
-
-CN: "太棒了！什么修改对你的故事影响最大？"
-
-**[Student 2 responds / 学生 2 回答]**
-
-**[Wait for responses / 等待回答]**
-
-EN: "That's a really important skill — knowing how to guide AI with specific instructions. The more specific you are, the better the result. That's true for stories, and it's true for everything you'll do with AI."
-
-CN: "这是一个非常重要的技能——知道如何用具体的指令引导 AI。你越具体，结果就越好。这对故事是如此，对你用 AI 做的所有事情都是如此。"
+*(About 3 minutes on art sharing / 艺术分享约 3 分钟)*
 
 ---
 
-## Wrap-up / 课程总结 (2 minutes / 分钟)
+EN: "Now let's hear a picture book! Who managed to make a picture book? Can you show us the preview and tell us the story?"
 
-**⏱ 0:40**
+CN: "现在来听一本绘本！谁做出了绘本？你能给我们看预览并讲讲故事吗？"
 
-EN: "Today you learned about prompts — instructions you give to AI. You learned that specific prompts get better results than vague ones. And you used a framework to write a creative story, then directed AI through revisions."
+**[Wait for a volunteer / 等待志愿者]**
 
-CN: "今天你学了关于提示词的知识——你给 AI 的指令。你学到了具体的提示词比模糊的能得到更好的结果。你还用框架写了一个创意故事，然后指导 AI 进行修改。"
+**[Student shows their picture book preview, clicking through pages / 学生展示绘本预览，翻页]**
 
-EN: "Remember: you're the director, AI is the assistant. You have the ideas and the vision. AI just helps you bring them to life."
+EN: "That's amazing! What style did you use for the illustrations? Was it hard to keep them consistent?"
 
-CN: "记住：你是导演，AI 是助手。你有想法和远景。AI 只是帮你把它们变成现实。"
+CN: "太棒了！你的插图用了什么风格？保持风格一致难吗？"
 
-EN: "Next week, we're going to use AI to create art — actual images from text descriptions. It's going to be amazing. See you then!"
+**[Student responds / 学生回答]**
 
-CN: "下周，我们要用 AI 来创作艺术——用文字描述生成真实的图片。会非常精彩。下次见！"
+EN: "Great observation. What about the story — did AI write it, or did you?"
+
+CN: "很好的观察。那故事呢——是 AI 写的还是你写的？"
+
+**[Student responds / 学生回答]**
+
+**[If time permits, 1 more student shares their book / 如果时间允许，再有 1 个学生分享]**
+
+*(About 5 minutes on picture book sharing / 绘本分享约 5 分钟)*
+
+---
+
+## Wrap-up / 课程总结 (2 minutes / 分钟) *(0:58–1:00)*
+
+EN: "Today you learned that AI can create images from text descriptions. The key is your PROMPT — subject, style, mood, and details. More detail means better results."
+
+CN: "今天你学到了 AI 可以从文字描述生成图片。关键是你的提示词——主题、风格、氛围和细节。细节越多，结果越好。"
+
+EN: "You also learned that when you combine text and images together, you can create something really special — like a picture book. That's the power of being a creative director: you have the ideas, and AI is your tool."
+
+CN: "你还学到了当你把文字和图片结合在一起时，你可以创造出真正特别的东西——比如一本绘本。这就是创意总监的力量：你有想法，AI 是你的工具。"
+
+EN: "Make sure you've downloaded your picture book and any art you want to keep! See you next time!"
+
+CN: "确保你已经下载了你的绘本和你想保留的任何艺术作品！下次见！"
 
 ---
 
@@ -329,15 +365,48 @@ CN: "下周，我们要用 AI 来创作艺术——用文字描述生成真实�
 
 | Time / 时间 | Section / 环节 | Activity / 活动 |
 |---|---|---|
-| 0:00–0:01 | Welcome | Slide 1 — Title & intro |
-| 0:01–0:03 | Review | Slide 2 — Recap last week |
-| 0:03–0:05 | Concept | Slide 3 — What's a prompt? (recipe analogy) |
-| 0:05–0:06 | Demo | Slide 4 — Vague vs. specific comparison |
-| 0:06–0:07 | Framework | Slide 5 — The four story ingredients |
-| 0:07–0:08 | Mission | Slides 6–8 — Today's mission & launch |
-| 0:08–0:13 | Step 1 | Students build story framework |
-| 0:13–0:16 | Step 2 | Students read AI's first draft |
-| 0:16–0:31 | Step 3 | Students revise story (2+ rounds) |
-| 0:31–0:35 | Save | Students finalize and export story |
-| 0:35–0:40 | Share | Students read stories aloud, discuss revisions |
-| 0:40–0:42 | Wrap-up | Recap prompts, preview next lesson |
+| 0:00–0:01 | Welcome | Slide 1 — Title & introduction |
+| 0:01–0:04 | Guessing Game | Slide 2 — "Real or AI?" discussion |
+| 0:04–0:06 | How it works | Slide 3 — Text to patterns to image |
+| 0:06–0:08 | Prompts | Slide 4 — Vague vs. detailed comparison |
+| 0:08–0:10 | Styles | Slide 5 — 6 different art styles |
+| 0:10–0:11 | Formula | Slide 6 — Subject + Style + Mood + Details |
+| 0:11–0:12 | Mission | Slides 7 + 12 — Part 1 launch |
+| 0:12–0:18 | Part 1A | Free exploration: first images |
+| 0:18–0:25 | Part 1B | Style exploration + Style Match challenge |
+| 0:25–0:30 | Part 1C | Title artwork + artist statement |
+| 0:30–0:35 | Transition + Part 2A | Slides 8-11, students write/generate story |
+| 0:35–0:38 | Part 2B | Split story into pages, edit |
+| 0:38–0:48 | Part 2C | Illustrate all pages |
+| 0:48–0:50 | Part 2D | Preview & download picture book |
+| 0:50–0:55 | Share — Art | Mini art exhibition (2-3 students) |
+| 0:55–0:58 | Share — Books | Picture book read-throughs (1-2 students) |
+| 0:58–1:00 | Wrap-up | Recap key ideas, save work |
+
+---
+
+## Contingency Plans / 应急方案
+
+### If image generation is very slow or down / 如果图片生成非常慢或不可用
+
+EN: Focus more time on Part 1 prompt writing and discussion. Have students write detailed prompts on paper and share them verbally. For Part 2, focus on story writing and page splitting — illustrations can be added next class.
+
+CN: 把更多时间放在第一部分的提示词编写和讨论上。让学生在纸上写详细的提示词并口头分享。第二部分重点放在故事写作和分页——插图可以下节课添加。
+
+### If students finish Part 1 very quickly / 如果学生很快完成第一部分
+
+EN: Encourage them to: (a) try generating the same subject in all 6 styles, (b) write longer, more detailed prompts, (c) start Part 2 early.
+
+CN: 鼓励他们：(a) 尝试用所有 6 种风格生成同一主题，(b) 写更长更详细的提示词，(c) 提前开始第二部分。
+
+### If students are slow with Part 2 / 如果学生在第二部分进度慢
+
+EN: Simplify: skip the chat and have them write a 4-sentence story directly. For illustrations, focus on just the first and last pages. The book can still look great with 2 illustrations.
+
+CN: 简化：跳过聊天，让他们直接写一个 4 句话的故事。插图只重点做第一页和最后一页。只有 2 张插图的书也可以看起来很棒。
+
+### If chat API is down but image API works / 如果聊天 API 不可用但图片 API 可用
+
+EN: Have students write their own story directly in the textarea. Provide some story starters on the board: "A tiny dragon finds a mysterious map...", "A robot wakes up in a forest...", "A girl discovers she can talk to animals..."
+
+CN: 让学生直接在文本区域写自己的故事。在黑板上提供一些故事开头："一只小龙发现了一张神秘的地图……"、"一个机器人在森林里醒来……"、"一个女孩发现她能和动物说话……"

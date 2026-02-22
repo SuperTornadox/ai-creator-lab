@@ -3,168 +3,731 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Lesson 2: AI Story Factory - AI Creator Lab</title>
+  <title>Lesson 2: AI Images — Paint with Words - AI Creator Lab</title>
   <link rel="stylesheet" href="/shared/styles.css">
   <style>
-    /* Suggestion chips */
-    .chip-row {
+    /* Part divider */
+    .part-divider {
       display: flex;
-      flex-wrap: wrap;
-      gap: var(--space-xs);
-      margin-top: var(--space-xs);
+      align-items: center;
+      gap: var(--space-md);
+      margin: var(--space-xl) 0 var(--space-lg);
+      padding: var(--space-lg) 0;
+      border-top: 3px solid var(--color-border);
     }
 
-    .chip {
-      display: inline-block;
-      padding: 0.3em 0.75em;
-      font-size: var(--text-sm);
+    .part-divider .part-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.3em 1em;
+      font-size: var(--text-lg);
+      font-weight: 700;
+      background: var(--color-secondary);
+      color: #ffffff;
+      border-radius: var(--radius-full);
+      white-space: nowrap;
+    }
+
+    .part-divider .part-title {
+      font-size: var(--text-xl);
+      font-weight: 700;
+    }
+
+    /* Style selector cards */
+    .style-selector .card-grid {
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    }
+
+    /* Gallery heading with count */
+    .gallery-heading {
+      font-size: var(--text-lg);
+      font-weight: 650;
+      margin-top: var(--space-xl);
+      margin-bottom: var(--space-md);
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+    }
+
+    .gallery-heading .count-badge {
       background: var(--color-primary-light);
       color: var(--color-primary);
-      border: 1px solid transparent;
+      font-size: var(--text-sm);
+      font-weight: 700;
+      padding: 0.1em 0.6em;
       border-radius: var(--radius-full);
-      cursor: pointer;
-      transition: background var(--transition-fast),
-                  border-color var(--transition-fast);
-      font-family: inherit;
     }
 
-    .chip:hover {
+    /* Challenge cards */
+    .challenge-section {
+      margin-top: var(--space-xl);
+    }
+
+    .challenge-card {
       background: var(--color-surface);
-      border-color: var(--color-primary);
-    }
-
-    /* Story reading pane */
-    .story-pane {
-      background: var(--color-surface);
-      border-radius: var(--radius-md);
-      box-shadow: var(--shadow-sm);
-      border: 1px solid var(--color-border);
-      padding: var(--space-lg) var(--space-xl);
-      font-size: 1.05rem;
-      line-height: 1.85;
-      white-space: pre-wrap;
-      max-height: 420px;
-      overflow-y: auto;
-    }
-
-    /* Story textarea in revision mode */
-    .story-editor {
-      width: 100%;
-      min-height: 280px;
+      border-radius: var(--radius-lg);
+      border: 2px solid var(--color-border);
       padding: var(--space-lg);
-      font-size: 1.05rem;
-      line-height: 1.85;
+      margin-bottom: var(--space-md);
+    }
+
+    .challenge-card.completed {
+      border-color: var(--color-success);
+      background: var(--color-success-light);
+    }
+
+    .challenge-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: var(--text-sm);
+      font-weight: 700;
+      padding: 0.2em 0.8em;
+      border-radius: var(--radius-full);
+      margin-bottom: var(--space-sm);
+    }
+
+    .challenge-badge.level-1 {
+      background: var(--color-success-light);
+      color: #16a34a;
+    }
+
+    .challenge-badge.level-2 {
+      background: var(--color-warning-light);
+      color: #d97706;
+    }
+
+    .challenge-badge.level-3 {
+      background: var(--color-secondary-light);
+      color: var(--color-secondary);
+    }
+
+    .challenge-concept {
+      font-size: var(--text-lg);
+      font-weight: 650;
+      padding: var(--space-md) var(--space-lg);
+      background: var(--color-bg);
+      border-radius: var(--radius-md);
+      margin-bottom: var(--space-md);
+      text-align: center;
+      line-height: 1.5;
+    }
+
+    /* Artist statement */
+    .artist-statement {
+      width: 100%;
+      min-height: 80px;
+      padding: var(--space-md);
+      font-size: var(--text-md);
       font-family: inherit;
-      color: var(--color-text);
-      background: var(--color-surface);
+      line-height: 1.6;
       border: 1.5px solid var(--color-border);
       border-radius: var(--radius-md);
       resize: vertical;
-      transition: border-color var(--transition-fast),
-                  box-shadow var(--transition-fast);
+      transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
     }
 
-    .story-editor:focus {
+    .artist-statement:focus {
       outline: none;
       border-color: var(--color-primary);
       box-shadow: 0 0 0 3px var(--color-primary-light);
     }
 
-    /* Button row */
-    .btn-row {
+    /* Caption overlay */
+    .caption-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.85);
+      z-index: 9999;
       display: flex;
-      flex-wrap: wrap;
-      gap: var(--space-sm);
-      margin-top: var(--space-md);
-    }
-
-    /* Version history buttons */
-    .version-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: var(--space-xs);
-      align-items: center;
-      margin-top: var(--space-md);
-    }
-
-    .version-label {
-      font-size: var(--text-sm);
-      font-weight: 600;
-      color: var(--color-text-muted);
-      margin-right: var(--space-xs);
-    }
-
-    .version-btn {
-      display: inline-flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
-      width: 32px;
-      height: 32px;
+      gap: var(--space-md);
+      cursor: default;
+    }
+
+    .caption-overlay img {
+      max-width: 80vw;
+      max-height: 60vh;
+      border-radius: var(--radius-md);
+      object-fit: contain;
+    }
+
+    .caption-overlay .caption-input-row {
+      display: flex;
+      gap: var(--space-sm);
+      align-items: center;
+      max-width: 500px;
+      width: 90%;
+    }
+
+    .caption-overlay .caption-input-row input {
+      flex: 1;
+      padding: 0.5em 0.85em;
+      font-size: var(--text-md);
+      font-family: inherit;
+      border: 1.5px solid rgba(255, 255, 255, 0.3);
+      border-radius: var(--radius-md);
+      background: rgba(255, 255, 255, 0.1);
+      color: #ffffff;
+    }
+
+    .caption-overlay .caption-input-row input::placeholder {
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    .caption-overlay .caption-input-row input:focus {
+      outline: none;
+      border-color: var(--color-primary);
+    }
+
+    .caption-overlay .caption-input-row button {
+      padding: 0.5em 1em;
+      font-size: var(--text-md);
+      font-weight: 600;
+      font-family: inherit;
+      border: none;
+      border-radius: var(--radius-md);
+      background: var(--color-primary);
+      color: #ffffff;
+      cursor: pointer;
+    }
+
+    .caption-overlay .close-hint {
+      color: rgba(255, 255, 255, 0.5);
+      font-size: var(--text-sm);
+    }
+
+    /* Picture Book Section */
+    .wizard-nav {
+      display: flex;
+      gap: var(--space-xs);
+      margin-bottom: var(--space-lg);
+      padding-bottom: var(--space-md);
+      border-bottom: 2px solid var(--color-border);
+    }
+
+    .wizard-step-btn {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      padding: 0.5em 1em;
       font-size: var(--text-sm);
       font-weight: 600;
-      border: 1.5px solid var(--color-border);
-      border-radius: var(--radius-sm);
+      font-family: inherit;
+      border: 2px solid var(--color-border);
       background: var(--color-surface);
       color: var(--color-text-muted);
+      border-radius: var(--radius-md);
       cursor: pointer;
       transition: all var(--transition-fast);
-      font-family: inherit;
+      white-space: nowrap;
     }
 
-    .version-btn:hover {
+    .wizard-step-btn:hover {
       border-color: var(--color-primary);
-      color: var(--color-primary);
+      color: var(--color-text);
     }
 
-    .version-btn.active {
+    .wizard-step-btn.active {
       background: var(--color-primary);
       border-color: var(--color-primary);
       color: #ffffff;
     }
 
-    /* Revision input area */
-    .revision-input-row {
+    .wizard-step-btn.completed {
+      background: var(--color-success-light);
+      border-color: var(--color-success);
+      color: #16a34a;
+    }
+
+    .wizard-step-btn .step-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      font-size: var(--text-xs);
+      font-weight: 700;
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .wizard-step-btn.active .step-num {
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    .wizard-step-btn.completed .step-num {
+      background: var(--color-success);
+      color: #ffffff;
+    }
+
+    .wizard-panel {
+      display: none;
+    }
+
+    .wizard-panel.active {
+      display: block;
+    }
+
+    .step-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: var(--space-xl);
+      padding-top: var(--space-lg);
+      border-top: 1px solid var(--color-border);
+    }
+
+    /* Story writing */
+    .story-textarea {
+      width: 100%;
+      min-height: 200px;
+      padding: var(--space-md);
+      font-size: var(--text-md);
+      font-family: inherit;
+      line-height: 1.7;
+      border: 1.5px solid var(--color-border);
+      border-radius: var(--radius-md);
+      resize: vertical;
+      transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+    }
+
+    .story-textarea:focus {
+      outline: none;
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px var(--color-primary-light);
+    }
+
+    .story-word-count {
+      font-size: var(--text-sm);
+      color: var(--color-text-muted);
+      text-align: right;
+      margin-top: var(--space-xs);
+    }
+
+    /* Page splitting */
+    .page-cards-list {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-md);
+    }
+
+    .page-card {
+      background: var(--color-surface);
+      border: 1.5px solid var(--color-border);
+      border-radius: var(--radius-md);
+      padding: var(--space-lg);
+      transition: box-shadow var(--transition-normal);
+    }
+
+    .page-card:hover {
+      box-shadow: var(--shadow-md);
+    }
+
+    .page-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: var(--space-sm);
+    }
+
+    .page-card-label {
+      font-weight: 700;
+      font-size: var(--text-md);
+      color: var(--color-primary);
+    }
+
+    .page-card-actions {
+      display: flex;
+      gap: var(--space-xs);
+    }
+
+    .page-card-actions button {
+      padding: 0.25em 0.5em;
+      font-size: var(--text-sm);
+      font-family: inherit;
+      border: 1px solid var(--color-border);
+      background: var(--color-surface);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      color: var(--color-text-muted);
+      transition: all var(--transition-fast);
+    }
+
+    .page-card-actions button:hover {
+      border-color: var(--color-primary);
+      color: var(--color-primary);
+    }
+
+    .page-card-actions button.delete-btn:hover {
+      border-color: var(--color-error);
+      color: var(--color-error);
+    }
+
+    .page-card textarea {
+      width: 100%;
+      min-height: 80px;
+      padding: var(--space-sm);
+      font-size: var(--text-md);
+      font-family: inherit;
+      line-height: 1.6;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      resize: vertical;
+    }
+
+    .page-card textarea:focus {
+      outline: none;
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 2px var(--color-primary-light);
+    }
+
+    .page-card-footer {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: var(--space-xs);
+      font-size: var(--text-xs);
+      color: var(--color-text-muted);
+    }
+
+    .add-page-btn {
+      width: 100%;
+      padding: var(--space-md);
+      border: 2px dashed var(--color-border);
+      border-radius: var(--radius-md);
+      background: transparent;
+      color: var(--color-text-muted);
+      font-size: var(--text-md);
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+    }
+
+    .add-page-btn:hover {
+      border-color: var(--color-primary);
+      color: var(--color-primary);
+      background: var(--color-primary-light);
+    }
+
+    /* Illustration rows */
+    .illustration-list {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-xl);
+    }
+
+    .illustration-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-lg);
+      background: var(--color-surface);
+      border: 1.5px solid var(--color-border);
+      border-radius: var(--radius-md);
+      padding: var(--space-lg);
+    }
+
+    @media (max-width: 767px) {
+      .illustration-row {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .illust-text-side h4 {
+      color: var(--color-primary);
+      margin-bottom: var(--space-sm);
+    }
+
+    .illust-text-content {
+      font-size: var(--text-sm);
+      line-height: 1.6;
+      color: var(--color-text);
+      padding: var(--space-sm);
+      background: var(--color-bg);
+      border-radius: var(--radius-sm);
+      margin-bottom: var(--space-md);
+    }
+
+    .illust-prompt-input {
+      width: 100%;
+      min-height: 60px;
+      padding: var(--space-sm);
+      font-size: var(--text-sm);
+      font-family: inherit;
+      line-height: 1.5;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      resize: vertical;
+      margin-bottom: var(--space-sm);
+    }
+
+    .illust-prompt-input:focus {
+      outline: none;
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 2px var(--color-primary-light);
+    }
+
+    .illust-style-row {
       display: flex;
       gap: var(--space-sm);
-      margin-top: var(--space-md);
+      align-items: center;
+      margin-bottom: var(--space-sm);
+      flex-wrap: wrap;
     }
 
-    .revision-input-row .input {
+    .illust-style-row label {
+      font-size: var(--text-sm);
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .illust-style-select {
       flex: 1;
+      padding: 0.4em 0.7em;
+      font-size: var(--text-sm);
+      font-family: inherit;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      background: var(--color-surface);
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236b7280' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 0.5em center;
+      padding-right: 1.8em;
     }
 
-    /* Loading state */
-    .loading-card {
+    .illust-btn-row {
+      display: flex;
+      gap: var(--space-sm);
+    }
+
+    .illust-image-side {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: var(--space-md);
-      padding: var(--space-xl);
+      justify-content: center;
     }
 
-    .loading-card .loading-text {
+    .illust-image-placeholder {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      background: var(--color-bg);
+      border: 2px dashed var(--color-border);
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--color-text-muted);
+      font-size: var(--text-sm);
+      text-align: center;
+      padding: var(--space-md);
+    }
+
+    .illust-image-placeholder img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: var(--radius-sm);
+    }
+
+    .illust-image-placeholder.has-image {
+      border-style: solid;
+      border-color: var(--color-success);
+      padding: 0;
+      overflow: hidden;
+    }
+
+    /* Book preview */
+    .book-preview {
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    .book-cover {
+      background: linear-gradient(135deg, #1e2330, #2d3352);
+      color: #ffffff;
+      border-radius: var(--radius-lg);
+      padding: var(--space-xl) var(--space-lg);
+      text-align: center;
+      margin-bottom: var(--space-lg);
+    }
+
+    .book-cover-image {
+      width: 100%;
+      max-width: 400px;
+      margin: var(--space-lg) auto;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+    }
+
+    .book-cover-image img {
+      width: 100%;
+      display: block;
+    }
+
+    .book-cover-title input {
+      background: transparent;
+      border: 1px dashed rgba(255, 255, 255, 0.3);
+      color: #ffffff;
+      font-size: var(--text-2xl);
+      font-weight: 700;
+      font-family: inherit;
+      text-align: center;
+      width: 100%;
+      padding: 0.2em;
+      border-radius: var(--radius-sm);
+    }
+
+    .book-cover-title input:focus {
+      outline: none;
+      border-color: rgba(255, 255, 255, 0.6);
+    }
+
+    .book-cover-title input::placeholder {
+      color: rgba(255, 255, 255, 0.4);
+    }
+
+    .book-cover-author input {
+      background: transparent;
+      border: 1px dashed rgba(255, 255, 255, 0.2);
+      color: rgba(255, 255, 255, 0.8);
+      font-size: var(--text-lg);
+      font-family: inherit;
+      text-align: center;
+      width: 80%;
+      padding: 0.2em;
+      border-radius: var(--radius-sm);
+    }
+
+    .book-cover-author input:focus {
+      outline: none;
+      border-color: rgba(255, 255, 255, 0.5);
+    }
+
+    .book-cover-author input::placeholder {
+      color: rgba(255, 255, 255, 0.3);
+    }
+
+    .book-page-display {
+      background: var(--color-surface);
+      border: 1.5px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: var(--space-xl);
+      margin-bottom: var(--space-md);
+      min-height: 400px;
+    }
+
+    .book-page-display img {
+      width: 100%;
+      max-width: 500px;
+      margin: 0 auto var(--space-lg);
+      border-radius: var(--radius-md);
+      display: block;
+    }
+
+    .book-page-display .page-text {
+      font-size: var(--text-lg);
+      line-height: 1.8;
+      text-align: center;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .book-page-nav {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-lg);
+      margin-bottom: var(--space-xl);
+    }
+
+    .book-page-nav .page-counter {
       font-size: var(--text-md);
+      font-weight: 600;
       color: var(--color-text-muted);
     }
 
-    /* Step heading */
-    .step-heading {
+    .book-end-page {
+      text-align: center;
+      padding: var(--space-xl);
       font-size: var(--text-xl);
       font-weight: 700;
-      margin-bottom: var(--space-lg);
+      color: var(--color-text-muted);
     }
 
-    .step-subheading {
-      font-size: var(--text-md);
-      color: var(--color-text-muted);
-      margin-top: calc(-1 * var(--space-sm));
-      margin-bottom: var(--space-lg);
+    .download-section {
+      display: flex;
+      justify-content: center;
+      margin-top: var(--space-lg);
     }
 
     /* Export section */
     .export-section {
-      margin-top: var(--space-md);
+      margin-top: var(--space-lg);
       display: flex;
+      justify-content: flex-end;
+    }
+
+    /* AI generate modal */
+    .generate-modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .generate-modal {
+      background: var(--color-surface);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-lg);
+      padding: var(--space-xl);
+      width: 90%;
+      max-width: 500px;
+    }
+
+    .generate-modal h3 {
+      margin-bottom: var(--space-lg);
+    }
+
+    .genre-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-sm);
+      margin-bottom: var(--space-lg);
+    }
+
+    .genre-option {
+      padding: 0.6em 0.8em;
+      border: 2px solid var(--color-border);
+      border-radius: var(--radius-md);
+      text-align: center;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: var(--text-sm);
+      font-weight: 600;
+      background: var(--color-surface);
+      transition: all var(--transition-fast);
+    }
+
+    .genre-option:hover {
+      border-color: var(--color-primary);
+    }
+
+    .genre-option.selected {
+      border-color: var(--color-primary);
+      background: var(--color-primary-light);
+      color: var(--color-primary);
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: var(--space-sm);
       justify-content: flex-end;
     }
   </style>
@@ -175,7 +738,7 @@
   <header class="lesson-header">
     <div class="lesson-badge">
       <span class="lesson-number">02</span>
-      <span class="lesson-title">AI Story Factory</span>
+      <span class="lesson-title">AI Images &mdash; Paint with Words</span>
     </div>
     <a href="/" class="back-link">&larr; Back to all lessons</a>
   </header>
@@ -186,112 +749,169 @@
     <!-- Main Content Area -->
     <main class="lesson-main" id="main-content">
 
-      <!-- Step 1: Story Framework -->
-      <div id="step-framework">
-        <h2 class="step-heading">Build Your Story Framework</h2>
-        <p class="step-subheading">Pick your ingredients and let AI cook up a story!</p>
+      <!-- ============================== -->
+      <!-- PART 1: AI Art Studio          -->
+      <!-- ============================== -->
+      <div id="part-1">
+        <h2>Part 1: AI Art Studio</h2>
+        <p style="color: var(--color-text-muted); margin-bottom: var(--space-lg);">
+          Type a description, pick a style, and let AI paint for you. Create your own art exhibition!
+        </p>
 
-        <div class="flex-col gap-lg">
+        <!-- Image Generator -->
+        <div id="image-generator-container"></div>
 
-          <!-- Main Character -->
-          <div class="form-group">
-            <label for="input-character">Main Character</label>
-            <input type="text" id="input-character" class="input" placeholder="Describe your main character...">
-            <div class="chip-row" id="character-chips">
-              <!-- chips rendered by JS -->
+        <!-- Gallery -->
+        <div class="gallery-heading">
+          <span>Your Gallery</span>
+          <span class="count-badge" id="gallery-count">0</span>
+        </div>
+        <div id="gallery-container"></div>
+
+        <!-- Challenges -->
+        <div class="challenge-section">
+          <h3 style="margin-bottom: var(--space-md);">Challenges</h3>
+
+          <!-- Challenge 1: Free Create -->
+          <div class="challenge-card" id="challenge-free">
+            <span class="challenge-badge level-1">Level 1 &mdash; Free Create</span>
+            <p style="margin-bottom: var(--space-sm);">Create <strong>3 artworks</strong> in any style you like. Experiment with different subjects and styles!</p>
+            <p style="font-size: var(--text-sm); color: var(--color-text-muted);">Progress: <span id="free-create-progress">0</span> / 3 artworks</p>
+          </div>
+
+          <!-- Challenge 2: Style Match -->
+          <div class="challenge-card" id="challenge-style">
+            <span class="challenge-badge level-2">Level 2 &mdash; Style Match</span>
+            <p style="font-weight: 600; margin-bottom: var(--space-sm);">Match this target:</p>
+            <div class="challenge-concept" id="style-match-target">
+              &ldquo;A cozy treehouse library at golden hour, with warm light streaming through the windows and books floating in the air &mdash; watercolor style&rdquo;
+            </div>
+            <p style="font-size: var(--text-sm); color: var(--color-text-muted); margin-bottom: var(--space-sm);">
+              Write your own prompt to create an image that matches this mood and subject. Use the generator above!
+            </p>
+            <div class="flex gap-sm" style="align-items: center;">
+              <button class="btn btn-secondary" id="style-match-done" style="font-size: var(--text-sm);">I did it!</button>
+              <span id="style-match-status" style="font-size: var(--text-sm); color: var(--color-text-muted);"></span>
             </div>
           </div>
 
-          <!-- Setting -->
-          <div class="form-group">
-            <label for="select-setting">Setting</label>
-            <select id="select-setting" class="select">
-              <option value="">-- Choose a setting --</option>
-              <option value="Outer Space">Outer Space</option>
-              <option value="Underwater Kingdom">Underwater Kingdom</option>
-              <option value="Haunted School">Haunted School</option>
-              <option value="Future City">Future City</option>
-              <option value="Enchanted Forest">Enchanted Forest</option>
-              <option value="Candy World">Candy World</option>
-            </select>
+          <!-- Challenge 3: Title Your Art -->
+          <div class="challenge-card" id="challenge-title">
+            <span class="challenge-badge level-3">Level 3 &mdash; Title Your Art</span>
+            <p style="margin-bottom: var(--space-sm);">Pick your best artwork from the gallery (click on it to add a title), then write an artist statement below.</p>
+            <div class="form-group" style="margin-top: var(--space-md);">
+              <label for="artist-statement">Artist Statement (1-2 sentences about your favorite piece)</label>
+              <textarea class="artist-statement" id="artist-statement" placeholder="I chose this piece because..."></textarea>
+            </div>
+            <button class="btn btn-secondary mt-sm" id="save-statement" style="font-size: var(--text-sm);">Save Statement</button>
           </div>
-
-          <!-- Conflict -->
-          <div class="form-group">
-            <label for="select-conflict">Conflict</label>
-            <select id="select-conflict" class="select">
-              <option value="">-- What goes wrong? --</option>
-              <option value="Lost something important">Lost something important</option>
-              <option value="Must save a friend">Must save a friend</option>
-              <option value="Discovers a secret">Discovers a secret</option>
-              <option value="Enters a competition">Enters a competition</option>
-              <option value="Gets a mysterious power">Gets a mysterious power</option>
-              <option value="Accidentally travels to another world">Accidentally travels to another world</option>
-            </select>
-          </div>
-
-          <!-- Ending Style -->
-          <div class="form-group">
-            <label for="select-ending">Ending Style</label>
-            <select id="select-ending" class="select">
-              <option value="">-- How does it end? --</option>
-              <option value="Happy ending">Happy ending</option>
-              <option value="Surprise twist">Surprise twist</option>
-              <option value="Funny ending">Funny ending</option>
-              <option value="Mysterious cliffhanger">Mysterious cliffhanger</option>
-            </select>
-          </div>
-
-          <button class="btn btn-primary btn-lg" id="btn-generate">Generate My Story!</button>
         </div>
+
+        <div class="export-section" id="export-container-art"></div>
       </div>
 
-      <!-- Step 2: AI Draft (hidden initially) -->
-      <div id="step-draft" class="hidden">
-        <h2 class="step-heading">Your AI-Generated Story</h2>
-
-        <!-- Loading state -->
-        <div id="draft-loading" class="card loading-card hidden">
-          <div class="loading-spinner"></div>
-          <div class="loading-text">AI is writing your story...</div>
-        </div>
-
-        <!-- Story display -->
-        <div id="draft-story" class="hidden">
-          <div class="story-pane" id="story-display"></div>
-
-          <div class="btn-row">
-            <button class="btn btn-primary" id="btn-revise">&#x270F;&#xFE0F; Revise This Story</button>
-            <button class="btn btn-secondary" id="btn-regenerate">&#x1F504; Generate a Different Version</button>
-            <button class="btn btn-secondary" id="btn-back-framework">&larr; Back to Framework</button>
-          </div>
-        </div>
+      <!-- ============================== -->
+      <!-- PART DIVIDER                   -->
+      <!-- ============================== -->
+      <div class="part-divider">
+        <span class="part-badge">Part 2</span>
+        <span class="part-title">AI Picture Book</span>
       </div>
 
-      <!-- Step 3: Revision Studio (hidden initially) -->
-      <div id="step-revision" class="hidden">
-        <h2 class="step-heading">Revision Studio</h2>
-        <p class="step-subheading">Edit directly or tell AI what to change</p>
+      <!-- ============================== -->
+      <!-- PART 2: AI Picture Book        -->
+      <!-- ============================== -->
+      <div id="part-2">
 
-        <textarea class="story-editor" id="story-editor"></textarea>
+        <!-- Wizard Navigation -->
+        <nav class="wizard-nav" id="wizard-nav">
+          <button class="wizard-step-btn active" data-step="1">
+            <span class="step-num">1</span> Write Story
+          </button>
+          <button class="wizard-step-btn" data-step="2">
+            <span class="step-num">2</span> Split Pages
+          </button>
+          <button class="wizard-step-btn" data-step="3">
+            <span class="step-num">3</span> Illustrate
+          </button>
+          <button class="wizard-step-btn" data-step="4">
+            <span class="step-num">4</span> Preview
+          </button>
+        </nav>
 
-        <div class="revision-input-row">
-          <input type="text" class="input" id="revision-input"
-                 placeholder="Tell AI how to change the story... (e.g., 'Make the ending funnier' or 'Add a talking sword')">
-          <button class="btn btn-primary" id="btn-update-story">Update Story</button>
+        <!-- Step 1: Write Your Story -->
+        <div class="wizard-panel active" id="pb-step-1">
+          <h3>Step 1: Write Your Story</h3>
+          <p style="color: var(--color-text-muted); margin-bottom: var(--space-lg);">
+            Write your own story or chat with AI to create one. A good picture book story has 4&ndash;6 paragraphs, each describing a visual scene.
+          </p>
+
+          <div id="chat-container" style="margin-bottom: var(--space-lg);"></div>
+
+          <div class="form-group">
+            <label for="story-input">Your story (paste or type here)</label>
+            <textarea class="story-textarea" id="story-input" placeholder="Once upon a time..."></textarea>
+            <div class="story-word-count" id="story-word-count">0 words</div>
+          </div>
+          <p style="font-size: var(--text-sm); color: var(--color-text-muted); margin-top: var(--space-xs);">
+            Tip: Copy the story from the chat above and paste it here, or write your own!
+          </p>
+
+          <div class="step-actions">
+            <div></div>
+            <button class="btn btn-primary" id="to-pb-step-2">Next: Split into Pages &#x2192;</button>
+          </div>
         </div>
 
-        <div class="version-row" id="version-row">
-          <span class="version-label">Versions:</span>
-          <!-- version buttons rendered by JS -->
+        <!-- Step 2: Split into Pages -->
+        <div class="wizard-panel" id="pb-step-2">
+          <h3>Step 2: Split into Pages</h3>
+          <p style="color: var(--color-text-muted); margin-bottom: var(--space-lg);">
+            Your story has been split into pages. Edit the text, reorder, add, or remove pages.
+          </p>
+
+          <div class="page-cards-list" id="page-cards-list"></div>
+
+          <button class="add-page-btn mt-md" id="add-page-btn">+ Add Page</button>
+
+          <div class="step-actions">
+            <button class="btn btn-secondary" id="back-to-pb-1">&#x2190; Back to Story</button>
+            <button class="btn btn-primary" id="to-pb-step-3">Next: Add Illustrations &#x2192;</button>
+          </div>
         </div>
 
-        <div class="btn-row">
-          <button class="btn btn-primary" id="btn-save-final">&#x1F4E5; Save Final Story</button>
-          <button class="btn btn-secondary" id="btn-back-draft">&larr; Back to Draft View</button>
+        <!-- Step 3: Illustrate -->
+        <div class="wizard-panel" id="pb-step-3">
+          <h3>Step 3: Add Illustrations</h3>
+          <p style="color: var(--color-text-muted); margin-bottom: var(--space-lg);">
+            Generate an illustration for each page. AI will suggest a prompt &mdash; edit it before generating.
+          </p>
+
+          <div class="illustration-list" id="illustration-list"></div>
+
+          <div class="step-actions">
+            <button class="btn btn-secondary" id="back-to-pb-2">&#x2190; Back to Pages</button>
+            <button class="btn btn-primary" id="to-pb-step-4">Next: Preview &#x2192;</button>
+          </div>
         </div>
 
-        <div class="export-section" id="export-container"></div>
+        <!-- Step 4: Preview -->
+        <div class="wizard-panel" id="pb-step-4">
+          <h3>Step 4: Preview Your Picture Book</h3>
+          <p style="color: var(--color-text-muted); margin-bottom: var(--space-lg);">
+            Add a title and author name, then flip through your book!
+          </p>
+
+          <div class="book-preview" id="book-preview"></div>
+
+          <div class="download-section" id="download-section"></div>
+
+          <div class="step-actions">
+            <button class="btn btn-secondary" id="back-to-pb-3">&#x2190; Back to Illustrations</button>
+            <div></div>
+          </div>
+        </div>
+
       </div>
 
     </main>
@@ -306,396 +926,1039 @@
   <script src="/shared/components.js"></script>
   <script>
     // =============================================
-    // Constants
+    // PART 1: AI ART STUDIO
     // =============================================
-    var SYSTEM_PROMPT = 'You are a creative story writer for kids. Write a fun, engaging short story (about 250-300 words) based on the provided framework. Use vivid descriptions, dialogue, and humor. Make it exciting and age-appropriate for 12-13 year olds. Just write the story, no title needed.';
 
-    var REVISION_SYSTEM_PROMPT = 'You are a creative story editor for kids. You will receive an existing story and a revision request. Rewrite the story incorporating the requested changes. Keep the same general structure but apply the changes throughout. Output only the revised story, no explanations.';
+    // --- Gallery Data ---
+    var allImages = [];
 
-    var CHARACTER_SUGGESTIONS = [
-      'a brave robot',
-      'a shy dragon',
-      'a talking dog',
-      'a young wizard'
-    ];
+    function addImageToCollection(url, caption, source) {
+      allImages.push({ url: url, caption: caption || '', source: source || 'free' });
+      updateGalleryCount();
+    }
 
-    // =============================================
-    // State
-    // =============================================
-    var storyVersions = [];    // Array of story strings
-    var currentVersionIdx = -1;
-    var revisionCount = 0;
-    var framework = {
-      character: '',
-      setting: '',
-      conflict: '',
-      ending: ''
+    function updateGalleryCount() {
+      document.getElementById('gallery-count').textContent = allImages.length;
+      document.getElementById('free-create-progress').textContent = Math.min(allImages.length, 3);
+
+      if (allImages.length >= 3) {
+        taskCards.setComplete('art-create', true);
+        document.getElementById('challenge-free').classList.add('completed');
+      }
+    }
+
+    // --- Image Generator ---
+    var genContainer = document.getElementById('image-generator-container');
+
+    var imageGen = window.ImageGenerator(genContainer, {
+      showGallery: false,
+      styles: [
+        { label: 'Realistic Photo', emoji: '\uD83D\uDCF8', value: 'realistic photograph, high detail' },
+        { label: 'Cartoon / Anime', emoji: '\uD83C\uDFA8', value: 'cartoon anime style, colorful' },
+        { label: 'Watercolor', emoji: '\uD83D\uDD8C\uFE0F', value: 'watercolor painting style' },
+        { label: 'Pixel Art', emoji: '\uD83D\uDC7E', value: 'pixel art style, 8-bit retro' },
+        { label: 'Oil Painting', emoji: '\uD83C\uDFAD', value: 'oil painting style, classical' },
+        { label: '3D Render', emoji: '\uD83D\uDC8E', value: '3D rendered, studio lighting' }
+      ],
+      onGenerate: function (result) {
+        addImageToCollection(result.url, result.prompt, 'free');
+        gallery.addImage(result.url, result.prompt);
+      }
+    });
+
+    // --- Gallery ---
+    var galleryContainer = document.getElementById('gallery-container');
+    var gallery = window.Gallery(galleryContainer, {});
+
+    // Override addImage to support captioning
+    gallery.addImage = function (url, caption) {
+      var grid = galleryContainer.querySelector('.gallery-grid');
+      if (!grid) return;
+
+      var item = document.createElement('div');
+      item.className = 'gallery-item';
+
+      var img = document.createElement('img');
+      img.src = url;
+      img.alt = caption || '';
+      item.appendChild(img);
+
+      var cap = document.createElement('div');
+      cap.className = 'gallery-item-caption';
+      cap.textContent = caption || 'Click to add a title';
+      item.appendChild(cap);
+
+      item.addEventListener('click', function () {
+        showCaptionOverlay(url, caption, function (newCaption) {
+          cap.textContent = newCaption || caption || 'Untitled';
+          for (var i = 0; i < allImages.length; i++) {
+            if (allImages[i].url === url) {
+              allImages[i].caption = newCaption || allImages[i].caption;
+              break;
+            }
+          }
+        });
+      });
+
+      grid.appendChild(item);
     };
 
-    // =============================================
-    // DOM References
-    // =============================================
-    var stepFramework = document.getElementById('step-framework');
-    var stepDraft = document.getElementById('step-draft');
-    var stepRevision = document.getElementById('step-revision');
-    var draftLoading = document.getElementById('draft-loading');
-    var draftStory = document.getElementById('draft-story');
-    var storyDisplay = document.getElementById('story-display');
-    var storyEditor = document.getElementById('story-editor');
-    var revisionInput = document.getElementById('revision-input');
-    var versionRow = document.getElementById('version-row');
-    var exportContainer = document.getElementById('export-container');
-    var taskSidebar = document.getElementById('task-sidebar');
+    // --- Caption Overlay ---
+    function showCaptionOverlay(url, currentCaption, onSave) {
+      var overlay = document.createElement('div');
+      overlay.className = 'caption-overlay';
 
-    var inputCharacter = document.getElementById('input-character');
-    var selectSetting = document.getElementById('select-setting');
-    var selectConflict = document.getElementById('select-conflict');
-    var selectEnding = document.getElementById('select-ending');
+      var img = document.createElement('img');
+      img.src = url;
+      img.alt = currentCaption || '';
+      overlay.appendChild(img);
 
-    var btnGenerate = document.getElementById('btn-generate');
-    var btnRevise = document.getElementById('btn-revise');
-    var btnRegenerate = document.getElementById('btn-regenerate');
-    var btnBackFramework = document.getElementById('btn-back-framework');
-    var btnUpdateStory = document.getElementById('btn-update-story');
-    var btnSaveFinal = document.getElementById('btn-save-final');
-    var btnBackDraft = document.getElementById('btn-back-draft');
+      var inputRow = document.createElement('div');
+      inputRow.className = 'caption-input-row';
 
-    // =============================================
-    // Render Suggestion Chips
-    // =============================================
-    var chipRow = document.getElementById('character-chips');
-    CHARACTER_SUGGESTIONS.forEach(function (suggestion) {
-      var chip = document.createElement('button');
-      chip.className = 'chip';
-      chip.type = 'button';
-      chip.textContent = suggestion;
-      chip.addEventListener('click', function () {
-        inputCharacter.value = suggestion;
-        inputCharacter.focus();
+      var input = document.createElement('input');
+      input.type = 'text';
+      input.placeholder = 'Give this artwork a title...';
+      input.value = currentCaption || '';
+
+      var saveBtn = document.createElement('button');
+      saveBtn.textContent = 'Save Title';
+
+      inputRow.appendChild(input);
+      inputRow.appendChild(saveBtn);
+      overlay.appendChild(inputRow);
+
+      var hint = document.createElement('div');
+      hint.className = 'close-hint';
+      hint.textContent = 'Click outside the image to close';
+      overlay.appendChild(hint);
+
+      function save() {
+        var value = input.value.trim();
+        if (value && onSave) {
+          onSave(value);
+        }
+        overlay.remove();
+        document.removeEventListener('keydown', onKeydown);
+      }
+
+      saveBtn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        save();
       });
-      chipRow.appendChild(chip);
+
+      input.addEventListener('keydown', function (e) {
+        e.stopPropagation();
+        if (e.key === 'Enter') save();
+      });
+
+      input.addEventListener('click', function (e) { e.stopPropagation(); });
+      img.addEventListener('click', function (e) { e.stopPropagation(); });
+      inputRow.addEventListener('click', function (e) { e.stopPropagation(); });
+
+      overlay.addEventListener('click', function () {
+        overlay.remove();
+        document.removeEventListener('keydown', onKeydown);
+      });
+
+      function onKeydown(e) {
+        if (e.key === 'Escape') {
+          overlay.remove();
+          document.removeEventListener('keydown', onKeydown);
+        }
+      }
+      document.addEventListener('keydown', onKeydown);
+
+      document.body.appendChild(overlay);
+      input.focus();
+    }
+
+    // --- Challenge: Style Match ---
+    document.getElementById('style-match-done').addEventListener('click', function () {
+      if (allImages.length < 1) {
+        document.getElementById('style-match-status').textContent = 'Generate at least one image first!';
+        return;
+      }
+      taskCards.setComplete('art-challenge', true);
+      document.getElementById('challenge-style').classList.add('completed');
+      document.getElementById('style-match-status').textContent = 'Challenge complete!';
+    });
+
+    // --- Challenge: Artist Statement ---
+    document.getElementById('save-statement').addEventListener('click', function () {
+      var statement = document.getElementById('artist-statement').value.trim();
+      if (!statement) {
+        alert('Please write something about your favorite piece!');
+        return;
+      }
+      taskCards.setComplete('art-challenge', true);
+      document.getElementById('challenge-title').classList.add('completed');
+      alert('Artist statement saved!');
+    });
+
+    // --- Art Export ---
+    var exportArtContainer = document.getElementById('export-container-art');
+
+    window.ExportButton(exportArtContainer, {
+      label: 'Download Gallery as HTML',
+      filename: 'my-ai-art-gallery.html',
+      format: 'html',
+      getData: function () {
+        var lines = [];
+        lines.push('<!DOCTYPE html>');
+        lines.push('<html lang="en">');
+        lines.push('<head>');
+        lines.push('<meta charset="UTF-8">');
+        lines.push('<meta name="viewport" content="width=device-width, initial-scale=1.0">');
+        lines.push('<title>My AI Art Gallery</title>');
+        lines.push('<style>');
+        lines.push('body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #f8f9fc; color: #1e2330; padding: 40px; }');
+        lines.push('h1 { text-align: center; font-size: 2rem; margin-bottom: 8px; }');
+        lines.push('.subtitle { text-align: center; color: #6b7280; margin-bottom: 32px; }');
+        lines.push('.gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 24px; max-width: 1000px; margin: 0 auto; }');
+        lines.push('.item { background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }');
+        lines.push('.item img { width: 100%; aspect-ratio: 1/1; object-fit: cover; }');
+        lines.push('.item .caption { padding: 12px 16px; font-size: 14px; color: #374151; }');
+        lines.push('</style>');
+        lines.push('</head>');
+        lines.push('<body>');
+        lines.push('<h1>My AI Art Gallery</h1>');
+        lines.push('<p class="subtitle">Created with AI Creator Lab &mdash; Lesson 2</p>');
+        lines.push('<div class="gallery">');
+
+        allImages.forEach(function (img) {
+          lines.push('<div class="item">');
+          var safeCaption = escapeHtml(img.caption || 'Untitled');
+          var safeUrl = escapeHtml(img.url);
+          lines.push('<img src="' + safeUrl + '" alt="' + safeCaption + '">');
+          lines.push('<div class="caption">' + safeCaption + '</div>');
+          lines.push('</div>');
+        });
+
+        lines.push('</div>');
+        lines.push('</body>');
+        lines.push('</html>');
+        return lines.join('\n');
+      }
     });
 
     // =============================================
-    // Step Navigation
+    // PART 2: AI PICTURE BOOK
     // =============================================
-    function showStep(stepName) {
-      stepFramework.className = stepName === 'framework' ? '' : 'hidden';
-      stepDraft.className = stepName === 'draft' ? '' : 'hidden';
-      stepRevision.className = stepName === 'revision' ? '' : 'hidden';
+
+    // --- State ---
+    var storyText = '';
+    var pbPages = [];
+    var pbIllustrations = [];
+    var bookTitle = '';
+    var bookAuthor = '';
+    var pbCurrentStep = 1;
+    var previewPageIndex = -1;
+
+    var imageStyles = [
+      { label: 'Cartoon / Anime', value: 'cartoon anime style, colorful, children\'s book illustration' },
+      { label: 'Watercolor', value: 'watercolor painting style, soft colors, children\'s book illustration' },
+      { label: 'Realistic Photo', value: 'realistic photograph, high detail' },
+      { label: 'Pixel Art', value: 'pixel art style, 8-bit retro' },
+      { label: 'Oil Painting', value: 'oil painting style, classical, picture book' },
+      { label: '3D Render', value: '3D rendered, studio lighting, children\'s book' },
+    ];
+
+    // --- ChatWidget for story writing ---
+    var chatContainer = document.getElementById('chat-container');
+    var chatWidget = window.ChatWidget(chatContainer, {
+      systemPrompt: 'You are a children\'s story writer. Write a SHORT story (4-6 paragraphs) suitable for a picture book. Each paragraph should describe a visual scene. Keep it around 150-250 words. Just output the story text, no titles or meta-commentary.',
+      placeholder: 'Tell AI what kind of story you want (e.g. "Write a story about a rabbit who discovers a magic garden")...'
+    });
+
+    // --- Word count ---
+    var storyInput = document.getElementById('story-input');
+    var wordCountEl = document.getElementById('story-word-count');
+
+    storyInput.addEventListener('input', function () {
+      var words = storyInput.value.trim().split(/\s+/).filter(function (w) { return w.length > 0; });
+      wordCountEl.textContent = words.length + ' words';
+    });
+
+    // --- Wizard Navigation ---
+    var wizardBtns = document.querySelectorAll('.wizard-step-btn');
+    var wizardPanels = document.querySelectorAll('.wizard-panel');
+
+    function goToStep(step) {
+      pbCurrentStep = step;
+
+      wizardBtns.forEach(function (btn) {
+        var s = parseInt(btn.getAttribute('data-step'), 10);
+        btn.classList.remove('active');
+        if (s === step) btn.classList.add('active');
+      });
+
+      wizardPanels.forEach(function (panel) {
+        panel.classList.remove('active');
+      });
+      document.getElementById('pb-step-' + step).classList.add('active');
+
+      if (step === 2) renderPageCards();
+      if (step === 3) renderIllustrations();
+      if (step === 4) renderPreview();
+
+      window.scrollTo(0, document.getElementById('part-2').offsetTop - 20);
     }
 
-    // =============================================
-    // Generate Story (API call)
-    // =============================================
-    async function generateStory() {
-      var character = inputCharacter.value.trim();
-      var setting = selectSetting.value;
-      var conflict = selectConflict.value;
-      var ending = selectEnding.value;
+    wizardBtns.forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        goToStep(parseInt(btn.getAttribute('data-step'), 10));
+      });
+    });
 
-      if (!character || !setting || !conflict || !ending) {
-        alert('Please fill in all four fields to generate your story!');
+    // Step navigation buttons
+    document.getElementById('to-pb-step-2').addEventListener('click', function () {
+      var text = storyInput.value.trim();
+      if (!text) {
+        alert('Please write or generate a story first!');
         return;
       }
+      storyText = text;
+      taskCards.setComplete('pb-story', true);
 
-      // Save framework
-      framework.character = character;
-      framework.setting = setting;
-      framework.conflict = conflict;
-      framework.ending = ending;
+      if (pbPages.length === 0) {
+        splitStoryWithAI(text);
+      } else {
+        goToStep(2);
+      }
+    });
 
-      // Mark task complete
-      taskCards.setComplete('ingredients', true);
+    document.getElementById('to-pb-step-3').addEventListener('click', function () {
+      if (pbPages.length === 0) {
+        alert('You need at least one page!');
+        return;
+      }
+      savePageEdits();
+      syncIllustrations();
+      goToStep(3);
+    });
 
-      // Show draft step with loading
-      showStep('draft');
-      draftLoading.className = 'card loading-card';
-      draftStory.className = 'hidden';
+    document.getElementById('to-pb-step-4').addEventListener('click', function () {
+      goToStep(4);
+    });
 
-      var userMessage = 'Write a story about ' + character + ' in ' + setting + ' who ' + conflict + '. Make the ending ' + ending + '.';
+    document.getElementById('back-to-pb-1').addEventListener('click', function () { goToStep(1); });
+    document.getElementById('back-to-pb-2').addEventListener('click', function () { goToStep(2); });
+    document.getElementById('back-to-pb-3').addEventListener('click', function () { goToStep(3); });
+
+    // --- Split Pages ---
+    async function splitStoryWithAI(text) {
+      var list = document.getElementById('page-cards-list');
+      clearChildrenLocal(list);
+
+      var spinnerWrapper = document.createElement('div');
+      spinnerWrapper.className = 'flex-center p-lg';
+      var spinner = document.createElement('div');
+      spinner.className = 'loading-spinner';
+      spinnerWrapper.appendChild(spinner);
+
+      var loadingText = document.createElement('p');
+      loadingText.textContent = 'AI is splitting your story into pages...';
+      loadingText.style.color = 'var(--color-text-muted)';
+      loadingText.style.textAlign = 'center';
+      loadingText.style.marginTop = 'var(--space-md)';
+
+      list.appendChild(spinnerWrapper);
+      list.appendChild(loadingText);
+
+      goToStep(2);
 
       try {
         var res = await fetch('/api/chat', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            system: SYSTEM_PROMPT,
-            messages: [{ role: 'user', content: userMessage }]
+            system: 'You split stories into picture book pages. Return ONLY the page text, with each page separated by exactly "---PAGE---". Split into 4-6 pages. Each page should be 1-3 sentences that work well with an illustration. Do not include page numbers or labels, just the text for each page separated by ---PAGE---.',
+            messages: [
+              { role: 'user', content: 'Split this story into 4-6 pages for a picture book:\n\n' + text }
+            ]
           })
         });
 
         var data = await res.json();
 
         if (!res.ok) {
-          alert(data.error || 'Something went wrong. Please try again.');
-          showStep('framework');
+          clearChildrenLocal(list);
+          pbPages = text.split(/\n\n+/).filter(function (p) { return p.trim().length > 0; });
+          if (pbPages.length < 2) {
+            var sentences = text.match(/[^.!?]+[.!?]+/g) || [text];
+            var perPage = Math.ceil(sentences.length / 5);
+            pbPages = [];
+            for (var i = 0; i < sentences.length; i += perPage) {
+              pbPages.push({ text: sentences.slice(i, i + perPage).join(' ').trim() });
+            }
+          } else {
+            pbPages = pbPages.map(function (p) { return { text: p.trim() }; });
+          }
+          renderPageCards();
           return;
         }
 
-        var story = data.response || '';
+        var responseText = data.response || '';
+        var splits = responseText.split('---PAGE---').map(function (s) { return s.trim(); }).filter(function (s) { return s.length > 0; });
 
-        // Reset versions and store first draft
-        storyVersions = [story];
-        currentVersionIdx = 0;
-        revisionCount = 0;
+        if (splits.length < 2) {
+          splits = responseText.split(/\n\s*\n|Page\s+\d+[:\.]?\s*/i).map(function (s) { return s.trim(); }).filter(function (s) { return s.length > 0; });
+        }
 
-        displayStory(story);
-        taskCards.setComplete('read', true);
-
-      } catch (err) {
-        alert('Could not reach the AI service. Check your connection and try again.');
-        showStep('framework');
-      }
-    }
-
-    // =============================================
-    // Display Story in Draft View
-    // =============================================
-    function displayStory(story) {
-      draftLoading.className = 'card loading-card hidden';
-      draftStory.className = '';
-      storyDisplay.textContent = story;
-    }
-
-    // =============================================
-    // Regenerate Story (same framework, new version)
-    // =============================================
-    async function regenerateStory() {
-      draftLoading.className = 'card loading-card';
-      draftStory.className = 'hidden';
-
-      var userMessage = 'Write a story about ' + framework.character + ' in ' + framework.setting + ' who ' + framework.conflict + '. Make the ending ' + framework.ending + '. Write a completely different version from before.';
-
-      try {
-        var res = await fetch('/api/chat', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            system: SYSTEM_PROMPT,
-            messages: [{ role: 'user', content: userMessage }]
-          })
+        pbPages = splits.map(function (s) {
+          return { text: s.replace(/^Page\s+\d+[:\.\-]?\s*/i, '').trim() };
         });
 
-        var data = await res.json();
-
-        if (!res.ok) {
-          alert(data.error || 'Something went wrong. Please try again.');
-          displayStory(storyVersions[currentVersionIdx]);
-          return;
+        if (pbPages.length === 0) {
+          pbPages = [{ text: text }];
         }
 
-        var story = data.response || '';
-
-        // Replace versions with new base
-        storyVersions = [story];
-        currentVersionIdx = 0;
-        revisionCount = 0;
-
-        displayStory(story);
-
+        syncIllustrations();
+        renderPageCards();
       } catch (err) {
-        alert('Could not reach the AI service. Check your connection and try again.');
-        displayStory(storyVersions[currentVersionIdx]);
+        clearChildrenLocal(list);
+        var paras = text.split(/\n\n+/).filter(function (p) { return p.trim().length > 0; });
+        pbPages = paras.length >= 2 ? paras.map(function (p) { return { text: p.trim() }; }) : [{ text: text }];
+        renderPageCards();
       }
     }
 
-    // =============================================
-    // Enter Revision Mode
-    // =============================================
-    function enterRevisionMode() {
-      showStep('revision');
-      storyEditor.value = storyVersions[currentVersionIdx];
-      renderVersionButtons();
-      revisionInput.value = '';
-    }
+    function renderPageCards() {
+      var list = document.getElementById('page-cards-list');
+      clearChildrenLocal(list);
 
-    // =============================================
-    // Update Story via AI Revision
-    // =============================================
-    async function updateStory() {
-      var instruction = revisionInput.value.trim();
-      if (!instruction) {
-        alert('Please describe what you want to change!');
-        return;
-      }
+      pbPages.forEach(function (page, index) {
+        var card = document.createElement('div');
+        card.className = 'page-card';
 
-      // Get current text (may have been manually edited)
-      var currentStory = storyEditor.value.trim();
-      if (!currentStory) {
-        alert('The story is empty. Please go back and generate one first.');
-        return;
-      }
+        var header = document.createElement('div');
+        header.className = 'page-card-header';
 
-      btnUpdateStory.disabled = true;
-      btnUpdateStory.textContent = 'Updating...';
+        var label = document.createElement('span');
+        label.className = 'page-card-label';
+        label.textContent = 'Page ' + (index + 1);
 
-      var userMessage = 'Here is the current story:\n\n' + currentStory + '\n\nRevision request: ' + instruction;
+        var actions = document.createElement('div');
+        actions.className = 'page-card-actions';
 
-      try {
-        var res = await fetch('/api/chat', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            system: REVISION_SYSTEM_PROMPT,
-            messages: [{ role: 'user', content: userMessage }]
-          })
-        });
-
-        var data = await res.json();
-
-        if (!res.ok) {
-          alert(data.error || 'Something went wrong. Please try again.');
-          return;
-        }
-
-        var revisedStory = data.response || '';
-
-        // Save the manually-edited version if it differs from the stored version
-        if (storyEditor.value.trim() !== storyVersions[currentVersionIdx]) {
-          storyVersions.push(storyEditor.value.trim());
-          currentVersionIdx = storyVersions.length - 1;
-        }
-
-        // Add revised version
-        storyVersions.push(revisedStory);
-        currentVersionIdx = storyVersions.length - 1;
-        revisionCount++;
-
-        storyEditor.value = revisedStory;
-        revisionInput.value = '';
-        renderVersionButtons();
-
-        // Track revision progress
-        if (revisionCount >= 2) {
-          taskCards.setComplete('revise', true);
-        }
-
-      } catch (err) {
-        alert('Could not reach the AI service. Check your connection and try again.');
-      } finally {
-        btnUpdateStory.disabled = false;
-        btnUpdateStory.textContent = 'Update Story';
-      }
-    }
-
-    // =============================================
-    // Version History
-    // =============================================
-    function renderVersionButtons() {
-      // Clear all version buttons (keep the label)
-      var children = versionRow.children;
-      while (children.length > 1) {
-        versionRow.removeChild(children[1]);
-      }
-
-      for (var i = 0; i < storyVersions.length; i++) {
-        (function (idx) {
-          var btn = document.createElement('button');
-          btn.className = 'version-btn' + (idx === currentVersionIdx ? ' active' : '');
-          btn.textContent = 'v' + (idx + 1);
-          btn.type = 'button';
-          btn.addEventListener('click', function () {
-            currentVersionIdx = idx;
-            storyEditor.value = storyVersions[idx];
-            renderVersionButtons();
+        if (index > 0) {
+          var upBtn = document.createElement('button');
+          upBtn.textContent = '\u2191';
+          upBtn.title = 'Move up';
+          upBtn.addEventListener('click', function () {
+            savePageEdits();
+            var temp = pbPages[index];
+            pbPages[index] = pbPages[index - 1];
+            pbPages[index - 1] = temp;
+            if (pbIllustrations[index] && pbIllustrations[index - 1]) {
+              var tempIll = pbIllustrations[index];
+              pbIllustrations[index] = pbIllustrations[index - 1];
+              pbIllustrations[index - 1] = tempIll;
+            }
+            renderPageCards();
           });
-          versionRow.appendChild(btn);
-        })(i);
-      }
+          actions.appendChild(upBtn);
+        }
+
+        if (index < pbPages.length - 1) {
+          var downBtn = document.createElement('button');
+          downBtn.textContent = '\u2193';
+          downBtn.title = 'Move down';
+          downBtn.addEventListener('click', function () {
+            savePageEdits();
+            var temp = pbPages[index];
+            pbPages[index] = pbPages[index + 1];
+            pbPages[index + 1] = temp;
+            if (pbIllustrations[index] && pbIllustrations[index + 1]) {
+              var tempIll = pbIllustrations[index];
+              pbIllustrations[index] = pbIllustrations[index + 1];
+              pbIllustrations[index + 1] = tempIll;
+            }
+            renderPageCards();
+          });
+          actions.appendChild(downBtn);
+        }
+
+        if (pbPages.length > 1) {
+          var delBtn = document.createElement('button');
+          delBtn.className = 'delete-btn';
+          delBtn.textContent = '\u2715';
+          delBtn.title = 'Remove page';
+          delBtn.addEventListener('click', function () {
+            savePageEdits();
+            pbPages.splice(index, 1);
+            pbIllustrations.splice(index, 1);
+            renderPageCards();
+          });
+          actions.appendChild(delBtn);
+        }
+
+        header.appendChild(label);
+        header.appendChild(actions);
+        card.appendChild(header);
+
+        var textarea = document.createElement('textarea');
+        textarea.className = 'page-edit-textarea';
+        textarea.value = page.text;
+        textarea.setAttribute('data-page-index', index);
+        card.appendChild(textarea);
+
+        var footer = document.createElement('div');
+        footer.className = 'page-card-footer';
+        var wc = page.text.trim().split(/\s+/).filter(function (w) { return w.length > 0; }).length;
+        footer.textContent = wc + ' words';
+        textarea.addEventListener('input', function () {
+          var words = textarea.value.trim().split(/\s+/).filter(function (w) { return w.length > 0; });
+          footer.textContent = words.length + ' words';
+        });
+        card.appendChild(footer);
+
+        list.appendChild(card);
+      });
     }
 
-    // =============================================
-    // Export / Save
-    // =============================================
-    function setupExport() {
-      clearChildren(exportContainer);
-      window.ExportButton(exportContainer, {
-        label: 'Download Story',
-        filename: 'my-ai-story.txt',
-        format: 'text',
-        getData: function () {
-          var lines = [];
-          lines.push('MY AI STORY');
-          lines.push('Created with AI Story Factory');
-          lines.push('Date: ' + new Date().toLocaleDateString());
-          lines.push('');
-          lines.push('Framework:');
-          lines.push('  Character: ' + framework.character);
-          lines.push('  Setting: ' + framework.setting);
-          lines.push('  Conflict: ' + framework.conflict);
-          lines.push('  Ending: ' + framework.ending);
-          lines.push('');
-          lines.push('---');
-          lines.push('');
-          lines.push(storyEditor.value || storyVersions[currentVersionIdx] || '');
-          return lines.join('\n');
+    function savePageEdits() {
+      var textareas = document.querySelectorAll('.page-edit-textarea');
+      textareas.forEach(function (ta) {
+        var idx = parseInt(ta.getAttribute('data-page-index'), 10);
+        if (pbPages[idx]) {
+          pbPages[idx].text = ta.value.trim();
         }
       });
     }
+
+    document.getElementById('add-page-btn').addEventListener('click', function () {
+      savePageEdits();
+      pbPages.push({ text: '' });
+      pbIllustrations.push({ prompt: '', style: imageStyles[0].value, url: null });
+      renderPageCards();
+      var list = document.getElementById('page-cards-list');
+      list.lastElementChild.scrollIntoView({ behavior: 'smooth' });
+    });
+
+    // --- Illustrations ---
+    function syncIllustrations() {
+      while (pbIllustrations.length < pbPages.length) {
+        pbIllustrations.push({ prompt: '', style: imageStyles[0].value, url: null });
+      }
+      while (pbIllustrations.length > pbPages.length) {
+        pbIllustrations.pop();
+      }
+    }
+
+    function renderIllustrations() {
+      savePageEdits();
+      syncIllustrations();
+      var list = document.getElementById('illustration-list');
+      clearChildrenLocal(list);
+
+      pbPages.forEach(function (page, index) {
+        var row = document.createElement('div');
+        row.className = 'illustration-row';
+
+        // Text side
+        var textSide = document.createElement('div');
+        textSide.className = 'illust-text-side';
+
+        var pageLabel = document.createElement('h4');
+        pageLabel.textContent = 'Page ' + (index + 1);
+        textSide.appendChild(pageLabel);
+
+        var textContent = document.createElement('div');
+        textContent.className = 'illust-text-content';
+        textContent.textContent = page.text || '(empty page)';
+        textSide.appendChild(textContent);
+
+        var promptLabel = document.createElement('label');
+        promptLabel.textContent = 'Image prompt';
+        promptLabel.style.fontWeight = '600';
+        promptLabel.style.fontSize = 'var(--text-sm)';
+        promptLabel.style.display = 'block';
+        promptLabel.style.marginBottom = 'var(--space-xs)';
+        textSide.appendChild(promptLabel);
+
+        var promptInput = document.createElement('textarea');
+        promptInput.className = 'illust-prompt-input';
+        promptInput.placeholder = 'Describe the illustration...';
+        promptInput.value = pbIllustrations[index].prompt || '';
+        promptInput.setAttribute('data-illust-index', index);
+        textSide.appendChild(promptInput);
+
+        var suggestBtn = document.createElement('button');
+        suggestBtn.className = 'btn btn-secondary';
+        suggestBtn.style.fontSize = 'var(--text-sm)';
+        suggestBtn.style.marginBottom = 'var(--space-sm)';
+        suggestBtn.textContent = '\u2728 Suggest prompt';
+        suggestBtn.addEventListener('click', function () {
+          autoSuggestPrompt(index, promptInput, suggestBtn);
+        });
+        textSide.appendChild(suggestBtn);
+
+        var styleRow = document.createElement('div');
+        styleRow.className = 'illust-style-row';
+
+        var styleLabel = document.createElement('label');
+        styleLabel.textContent = 'Style:';
+        styleRow.appendChild(styleLabel);
+
+        var styleSelect = document.createElement('select');
+        styleSelect.className = 'illust-style-select';
+        styleSelect.setAttribute('data-style-index', index);
+
+        imageStyles.forEach(function (style) {
+          var option = document.createElement('option');
+          option.value = style.value;
+          option.textContent = style.label;
+          if (pbIllustrations[index].style === style.value) {
+            option.selected = true;
+          }
+          styleSelect.appendChild(option);
+        });
+
+        styleSelect.addEventListener('change', function () {
+          pbIllustrations[index].style = styleSelect.value;
+        });
+
+        styleRow.appendChild(styleSelect);
+        textSide.appendChild(styleRow);
+
+        var btnRow = document.createElement('div');
+        btnRow.className = 'illust-btn-row';
+
+        var genBtn = document.createElement('button');
+        genBtn.className = 'btn btn-primary';
+        genBtn.style.fontSize = 'var(--text-sm)';
+        genBtn.textContent = 'Generate';
+
+        var regenBtn = document.createElement('button');
+        regenBtn.className = 'btn btn-secondary';
+        regenBtn.style.fontSize = 'var(--text-sm)';
+        regenBtn.textContent = 'Regenerate';
+        if (!pbIllustrations[index].url) {
+          regenBtn.style.display = 'none';
+        }
+
+        btnRow.appendChild(genBtn);
+        btnRow.appendChild(regenBtn);
+        textSide.appendChild(btnRow);
+
+        row.appendChild(textSide);
+
+        // Image side
+        var imageSide = document.createElement('div');
+        imageSide.className = 'illust-image-side';
+
+        var imagePlaceholder = document.createElement('div');
+        imagePlaceholder.className = 'illust-image-placeholder';
+
+        if (pbIllustrations[index].url) {
+          imagePlaceholder.classList.add('has-image');
+          var img = document.createElement('img');
+          img.src = pbIllustrations[index].url;
+          img.alt = 'Illustration for page ' + (index + 1);
+          imagePlaceholder.appendChild(img);
+        } else {
+          imagePlaceholder.textContent = 'No illustration yet.\nGenerate one!';
+          imagePlaceholder.style.whiteSpace = 'pre-line';
+        }
+
+        imageSide.appendChild(imagePlaceholder);
+        row.appendChild(imageSide);
+
+        list.appendChild(row);
+
+        // Generate handler
+        function doGenerate() {
+          var prompt = promptInput.value.trim();
+          if (!prompt) {
+            alert('Please write or suggest an image prompt first.');
+            return;
+          }
+
+          pbIllustrations[index].prompt = prompt;
+          pbIllustrations[index].style = styleSelect.value;
+
+          var fullPrompt = prompt + ', ' + styleSelect.value;
+
+          genBtn.disabled = true;
+          regenBtn.disabled = true;
+          genBtn.textContent = 'Generating...';
+
+          clearChildrenLocal(imagePlaceholder);
+          imagePlaceholder.className = 'illust-image-placeholder';
+          var spinnerW = document.createElement('div');
+          spinnerW.className = 'loading-spinner';
+          imagePlaceholder.appendChild(spinnerW);
+
+          fetch('/api/image', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ prompt: fullPrompt })
+          })
+          .then(function (res) { return res.json().then(function (d) { return { ok: res.ok, data: d }; }); })
+          .then(function (result) {
+            clearChildrenLocal(imagePlaceholder);
+
+            if (!result.ok || !result.data.url) {
+              imagePlaceholder.className = 'illust-image-placeholder';
+              imagePlaceholder.textContent = result.data.error || 'Failed to generate. Try again.';
+              return;
+            }
+
+            pbIllustrations[index].url = result.data.url;
+            imagePlaceholder.classList.add('has-image');
+            var img = document.createElement('img');
+            img.src = result.data.url;
+            img.alt = 'Illustration for page ' + (index + 1);
+            imagePlaceholder.appendChild(img);
+            regenBtn.style.display = '';
+
+            checkIllustrationProgress();
+          })
+          .catch(function () {
+            clearChildrenLocal(imagePlaceholder);
+            imagePlaceholder.className = 'illust-image-placeholder';
+            imagePlaceholder.textContent = 'Could not reach the image service. Try again.';
+          })
+          .finally(function () {
+            genBtn.disabled = false;
+            regenBtn.disabled = false;
+            genBtn.textContent = 'Generate';
+          });
+        }
+
+        genBtn.addEventListener('click', doGenerate);
+        regenBtn.addEventListener('click', doGenerate);
+
+        if (!pbIllustrations[index].prompt && page.text) {
+          autoSuggestPrompt(index, promptInput, suggestBtn);
+        }
+      });
+    }
+
+    function autoSuggestPrompt(index, promptInput, suggestBtn) {
+      var text = pbPages[index] ? pbPages[index].text : '';
+      if (!text) return;
+
+      suggestBtn.disabled = true;
+      suggestBtn.textContent = 'Suggesting...';
+
+      fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          system: 'You are an image prompt writer for a children\'s picture book. Given a page of text, suggest a short, vivid image generation prompt (1-2 sentences). Focus on the visual scene, characters, and mood. Do NOT include art style in the prompt. Just output the prompt text, nothing else.',
+          messages: [
+            { role: 'user', content: 'Based on this picture book page text, suggest a short image generation prompt:\n\n' + text }
+          ]
+        })
+      })
+      .then(function (res) { return res.json(); })
+      .then(function (data) {
+        if (data.response) {
+          promptInput.value = data.response.trim();
+          pbIllustrations[index].prompt = data.response.trim();
+        }
+      })
+      .catch(function () {})
+      .finally(function () {
+        suggestBtn.disabled = false;
+        suggestBtn.textContent = '\u2728 Suggest prompt';
+      });
+    }
+
+    function checkIllustrationProgress() {
+      var count = pbIllustrations.filter(function (ill) { return ill.url; }).length;
+      if (count > 0) {
+        taskCards.setComplete('pb-illustrate', true);
+      }
+      if (count === pbPages.length && pbPages.length > 0) {
+        taskCards.setComplete('pb-illustrate', true);
+      }
+    }
+
+    // --- Preview ---
+    function renderPreview() {
+      var preview = document.getElementById('book-preview');
+      clearChildrenLocal(preview);
+
+      previewPageIndex = -1;
+
+      // Cover
+      var cover = document.createElement('div');
+      cover.className = 'book-cover';
+      cover.id = 'book-cover';
+
+      var firstIllUrl = null;
+      for (var i = 0; i < pbIllustrations.length; i++) {
+        if (pbIllustrations[i].url) { firstIllUrl = pbIllustrations[i].url; break; }
+      }
+      if (firstIllUrl) {
+        var coverImgDiv = document.createElement('div');
+        coverImgDiv.className = 'book-cover-image';
+        var coverImg = document.createElement('img');
+        coverImg.src = firstIllUrl;
+        coverImg.alt = 'Cover illustration';
+        coverImgDiv.appendChild(coverImg);
+        cover.appendChild(coverImgDiv);
+      }
+
+      var titleDiv = document.createElement('div');
+      titleDiv.className = 'book-cover-title';
+      var titleInput = document.createElement('input');
+      titleInput.type = 'text';
+      titleInput.value = bookTitle;
+      titleInput.placeholder = 'Your Book Title';
+      titleInput.addEventListener('input', function () {
+        bookTitle = titleInput.value;
+      });
+      titleDiv.appendChild(titleInput);
+      cover.appendChild(titleDiv);
+
+      var authorDiv = document.createElement('div');
+      authorDiv.className = 'book-cover-author';
+      var authorInput = document.createElement('input');
+      authorInput.type = 'text';
+      authorInput.value = bookAuthor;
+      authorInput.placeholder = 'By Your Name';
+      authorInput.addEventListener('input', function () {
+        bookAuthor = authorInput.value;
+      });
+      authorDiv.appendChild(authorInput);
+      cover.appendChild(authorDiv);
+
+      preview.appendChild(cover);
+
+      var pageDisplay = document.createElement('div');
+      pageDisplay.className = 'book-page-display';
+      pageDisplay.id = 'book-page-display';
+      preview.appendChild(pageDisplay);
+
+      var nav = document.createElement('div');
+      nav.className = 'book-page-nav';
+
+      var prevBtn = document.createElement('button');
+      prevBtn.className = 'btn btn-secondary';
+      prevBtn.textContent = '\u2190 Previous';
+      prevBtn.id = 'preview-prev';
+
+      var counter = document.createElement('span');
+      counter.className = 'page-counter';
+      counter.id = 'preview-counter';
+
+      var nextBtn = document.createElement('button');
+      nextBtn.className = 'btn btn-primary';
+      nextBtn.textContent = 'Next \u2192';
+      nextBtn.id = 'preview-next';
+
+      nav.appendChild(prevBtn);
+      nav.appendChild(counter);
+      nav.appendChild(nextBtn);
+      preview.appendChild(nav);
+
+      prevBtn.addEventListener('click', function () {
+        if (previewPageIndex > -1) {
+          previewPageIndex--;
+          showPreviewPage();
+        }
+      });
+
+      nextBtn.addEventListener('click', function () {
+        if (previewPageIndex < pbPages.length) {
+          previewPageIndex++;
+          showPreviewPage();
+        }
+      });
+
+      showPreviewPage();
+      taskCards.setComplete('pb-preview', true);
+    }
+
+    function showPreviewPage() {
+      var display = document.getElementById('book-page-display');
+      var counter = document.getElementById('preview-counter');
+      var prevBtn = document.getElementById('preview-prev');
+      var nextBtn = document.getElementById('preview-next');
+      var cover = document.getElementById('book-cover');
+
+      if (!display) return;
+
+      clearChildrenLocal(display);
+
+      if (previewPageIndex === -1) {
+        cover.style.display = '';
+        display.style.display = 'none';
+        counter.textContent = 'Cover';
+        prevBtn.disabled = true;
+        nextBtn.disabled = false;
+        return;
+      }
+
+      cover.style.display = 'none';
+      display.style.display = '';
+
+      if (previewPageIndex >= pbPages.length) {
+        var endPage = document.createElement('div');
+        endPage.className = 'book-end-page';
+        endPage.textContent = 'The End';
+        display.appendChild(endPage);
+        counter.textContent = 'The End';
+        prevBtn.disabled = false;
+        nextBtn.disabled = true;
+        return;
+      }
+
+      var page = pbPages[previewPageIndex];
+      var ill = pbIllustrations[previewPageIndex];
+
+      if (ill && ill.url) {
+        var img = document.createElement('img');
+        img.src = ill.url;
+        img.alt = 'Illustration for page ' + (previewPageIndex + 1);
+        display.appendChild(img);
+      }
+
+      var textEl = document.createElement('div');
+      textEl.className = 'page-text';
+      textEl.textContent = page.text;
+      display.appendChild(textEl);
+
+      counter.textContent = 'Page ' + (previewPageIndex + 1) + ' of ' + pbPages.length;
+      prevBtn.disabled = false;
+      nextBtn.disabled = false;
+    }
+
+    // --- Download Picture Book ---
+    var downloadContainer = document.getElementById('download-section');
+
+    window.ExportButton(downloadContainer, {
+      label: 'Download Picture Book',
+      filename: 'my-ai-picture-book.html',
+      format: 'html',
+      getData: function () {
+        taskCards.setComplete('pb-preview', true);
+        var lines = [];
+        lines.push('<!DOCTYPE html>');
+        lines.push('<html lang="en">');
+        lines.push('<head>');
+        lines.push('<meta charset="UTF-8">');
+        lines.push('<meta name="viewport" content="width=device-width, initial-scale=1.0">');
+
+        var safeTitle = escapeHtml(bookTitle || 'My AI Picture Book');
+        lines.push('<title>' + safeTitle + '</title>');
+        lines.push('<style>');
+        lines.push('* { box-sizing: border-box; margin: 0; padding: 0; }');
+        lines.push('body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #f8f9fc; color: #1e2330; }');
+        lines.push('.book { max-width: 700px; margin: 0 auto; padding: 40px 20px; }');
+        lines.push('.cover { background: linear-gradient(135deg, #1e2330, #2d3352); color: #fff; border-radius: 16px; padding: 48px 32px; text-align: center; margin-bottom: 32px; }');
+        lines.push('.cover img { max-width: 400px; width: 100%; border-radius: 12px; margin-bottom: 24px; }');
+        lines.push('.cover h1 { font-size: 2rem; margin-bottom: 8px; }');
+        lines.push('.cover .author { font-size: 1.2rem; opacity: 0.8; }');
+        lines.push('.page { background: #fff; border: 1px solid #e2e5ee; border-radius: 16px; padding: 40px; margin-bottom: 24px; text-align: center; }');
+        lines.push('.page img { max-width: 500px; width: 100%; border-radius: 12px; margin-bottom: 24px; }');
+        lines.push('.page .text { font-size: 1.25rem; line-height: 1.8; max-width: 600px; margin: 0 auto; }');
+        lines.push('.page .page-num { font-size: 0.85rem; color: #6b7280; margin-top: 16px; }');
+        lines.push('.end { text-align: center; padding: 48px; font-size: 1.5rem; font-weight: 700; color: #6b7280; }');
+        lines.push('.nav { display: flex; justify-content: center; gap: 16px; margin-bottom: 32px; flex-wrap: wrap; }');
+        lines.push('.nav a { display: inline-block; padding: 8px 16px; background: #4f6ef7; color: #fff; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 0.9rem; }');
+        lines.push('.nav a:hover { background: #3b5ae0; }');
+        lines.push('.section { display: none; }');
+        lines.push('.section.active { display: block; }');
+        lines.push('</style>');
+        lines.push('</head>');
+        lines.push('<body>');
+        lines.push('<div class="book">');
+
+        lines.push('<div class="nav" id="nav">');
+        lines.push('<a href="#" onclick="showPage(-1); return false;">Cover</a>');
+        for (var i = 0; i < pbPages.length; i++) {
+          lines.push('<a href="#" onclick="showPage(' + i + '); return false;">Page ' + (i + 1) + '</a>');
+        }
+        lines.push('<a href="#" onclick="showPage(' + pbPages.length + '); return false;">The End</a>');
+        lines.push('</div>');
+
+        var firstUrl = '';
+        for (var j = 0; j < pbIllustrations.length; j++) {
+          if (pbIllustrations[j].url) { firstUrl = pbIllustrations[j].url; break; }
+        }
+
+        lines.push('<div class="section active" id="page--1">');
+        lines.push('<div class="cover">');
+        if (firstUrl) {
+          lines.push('<img src="' + escapeHtml(firstUrl) + '" alt="Cover">');
+        }
+        lines.push('<h1>' + safeTitle + '</h1>');
+        lines.push('<div class="author">' + escapeHtml(bookAuthor || 'Anonymous') + '</div>');
+        lines.push('</div>');
+        lines.push('</div>');
+
+        for (var k = 0; k < pbPages.length; k++) {
+          lines.push('<div class="section" id="page-' + k + '">');
+          lines.push('<div class="page">');
+          if (pbIllustrations[k] && pbIllustrations[k].url) {
+            lines.push('<img src="' + escapeHtml(pbIllustrations[k].url) + '" alt="Page ' + (k + 1) + '">');
+          }
+          lines.push('<div class="text">' + escapeHtml(pbPages[k].text) + '</div>');
+          lines.push('<div class="page-num">Page ' + (k + 1) + ' of ' + pbPages.length + '</div>');
+          lines.push('</div>');
+          lines.push('</div>');
+        }
+
+        lines.push('<div class="section" id="page-' + pbPages.length + '">');
+        lines.push('<div class="end">The End</div>');
+        lines.push('</div>');
+
+        lines.push('</div>');
+
+        lines.push('<script>');
+        lines.push('var current = -1;');
+        lines.push('function showPage(n) {');
+        lines.push('  document.querySelectorAll(".section").forEach(function(s) { s.classList.remove("active"); });');
+        lines.push('  var el = document.getElementById("page-" + n);');
+        lines.push('  if (el) { el.classList.add("active"); current = n; }');
+        lines.push('}');
+        lines.push('document.addEventListener("keydown", function(e) {');
+        lines.push('  if (e.key === "ArrowRight") { showPage(current + 1); }');
+        lines.push('  if (e.key === "ArrowLeft") { showPage(current - 1); }');
+        lines.push('});');
+        lines.push('</' + 'script>');
+        lines.push('</body>');
+        lines.push('</html>');
+
+        return lines.join('\n');
+      }
+    });
+
+    // =============================================
+    // Task Sidebar
+    // =============================================
+    var taskSidebar = document.getElementById('task-sidebar');
+
+    var taskCards = window.TaskCards(taskSidebar, [
+      { id: 'art-create', title: 'Create 3 artworks', description: 'Part 1: Generate at least 3 images in any style' },
+      { id: 'art-challenge', title: 'Complete the style challenge', description: 'Part 1: Try the Style Match or Title Your Art' },
+      { id: 'pb-story', title: 'Write your picture book story', description: 'Part 2: Write or generate a short story' },
+      { id: 'pb-illustrate', title: 'Illustrate all pages', description: 'Part 2: Generate images for your book pages' },
+      { id: 'pb-preview', title: 'Preview and export your book', description: 'Part 2: See your finished picture book' }
+    ]);
 
     // =============================================
     // Utility
     // =============================================
-    function clearChildren(el) {
+    function clearChildrenLocal(el) {
       while (el.firstChild) {
         el.removeChild(el.firstChild);
       }
     }
 
-    // =============================================
-    // Event Listeners
-    // =============================================
-    btnGenerate.addEventListener('click', generateStory);
-
-    btnRevise.addEventListener('click', function () {
-      enterRevisionMode();
-      setupExport();
-    });
-
-    btnRegenerate.addEventListener('click', regenerateStory);
-
-    btnBackFramework.addEventListener('click', function () {
-      showStep('framework');
-    });
-
-    btnUpdateStory.addEventListener('click', updateStory);
-
-    btnSaveFinal.addEventListener('click', function () {
-      taskCards.setComplete('read-aloud', true);
-      taskCards.setComplete('export', true);
-      // Trigger export
-      var exportBtn = exportContainer.querySelector('button');
-      if (exportBtn) {
-        exportBtn.click();
-      }
-    });
-
-    btnBackDraft.addEventListener('click', function () {
-      // Update the draft display with current editor content
-      storyVersions[currentVersionIdx] = storyEditor.value;
-      storyDisplay.textContent = storyVersions[currentVersionIdx];
-      showStep('draft');
-    });
-
-    // Allow Enter key in revision input
-    revisionInput.addEventListener('keydown', function (e) {
-      if (e.key === 'Enter') {
-        e.preventDefault();
-        updateStory();
-      }
-    });
-
-    // =============================================
-    // Initialize Task Sidebar
-    // =============================================
-    var taskCards = window.TaskCards(taskSidebar, [
-      { id: 'ingredients', title: 'Pick your story ingredients', description: 'Choose character, setting, conflict & ending' },
-      { id: 'read', title: 'Read the AI\'s first draft', description: 'See what AI creates from your framework' },
-      { id: 'revise', title: 'Request at least 2 changes', description: 'Use the revision studio to improve your story' },
-      { id: 'read-aloud', title: 'Read your final story out loud', description: 'Share your creation with the class' },
-      { id: 'export', title: 'Export and save your story', description: 'Download your finished story as a file' }
-    ]);
+    function escapeHtml(str) {
+      return str
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
   </script>
 
 </body>

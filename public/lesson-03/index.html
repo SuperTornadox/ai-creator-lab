@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Lesson 3: AI Artist - AI Creator Lab</title>
+  <title>Lesson 3: AI Media — Sound, Scene, Action! - AI Creator Lab</title>
   <link rel="stylesheet" href="/shared/styles.css">
   <style>
     /* Tab navigation */
@@ -52,170 +52,654 @@
       display: block;
     }
 
-    /* Challenge mode */
-    .challenge-card {
-      background: var(--color-surface);
-      border-radius: var(--radius-lg);
-      border: 2px solid var(--color-border);
-      padding: var(--space-xl);
-      max-width: 700px;
+    /* Section spacing */
+    .lesson-section {
+      margin-bottom: var(--space-xl);
+      padding-bottom: var(--space-xl);
+      border-bottom: 1px solid var(--color-border);
     }
 
-    .challenge-card.completed {
-      border-color: var(--color-success);
-      background: var(--color-success-light);
+    .lesson-section:last-child {
+      border-bottom: none;
     }
 
-    .challenge-header {
+    .section-heading {
+      font-size: var(--text-xl);
+      font-weight: 650;
+      margin-bottom: var(--space-lg);
       display: flex;
       align-items: center;
-      gap: var(--space-md);
-      margin-bottom: var(--space-lg);
+      gap: var(--space-sm);
     }
 
-    .challenge-badge {
+    /* Genre cards grid */
+    .genre-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: var(--space-md);
+    }
+
+    .genre-card {
+      background: var(--color-surface);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-sm);
+      padding: var(--space-lg);
+      border: 2px solid var(--color-border);
+      text-align: center;
+      cursor: pointer;
+      transition: box-shadow var(--transition-normal),
+                  transform var(--transition-normal),
+                  border-color var(--transition-normal);
+    }
+
+    .genre-card:hover {
+      box-shadow: var(--shadow-md);
+      transform: translateY(-2px);
+    }
+
+    .genre-card.card-selected {
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px var(--color-primary-light);
+    }
+
+    .genre-card .genre-emoji {
+      font-size: 2.2rem;
+      margin-bottom: var(--space-sm);
+    }
+
+    .genre-card .genre-name {
+      font-size: var(--text-md);
+      font-weight: 650;
+      margin-bottom: var(--space-xs);
+    }
+
+    .genre-card .genre-desc {
+      font-size: var(--text-sm);
+      color: var(--color-text-muted);
+    }
+
+    /* Suno launch section */
+    .launch-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-sm);
+      padding: 0.8em 2em;
+      font-size: var(--text-xl);
+      font-weight: 700;
+      font-family: inherit;
+      background: linear-gradient(135deg, var(--color-secondary), var(--color-primary));
+      color: #ffffff;
+      border: none;
+      border-radius: var(--radius-lg);
+      cursor: pointer;
+      transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+      text-decoration: none;
+    }
+
+    .launch-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lg);
+      color: #ffffff;
+    }
+
+    .launch-btn:active {
+      transform: scale(0.97);
+    }
+
+    /* Steps card */
+    .steps-card {
+      background: var(--color-surface);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--color-border);
+      padding: var(--space-xl);
+      margin-top: var(--space-lg);
+    }
+
+    .steps-card h3 {
+      margin-bottom: var(--space-md);
+    }
+
+    .steps-list {
+      list-style: none;
+      padding: 0;
+      counter-reset: step-counter;
+    }
+
+    .steps-list li {
+      counter-increment: step-counter;
+      display: flex;
+      align-items: flex-start;
+      gap: var(--space-md);
+      padding: var(--space-sm) 0;
+      font-size: var(--text-md);
+      line-height: 1.6;
+    }
+
+    .steps-list li::before {
+      content: counter(step-counter);
       display: inline-flex;
       align-items: center;
       justify-content: center;
+      width: 28px;
+      height: 28px;
+      min-width: 28px;
+      background: var(--color-primary);
+      color: #ffffff;
+      border-radius: 50%;
       font-size: var(--text-sm);
       font-weight: 700;
-      padding: 0.2em 0.8em;
-      border-radius: var(--radius-full);
+    }
+
+    /* Tips box */
+    .tips-box {
+      background: var(--color-accent-light);
+      border-radius: var(--radius-md);
+      padding: var(--space-lg);
+      margin-top: var(--space-md);
+    }
+
+    .tips-box h4 {
+      margin-bottom: var(--space-sm);
+      color: var(--color-accent-hover);
+    }
+
+    .tips-box ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .tips-box li {
+      padding: var(--space-xs) 0;
+      font-size: var(--text-sm);
+      line-height: 1.6;
+    }
+
+    .tips-box li::before {
+      content: "\2728 ";
+    }
+
+    /* Song collection */
+    .song-entry {
+      background: var(--color-surface);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--color-border);
+      padding: var(--space-md);
+      display: flex;
+      align-items: center;
+      gap: var(--space-md);
+      margin-bottom: var(--space-sm);
+    }
+
+    .song-entry .song-info {
+      flex: 1;
+      display: flex;
+      gap: var(--space-md);
+      flex-wrap: wrap;
+    }
+
+    .song-entry .song-title {
+      font-weight: 650;
+      font-size: var(--text-md);
+    }
+
+    .song-entry .song-style {
+      color: var(--color-text-muted);
+      font-size: var(--text-sm);
+    }
+
+    .song-entry .song-notes {
+      color: var(--color-text-muted);
+      font-size: var(--text-sm);
+      font-style: italic;
+    }
+
+    .song-entry .delete-btn {
+      background: none;
+      border: none;
+      font-size: var(--text-md);
+      color: var(--color-text-muted);
+      cursor: pointer;
+      padding: var(--space-xs);
+      border-radius: var(--radius-sm);
+    }
+
+    .song-entry .delete-btn:hover {
+      color: var(--color-error);
+      background: var(--color-error-light);
+    }
+
+    .add-song-form {
+      display: flex;
+      gap: var(--space-sm);
+      align-items: flex-end;
+      flex-wrap: wrap;
+      margin-top: var(--space-md);
+    }
+
+    .add-song-form .form-group {
+      flex: 1;
+      min-width: 120px;
+    }
+
+    /* Lyrics area */
+    .lyrics-area {
+      margin-top: var(--space-md);
+    }
+
+    .lyrics-area label {
+      display: block;
+      font-size: var(--text-sm);
+      font-weight: 600;
+      margin-bottom: var(--space-xs);
+    }
+
+    .copy-btn.copied {
+      background: var(--color-success);
+      border-color: var(--color-success);
+      color: #ffffff;
+    }
+
+    /* Empty state */
+    .empty-state {
+      text-align: center;
+      padding: var(--space-xl);
+      color: var(--color-text-muted);
+      font-size: var(--text-sm);
+    }
+
+    /* ==== Part 2: AI Director Styles ==== */
+
+    /* Wizard step navigation */
+    .wizard-nav {
+      display: flex;
+      gap: var(--space-xs);
+      margin-bottom: var(--space-lg);
+      padding-bottom: var(--space-md);
+      border-bottom: 2px solid var(--color-border);
+    }
+
+    .wizard-step-btn {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      padding: 0.5em 1em;
+      font-size: var(--text-sm);
+      font-weight: 600;
+      font-family: inherit;
+      border: 2px solid var(--color-border);
+      background: var(--color-surface);
+      color: var(--color-text-muted);
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      transition: all var(--transition-fast);
       white-space: nowrap;
     }
 
-    .challenge-badge.easy {
+    .wizard-step-btn:hover {
+      border-color: var(--color-primary);
+      color: var(--color-text);
+    }
+
+    .wizard-step-btn.active {
+      background: var(--color-primary);
+      border-color: var(--color-primary);
+      color: #ffffff;
+    }
+
+    .wizard-step-btn.completed {
+      background: var(--color-success-light);
+      border-color: var(--color-success);
+      color: #16a34a;
+    }
+
+    .wizard-step-btn .step-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      font-size: var(--text-xs);
+      font-weight: 700;
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .wizard-step-btn.active .step-num {
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    .wizard-step-btn.completed .step-num {
+      background: var(--color-success);
+      color: #ffffff;
+    }
+
+    .wizard-panel {
+      display: none;
+    }
+
+    .wizard-panel.active {
+      display: block;
+    }
+
+    .step-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: var(--space-xl);
+      padding-top: var(--space-lg);
+      border-top: 1px solid var(--color-border);
+    }
+
+    /* Scene cards */
+    .scene-cards-list {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-xl);
+    }
+
+    .scene-card {
+      background: var(--color-surface);
+      border: 1.5px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      transition: box-shadow var(--transition-normal);
+    }
+
+    .scene-card:hover {
+      box-shadow: var(--shadow-md);
+    }
+
+    .scene-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--space-md) var(--space-lg);
+      background: var(--color-bg);
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .scene-card-label {
+      font-weight: 700;
+      font-size: var(--text-md);
+      color: var(--color-primary);
+    }
+
+    .scene-card-status {
+      font-size: var(--text-xs);
+      font-weight: 600;
+      padding: 0.2em 0.6em;
+      border-radius: var(--radius-full);
+      background: var(--color-border);
+      color: var(--color-text-muted);
+    }
+
+    .scene-card-status.done {
       background: var(--color-success-light);
       color: #16a34a;
     }
 
-    .challenge-badge.medium {
-      background: var(--color-warning-light);
-      color: #d97706;
+    .scene-card-body {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-lg);
+      padding: var(--space-lg);
     }
 
-    .challenge-badge.hard {
-      background: var(--color-error-light);
-      color: #dc2626;
+    @media (max-width: 767px) {
+      .scene-card-body {
+        grid-template-columns: 1fr;
+      }
     }
 
-    .challenge-concept {
-      font-size: var(--text-lg);
-      font-weight: 650;
-      padding: var(--space-md) var(--space-lg);
-      background: var(--color-bg);
-      border-radius: var(--radius-md);
-      margin-bottom: var(--space-lg);
-      text-align: center;
-      line-height: 1.5;
-    }
-
-    .challenge-result {
-      margin-top: var(--space-md);
-    }
-
-    .challenge-result .gallery-item {
-      max-width: 400px;
-      margin: 0 auto;
-    }
-
-    .challenge-nav {
+    .scene-text-side {
       display: flex;
-      justify-content: flex-end;
-      margin-top: var(--space-lg);
-    }
-
-    /* Gallery section heading */
-    .gallery-heading {
-      font-size: var(--text-lg);
-      font-weight: 650;
-      margin-top: var(--space-xl);
-      margin-bottom: var(--space-md);
-      display: flex;
-      align-items: center;
+      flex-direction: column;
       gap: var(--space-sm);
     }
 
-    .gallery-heading .count-badge {
-      background: var(--color-primary-light);
-      color: var(--color-primary);
+    .scene-text-display {
       font-size: var(--text-sm);
-      font-weight: 700;
-      padding: 0.1em 0.6em;
-      border-radius: var(--radius-full);
+      line-height: 1.7;
+      padding: var(--space-md);
+      background: var(--color-bg);
+      border-radius: var(--radius-md);
+      color: var(--color-text);
+      min-height: 60px;
     }
 
-    /* Export section */
-    .export-section {
-      margin-top: var(--space-lg);
+    .scene-image-side {
       display: flex;
-      justify-content: flex-end;
+      flex-direction: column;
+      gap: var(--space-sm);
     }
 
-    /* Fullscreen caption edit */
-    .caption-overlay {
-      position: fixed;
+    .scene-image-holder {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      background: var(--color-bg);
+      border: 2px dashed var(--color-border);
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--color-text-muted);
+      font-size: var(--text-sm);
+      text-align: center;
+      padding: var(--space-md);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .scene-image-holder img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: var(--radius-sm);
+    }
+
+    .scene-image-holder.has-image {
+      border-style: solid;
+      border-color: var(--color-success);
+      padding: 0;
+    }
+
+    .scene-prompt-input {
+      width: 100%;
+      min-height: 50px;
+      padding: var(--space-sm);
+      font-size: var(--text-sm);
+      font-family: inherit;
+      line-height: 1.5;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      resize: vertical;
+    }
+
+    .scene-prompt-input:focus {
+      outline: none;
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 2px var(--color-primary-light);
+    }
+
+    .scene-btn-row {
+      display: flex;
+      gap: var(--space-sm);
+      flex-wrap: wrap;
+    }
+
+    /* Film Player */
+    .film-player {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .film-screen {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      background: #111;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: var(--shadow-lg);
+      margin-bottom: var(--space-md);
+    }
+
+    .film-screen img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0;
+      transition: opacity 0.6s ease;
+      position: absolute;
       inset: 0;
-      background: rgba(0, 0, 0, 0.85);
-      z-index: 9999;
+    }
+
+    .film-screen img.visible {
+      opacity: 1;
+    }
+
+    .film-caption {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: var(--space-lg) var(--space-xl);
+      background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 60%, transparent 100%);
+      color: #ffffff;
+      font-size: var(--text-lg);
+      line-height: 1.5;
+      text-align: center;
+      text-shadow: 0 1px 4px rgba(0,0,0,0.5);
+      opacity: 0;
+      transition: opacity 0.6s ease;
+    }
+
+    .film-caption.visible {
+      opacity: 1;
+    }
+
+    .film-empty-screen {
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: var(--space-md);
-      cursor: default;
-    }
-
-    .caption-overlay img {
-      max-width: 80vw;
-      max-height: 60vh;
-      border-radius: var(--radius-md);
-      object-fit: contain;
-    }
-
-    .caption-overlay .caption-input-row {
-      display: flex;
+      height: 100%;
+      color: rgba(255,255,255,0.5);
+      font-size: var(--text-lg);
       gap: var(--space-sm);
+    }
+
+    .film-empty-screen .empty-icon {
+      font-size: 3rem;
+    }
+
+    .film-controls {
+      display: flex;
       align-items: center;
-      max-width: 500px;
-      width: 90%;
+      justify-content: center;
+      gap: var(--space-md);
+      margin-bottom: var(--space-md);
     }
 
-    .caption-overlay .caption-input-row input {
-      flex: 1;
-      padding: 0.5em 0.85em;
-      font-size: var(--text-md);
-      font-family: inherit;
-      border: 1.5px solid rgba(255, 255, 255, 0.3);
-      border-radius: var(--radius-md);
-      background: rgba(255, 255, 255, 0.1);
-      color: #ffffff;
-    }
-
-    .caption-overlay .caption-input-row input::placeholder {
-      color: rgba(255, 255, 255, 0.5);
-    }
-
-    .caption-overlay .caption-input-row input:focus {
-      outline: none;
-      border-color: var(--color-primary);
-    }
-
-    .caption-overlay .caption-input-row button {
-      padding: 0.5em 1em;
+    .film-controls .scene-counter {
       font-size: var(--text-md);
       font-weight: 600;
-      font-family: inherit;
-      border: none;
-      border-radius: var(--radius-md);
-      background: var(--color-primary);
-      color: #ffffff;
-      cursor: pointer;
+      color: var(--color-text-muted);
+      min-width: 120px;
+      text-align: center;
     }
 
-    .caption-overlay .close-hint {
-      color: rgba(255, 255, 255, 0.5);
+    .film-controls .btn {
+      min-width: 100px;
+    }
+
+    .autoplay-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-sm);
+      margin-bottom: var(--space-lg);
+    }
+
+    .autoplay-row label {
       font-size: var(--text-sm);
+      color: var(--color-text-muted);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: var(--space-xs);
+    }
+
+    .autoplay-row select {
+      padding: 0.3em 0.6em;
+      font-size: var(--text-sm);
+      font-family: inherit;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      background: var(--color-surface);
+    }
+
+    .soundtrack-display {
+      background: var(--color-bg);
+      border-radius: var(--radius-md);
+      padding: var(--space-md);
+      text-align: center;
+      font-size: var(--text-sm);
+      color: var(--color-text-muted);
+    }
+
+    .soundtrack-display a {
+      word-break: break-all;
+    }
+
+    .download-section {
+      display: flex;
+      justify-content: center;
+      margin-top: var(--space-lg);
+    }
+
+    .panel-intro {
+      color: var(--color-text-muted);
+      margin-bottom: var(--space-lg);
+    }
+
+    .parse-hint {
+      background: var(--color-warning-light);
+      border-radius: var(--radius-md);
+      padding: var(--space-md);
+      font-size: var(--text-sm);
+      margin-bottom: var(--space-lg);
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+    }
+
+    .parse-hint .hint-icon {
+      font-size: 1.3rem;
+      flex-shrink: 0;
+    }
+
+    /* Soundtrack info card */
+    .soundtrack-info-card {
+      background: var(--color-surface);
+      border: 1.5px solid var(--color-border);
+      border-radius: var(--radius-md);
+      padding: var(--space-lg);
+    }
+
+    .soundtrack-info-card label {
+      display: block;
+      font-size: var(--text-sm);
+      font-weight: 600;
+      margin-bottom: var(--space-xs);
+    }
+
+    .suno-launch-area {
+      text-align: center;
+      padding: var(--space-xl);
+      background: linear-gradient(135deg, rgba(124, 58, 237, 0.06), rgba(79, 110, 247, 0.06));
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--color-border);
     }
   </style>
 </head>
@@ -225,7 +709,7 @@
   <header class="lesson-header">
     <div class="lesson-badge">
       <span class="lesson-number">03</span>
-      <span class="lesson-title">AI Artist</span>
+      <span class="lesson-title">AI Media</span>
     </div>
     <a href="/" class="back-link">&larr; Back to all lessons</a>
   </header>
@@ -238,26 +722,240 @@
 
       <!-- Tab Navigation -->
       <div class="tab-nav">
-        <button class="tab-btn active" data-tab="free-create">&#x1F3A8; Free Create</button>
-        <button class="tab-btn" data-tab="challenge-mode">&#x1F3AF; Challenge Mode</button>
+        <button class="tab-btn active" data-tab="musician">&#x1F3B5; Part 1: AI Musician</button>
+        <button class="tab-btn" data-tab="director">&#x1F3AC; Part 2: AI Director</button>
       </div>
 
-      <!-- Tab 1: Free Create -->
-      <div class="tab-panel active" id="tab-free-create">
-        <div id="image-generator-container"></div>
+      <!-- ===== TAB 1: AI Musician ===== -->
+      <div class="tab-panel active" id="tab-musician">
 
-        <div class="gallery-heading">
-          <span>Your Gallery</span>
-          <span class="count-badge" id="gallery-count">0</span>
+        <!-- Section 1: Lyrics Workshop -->
+        <div class="lesson-section">
+          <h2 class="section-heading">&#x270D;&#xFE0F; Write Your Song Lyrics</h2>
+          <div id="lyrics-chat"></div>
+          <div class="lyrics-area">
+            <button class="btn btn-secondary copy-btn" id="copy-lyrics-btn">&#x1F4CB; Copy Lyrics</button>
+          </div>
+          <div class="lyrics-area">
+            <label for="final-lyrics">Your Final Lyrics</label>
+            <textarea id="final-lyrics" class="textarea" placeholder="Paste and edit your lyrics here..."></textarea>
+          </div>
         </div>
-        <div id="gallery-container"></div>
 
-        <div class="export-section" id="export-container"></div>
+        <!-- Section 2: Music Style Explorer -->
+        <div class="lesson-section">
+          <h2 class="section-heading">&#x1F3B6; Explore Music Styles</h2>
+          <div class="genre-grid" id="genre-grid"></div>
+        </div>
+
+        <!-- Section 3: Suno Launch Pad -->
+        <div class="lesson-section">
+          <h2 class="section-heading">&#x1F3A4; Create Your Music on Suno</h2>
+          <div class="text-center">
+            <a href="https://suno.com/create" target="_blank" rel="noopener noreferrer" class="launch-btn">
+              &#x1F3B5; Open Suno Music Studio &rarr;
+            </a>
+          </div>
+
+          <div class="steps-card">
+            <h3>Step-by-Step Guide</h3>
+            <ol class="steps-list">
+              <li>Click "Create" on the Suno page</li>
+              <li>Toggle "Custom" mode on</li>
+              <li>Paste your lyrics (or leave empty for instrumental)</li>
+              <li>Type your style (e.g., "upbeat pop" or "chill lo-fi")</li>
+              <li>Click "Create" and wait for your song!</li>
+              <li>Try at least 2 different styles</li>
+            </ol>
+          </div>
+
+          <div class="tips-box">
+            <h4>&#x1F4A1; Tips</h4>
+            <ul>
+              <li>Style keywords that work well: upbeat, chill, epic, dreamy, funky, acoustic</li>
+              <li>Try combining styles: "jazz pop" or "electronic rock"</li>
+              <li>Don't like it? Just create again with different keywords!</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Section 4: My Music Collection -->
+        <div class="lesson-section">
+          <h2 class="section-heading">&#x1F3B5; My Songs</h2>
+          <div id="song-list"></div>
+          <div class="add-song-form" id="add-song-form">
+            <div class="form-group">
+              <label>Song Title</label>
+              <input type="text" class="input" id="song-title-input" placeholder="My Song">
+            </div>
+            <div class="form-group">
+              <label>Style</label>
+              <input type="text" class="input" id="song-style-input" placeholder="e.g., upbeat pop">
+            </div>
+            <div class="form-group">
+              <label>Notes</label>
+              <input type="text" class="input" id="song-notes-input" placeholder="How did it turn out?">
+            </div>
+            <button class="btn btn-primary" id="add-song-btn">Add Song</button>
+          </div>
+        </div>
+
       </div>
 
-      <!-- Tab 2: Challenge Mode -->
-      <div class="tab-panel" id="tab-challenge-mode">
-        <div id="challenge-container"></div>
+      <!-- ===== TAB 2: AI Director ===== -->
+      <div class="tab-panel" id="tab-director">
+
+        <!-- Wizard Navigation -->
+        <nav class="wizard-nav" id="wizard-nav">
+          <button class="wizard-step-btn active" data-step="1">
+            <span class="step-num">1</span> Script
+          </button>
+          <button class="wizard-step-btn" data-step="2">
+            <span class="step-num">2</span> Scenes
+          </button>
+          <button class="wizard-step-btn" data-step="3">
+            <span class="step-num">3</span> Soundtrack
+          </button>
+          <button class="wizard-step-btn" data-step="4">
+            <span class="step-num">4</span> Preview
+          </button>
+        </nav>
+
+        <!-- Step 1: Script -->
+        <div class="wizard-panel active" id="step-1">
+          <h2>&#x1F3AC; Write Your Film Script</h2>
+          <p class="panel-intro">
+            Every great film starts with a story. Chat with AI to brainstorm a 4&ndash;6 scene story outline for your mini film.
+            Tell the AI your idea and it will help you organize it into scenes!
+          </p>
+
+          <div id="script-chat"></div>
+
+          <div class="parse-hint mt-lg" id="parse-hint" style="display: none;">
+            <span class="hint-icon">&#x1F4A1;</span>
+            <span>Scenes detected! Click <strong>"Use These Scenes"</strong> to load them into Step 2, or keep chatting to refine your story.</span>
+          </div>
+
+          <div style="display: flex; gap: var(--space-sm); margin-top: var(--space-md); flex-wrap: wrap;">
+            <button class="btn btn-secondary" id="parse-scenes-btn" disabled>&#x1F4CB; Use These Scenes</button>
+          </div>
+
+          <div class="step-actions">
+            <div></div>
+            <button class="btn btn-primary" id="to-step-2">Next: Create Scene Images &#x2192;</button>
+          </div>
+        </div>
+
+        <!-- Step 2: Scenes -->
+        <div class="wizard-panel" id="step-2">
+          <h2>&#x1F3A8; Create Your Scene Images</h2>
+          <p class="panel-intro">
+            Generate an image for each scene of your film. Write a prompt describing what you want to see, then click Generate.
+          </p>
+
+          <div class="scene-cards-list" id="scene-cards-list">
+            <div class="text-center p-lg" style="color: var(--color-text-muted);">
+              No scenes yet. Go back to Step 1 and write your story first!
+            </div>
+          </div>
+
+          <div class="step-actions">
+            <button class="btn btn-secondary" id="back-to-1">&#x2190; Back to Script</button>
+            <button class="btn btn-primary" id="to-step-3">Next: Add Soundtrack &#x2192;</button>
+          </div>
+        </div>
+
+        <!-- Step 3: Soundtrack -->
+        <div class="wizard-panel" id="step-3">
+          <h2>&#x1F3B5; Choose Your Soundtrack</h2>
+          <p class="panel-intro">
+            Use the music you created in Part 1, or make new music on Suno! Paste a link or describe the soundtrack you picked.
+          </p>
+
+          <div style="display: flex; flex-direction: column; gap: var(--space-lg);">
+            <div class="suno-launch-area">
+              <p style="font-size: var(--text-lg); margin-bottom: var(--space-md); font-weight: 600;">Create music for your film</p>
+              <a href="https://suno.com/create" target="_blank" rel="noopener noreferrer" class="launch-btn">
+                &#x1F3B5; Open Suno Music Studio &rarr;
+              </a>
+              <p style="font-size: var(--text-sm); color: var(--color-text-muted); margin-top: var(--space-md);">
+                Tip: try "cinematic instrumental" or "epic adventure background music" for film soundtracks
+              </p>
+            </div>
+
+            <div class="soundtrack-info-card">
+              <label for="music-url">Music URL (paste your Suno link here)</label>
+              <input type="text" class="input" id="music-url" placeholder="https://suno.com/song/...">
+
+              <label for="music-description" style="margin-top: var(--space-md);">Describe your soundtrack</label>
+              <textarea class="textarea" id="music-description" placeholder="What kind of music did you pick? (e.g., 'epic orchestral music' or 'chill piano background')"></textarea>
+            </div>
+
+            <div class="tips-box">
+              <h4>&#x1F4A1; Soundtrack Tips</h4>
+              <ul>
+                <li>Think about the mood of your film &mdash; happy, mysterious, epic, funny?</li>
+                <li>Try style keywords: "cinematic", "orchestral", "lo-fi", "8-bit retro"</li>
+                <li>Instrumental (no lyrics) usually works best as background music</li>
+                <li>You can reuse the music you made in Part 1!</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="step-actions">
+            <button class="btn btn-secondary" id="back-to-2">&#x2190; Back to Scenes</button>
+            <button class="btn btn-primary" id="to-step-4">Next: Preview Film &#x2192;</button>
+          </div>
+        </div>
+
+        <!-- Step 4: Preview -->
+        <div class="wizard-panel" id="step-4">
+          <h2>&#x1F3AC; Preview Your Mini Film</h2>
+          <p class="panel-intro">
+            Here is your film! Use the controls to step through each scene or turn on auto-play for the full experience.
+          </p>
+
+          <div class="film-player" id="film-player">
+            <div class="film-screen" id="film-screen">
+              <div class="film-empty-screen" id="film-empty">
+                <span class="empty-icon">&#x1F3AC;</span>
+                <span>Your film will appear here</span>
+              </div>
+            </div>
+
+            <div class="film-controls">
+              <button class="btn btn-secondary" id="film-prev">&#x2190; Previous</button>
+              <span class="scene-counter" id="film-counter">Scene 0 / 0</span>
+              <button class="btn btn-primary" id="film-next">Next &#x2192;</button>
+            </div>
+
+            <div class="autoplay-row">
+              <label>
+                <input type="checkbox" id="autoplay-toggle"> Auto-play
+              </label>
+              <select id="autoplay-speed">
+                <option value="3000">3 sec/scene</option>
+                <option value="5000" selected>5 sec/scene</option>
+                <option value="8000">8 sec/scene</option>
+              </select>
+              <button class="btn btn-secondary" id="autoplay-btn" style="font-size: var(--text-sm);" disabled>
+                &#x25B6; Play
+              </button>
+            </div>
+
+            <div class="soundtrack-display" id="soundtrack-display">
+              No soundtrack added yet. Go to Step 3 to add music!
+            </div>
+          </div>
+
+          <div class="download-section" id="download-section"></div>
+
+          <div class="step-actions">
+            <button class="btn btn-secondary" id="back-to-3">&#x2190; Back to Soundtrack</button>
+            <div></div>
+          </div>
+        </div>
+
       </div>
 
     </main>
@@ -290,507 +988,895 @@
     });
 
     // =============================================
-    // Gallery Data (shared across Free Create and Challenge)
+    // PART 1: AI MUSICIAN
     // =============================================
-    var allImages = []; // { url, caption, source }
 
-    function addImageToCollection(url, caption, source) {
-      allImages.push({ url: url, caption: caption || '', source: source || 'free' });
-      updateGalleryCount();
-    }
+    // --- Lyrics Workshop (ChatWidget) ---
+    var lyricsChat = document.getElementById('lyrics-chat');
 
-    function updateGalleryCount() {
-      document.getElementById('gallery-count').textContent = allImages.length;
-
-      // Auto-complete tasks based on image count
-      if (allImages.length >= 1) {
-        taskCards.setComplete('first-image', true);
-      }
-      if (allImages.length >= 3) {
-        taskCards.setComplete('three-images', true);
-      }
-    }
-
-    // =============================================
-    // Image Generator (Free Create tab)
-    // =============================================
-    var genContainer = document.getElementById('image-generator-container');
-
-    var imageGen = window.ImageGenerator(genContainer, {
-      showGallery: false,
-      styles: [
-        { label: 'Realistic Photo', emoji: '\uD83D\uDCF8', value: 'realistic photograph, high detail' },
-        { label: 'Cartoon / Anime', emoji: '\uD83C\uDFA8', value: 'cartoon anime style, colorful' },
-        { label: 'Watercolor', emoji: '\uD83D\uDD8C\uFE0F', value: 'watercolor painting style' },
-        { label: 'Pixel Art', emoji: '\uD83D\uDC7E', value: 'pixel art style, 8-bit retro' },
-        { label: 'Oil Painting', emoji: '\uD83C\uDFAD', value: 'oil painting style, classical' },
-        { label: '3D Render', emoji: '\uD83D\uDC8E', value: '3D rendered, studio lighting' }
-      ],
-      onGenerate: function (result) {
-        addImageToCollection(result.url, result.prompt, 'free');
-        gallery.addImage(result.url, result.prompt);
-      }
+    var lyricsChatWidget = window.ChatWidget(lyricsChat, {
+      systemPrompt: "You are a fun, creative songwriting assistant for kids aged 12-13. Help them write song lyrics. Keep lyrics clean, fun, and catchy. When they describe what the song should be about, write 1-2 verses and a chorus. Keep it short (8-16 lines total). Use simple, relatable language. If they want changes, modify the lyrics accordingly.",
+      placeholder: "Describe your song idea... (e.g., 'a happy song about summer vacation')"
     });
 
-    // =============================================
-    // Gallery (below generator)
-    // =============================================
-    var galleryContainer = document.getElementById('gallery-container');
-    var gallery = window.Gallery(galleryContainer, {});
-
-    // Override the gallery's click handler to support captioning
-    // We'll rebuild the gallery's addImage to use our custom overlay
-    var originalAddImage = gallery.addImage;
-    gallery.addImage = function (url, caption) {
-      var grid = galleryContainer.querySelector('.gallery-grid');
-      if (!grid) return;
-
-      var item = document.createElement('div');
-      item.className = 'gallery-item';
-
-      var img = document.createElement('img');
-      img.src = url;
-      img.alt = caption || '';
-      item.appendChild(img);
-
-      var cap = document.createElement('div');
-      cap.className = 'gallery-item-caption';
-      cap.textContent = caption || 'Click to add a title';
-      item.appendChild(cap);
-
-      item.addEventListener('click', function () {
-        showCaptionOverlay(url, caption, function (newCaption) {
-          cap.textContent = newCaption || caption || 'Untitled';
-          // Update the record in allImages
-          for (var i = 0; i < allImages.length; i++) {
-            if (allImages[i].url === url) {
-              allImages[i].caption = newCaption || allImages[i].caption;
-              break;
-            }
-          }
-          // Mark the "title" task complete
-          taskCards.setComplete('title', true);
-        });
-      });
-
-      grid.appendChild(item);
-    };
-
-    // =============================================
-    // Caption Overlay (fullscreen + title input)
-    // =============================================
-    function showCaptionOverlay(url, currentCaption, onSave) {
-      var overlay = document.createElement('div');
-      overlay.className = 'caption-overlay';
-
-      var img = document.createElement('img');
-      img.src = url;
-      img.alt = currentCaption || '';
-      overlay.appendChild(img);
-
-      var inputRow = document.createElement('div');
-      inputRow.className = 'caption-input-row';
-
-      var input = document.createElement('input');
-      input.type = 'text';
-      input.placeholder = 'Give this artwork a title...';
-      input.value = currentCaption || '';
-
-      var saveBtn = document.createElement('button');
-      saveBtn.textContent = 'Save Title';
-
-      inputRow.appendChild(input);
-      inputRow.appendChild(saveBtn);
-      overlay.appendChild(inputRow);
-
-      var hint = document.createElement('div');
-      hint.className = 'close-hint';
-      hint.textContent = 'Click outside the image to close';
-      overlay.appendChild(hint);
-
-      function save() {
-        var value = input.value.trim();
-        if (value && onSave) {
-          onSave(value);
-        }
-        overlay.remove();
-        document.removeEventListener('keydown', onKeydown);
-      }
-
-      saveBtn.addEventListener('click', function (e) {
-        e.stopPropagation();
-        save();
-      });
-
-      input.addEventListener('keydown', function (e) {
-        e.stopPropagation();
-        if (e.key === 'Enter') {
-          save();
-        }
-      });
-
-      input.addEventListener('click', function (e) {
-        e.stopPropagation();
-      });
-
-      img.addEventListener('click', function (e) {
-        e.stopPropagation();
-      });
-
-      inputRow.addEventListener('click', function (e) {
-        e.stopPropagation();
-      });
-
-      overlay.addEventListener('click', function () {
-        overlay.remove();
-        document.removeEventListener('keydown', onKeydown);
-      });
-
-      function onKeydown(e) {
-        if (e.key === 'Escape') {
-          overlay.remove();
-          document.removeEventListener('keydown', onKeydown);
+    // Copy Lyrics button
+    var copyBtn = document.getElementById('copy-lyrics-btn');
+    copyBtn.addEventListener('click', function () {
+      var messages = lyricsChatWidget.getMessages();
+      var latestLyrics = '';
+      for (var i = messages.length - 1; i >= 0; i--) {
+        if (messages[i].role === 'assistant') {
+          latestLyrics = messages[i].content;
+          break;
         }
       }
-      document.addEventListener('keydown', onKeydown);
-
-      document.body.appendChild(overlay);
-      input.focus();
-    }
-
-    // =============================================
-    // Challenge Mode
-    // =============================================
-    var challenges = [
-      {
-        id: 1,
-        difficulty: 'easy',
-        label: 'Easy',
-        concept: 'A cat wearing sunglasses',
-        hint: 'Describe what you see in your mind. What kind of cat? What kind of sunglasses?'
-      },
-      {
-        id: 2,
-        difficulty: 'medium',
-        label: 'Medium',
-        concept: 'A magical treehouse at sunset',
-        hint: 'Think about mood, colors, and details. What makes it magical? What does the sky look like?'
-      },
-      {
-        id: 3,
-        difficulty: 'hard',
-        label: 'Hard',
-        concept: 'A tiny astronaut exploring a giant\'s kitchen',
-        hint: 'This is a complex scene! Think about scale, perspective, and specific objects the astronaut might be near.'
+      if (!latestLyrics) {
+        copyBtn.textContent = '\u274C No lyrics yet!';
+        setTimeout(function () {
+          copyBtn.textContent = '\uD83D\uDCCB Copy Lyrics';
+          copyBtn.classList.remove('copied');
+        }, 2000);
+        return;
       }
+      navigator.clipboard.writeText(latestLyrics).then(function () {
+        copyBtn.textContent = '\u2705 Copied!';
+        copyBtn.classList.add('copied');
+        document.getElementById('final-lyrics').value = latestLyrics;
+        taskCards.setComplete('write-lyrics', true);
+        setTimeout(function () {
+          copyBtn.textContent = '\uD83D\uDCCB Copy Lyrics';
+          copyBtn.classList.remove('copied');
+        }, 2000);
+      }).catch(function () {
+        document.getElementById('final-lyrics').value = latestLyrics;
+        copyBtn.textContent = '\u2705 Pasted into textarea!';
+        taskCards.setComplete('write-lyrics', true);
+        setTimeout(function () {
+          copyBtn.textContent = '\uD83D\uDCCB Copy Lyrics';
+          copyBtn.classList.remove('copied');
+        }, 2000);
+      });
+    });
+
+    // --- Music Style Explorer ---
+    var genres = [
+      { emoji: '\uD83C\uDFB5', name: 'Pop', desc: 'Catchy, upbeat, radio-friendly' },
+      { emoji: '\uD83C\uDFA4', name: 'Hip-Hop', desc: 'Rhythmic, energetic, beat-driven' },
+      { emoji: '\uD83C\uDFBB', name: 'Classical', desc: 'Orchestral, elegant, timeless' },
+      { emoji: '\uD83C\uDFB9', name: 'Electronic', desc: 'Synth-powered, danceable, modern' },
+      { emoji: '\uD83C\uDFB7', name: 'Jazz', desc: 'Smooth, improvisational, cool' },
+      { emoji: '\uD83C\uDFB8', name: 'Rock', desc: 'Guitar-heavy, powerful, bold' }
     ];
 
-    var currentChallengeIndex = 0;
-    var challengeContainer = document.getElementById('challenge-container');
+    var genreGrid = document.getElementById('genre-grid');
+    var selectedGenre = null;
 
-    function renderChallenge(index) {
-      clearChildren(challengeContainer);
+    genres.forEach(function (genre) {
+      var card = document.createElement('div');
+      card.className = 'genre-card';
 
-      if (index >= challenges.length) {
-        // All challenges completed
-        var doneCard = document.createElement('div');
-        doneCard.className = 'challenge-card completed';
+      var emojiEl = document.createElement('div');
+      emojiEl.className = 'genre-emoji';
+      emojiEl.textContent = genre.emoji;
 
-        var doneEmoji = document.createElement('div');
-        doneEmoji.style.fontSize = '3rem';
-        doneEmoji.style.textAlign = 'center';
-        doneEmoji.style.marginBottom = 'var(--space-md)';
-        doneEmoji.textContent = '\uD83C\uDF89';
+      var nameEl = document.createElement('div');
+      nameEl.className = 'genre-name';
+      nameEl.textContent = genre.name;
 
-        var doneTitle = document.createElement('h2');
-        doneTitle.textContent = 'All Challenges Complete!';
-        doneTitle.style.textAlign = 'center';
-        doneTitle.style.marginBottom = 'var(--space-md)';
+      var descEl = document.createElement('div');
+      descEl.className = 'genre-desc';
+      descEl.textContent = genre.desc;
 
-        var doneText = document.createElement('p');
-        doneText.textContent = 'Great work! You\'ve completed all three prompt challenges. Go back to Free Create to keep experimenting, or check out your gallery.';
-        doneText.style.textAlign = 'center';
-        doneText.style.color = 'var(--color-text-muted)';
+      card.appendChild(emojiEl);
+      card.appendChild(nameEl);
+      card.appendChild(descEl);
 
-        var backBtn = document.createElement('button');
-        backBtn.className = 'btn btn-primary mt-lg';
-        backBtn.textContent = '\uD83C\uDFA8 Back to Free Create';
-        backBtn.style.display = 'block';
-        backBtn.style.margin = 'var(--space-lg) auto 0';
-        backBtn.addEventListener('click', function () {
-          // Switch to Free Create tab
-          tabButtons[0].click();
-        });
+      card.addEventListener('click', function () {
+        var allCards = genreGrid.querySelectorAll('.genre-card');
+        allCards.forEach(function (c) { c.classList.remove('card-selected'); });
+        card.classList.add('card-selected');
+        selectedGenre = genre.name;
+      });
 
-        doneCard.appendChild(doneEmoji);
-        doneCard.appendChild(doneTitle);
-        doneCard.appendChild(doneText);
-        doneCard.appendChild(backBtn);
-        challengeContainer.appendChild(doneCard);
+      genreGrid.appendChild(card);
+    });
+
+    // --- My Music Collection ---
+    var songs = [];
+    var songListEl = document.getElementById('song-list');
+    var songTitleInput = document.getElementById('song-title-input');
+    var songStyleInput = document.getElementById('song-style-input');
+    var songNotesInput = document.getElementById('song-notes-input');
+    var addSongBtn = document.getElementById('add-song-btn');
+
+    var songStorageKey = 'songs_' + window.location.pathname;
+    try {
+      var saved = localStorage.getItem(songStorageKey);
+      if (saved) {
+        songs = JSON.parse(saved);
+      }
+    } catch (e) { /* ignore */ }
+
+    function saveSongs() {
+      try {
+        localStorage.setItem(songStorageKey, JSON.stringify(songs));
+      } catch (e) { /* ignore */ }
+    }
+
+    function renderSongs() {
+      while (songListEl.firstChild) {
+        songListEl.removeChild(songListEl.firstChild);
+      }
+
+      if (songs.length === 0) {
+        var empty = document.createElement('div');
+        empty.className = 'empty-state';
+        empty.textContent = 'No songs yet. Create some music on Suno, then add them here!';
+        songListEl.appendChild(empty);
         return;
       }
 
-      var ch = challenges[index];
+      songs.forEach(function (song, index) {
+        var entry = document.createElement('div');
+        entry.className = 'song-entry';
 
-      var card = document.createElement('div');
-      card.className = 'challenge-card';
+        var info = document.createElement('div');
+        info.className = 'song-info';
 
-      // Header
-      var header = document.createElement('div');
-      header.className = 'challenge-header';
+        var titleEl = document.createElement('span');
+        titleEl.className = 'song-title';
+        titleEl.textContent = song.title;
 
-      var badge = document.createElement('span');
-      badge.className = 'challenge-badge ' + ch.difficulty;
-      badge.textContent = 'Challenge ' + (index + 1) + ' / ' + challenges.length + ' \u2014 ' + ch.label;
+        var styleEl = document.createElement('span');
+        styleEl.className = 'song-style';
+        styleEl.textContent = song.style;
 
-      header.appendChild(badge);
-      card.appendChild(header);
+        info.appendChild(titleEl);
+        info.appendChild(styleEl);
 
-      // Concept description
-      var conceptTitle = document.createElement('p');
-      conceptTitle.style.fontWeight = '600';
-      conceptTitle.style.marginBottom = 'var(--space-sm)';
-      conceptTitle.textContent = 'Your goal: generate an image that matches this description';
+        if (song.notes) {
+          var notesEl = document.createElement('span');
+          notesEl.className = 'song-notes';
+          notesEl.textContent = song.notes;
+          info.appendChild(notesEl);
+        }
 
-      var concept = document.createElement('div');
-      concept.className = 'challenge-concept';
-      concept.textContent = '\u201C' + ch.concept + '\u201D';
+        var deleteBtn = document.createElement('button');
+        deleteBtn.className = 'delete-btn';
+        deleteBtn.textContent = '\u2715';
+        deleteBtn.title = 'Remove song';
+        deleteBtn.addEventListener('click', (function (idx) {
+          return function () {
+            songs.splice(idx, 1);
+            saveSongs();
+            renderSongs();
+          };
+        })(index));
 
-      card.appendChild(conceptTitle);
-      card.appendChild(concept);
+        entry.appendChild(info);
+        entry.appendChild(deleteBtn);
+        songListEl.appendChild(entry);
+      });
 
-      // Hint
-      var hintEl = document.createElement('p');
-      hintEl.style.fontSize = 'var(--text-sm)';
-      hintEl.style.color = 'var(--color-text-muted)';
-      hintEl.style.marginBottom = 'var(--space-md)';
-      hintEl.textContent = '\uD83D\uDCA1 Tip: ' + ch.hint;
-      card.appendChild(hintEl);
-
-      // Prompt input
-      var promptGroup = document.createElement('div');
-      promptGroup.className = 'form-group';
-
-      var promptLabel = document.createElement('label');
-      promptLabel.textContent = 'Write your prompt';
-
-      var promptInput = document.createElement('textarea');
-      promptInput.className = 'textarea';
-      promptInput.placeholder = 'Describe the image you want AI to generate...';
-      promptInput.rows = 3;
-
-      promptGroup.appendChild(promptLabel);
-      promptGroup.appendChild(promptInput);
-      card.appendChild(promptGroup);
-
-      // Generate button
-      var genBtn = document.createElement('button');
-      genBtn.className = 'btn btn-primary w-full mt-md';
-      genBtn.textContent = '\uD83C\uDFA8 Generate Image';
-      card.appendChild(genBtn);
-
-      // Result area
-      var resultArea = document.createElement('div');
-      resultArea.className = 'challenge-result';
-      card.appendChild(resultArea);
-
-      // Next challenge button (hidden until image generated)
-      var navDiv = document.createElement('div');
-      navDiv.className = 'challenge-nav hidden';
-
-      var nextBtn = document.createElement('button');
-      nextBtn.className = 'btn btn-secondary';
-      if (index < challenges.length - 1) {
-        nextBtn.textContent = 'Next Challenge \u2192';
-      } else {
-        nextBtn.textContent = 'Finish Challenges \uD83C\uDF89';
+      if (songs.length >= 1) {
+        taskCards.setComplete('create-song', true);
       }
-
-      nextBtn.addEventListener('click', function () {
-        currentChallengeIndex++;
-        renderChallenge(currentChallengeIndex);
-      });
-
-      navDiv.appendChild(nextBtn);
-
-      // Also add a "Try Again" button
-      var retryBtn = document.createElement('button');
-      retryBtn.className = 'btn btn-icon';
-      retryBtn.textContent = '\uD83D\uDD04 Try Again';
-      retryBtn.style.marginRight = 'var(--space-sm)';
-      retryBtn.addEventListener('click', function () {
-        clearChildren(resultArea);
-        navDiv.classList.add('hidden');
-        promptInput.value = '';
-        promptInput.focus();
-      });
-
-      navDiv.insertBefore(retryBtn, nextBtn);
-      card.appendChild(navDiv);
-
-      challengeContainer.appendChild(card);
-
-      // Generate handler
-      genBtn.addEventListener('click', async function () {
-        var prompt = promptInput.value.trim();
-        if (!prompt) {
-          clearChildren(resultArea);
-          var errDiv = document.createElement('div');
-          errDiv.className = 'card';
-          errDiv.style.marginTop = 'var(--space-md)';
-          errDiv.textContent = 'Please write a prompt first!';
-          resultArea.appendChild(errDiv);
-          return;
-        }
-
-        genBtn.disabled = true;
-        genBtn.textContent = 'Generating...';
-        clearChildren(resultArea);
-
-        var spinnerWrapper = document.createElement('div');
-        spinnerWrapper.className = 'flex-center p-lg';
-        var spinner = document.createElement('div');
-        spinner.className = 'loading-spinner';
-        spinnerWrapper.appendChild(spinner);
-        resultArea.appendChild(spinnerWrapper);
-
-        try {
-          var res = await fetch('/api/image', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ prompt: prompt }),
-          });
-
-          var data = await res.json();
-          clearChildren(resultArea);
-
-          if (!res.ok) {
-            var errCard = document.createElement('div');
-            errCard.className = 'card';
-            errCard.textContent = data.error || 'Something went wrong. Please try again.';
-            resultArea.appendChild(errCard);
-            genBtn.disabled = false;
-            genBtn.textContent = '\uD83C\uDFA8 Generate Image';
-            return;
-          }
-
-          var url = data.url;
-          if (!url) {
-            var noUrlCard = document.createElement('div');
-            noUrlCard.className = 'card';
-            noUrlCard.textContent = 'No image was returned. Please try again.';
-            resultArea.appendChild(noUrlCard);
-            genBtn.disabled = false;
-            genBtn.textContent = '\uD83C\uDFA8 Generate Image';
-            return;
-          }
-
-          // Show the result
-          var imgWrapper = document.createElement('div');
-          imgWrapper.className = 'gallery-item';
-          imgWrapper.style.maxWidth = '400px';
-          imgWrapper.style.margin = '0 auto';
-
-          var img = document.createElement('img');
-          img.src = url;
-          img.alt = prompt;
-          imgWrapper.appendChild(img);
-          resultArea.appendChild(imgWrapper);
-
-          // Add to the shared collection and Free Create gallery
-          addImageToCollection(url, prompt, 'challenge');
-          gallery.addImage(url, 'Challenge: ' + ch.concept);
-
-          // Mark challenge task
-          taskCards.setComplete('challenge', true);
-
-          // Show nav
-          navDiv.classList.remove('hidden');
-
-        } catch (err) {
-          clearChildren(resultArea);
-          var networkErr = document.createElement('div');
-          networkErr.className = 'card';
-          networkErr.textContent = 'Could not reach the image service. Check your connection and try again.';
-          resultArea.appendChild(networkErr);
-        } finally {
-          genBtn.disabled = false;
-          genBtn.textContent = '\uD83C\uDFA8 Generate Image';
-        }
-      });
-
-      promptInput.focus();
     }
 
-    // Initial render of challenge
-    renderChallenge(0);
+    addSongBtn.addEventListener('click', function () {
+      var title = songTitleInput.value.trim();
+      var style = songStyleInput.value.trim();
+      var notes = songNotesInput.value.trim();
 
-    // =============================================
-    // Export Button
-    // =============================================
-    var exportContainer = document.getElementById('export-container');
+      if (!title) {
+        songTitleInput.focus();
+        return;
+      }
 
-    window.ExportButton(exportContainer, {
-      label: 'Download Gallery as HTML',
-      filename: 'my-ai-art-gallery.html',
-      format: 'html',
-      getData: function () {
-        var lines = [];
-        lines.push('<!DOCTYPE html>');
-        lines.push('<html lang="en">');
-        lines.push('<head>');
-        lines.push('<meta charset="UTF-8">');
-        lines.push('<meta name="viewport" content="width=device-width, initial-scale=1.0">');
-        lines.push('<title>My AI Art Gallery</title>');
-        lines.push('<style>');
-        lines.push('body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #f8f9fc; color: #1e2330; padding: 40px; }');
-        lines.push('h1 { text-align: center; font-size: 2rem; margin-bottom: 8px; }');
-        lines.push('.subtitle { text-align: center; color: #6b7280; margin-bottom: 32px; }');
-        lines.push('.gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 24px; max-width: 1000px; margin: 0 auto; }');
-        lines.push('.item { background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }');
-        lines.push('.item img { width: 100%; aspect-ratio: 1/1; object-fit: cover; }');
-        lines.push('.item .caption { padding: 12px 16px; font-size: 14px; color: #374151; }');
-        lines.push('</style>');
-        lines.push('</head>');
-        lines.push('<body>');
-        lines.push('<h1>My AI Art Gallery</h1>');
-        lines.push('<p class="subtitle">Created with AI Creator Lab &mdash; Lesson 3: AI Artist</p>');
-        lines.push('<div class="gallery">');
+      songs.push({
+        title: title,
+        style: style || 'Unknown',
+        notes: notes
+      });
 
-        allImages.forEach(function (img) {
-          lines.push('<div class="item">');
-          // Escape caption for safe HTML
-          var safeCaption = (img.caption || 'Untitled')
-            .replace(/&/g, '&amp;')
-            .replace(/</g, '&lt;')
-            .replace(/>/g, '&gt;')
-            .replace(/"/g, '&quot;');
-          var safeUrl = img.url
-            .replace(/&/g, '&amp;')
-            .replace(/"/g, '&quot;');
-          lines.push('<img src="' + safeUrl + '" alt="' + safeCaption + '">');
-          lines.push('<div class="caption">' + safeCaption + '</div>');
-          lines.push('</div>');
-        });
+      saveSongs();
+      renderSongs();
 
-        lines.push('</div>');
-        lines.push('</body>');
-        lines.push('</html>');
-        return lines.join('\n');
+      songTitleInput.value = '';
+      songStyleInput.value = '';
+      songNotesInput.value = '';
+      songTitleInput.focus();
+    });
+
+    songNotesInput.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        addSongBtn.click();
       }
     });
 
+    renderSongs();
+
     // =============================================
-    // Task Sidebar
+    // PART 2: AI DIRECTOR
+    // =============================================
+
+    // --- State ---
+    var scenes = [];
+    var musicUrl = '';
+    var musicDescription = '';
+    var currentStep = 1;
+    var currentScene = 0;
+    var autoplayTimer = null;
+
+    // --- Wizard Navigation ---
+    var wizardBtns = document.querySelectorAll('.wizard-step-btn');
+    var wizardPanels = document.querySelectorAll('.wizard-panel');
+
+    function goToStep(step) {
+      currentStep = step;
+
+      wizardBtns.forEach(function (btn) {
+        var s = parseInt(btn.getAttribute('data-step'), 10);
+        btn.classList.remove('active');
+        if (s === step) btn.classList.add('active');
+      });
+
+      wizardPanels.forEach(function (panel) {
+        panel.classList.remove('active');
+      });
+      document.getElementById('step-' + step).classList.add('active');
+
+      if (step === 2) renderSceneCards();
+      if (step === 3) loadSoundtrackState();
+      if (step === 4) renderFilmPlayer();
+
+      window.scrollTo(0, 0);
+    }
+
+    wizardBtns.forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        goToStep(parseInt(btn.getAttribute('data-step'), 10));
+      });
+    });
+
+    document.getElementById('to-step-2').addEventListener('click', function () {
+      if (scenes.length === 0) {
+        alert('Write your story first and click "Use These Scenes" to extract scenes!');
+        return;
+      }
+      taskCards.setComplete('write-script', true);
+      goToStep(2);
+    });
+
+    document.getElementById('to-step-3').addEventListener('click', function () {
+      goToStep(3);
+    });
+
+    document.getElementById('to-step-4').addEventListener('click', function () {
+      saveSoundtrackState();
+      goToStep(4);
+    });
+
+    document.getElementById('back-to-1').addEventListener('click', function () { goToStep(1); });
+    document.getElementById('back-to-2').addEventListener('click', function () { goToStep(2); });
+    document.getElementById('back-to-3').addEventListener('click', function () { goToStep(3); });
+
+    // --- Step 1: Script (ChatWidget) ---
+    var scriptChat = document.getElementById('script-chat');
+
+    var scriptChatWidget = window.ChatWidget(scriptChat, {
+      systemPrompt: 'You are a fun, creative film director assistant for kids aged 12-13. Help them brainstorm a short story for a mini film (slideshow with images). When they give you an idea, outline it as exactly 4-6 scenes. Format your response EXACTLY like this:\n\nScene 1: [one sentence describing what happens and what the viewer sees]\nScene 2: [one sentence describing what happens and what the viewer sees]\nScene 3: [one sentence describing what happens and what the viewer sees]\nScene 4: [one sentence describing what happens and what the viewer sees]\n\nKeep each scene description vivid and visual (since each scene will become an image). Keep the story fun, age-appropriate, and exciting. If the student asks to change something, output the full revised scene list again in the same format.',
+      placeholder: 'Describe your film idea... (e.g., "a space adventure where a kid discovers a new planet")'
+    });
+
+    // Parse scenes from chat
+    var parseScenesBtn = document.getElementById('parse-scenes-btn');
+    var parseHint = document.getElementById('parse-hint');
+
+    var chatObserver = new MutationObserver(function () {
+      var msgs = scriptChatWidget.getMessages();
+      var hasAssistant = msgs.some(function (m) { return m.role === 'assistant'; });
+      parseScenesBtn.disabled = !hasAssistant;
+      if (hasAssistant) {
+        parseHint.style.display = '';
+      }
+    });
+    chatObserver.observe(scriptChat, { childList: true, subtree: true });
+
+    parseScenesBtn.addEventListener('click', function () {
+      var msgs = scriptChatWidget.getMessages();
+      var latestResponse = '';
+      for (var i = msgs.length - 1; i >= 0; i--) {
+        if (msgs[i].role === 'assistant') {
+          latestResponse = msgs[i].content;
+          break;
+        }
+      }
+
+      if (!latestResponse) {
+        alert('No AI response found. Chat with the AI first to create your story!');
+        return;
+      }
+
+      var parsed = parseSceneText(latestResponse);
+      if (parsed.length === 0) {
+        alert('Could not find scenes in the AI response. Make sure the AI listed scenes as "Scene 1: ...", "Scene 2: ...", etc.');
+        return;
+      }
+
+      scenes = parsed;
+      taskCards.setComplete('write-script', true);
+      parseScenesBtn.textContent = '\u2705 ' + scenes.length + ' scenes loaded!';
+      setTimeout(function () {
+        parseScenesBtn.textContent = '\uD83D\uDCCB Use These Scenes';
+      }, 2000);
+    });
+
+    function parseSceneText(text) {
+      var result = [];
+      var regex = /Scene\s*(\d+)\s*[:\.]\s*(.+?)(?=Scene\s*\d+\s*[:\.]|$)/gis;
+      var match;
+      while ((match = regex.exec(text)) !== null) {
+        var sceneText = match[2].trim();
+        sceneText = sceneText.replace(/\n+$/, '').trim();
+        if (sceneText) {
+          result.push({
+            text: sceneText,
+            prompt: '',
+            imageUrl: null
+          });
+        }
+      }
+
+      if (result.length === 0) {
+        var lines = text.split('\n').filter(function (l) { return l.trim().length > 0; });
+        var numberedLines = lines.filter(function (l) { return /^\d+[\.\):]/.test(l.trim()); });
+        if (numberedLines.length >= 3) {
+          numberedLines.forEach(function (line) {
+            var cleaned = line.trim().replace(/^\d+[\.\):]\s*/, '').trim();
+            if (cleaned) {
+              result.push({ text: cleaned, prompt: '', imageUrl: null });
+            }
+          });
+        }
+      }
+
+      return result;
+    }
+
+    // --- Step 2: Scene Image Generation ---
+    function renderSceneCards() {
+      var list = document.getElementById('scene-cards-list');
+      clearChildren(list);
+
+      if (scenes.length === 0) {
+        var empty = document.createElement('div');
+        empty.className = 'text-center p-lg';
+        empty.style.color = 'var(--color-text-muted)';
+        empty.textContent = 'No scenes yet. Go back to Step 1 and write your story first!';
+        list.appendChild(empty);
+        return;
+      }
+
+      scenes.forEach(function (scene, index) {
+        var card = document.createElement('div');
+        card.className = 'scene-card';
+
+        var header = document.createElement('div');
+        header.className = 'scene-card-header';
+
+        var label = document.createElement('span');
+        label.className = 'scene-card-label';
+        label.textContent = 'Scene ' + (index + 1);
+
+        var status = document.createElement('span');
+        status.className = 'scene-card-status' + (scene.imageUrl ? ' done' : '');
+        status.textContent = scene.imageUrl ? 'Image ready' : 'Needs image';
+
+        header.appendChild(label);
+        header.appendChild(status);
+        card.appendChild(header);
+
+        var body = document.createElement('div');
+        body.className = 'scene-card-body';
+
+        var textSide = document.createElement('div');
+        textSide.className = 'scene-text-side';
+
+        var textLabel = document.createElement('label');
+        textLabel.textContent = 'Scene description';
+        textLabel.style.fontWeight = '600';
+        textLabel.style.fontSize = 'var(--text-sm)';
+        textSide.appendChild(textLabel);
+
+        var textDisplay = document.createElement('div');
+        textDisplay.className = 'scene-text-display';
+        textDisplay.textContent = scene.text;
+        textSide.appendChild(textDisplay);
+
+        var promptLabel = document.createElement('label');
+        promptLabel.textContent = 'Image prompt';
+        promptLabel.style.fontWeight = '600';
+        promptLabel.style.fontSize = 'var(--text-sm)';
+        promptLabel.style.marginTop = 'var(--space-sm)';
+        textSide.appendChild(promptLabel);
+
+        var promptInput = document.createElement('textarea');
+        promptInput.className = 'scene-prompt-input';
+        promptInput.placeholder = 'Describe the image for this scene...';
+        promptInput.value = scene.prompt || '';
+        promptInput.setAttribute('data-scene-index', index);
+        textSide.appendChild(promptInput);
+
+        var btnRow = document.createElement('div');
+        btnRow.className = 'scene-btn-row';
+
+        var suggestBtn = document.createElement('button');
+        suggestBtn.className = 'btn btn-secondary';
+        suggestBtn.style.fontSize = 'var(--text-sm)';
+        suggestBtn.textContent = '\u2728 Suggest Prompt';
+
+        var genBtn = document.createElement('button');
+        genBtn.className = 'btn btn-primary';
+        genBtn.style.fontSize = 'var(--text-sm)';
+        genBtn.textContent = scene.imageUrl ? 'Regenerate' : 'Generate Image';
+
+        btnRow.appendChild(suggestBtn);
+        btnRow.appendChild(genBtn);
+        textSide.appendChild(btnRow);
+
+        body.appendChild(textSide);
+
+        var imageSide = document.createElement('div');
+        imageSide.className = 'scene-image-side';
+
+        var imageHolder = document.createElement('div');
+        imageHolder.className = 'scene-image-holder' + (scene.imageUrl ? ' has-image' : '');
+
+        if (scene.imageUrl) {
+          var img = document.createElement('img');
+          img.src = scene.imageUrl;
+          img.alt = 'Scene ' + (index + 1) + ' image';
+          imageHolder.appendChild(img);
+        } else {
+          imageHolder.textContent = 'No image yet.\nGenerate one!';
+          imageHolder.style.whiteSpace = 'pre-line';
+        }
+
+        imageSide.appendChild(imageHolder);
+        body.appendChild(imageSide);
+
+        card.appendChild(body);
+        list.appendChild(card);
+
+        // Suggest prompt handler
+        suggestBtn.addEventListener('click', function () {
+          suggestBtn.disabled = true;
+          suggestBtn.textContent = 'Suggesting...';
+
+          fetch('/api/chat', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              system: 'You write concise image generation prompts for a kid\'s slideshow film. Given a scene description, write a short, vivid image prompt (1-2 sentences) that focuses on the visual scene, characters, setting, lighting, and mood. Output ONLY the prompt text. Make the images look cinematic and visually interesting for a widescreen film.',
+              messages: [
+                { role: 'user', content: 'Write an image generation prompt for this film scene:\n\n' + scene.text }
+              ]
+            })
+          })
+          .then(function (res) { return res.json(); })
+          .then(function (data) {
+            if (data.response) {
+              promptInput.value = data.response.trim();
+              scenes[index].prompt = data.response.trim();
+            }
+          })
+          .catch(function () { /* silent fail */ })
+          .finally(function () {
+            suggestBtn.disabled = false;
+            suggestBtn.textContent = '\u2728 Suggest Prompt';
+          });
+        });
+
+        // Generate image handler
+        genBtn.addEventListener('click', function () {
+          var prompt = promptInput.value.trim();
+          if (!prompt) {
+            alert('Please write or suggest an image prompt first.');
+            return;
+          }
+
+          scenes[index].prompt = prompt;
+          var fullPrompt = prompt + ', cinematic film still, widescreen, detailed, high quality';
+
+          genBtn.disabled = true;
+          suggestBtn.disabled = true;
+          genBtn.textContent = 'Generating...';
+
+          clearChildren(imageHolder);
+          imageHolder.className = 'scene-image-holder';
+          var spinner = document.createElement('div');
+          spinner.className = 'loading-spinner';
+          imageHolder.appendChild(spinner);
+
+          fetch('/api/image', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ prompt: fullPrompt })
+          })
+          .then(function (res) { return res.json().then(function (d) { return { ok: res.ok, data: d }; }); })
+          .then(function (result) {
+            clearChildren(imageHolder);
+
+            if (!result.ok || !result.data.url) {
+              imageHolder.className = 'scene-image-holder';
+              imageHolder.textContent = result.data.error || 'Failed to generate. Try again.';
+              return;
+            }
+
+            scenes[index].imageUrl = result.data.url;
+            imageHolder.className = 'scene-image-holder has-image';
+            var newImg = document.createElement('img');
+            newImg.src = result.data.url;
+            newImg.alt = 'Scene ' + (index + 1) + ' image';
+            imageHolder.appendChild(newImg);
+
+            status.className = 'scene-card-status done';
+            status.textContent = 'Image ready';
+
+            checkImageProgress();
+
+            ActivityLogger.log('image', 'Scene ' + (index + 1) + ': ' + prompt, result.data.url);
+          })
+          .catch(function () {
+            clearChildren(imageHolder);
+            imageHolder.className = 'scene-image-holder';
+            imageHolder.textContent = 'Could not reach image service. Try again.';
+          })
+          .finally(function () {
+            genBtn.disabled = false;
+            suggestBtn.disabled = false;
+            genBtn.textContent = scenes[index].imageUrl ? 'Regenerate' : 'Generate Image';
+          });
+        });
+
+        // Auto-suggest prompt on first render if empty
+        if (!scene.prompt && scene.text) {
+          suggestBtn.click();
+        }
+      });
+    }
+
+    function checkImageProgress() {
+      var count = scenes.filter(function (s) { return s.imageUrl; }).length;
+      if (count >= 4 || (count >= scenes.length && scenes.length > 0)) {
+        taskCards.setComplete('generate-images', true);
+      }
+    }
+
+    // --- Step 3: Soundtrack ---
+    function saveSoundtrackState() {
+      musicUrl = document.getElementById('music-url').value.trim();
+      musicDescription = document.getElementById('music-description').value.trim();
+    }
+
+    function loadSoundtrackState() {
+      document.getElementById('music-url').value = musicUrl;
+      document.getElementById('music-description').value = musicDescription;
+    }
+
+    document.getElementById('music-url').addEventListener('input', function () {
+      musicUrl = this.value.trim();
+    });
+    document.getElementById('music-description').addEventListener('input', function () {
+      musicDescription = this.value.trim();
+    });
+
+    // --- Step 4: Film Player ---
+    function renderFilmPlayer() {
+      saveSoundtrackState();
+      currentScene = 0;
+
+      var playableScenes = scenes.filter(function (s) { return s.imageUrl; });
+
+      var screen = document.getElementById('film-screen');
+      var filmEmpty = document.getElementById('film-empty');
+      var counter = document.getElementById('film-counter');
+      var prevBtn = document.getElementById('film-prev');
+      var nextBtn = document.getElementById('film-next');
+
+      var existingImgs = screen.querySelectorAll('img');
+      existingImgs.forEach(function (el) { el.remove(); });
+      var existingCaptions = screen.querySelectorAll('.film-caption');
+      existingCaptions.forEach(function (el) { el.remove(); });
+
+      if (playableScenes.length === 0) {
+        filmEmpty.style.display = '';
+        counter.textContent = 'Scene 0 / 0';
+        prevBtn.disabled = true;
+        nextBtn.disabled = true;
+        document.getElementById('autoplay-btn').disabled = true;
+      } else {
+        filmEmpty.style.display = 'none';
+
+        playableScenes.forEach(function (scene, idx) {
+          var sceneImg = document.createElement('img');
+          sceneImg.src = scene.imageUrl;
+          sceneImg.alt = 'Scene ' + (idx + 1);
+          sceneImg.setAttribute('data-scene-idx', idx);
+          if (idx === 0) sceneImg.classList.add('visible');
+          screen.appendChild(sceneImg);
+
+          var caption = document.createElement('div');
+          caption.className = 'film-caption' + (idx === 0 ? ' visible' : '');
+          caption.setAttribute('data-scene-idx', idx);
+          caption.textContent = scene.text;
+          screen.appendChild(caption);
+        });
+
+        currentScene = 0;
+        updatePlayerDisplay(playableScenes);
+        document.getElementById('autoplay-btn').disabled = false;
+      }
+
+      var soundtrackDisplay = document.getElementById('soundtrack-display');
+      clearChildren(soundtrackDisplay);
+
+      if (musicUrl || musicDescription) {
+        var musicIcon = document.createElement('span');
+        musicIcon.textContent = '\uD83C\uDFB5 Soundtrack: ';
+        musicIcon.style.fontWeight = '600';
+        soundtrackDisplay.appendChild(musicIcon);
+
+        if (musicDescription) {
+          var descSpan = document.createElement('span');
+          descSpan.textContent = musicDescription;
+          soundtrackDisplay.appendChild(descSpan);
+        }
+
+        if (musicUrl) {
+          if (musicDescription) {
+            var sep = document.createElement('span');
+            sep.textContent = ' | ';
+            soundtrackDisplay.appendChild(sep);
+          }
+          var link = document.createElement('a');
+          link.href = musicUrl;
+          link.target = '_blank';
+          link.rel = 'noopener noreferrer';
+          link.textContent = 'Listen on Suno';
+          soundtrackDisplay.appendChild(link);
+        }
+      } else {
+        soundtrackDisplay.textContent = 'No soundtrack added yet. Go to Step 3 to add music!';
+      }
+
+      taskCards.setComplete('preview-film', true);
+    }
+
+    function updatePlayerDisplay(playableScenes) {
+      if (!playableScenes) {
+        playableScenes = scenes.filter(function (s) { return s.imageUrl; });
+      }
+
+      var screen = document.getElementById('film-screen');
+      var counter = document.getElementById('film-counter');
+      var prevBtn = document.getElementById('film-prev');
+      var nextBtn = document.getElementById('film-next');
+
+      var imgs = screen.querySelectorAll('img');
+      var captions = screen.querySelectorAll('.film-caption');
+
+      imgs.forEach(function (el) {
+        var idx = parseInt(el.getAttribute('data-scene-idx'), 10);
+        if (idx === currentScene) {
+          el.classList.add('visible');
+        } else {
+          el.classList.remove('visible');
+        }
+      });
+
+      captions.forEach(function (el) {
+        var idx = parseInt(el.getAttribute('data-scene-idx'), 10);
+        if (idx === currentScene) {
+          el.classList.add('visible');
+        } else {
+          el.classList.remove('visible');
+        }
+      });
+
+      counter.textContent = 'Scene ' + (currentScene + 1) + ' / ' + playableScenes.length;
+      prevBtn.disabled = currentScene <= 0;
+      nextBtn.disabled = currentScene >= playableScenes.length - 1;
+    }
+
+    document.getElementById('film-prev').addEventListener('click', function () {
+      if (currentScene > 0) {
+        currentScene--;
+        updatePlayerDisplay();
+      }
+    });
+
+    document.getElementById('film-next').addEventListener('click', function () {
+      var playable = scenes.filter(function (s) { return s.imageUrl; });
+      if (currentScene < playable.length - 1) {
+        currentScene++;
+        updatePlayerDisplay();
+      }
+    });
+
+    // Auto-play
+    var autoplayToggle = document.getElementById('autoplay-toggle');
+    var autoplaySpeedSelect = document.getElementById('autoplay-speed');
+    var autoplayBtn = document.getElementById('autoplay-btn');
+    var isPlaying = false;
+
+    autoplayToggle.addEventListener('change', function () {
+      autoplayBtn.disabled = !autoplayToggle.checked;
+      if (!autoplayToggle.checked) {
+        stopAutoplay();
+      }
+    });
+
+    autoplayBtn.addEventListener('click', function () {
+      if (isPlaying) {
+        stopAutoplay();
+      } else {
+        startAutoplay();
+      }
+    });
+
+    function startAutoplay() {
+      var playable = scenes.filter(function (s) { return s.imageUrl; });
+      if (playable.length === 0) return;
+
+      isPlaying = true;
+      autoplayBtn.textContent = '\u23F8 Pause';
+      currentScene = 0;
+      updatePlayerDisplay(playable);
+
+      var speed = parseInt(autoplaySpeedSelect.value, 10);
+      autoplayTimer = setInterval(function () {
+        currentScene++;
+        if (currentScene >= playable.length) {
+          currentScene = 0;
+        }
+        updatePlayerDisplay(playable);
+      }, speed);
+    }
+
+    function stopAutoplay() {
+      isPlaying = false;
+      autoplayBtn.textContent = '\u25B6 Play';
+      if (autoplayTimer) {
+        clearInterval(autoplayTimer);
+        autoplayTimer = null;
+      }
+    }
+
+    // Keyboard navigation for the player
+    document.addEventListener('keydown', function (e) {
+      var directorTab = document.getElementById('tab-director');
+      if (!directorTab.classList.contains('active')) return;
+      if (currentStep !== 4) return;
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+
+      var playable = scenes.filter(function (s) { return s.imageUrl; });
+      if (playable.length === 0) return;
+
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+        if (currentScene < playable.length - 1) {
+          currentScene++;
+          updatePlayerDisplay(playable);
+        }
+      } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+        if (currentScene > 0) {
+          currentScene--;
+          updatePlayerDisplay(playable);
+        }
+      }
+    });
+
+    // --- Export Button ---
+    var downloadContainer = document.getElementById('download-section');
+
+    window.ExportButton(downloadContainer, {
+      label: 'Download Film as HTML',
+      filename: 'my-ai-film.html',
+      format: 'html',
+      getData: function () {
+        taskCards.setComplete('preview-film', true);
+        return generateFilmHTML();
+      }
+    });
+
+    function generateFilmHTML() {
+      var playable = scenes.filter(function (s) { return s.imageUrl; });
+      var lines = [];
+      lines.push('<!DOCTYPE html>');
+      lines.push('<html lang="en">');
+      lines.push('<head>');
+      lines.push('<meta charset="UTF-8">');
+      lines.push('<meta name="viewport" content="width=device-width, initial-scale=1.0">');
+      lines.push('<title>My AI Film</title>');
+      lines.push('<style>');
+      lines.push('* { box-sizing: border-box; margin: 0; padding: 0; }');
+      lines.push('body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #111; color: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; }');
+      lines.push('.screen { position: relative; width: 90vw; max-width: 900px; aspect-ratio: 16/9; background: #000; border-radius: 12px; overflow: hidden; box-shadow: 0 8px 32px rgba(0,0,0,0.5); }');
+      lines.push('.screen img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 0.8s ease; }');
+      lines.push('.screen img.active { opacity: 1; }');
+      lines.push('.caption { position: absolute; bottom: 0; left: 0; right: 0; padding: 24px 32px; background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 100%); font-size: 1.2rem; text-align: center; line-height: 1.5; opacity: 0; transition: opacity 0.8s ease; }');
+      lines.push('.caption.active { opacity: 1; }');
+      lines.push('.controls { margin-top: 24px; display: flex; align-items: center; gap: 16px; }');
+      lines.push('.controls button { padding: 10px 24px; font-size: 1rem; font-weight: 600; border: 2px solid rgba(255,255,255,0.3); background: transparent; color: #fff; border-radius: 8px; cursor: pointer; transition: all 0.2s; }');
+      lines.push('.controls button:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.6); }');
+      lines.push('.controls button:disabled { opacity: 0.3; cursor: not-allowed; }');
+      lines.push('.counter { font-size: 0.9rem; color: rgba(255,255,255,0.6); min-width: 100px; text-align: center; }');
+      if (musicUrl || musicDescription) {
+        lines.push('.soundtrack { margin-top: 16px; font-size: 0.85rem; color: rgba(255,255,255,0.5); }');
+        lines.push('.soundtrack a { color: rgba(255,255,255,0.7); }');
+      }
+      lines.push('</style>');
+      lines.push('</head>');
+      lines.push('<body>');
+      lines.push('<div class="screen" id="screen">');
+
+      playable.forEach(function (scene, idx) {
+        lines.push('<img src="' + escapeHtml(scene.imageUrl) + '" alt="Scene ' + (idx + 1) + '"' + (idx === 0 ? ' class="active"' : '') + '>');
+        lines.push('<div class="caption' + (idx === 0 ? ' active' : '') + '" data-idx="' + idx + '">' + escapeHtml(scene.text) + '</div>');
+      });
+
+      lines.push('</div>');
+      lines.push('<div class="controls">');
+      lines.push('<button id="prev">&larr; Previous</button>');
+      lines.push('<span class="counter" id="counter">Scene 1 / ' + playable.length + '</span>');
+      lines.push('<button id="next">Next &rarr;</button>');
+      lines.push('</div>');
+
+      if (musicUrl || musicDescription) {
+        lines.push('<div class="soundtrack">');
+        var soundParts = [];
+        if (musicDescription) soundParts.push(escapeHtml(musicDescription));
+        if (musicUrl) soundParts.push('<a href="' + escapeHtml(musicUrl) + '" target="_blank">Listen to soundtrack</a>');
+        lines.push('&#x1F3B5; ' + soundParts.join(' | '));
+        lines.push('</div>');
+      }
+
+      lines.push('<scr' + 'ipt>');
+      lines.push('var cur=0,total=' + playable.length + ';');
+      lines.push('function go(d){');
+      lines.push('  var n=cur+d; if(n<0||n>=total)return; cur=n;');
+      lines.push('  document.querySelectorAll(".screen img").forEach(function(i,x){i.className=x===cur?"active":"";});');
+      lines.push('  document.querySelectorAll(".caption").forEach(function(c,x){c.className="caption"+(x===cur?" active":"");});');
+      lines.push('  document.getElementById("counter").textContent="Scene "+(cur+1)+" / "+total;');
+      lines.push('  document.getElementById("prev").disabled=cur<=0;');
+      lines.push('  document.getElementById("next").disabled=cur>=total-1;');
+      lines.push('}');
+      lines.push('document.getElementById("prev").addEventListener("click",function(){go(-1);});');
+      lines.push('document.getElementById("next").addEventListener("click",function(){go(1);});');
+      lines.push('document.addEventListener("keydown",function(e){');
+      lines.push('  if(e.key==="ArrowRight")go(1); if(e.key==="ArrowLeft")go(-1);');
+      lines.push('});');
+      lines.push('go(0);');
+      lines.push('</scr' + 'ipt>');
+      lines.push('</body>');
+      lines.push('</html>');
+
+      return lines.join('\n');
+    }
+
+    // =============================================
+    // Task Sidebar (shared across both parts)
     // =============================================
     var taskSidebar = document.getElementById('task-sidebar');
 
     var taskCards = window.TaskCards(taskSidebar, [
-      { id: 'first-image', title: 'Generate your first image', description: 'Try anything \u2014 describe something fun!' },
-      { id: 'three-images', title: 'Generate 2 more images', description: 'Try different styles for variety' },
-      { id: 'challenge', title: 'Try a Challenge', description: 'Match a description in Challenge Mode' },
-      { id: 'title', title: 'Title your best work', description: 'Click a gallery image to add a title' },
-      { id: 'statement', title: '(Optional) Artist statement', description: 'Write 1 sentence about your favorite piece' }
+      { id: 'write-lyrics', title: 'Write lyrics with AI', description: 'Use the Lyrics Workshop in Part 1' },
+      { id: 'create-song', title: 'Create a song on Suno', description: 'Open Suno and make music' },
+      { id: 'write-script', title: 'Write your film script', description: 'Chat with AI to create a 4-6 scene story' },
+      { id: 'generate-images', title: 'Generate scene images', description: 'Create a visual for each scene' },
+      { id: 'preview-film', title: 'Preview and export your film', description: 'Watch your mini film in the player' }
     ]);
 
     // =============================================
@@ -800,6 +1886,14 @@
       while (el.firstChild) {
         el.removeChild(el.firstChild);
       }
+    }
+
+    function escapeHtml(str) {
+      return str
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
     }
   </script>
 

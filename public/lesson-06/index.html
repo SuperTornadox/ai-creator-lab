@@ -3,23 +3,143 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Lesson 6: AI Director - AI Creator Lab</title>
+  <title>Lesson 6: Final Project — Plan, Build, Present! - AI Creator Lab</title>
   <link rel="stylesheet" href="/shared/styles.css">
   <style>
-    /* Wizard step navigation */
-    .wizard-nav {
+    /* ===== Section Dividers ===== */
+    .lesson-section {
+      margin-bottom: var(--space-xl);
+      padding-bottom: var(--space-xl);
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .lesson-section:last-child {
+      border-bottom: none;
+    }
+
+    .section-heading {
+      font-size: var(--text-xl);
+      font-weight: 650;
+      margin-bottom: var(--space-lg);
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+    }
+
+    /* ===== Project Type Cards ===== */
+    .project-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: var(--space-md);
+    }
+
+    .project-card {
+      background: var(--color-surface);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-sm);
+      padding: var(--space-lg);
+      border: 2px solid var(--color-border);
+      text-align: center;
+      cursor: pointer;
+      transition: box-shadow var(--transition-normal),
+                  transform var(--transition-normal),
+                  border-color var(--transition-normal);
+    }
+
+    .project-card:hover {
+      box-shadow: var(--shadow-md);
+      transform: translateY(-2px);
+    }
+
+    .project-card.card-selected {
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px var(--color-primary-light);
+    }
+
+    .project-card .project-emoji {
+      font-size: 2.5rem;
+      margin-bottom: var(--space-sm);
+    }
+
+    .project-card .project-name {
+      font-size: var(--text-lg);
+      font-weight: 650;
+      margin-bottom: var(--space-xs);
+    }
+
+    .project-card .project-desc {
+      font-size: var(--text-sm);
+      color: var(--color-text-muted);
+    }
+
+    /* ===== Planning Form ===== */
+    .plan-form {
+      background: var(--color-surface);
+      border: 1.5px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: var(--space-xl);
+      margin-top: var(--space-lg);
+    }
+
+    .plan-form h3 {
+      margin-bottom: var(--space-md);
+    }
+
+    .plan-form .form-group {
+      margin-bottom: var(--space-md);
+    }
+
+    .plan-form label {
+      display: block;
+      font-size: var(--text-sm);
+      font-weight: 600;
+      margin-bottom: var(--space-xs);
+    }
+
+    .plan-form .tool-checkboxes {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-md);
+      margin-top: var(--space-xs);
+    }
+
+    .plan-form .tool-checkboxes label {
+      display: flex;
+      align-items: center;
+      gap: var(--space-xs);
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    .plan-form .tool-checkboxes input[type="checkbox"] {
+      accent-color: var(--color-primary);
+      width: 18px;
+      height: 18px;
+    }
+
+    .plan-saved-msg {
+      display: none;
+      color: var(--color-success);
+      font-size: var(--text-sm);
+      font-weight: 600;
+      margin-top: var(--space-sm);
+    }
+
+    /* ===== Build Tabs ===== */
+    .build-tabs {
       display: flex;
       gap: var(--space-xs);
       margin-bottom: var(--space-lg);
       padding-bottom: var(--space-md);
       border-bottom: 2px solid var(--color-border);
+      flex-wrap: wrap;
     }
 
-    .wizard-step-btn {
+    .build-tab-btn {
       display: flex;
       align-items: center;
       gap: var(--space-sm);
-      padding: 0.5em 1em;
+      padding: 0.5em 1.2em;
       font-size: var(--text-sm);
       font-weight: 600;
       font-family: inherit;
@@ -28,437 +148,219 @@
       color: var(--color-text-muted);
       border-radius: var(--radius-md);
       cursor: pointer;
-      transition: all var(--transition-fast);
+      transition: all 0.15s ease;
       white-space: nowrap;
     }
 
-    .wizard-step-btn:hover {
+    .build-tab-btn:hover {
       border-color: var(--color-primary);
       color: var(--color-text);
     }
 
-    .wizard-step-btn.active {
+    .build-tab-btn.active {
       background: var(--color-primary);
       border-color: var(--color-primary);
       color: #ffffff;
     }
 
-    .wizard-step-btn.completed {
-      background: var(--color-success-light);
-      border-color: var(--color-success);
-      color: #16a34a;
-    }
-
-    .wizard-step-btn .step-num {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 24px;
-      height: 24px;
-      border-radius: 50%;
-      font-size: var(--text-xs);
-      font-weight: 700;
-      background: rgba(255, 255, 255, 0.2);
-    }
-
-    .wizard-step-btn.active .step-num {
-      background: rgba(255, 255, 255, 0.3);
-    }
-
-    .wizard-step-btn.completed .step-num {
-      background: var(--color-success);
-      color: #ffffff;
-    }
-
-    .wizard-panel {
+    .build-panel {
       display: none;
     }
 
-    .wizard-panel.active {
+    .build-panel.active {
       display: block;
     }
 
-    /* Step navigation buttons */
-    .step-actions {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-top: var(--space-xl);
+    /* ===== Project Notes ===== */
+    .project-notes-area {
+      margin-top: var(--space-lg);
       padding-top: var(--space-lg);
       border-top: 1px solid var(--color-border);
     }
 
-    /* Scene cards for Step 2 */
-    .scene-cards-list {
-      display: flex;
-      flex-direction: column;
-      gap: var(--space-xl);
-    }
-
-    .scene-card {
-      background: var(--color-surface);
-      border: 1.5px solid var(--color-border);
-      border-radius: var(--radius-lg);
-      overflow: hidden;
-      transition: box-shadow var(--transition-normal);
-    }
-
-    .scene-card:hover {
-      box-shadow: var(--shadow-md);
-    }
-
-    .scene-card-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: var(--space-md) var(--space-lg);
-      background: var(--color-bg);
-      border-bottom: 1px solid var(--color-border);
-    }
-
-    .scene-card-label {
-      font-weight: 700;
-      font-size: var(--text-md);
-      color: var(--color-primary);
-    }
-
-    .scene-card-status {
-      font-size: var(--text-xs);
-      font-weight: 600;
-      padding: 0.2em 0.6em;
-      border-radius: var(--radius-full);
-      background: var(--color-border);
-      color: var(--color-text-muted);
-    }
-
-    .scene-card-status.done {
-      background: var(--color-success-light);
-      color: #16a34a;
-    }
-
-    .scene-card-body {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: var(--space-lg);
-      padding: var(--space-lg);
-    }
-
-    @media (max-width: 767px) {
-      .scene-card-body {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    .scene-text-side {
-      display: flex;
-      flex-direction: column;
-      gap: var(--space-sm);
-    }
-
-    .scene-text-display {
-      font-size: var(--text-sm);
-      line-height: 1.7;
-      padding: var(--space-md);
-      background: var(--color-bg);
-      border-radius: var(--radius-md);
-      color: var(--color-text);
-      min-height: 60px;
-    }
-
-    .scene-image-side {
-      display: flex;
-      flex-direction: column;
-      gap: var(--space-sm);
-    }
-
-    .scene-image-holder {
-      width: 100%;
-      aspect-ratio: 16 / 9;
-      background: var(--color-bg);
-      border: 2px dashed var(--color-border);
-      border-radius: var(--radius-md);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--color-text-muted);
-      font-size: var(--text-sm);
-      text-align: center;
-      padding: var(--space-md);
-      overflow: hidden;
-      position: relative;
-    }
-
-    .scene-image-holder img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      border-radius: var(--radius-sm);
-    }
-
-    .scene-image-holder.has-image {
-      border-style: solid;
-      border-color: var(--color-success);
-      padding: 0;
-    }
-
-    .scene-prompt-input {
-      width: 100%;
-      min-height: 50px;
-      padding: var(--space-sm);
-      font-size: var(--text-sm);
-      font-family: inherit;
-      line-height: 1.5;
-      border: 1px solid var(--color-border);
-      border-radius: var(--radius-sm);
-      resize: vertical;
-    }
-
-    .scene-prompt-input:focus {
-      outline: none;
-      border-color: var(--color-primary);
-      box-shadow: 0 0 0 2px var(--color-primary-light);
-    }
-
-    .scene-btn-row {
-      display: flex;
-      gap: var(--space-sm);
-      flex-wrap: wrap;
-    }
-
-    /* Soundtrack panel */
-    .soundtrack-panel {
-      display: flex;
-      flex-direction: column;
-      gap: var(--space-lg);
-    }
-
-    .suno-launch-area {
-      text-align: center;
-      padding: var(--space-xl);
-      background: linear-gradient(135deg, rgba(124, 58, 237, 0.06), rgba(79, 110, 247, 0.06));
-      border-radius: var(--radius-lg);
-      border: 1px solid var(--color-border);
-    }
-
-    .suno-launch-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: var(--space-sm);
-      padding: 0.8em 2em;
-      font-size: var(--text-xl);
-      font-weight: 700;
-      font-family: inherit;
-      background: linear-gradient(135deg, var(--color-secondary), var(--color-primary));
-      color: #ffffff;
-      border: none;
-      border-radius: var(--radius-lg);
-      cursor: pointer;
-      transition: transform var(--transition-fast), box-shadow var(--transition-fast);
-      text-decoration: none;
-    }
-
-    .suno-launch-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: var(--shadow-lg);
-      color: #ffffff;
-    }
-
-    .suno-launch-btn:active {
-      transform: scale(0.97);
-    }
-
-    .soundtrack-info-card {
-      background: var(--color-surface);
-      border: 1.5px solid var(--color-border);
-      border-radius: var(--radius-md);
-      padding: var(--space-lg);
-    }
-
-    .soundtrack-info-card label {
+    .project-notes-area label {
       display: block;
       font-size: var(--text-sm);
       font-weight: 600;
       margin-bottom: var(--space-xs);
     }
 
-    .tips-box {
-      background: var(--color-accent-light);
-      border-radius: var(--radius-md);
-      padding: var(--space-lg);
+    .notes-saved-msg {
+      display: none;
+      color: var(--color-success);
+      font-size: var(--text-xs);
+      font-weight: 600;
+      margin-top: var(--space-xs);
     }
 
-    .tips-box h4 {
-      margin-bottom: var(--space-sm);
-      color: var(--color-accent-hover);
+    /* ===== Presentation Prep ===== */
+    .present-form {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-lg);
     }
 
-    .tips-box ul {
-      list-style: none;
-      padding: 0;
-    }
-
-    .tips-box li {
-      padding: var(--space-xs) 0;
+    .present-form label {
+      display: block;
       font-size: var(--text-sm);
-      line-height: 1.6;
+      font-weight: 600;
+      margin-bottom: var(--space-xs);
     }
 
-    .tips-box li::before {
-      content: "\2728 ";
+    .present-actions {
+      display: flex;
+      gap: var(--space-md);
+      flex-wrap: wrap;
+      align-items: center;
+      margin-top: var(--space-md);
     }
 
-    /* Film Player (Step 4) */
-    .film-player {
-      max-width: 800px;
-      margin: 0 auto;
-    }
-
-    .film-screen {
-      position: relative;
-      width: 100%;
-      aspect-ratio: 16 / 9;
-      background: #111;
-      border-radius: var(--radius-lg);
-      overflow: hidden;
-      box-shadow: var(--shadow-lg);
-      margin-bottom: var(--space-md);
-    }
-
-    .film-screen img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      opacity: 0;
-      transition: opacity 0.6s ease;
-      position: absolute;
+    /* ===== Presentation Mode Overlay ===== */
+    .presentation-overlay {
+      display: none;
+      position: fixed;
       inset: 0;
-    }
-
-    .film-screen img.visible {
-      opacity: 1;
-    }
-
-    .film-caption {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      padding: var(--space-lg) var(--space-xl);
-      background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 60%, transparent 100%);
+      z-index: 99999;
+      background: linear-gradient(160deg, #1e2330 0%, #2d1b69 50%, #1e2330 100%);
       color: #ffffff;
-      font-size: var(--text-lg);
-      line-height: 1.5;
-      text-align: center;
-      text-shadow: 0 1px 4px rgba(0,0,0,0.5);
-      opacity: 0;
-      transition: opacity 0.6s ease;
+      overflow-y: auto;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     }
 
-    .film-caption.visible {
-      opacity: 1;
-    }
-
-    .film-empty-screen {
+    .presentation-overlay.visible {
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      height: 100%;
-      color: rgba(255,255,255,0.5);
-      font-size: var(--text-lg);
-      gap: var(--space-sm);
+      justify-content: flex-start;
+      padding: 60px 40px;
     }
 
-    .film-empty-screen .empty-icon {
-      font-size: 3rem;
-    }
-
-    .film-controls {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: var(--space-md);
-      margin-bottom: var(--space-md);
-    }
-
-    .film-controls .scene-counter {
-      font-size: var(--text-md);
-      font-weight: 600;
-      color: var(--color-text-muted);
-      min-width: 120px;
-      text-align: center;
-    }
-
-    .film-controls .btn {
-      min-width: 100px;
-    }
-
-    .autoplay-row {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: var(--space-sm);
-      margin-bottom: var(--space-lg);
-    }
-
-    .autoplay-row label {
-      font-size: var(--text-sm);
-      color: var(--color-text-muted);
+    .presentation-close {
+      position: fixed;
+      top: 20px;
+      right: 24px;
+      background: rgba(255,255,255,0.15);
+      border: none;
+      color: #ffffff;
+      font-size: 1.5rem;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
       cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: var(--space-xs);
+      transition: background 0.2s;
+      z-index: 100000;
     }
 
-    .autoplay-row select {
-      padding: 0.3em 0.6em;
-      font-size: var(--text-sm);
-      font-family: inherit;
-      border: 1px solid var(--color-border);
-      border-radius: var(--radius-sm);
-      background: var(--color-surface);
+    .presentation-close:hover {
+      background: rgba(255,255,255,0.3);
     }
 
-    .soundtrack-display {
-      background: var(--color-bg);
+    .presentation-content {
+      max-width: 800px;
+      width: 100%;
+      text-align: center;
+    }
+
+    .presentation-content h1 {
+      font-size: 3rem;
+      font-weight: 800;
+      margin-bottom: 0.3em;
+      background: linear-gradient(135deg, #a78bfa, #60a5fa);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .presentation-content .pres-author {
+      font-size: 1.2rem;
+      color: rgba(255,255,255,0.6);
+      margin-bottom: 2em;
+    }
+
+    .presentation-content .pres-section {
+      text-align: left;
+      margin-bottom: 2em;
+    }
+
+    .presentation-content .pres-section h2 {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #a78bfa;
+      margin-bottom: 0.5em;
+    }
+
+    .presentation-content .pres-section p {
+      font-size: 1.15rem;
+      line-height: 1.8;
+      color: rgba(255,255,255,0.85);
+      white-space: pre-wrap;
+    }
+
+    /* ===== Graduation Section ===== */
+    .graduation-section {
+      background: linear-gradient(135deg, #4f6ef7 0%, #7c3aed 40%, #ec4899 70%, #f59e0b 100%);
+      border-radius: var(--radius-lg);
+      padding: var(--space-xl) var(--space-xl) var(--space-xl);
+      color: #ffffff;
+      text-align: center;
+    }
+
+    .graduation-section h2 {
+      font-size: 2rem;
+      font-weight: 800;
+      margin-bottom: var(--space-xs);
+    }
+
+    .graduation-section .grad-subtitle {
+      font-size: var(--text-lg);
+      opacity: 0.9;
+      margin-bottom: var(--space-lg);
+    }
+
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: var(--space-md);
+      margin-bottom: var(--space-lg);
+    }
+
+    .skill-badge {
+      background: rgba(255,255,255,0.18);
+      backdrop-filter: blur(6px);
       border-radius: var(--radius-md);
       padding: var(--space-md);
       text-align: center;
+    }
+
+    .skill-badge .skill-emoji {
+      font-size: 2rem;
+      margin-bottom: var(--space-xs);
+    }
+
+    .skill-badge .skill-name {
       font-size: var(--text-sm);
+      font-weight: 700;
+    }
+
+    .skill-badge .skill-lesson {
+      font-size: var(--text-xs);
+      opacity: 0.75;
+    }
+
+    .graduation-message {
+      font-size: var(--text-lg);
+      line-height: 1.7;
+      opacity: 0.95;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    /* ===== Collection Gallery ===== */
+    .collection-empty {
+      text-align: center;
+      padding: var(--space-xl);
       color: var(--color-text-muted);
-    }
-
-    .soundtrack-display a {
-      word-break: break-all;
-    }
-
-    .download-section {
-      display: flex;
-      justify-content: center;
-      margin-top: var(--space-lg);
-    }
-
-    /* Intro text for panels */
-    .panel-intro {
-      color: var(--color-text-muted);
-      margin-bottom: var(--space-lg);
-    }
-
-    /* Parse scenes hint */
-    .parse-hint {
-      background: var(--color-warning-light);
-      border-radius: var(--radius-md);
-      padding: var(--space-md);
       font-size: var(--text-sm);
-      margin-bottom: var(--space-lg);
-      display: flex;
-      align-items: center;
-      gap: var(--space-sm);
-    }
-
-    .parse-hint .hint-icon {
-      font-size: 1.3rem;
-      flex-shrink: 0;
     }
   </style>
 </head>
@@ -468,7 +370,7 @@
   <header class="lesson-header">
     <div class="lesson-badge">
       <span class="lesson-number">06</span>
-      <span class="lesson-title">AI Director</span>
+      <span class="lesson-title">Final Project</span>
     </div>
     <a href="/" class="back-link">&larr; Back to all lessons</a>
   </header>
@@ -479,158 +381,145 @@
     <!-- Main Content Area -->
     <main class="lesson-main" id="main-content">
 
-      <!-- Wizard Navigation -->
-      <nav class="wizard-nav" id="wizard-nav">
-        <button class="wizard-step-btn active" data-step="1">
-          <span class="step-num">1</span> Script
-        </button>
-        <button class="wizard-step-btn" data-step="2">
-          <span class="step-num">2</span> Scenes
-        </button>
-        <button class="wizard-step-btn" data-step="3">
-          <span class="step-num">3</span> Soundtrack
-        </button>
-        <button class="wizard-step-btn" data-step="4">
-          <span class="step-num">4</span> Preview
-        </button>
-      </nav>
-
-      <!-- Step 1: Script -->
-      <div class="wizard-panel active" id="step-1">
-        <h2>&#x1F3AC; Write Your Film Script</h2>
-        <p class="panel-intro">
-          Every great film starts with a story. Chat with AI to brainstorm a 4&ndash;6 scene story outline for your mini film.
-          Tell the AI your idea and it will help you organize it into scenes!
-        </p>
-
-        <div id="script-chat"></div>
-
-        <div class="parse-hint mt-lg" id="parse-hint" style="display: none;">
-          <span class="hint-icon">&#x1F4A1;</span>
-          <span>Scenes detected! Click <strong>"Use These Scenes"</strong> to load them into Step 2, or keep chatting to refine your story.</span>
+      <!-- ===== Section 1: Choose & Plan ===== -->
+      <div class="lesson-section">
+        <h2 class="section-heading">&#x1F3AF; Choose Your Project</h2>
+        <div class="project-grid" id="project-grid">
+          <!-- rendered by JS -->
         </div>
 
-        <div style="display: flex; gap: var(--space-sm); margin-top: var(--space-md); flex-wrap: wrap;">
-          <button class="btn btn-secondary" id="parse-scenes-btn" disabled>&#x1F4CB; Use These Scenes</button>
-        </div>
-
-        <div class="step-actions">
-          <div></div>
-          <button class="btn btn-primary" id="to-step-2">Next: Create Scene Images &#x2192;</button>
+        <div class="plan-form" id="plan-form">
+          <h3>&#x1F4DD; My Project Plan</h3>
+          <div class="form-group">
+            <label for="plan-title">Project Title</label>
+            <input type="text" class="input" id="plan-title" placeholder="Give your project a cool name...">
+          </div>
+          <div class="form-group">
+            <label for="plan-description">What is your project about?</label>
+            <textarea class="textarea" id="plan-description" rows="2" placeholder="Describe your project in 1-2 sentences..."></textarea>
+          </div>
+          <div class="form-group">
+            <label>Tools I'll use</label>
+            <div class="tool-checkboxes">
+              <label><input type="checkbox" id="tool-text" value="text"> &#x1F4DD; Text AI</label>
+              <label><input type="checkbox" id="tool-image" value="image"> &#x1F3A8; Image AI</label>
+              <label><input type="checkbox" id="tool-code" value="code"> &#x1F4BB; Code AI</label>
+              <label><input type="checkbox" id="tool-music" value="music"> &#x1F3B5; Music (Suno)</label>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="plan-steps">My Plan (3-5 steps)</label>
+            <textarea class="textarea" id="plan-steps" rows="5" placeholder="Step 1: ...&#10;Step 2: ...&#10;Step 3: ..."></textarea>
+          </div>
+          <button class="btn btn-primary" id="save-plan-btn">&#x1F4BE; Save My Plan</button>
+          <div class="plan-saved-msg" id="plan-saved-msg">&#x2705; Plan saved!</div>
         </div>
       </div>
 
-      <!-- Step 2: Scenes -->
-      <div class="wizard-panel" id="step-2">
-        <h2>&#x1F3A8; Create Your Scene Images</h2>
-        <p class="panel-intro">
-          Generate an image for each scene of your film. Write a prompt describing what you want to see, then click Generate.
-        </p>
+      <!-- ===== Section 2: Build ===== -->
+      <div class="lesson-section">
+        <h2 class="section-heading">&#x1F528; Build Your Project</h2>
 
-        <div class="scene-cards-list" id="scene-cards-list">
-          <div class="text-center p-lg" style="color: var(--color-text-muted);">
-            No scenes yet. Go back to Step 1 and write your story first!
-          </div>
+        <nav class="build-tabs" id="build-tabs">
+          <button class="build-tab-btn active" data-tab="tab-text">&#x1F4DD; Text AI</button>
+          <button class="build-tab-btn" data-tab="tab-image">&#x1F3A8; Image AI</button>
+          <button class="build-tab-btn" data-tab="tab-code">&#x1F4BB; Code AI</button>
+          <button class="build-tab-btn" data-tab="tab-collection">&#x1F5BC;&#xFE0F; My Collection</button>
+        </nav>
+
+        <!-- Tab 1: Text AI -->
+        <div class="build-panel active" id="tab-text">
+          <div id="text-chat"></div>
         </div>
 
-        <div class="step-actions">
-          <button class="btn btn-secondary" id="back-to-1">&#x2190; Back to Script</button>
-          <button class="btn btn-primary" id="to-step-3">Next: Add Soundtrack &#x2192;</button>
-        </div>
-      </div>
-
-      <!-- Step 3: Soundtrack -->
-      <div class="wizard-panel" id="step-3">
-        <h2>&#x1F3B5; Choose Your Soundtrack</h2>
-        <p class="panel-intro">
-          Every great film needs music! Visit Suno to generate background music for your film, or describe the music you picked.
-        </p>
-
-        <div class="soundtrack-panel">
-          <div class="suno-launch-area">
-            <p style="font-size: var(--text-lg); margin-bottom: var(--space-md); font-weight: 600;">Create music for your film</p>
-            <a href="https://suno.com/create" target="_blank" rel="noopener noreferrer" class="suno-launch-btn">
-              &#x1F3B5; Open Suno Music Studio &rarr;
-            </a>
-            <p style="font-size: var(--text-sm); color: var(--color-text-muted); margin-top: var(--space-md);">
-              Tip: try "cinematic instrumental" or "epic adventure background music" for film soundtracks
-            </p>
-          </div>
-
-          <div class="soundtrack-info-card">
-            <label for="music-url">Music URL (paste your Suno link here)</label>
-            <input type="text" class="input" id="music-url" placeholder="https://suno.com/song/...">
-
-            <label for="music-description" style="margin-top: var(--space-md);">Describe your soundtrack</label>
-            <textarea class="textarea" id="music-description" placeholder="What kind of music did you pick? (e.g., 'epic orchestral music for an adventure film' or 'chill piano background')"></textarea>
-          </div>
-
-          <div class="tips-box">
-            <h4>&#x1F4A1; Soundtrack Tips</h4>
-            <ul>
-              <li>Think about the mood of your film &mdash; happy, mysterious, epic, funny?</li>
-              <li>Try style keywords: "cinematic", "orchestral", "lo-fi", "8-bit retro"</li>
-              <li>Instrumental (no lyrics) usually works best as background music</li>
-              <li>You can also just describe what music you would want &mdash; no Suno required!</li>
-            </ul>
-          </div>
+        <!-- Tab 2: Image AI -->
+        <div class="build-panel" id="tab-image">
+          <div id="image-gen"></div>
         </div>
 
-        <div class="step-actions">
-          <button class="btn btn-secondary" id="back-to-2">&#x2190; Back to Scenes</button>
-          <button class="btn btn-primary" id="to-step-4">Next: Preview Film &#x2192;</button>
+        <!-- Tab 3: Code AI -->
+        <div class="build-panel" id="tab-code">
+          <div id="code-playground"></div>
+        </div>
+
+        <!-- Tab 4: My Collection -->
+        <div class="build-panel" id="tab-collection">
+          <div id="my-gallery"></div>
+        </div>
+
+        <!-- Project Notes -->
+        <div class="project-notes-area">
+          <label for="project-notes">&#x1F4D3; Project Notes (auto-saves)</label>
+          <textarea class="textarea" id="project-notes" rows="4" placeholder="Keep track of ideas, prompts that worked well, things to try next..."></textarea>
+          <div class="notes-saved-msg" id="notes-saved-msg">&#x2705; Saved</div>
         </div>
       </div>
 
-      <!-- Step 4: Preview -->
-      <div class="wizard-panel" id="step-4">
-        <h2>&#x1F3AC; Preview Your Mini Film</h2>
-        <p class="panel-intro">
-          Here is your film! Use the controls to step through each scene or turn on auto-play for the full experience.
-        </p>
+      <!-- ===== Section 3: Present ===== -->
+      <div class="lesson-section">
+        <h2 class="section-heading">&#x1F3A4; Prepare Your Presentation</h2>
 
-        <div class="film-player" id="film-player">
-          <!-- Film screen -->
-          <div class="film-screen" id="film-screen">
-            <div class="film-empty-screen" id="film-empty">
-              <span class="empty-icon">&#x1F3AC;</span>
-              <span>Your film will appear here</span>
+        <div class="present-form">
+          <div class="form-group">
+            <label for="pres-about">About My Project</label>
+            <textarea class="textarea" id="pres-about" rows="4" placeholder="Describe your project: What is it? What does it do? Why did you choose this idea?"></textarea>
+          </div>
+          <div class="form-group">
+            <label for="pres-process">My Creative Process</label>
+            <textarea class="textarea" id="pres-process" rows="4" placeholder="How did you make it? What tools did you use? What challenges did you face? What did you learn?"></textarea>
+          </div>
+        </div>
+
+        <div class="present-actions">
+          <button class="btn btn-primary" id="launch-presentation-btn">&#x1F680; Launch Presentation Mode</button>
+          <div id="export-container"></div>
+        </div>
+      </div>
+
+      <!-- ===== Section 4: Graduation ===== -->
+      <div class="lesson-section">
+        <div class="graduation-section">
+          <h2>&#x1F393; Congratulations!</h2>
+          <p class="grad-subtitle">You're now an AI Creator!</p>
+
+          <div class="skills-grid">
+            <div class="skill-badge">
+              <div class="skill-emoji">&#x1F4DD;</div>
+              <div class="skill-name">Text AI</div>
+              <div class="skill-lesson">Lesson 1 & 2</div>
+            </div>
+            <div class="skill-badge">
+              <div class="skill-emoji">&#x1F3A8;</div>
+              <div class="skill-name">Image AI</div>
+              <div class="skill-lesson">Lesson 3</div>
+            </div>
+            <div class="skill-badge">
+              <div class="skill-emoji">&#x1F3B5;</div>
+              <div class="skill-name">Music AI</div>
+              <div class="skill-lesson">Lesson 4</div>
+            </div>
+            <div class="skill-badge">
+              <div class="skill-emoji">&#x1F3AC;</div>
+              <div class="skill-name">Film Making</div>
+              <div class="skill-lesson">Lesson 5</div>
+            </div>
+            <div class="skill-badge">
+              <div class="skill-emoji">&#x1F4BB;</div>
+              <div class="skill-name">Code AI</div>
+              <div class="skill-lesson">Lesson 6</div>
+            </div>
+            <div class="skill-badge">
+              <div class="skill-emoji">&#x1F9E0;</div>
+              <div class="skill-name">AI Ethics</div>
+              <div class="skill-lesson">Every Lesson</div>
             </div>
           </div>
 
-          <!-- Controls -->
-          <div class="film-controls">
-            <button class="btn btn-secondary" id="film-prev">&#x2190; Previous</button>
-            <span class="scene-counter" id="film-counter">Scene 0 / 0</span>
-            <button class="btn btn-primary" id="film-next">Next &#x2192;</button>
-          </div>
-
-          <!-- Auto-play -->
-          <div class="autoplay-row">
-            <label>
-              <input type="checkbox" id="autoplay-toggle"> Auto-play
-            </label>
-            <select id="autoplay-speed">
-              <option value="3000">3 sec/scene</option>
-              <option value="5000" selected>5 sec/scene</option>
-              <option value="8000">8 sec/scene</option>
-            </select>
-            <button class="btn btn-secondary" id="autoplay-btn" style="font-size: var(--text-sm);" disabled>
-              &#x25B6; Play
-            </button>
-          </div>
-
-          <!-- Soundtrack info -->
-          <div class="soundtrack-display" id="soundtrack-display">
-            No soundtrack added yet. Go to Step 3 to add music!
-          </div>
-        </div>
-
-        <div class="download-section" id="download-section"></div>
-
-        <div class="step-actions">
-          <button class="btn btn-secondary" id="back-to-3">&#x2190; Back to Soundtrack</button>
-          <div></div>
+          <p class="graduation-message">
+            You have learned to use AI as a creative partner &mdash; for writing, art, music, film, and code.
+            These skills will only grow as AI keeps evolving. Keep creating, keep experimenting, and never stop being curious.
+            The future belongs to creators like YOU!
+          </p>
         </div>
       </div>
 
@@ -643,713 +532,333 @@
 
   </div>
 
+  <!-- Presentation Mode Overlay -->
+  <div class="presentation-overlay" id="presentation-overlay">
+    <button class="presentation-close" id="presentation-close">&times;</button>
+    <div class="presentation-content" id="presentation-content">
+      <!-- filled by JS -->
+    </div>
+  </div>
+
   <script src="/shared/components.js"></script>
   <script>
     // =============================================
-    // State
+    // LocalStorage Keys
     // =============================================
-    var scenes = [];       // Array of { text: string, prompt: string, imageUrl: string|null }
-    var musicUrl = '';
-    var musicDescription = '';
-    var currentStep = 1;
-    var currentScene = 0;  // 0-indexed for the player
-    var autoplayTimer = null;
+    var STORAGE_PREFIX = 'lesson06_';
+    function storageKey(name) { return STORAGE_PREFIX + name; }
 
-    // =============================================
-    // Wizard Navigation
-    // =============================================
-    var wizardBtns = document.querySelectorAll('.wizard-step-btn');
-    var wizardPanels = document.querySelectorAll('.wizard-panel');
-
-    function goToStep(step) {
-      currentStep = step;
-
-      wizardBtns.forEach(function (btn) {
-        var s = parseInt(btn.getAttribute('data-step'), 10);
-        btn.classList.remove('active');
-        if (s === step) btn.classList.add('active');
-      });
-
-      wizardPanels.forEach(function (panel) {
-        panel.classList.remove('active');
-      });
-      document.getElementById('step-' + step).classList.add('active');
-
-      // Trigger step-specific rendering
-      if (step === 2) renderSceneCards();
-      if (step === 3) loadSoundtrackState();
-      if (step === 4) renderFilmPlayer();
-
-      // Scroll to top
-      window.scrollTo(0, 0);
+    function saveToStorage(key, value) {
+      try { localStorage.setItem(storageKey(key), JSON.stringify(value)); } catch (e) { /* ignore */ }
     }
 
-    wizardBtns.forEach(function (btn) {
+    function loadFromStorage(key, fallback) {
+      try {
+        var v = localStorage.getItem(storageKey(key));
+        return v ? JSON.parse(v) : fallback;
+      } catch (e) { return fallback; }
+    }
+
+    // =============================================
+    // Section 1: Choose Your Project
+    // =============================================
+    var projectTypes = [
+      { id: 'magazine', emoji: '\uD83D\uDCF0', name: 'AI Magazine', desc: 'Create articles & illustrations for a magazine' },
+      { id: 'film',     emoji: '\uD83C\uDFAC', name: 'AI Short Film', desc: 'Write a story and generate scene images' },
+      { id: 'game',     emoji: '\uD83C\uDFAE', name: 'AI Game', desc: 'Design and code a simple game with AI help' },
+      { id: 'free',     emoji: '\u2728',        name: 'Free Choice', desc: 'Your own idea! Combine any AI tools' }
+    ];
+
+    var projectGrid = document.getElementById('project-grid');
+    var selectedProjectType = loadFromStorage('projectType', null);
+
+    projectTypes.forEach(function (proj) {
+      var card = document.createElement('div');
+      card.className = 'project-card' + (selectedProjectType === proj.id ? ' card-selected' : '');
+
+      var emojiEl = document.createElement('div');
+      emojiEl.className = 'project-emoji';
+      emojiEl.textContent = proj.emoji;
+
+      var nameEl = document.createElement('div');
+      nameEl.className = 'project-name';
+      nameEl.textContent = proj.name;
+
+      var descEl = document.createElement('div');
+      descEl.className = 'project-desc';
+      descEl.textContent = proj.desc;
+
+      card.appendChild(emojiEl);
+      card.appendChild(nameEl);
+      card.appendChild(descEl);
+
+      card.addEventListener('click', function () {
+        var allCards = projectGrid.querySelectorAll('.project-card');
+        allCards.forEach(function (c) { c.classList.remove('card-selected'); });
+        card.classList.add('card-selected');
+        selectedProjectType = proj.id;
+        saveToStorage('projectType', proj.id);
+        taskCards.setComplete('choose-project', true);
+      });
+
+      projectGrid.appendChild(card);
+    });
+
+    if (selectedProjectType) {
+      taskCards && taskCards.setComplete && taskCards.setComplete('choose-project', true);
+    }
+
+    // =============================================
+    // Planning Form — Load & Save
+    // =============================================
+    var planTitle = document.getElementById('plan-title');
+    var planDescription = document.getElementById('plan-description');
+    var planSteps = document.getElementById('plan-steps');
+    var savePlanBtn = document.getElementById('save-plan-btn');
+    var planSavedMsg = document.getElementById('plan-saved-msg');
+    var toolText = document.getElementById('tool-text');
+    var toolImage = document.getElementById('tool-image');
+    var toolCode = document.getElementById('tool-code');
+    var toolMusic = document.getElementById('tool-music');
+
+    // Load saved plan
+    var savedPlan = loadFromStorage('plan', null);
+    if (savedPlan) {
+      planTitle.value = savedPlan.title || '';
+      planDescription.value = savedPlan.description || '';
+      planSteps.value = savedPlan.steps || '';
+      if (savedPlan.tools) {
+        toolText.checked = savedPlan.tools.indexOf('text') !== -1;
+        toolImage.checked = savedPlan.tools.indexOf('image') !== -1;
+        toolCode.checked = savedPlan.tools.indexOf('code') !== -1;
+        toolMusic.checked = savedPlan.tools.indexOf('music') !== -1;
+      }
+    }
+
+    savePlanBtn.addEventListener('click', function () {
+      var tools = [];
+      if (toolText.checked) tools.push('text');
+      if (toolImage.checked) tools.push('image');
+      if (toolCode.checked) tools.push('code');
+      if (toolMusic.checked) tools.push('music');
+
+      var plan = {
+        title: planTitle.value.trim(),
+        description: planDescription.value.trim(),
+        steps: planSteps.value.trim(),
+        tools: tools
+      };
+      saveToStorage('plan', plan);
+
+      planSavedMsg.style.display = 'block';
+      setTimeout(function () { planSavedMsg.style.display = 'none'; }, 2000);
+
+      if (plan.title && plan.steps) {
+        taskCards.setComplete('write-plan', true);
+      }
+    });
+
+    // =============================================
+    // Section 2: Build — Tab Navigation
+    // =============================================
+    var tabBtns = document.querySelectorAll('.build-tab-btn');
+    var tabPanels = document.querySelectorAll('.build-panel');
+
+    tabBtns.forEach(function (btn) {
       btn.addEventListener('click', function () {
-        goToStep(parseInt(btn.getAttribute('data-step'), 10));
+        var target = btn.getAttribute('data-tab');
+
+        tabBtns.forEach(function (b) { b.classList.remove('active'); });
+        btn.classList.add('active');
+
+        tabPanels.forEach(function (p) { p.classList.remove('active'); });
+        document.getElementById(target).classList.add('active');
       });
     });
 
-    // Step nav buttons
-    document.getElementById('to-step-2').addEventListener('click', function () {
-      if (scenes.length === 0) {
-        alert('Write your story first and click "Use These Scenes" to extract scenes!');
-        return;
-      }
-      taskCards.setComplete('write-story', true);
-      goToStep(2);
-    });
-
-    document.getElementById('to-step-3').addEventListener('click', function () {
-      goToStep(3);
-    });
-
-    document.getElementById('to-step-4').addEventListener('click', function () {
-      // Save soundtrack info
-      saveSoundtrackState();
-      taskCards.setComplete('soundtrack', true);
-      goToStep(4);
-    });
-
-    document.getElementById('back-to-1').addEventListener('click', function () { goToStep(1); });
-    document.getElementById('back-to-2').addEventListener('click', function () { goToStep(2); });
-    document.getElementById('back-to-3').addEventListener('click', function () { goToStep(3); });
-
     // =============================================
-    // Step 1: Script (ChatWidget)
+    // Tab 1: Text AI (ChatWidget)
     // =============================================
-    var scriptChat = document.getElementById('script-chat');
+    var textChatContainer = document.getElementById('text-chat');
 
-    var scriptChatWidget = window.ChatWidget(scriptChat, {
-      systemPrompt: 'You are a fun, creative film director assistant for kids aged 12-13. Help them brainstorm a short story for a mini film (slideshow with images). When they give you an idea, outline it as exactly 4-6 scenes. Format your response EXACTLY like this:\n\nScene 1: [one sentence describing what happens and what the viewer sees]\nScene 2: [one sentence describing what happens and what the viewer sees]\nScene 3: [one sentence describing what happens and what the viewer sees]\nScene 4: [one sentence describing what happens and what the viewer sees]\n\nKeep each scene description vivid and visual (since each scene will become an image). Keep the story fun, age-appropriate, and exciting. If the student asks to change something, output the full revised scene list again in the same format.',
-      placeholder: 'Describe your film idea... (e.g., "a space adventure where a kid discovers a new planet")'
-    });
-
-    // Parse scenes from chat
-    var parseScenesBtn = document.getElementById('parse-scenes-btn');
-    var parseHint = document.getElementById('parse-hint');
-
-    // Watch for chat messages to enable/disable the parse button
-    var chatObserver = new MutationObserver(function () {
-      var msgs = scriptChatWidget.getMessages();
-      var hasAssistant = msgs.some(function (m) { return m.role === 'assistant'; });
-      parseScenesBtn.disabled = !hasAssistant;
-      if (hasAssistant) {
-        parseHint.style.display = '';
-      }
-    });
-    chatObserver.observe(scriptChat, { childList: true, subtree: true });
-
-    parseScenesBtn.addEventListener('click', function () {
-      var msgs = scriptChatWidget.getMessages();
-      // Find the latest assistant message
-      var latestResponse = '';
-      for (var i = msgs.length - 1; i >= 0; i--) {
-        if (msgs[i].role === 'assistant') {
-          latestResponse = msgs[i].content;
-          break;
-        }
-      }
-
-      if (!latestResponse) {
-        alert('No AI response found. Chat with the AI first to create your story!');
-        return;
-      }
-
-      // Parse scenes from the response
-      var parsed = parseSceneText(latestResponse);
-      if (parsed.length === 0) {
-        alert('Could not find scenes in the AI response. Make sure the AI listed scenes as "Scene 1: ...", "Scene 2: ...", etc.');
-        return;
-      }
-
-      scenes = parsed;
-      taskCards.setComplete('write-story', true);
-      parseScenesBtn.textContent = '\u2705 ' + scenes.length + ' scenes loaded!';
-      setTimeout(function () {
-        parseScenesBtn.textContent = '\uD83D\uDCCB Use These Scenes';
-      }, 2000);
-    });
-
-    function parseSceneText(text) {
-      var result = [];
-      // Match patterns like "Scene 1:", "Scene 2:", etc.
-      var regex = /Scene\s*(\d+)\s*[:\.]\s*(.+?)(?=Scene\s*\d+\s*[:\.]|$)/gis;
-      var match;
-      while ((match = regex.exec(text)) !== null) {
-        var sceneText = match[2].trim();
-        // Clean up trailing whitespace or newlines
-        sceneText = sceneText.replace(/\n+$/, '').trim();
-        if (sceneText) {
-          result.push({
-            text: sceneText,
-            prompt: '',
-            imageUrl: null
-          });
-        }
-      }
-
-      // Fallback: try splitting by numbered lines
-      if (result.length === 0) {
-        var lines = text.split('\n').filter(function (l) { return l.trim().length > 0; });
-        var numberedLines = lines.filter(function (l) { return /^\d+[\.\):]/.test(l.trim()); });
-        if (numberedLines.length >= 3) {
-          numberedLines.forEach(function (line) {
-            var cleaned = line.trim().replace(/^\d+[\.\):]\s*/, '').trim();
-            if (cleaned) {
-              result.push({ text: cleaned, prompt: '', imageUrl: null });
-            }
-          });
-        }
-      }
-
-      return result;
-    }
-
-    // =============================================
-    // Step 2: Scene Image Generation
-    // =============================================
-    function renderSceneCards() {
-      var list = document.getElementById('scene-cards-list');
-      clearChildren(list);
-
-      if (scenes.length === 0) {
-        var empty = document.createElement('div');
-        empty.className = 'text-center p-lg';
-        empty.style.color = 'var(--color-text-muted)';
-        empty.textContent = 'No scenes yet. Go back to Step 1 and write your story first!';
-        list.appendChild(empty);
-        return;
-      }
-
-      scenes.forEach(function (scene, index) {
-        var card = document.createElement('div');
-        card.className = 'scene-card';
-
-        // Header
-        var header = document.createElement('div');
-        header.className = 'scene-card-header';
-
-        var label = document.createElement('span');
-        label.className = 'scene-card-label';
-        label.textContent = 'Scene ' + (index + 1);
-
-        var status = document.createElement('span');
-        status.className = 'scene-card-status' + (scene.imageUrl ? ' done' : '');
-        status.textContent = scene.imageUrl ? 'Image ready' : 'Needs image';
-
-        header.appendChild(label);
-        header.appendChild(status);
-        card.appendChild(header);
-
-        // Body
-        var body = document.createElement('div');
-        body.className = 'scene-card-body';
-
-        // Text side
-        var textSide = document.createElement('div');
-        textSide.className = 'scene-text-side';
-
-        var textLabel = document.createElement('label');
-        textLabel.textContent = 'Scene description';
-        textLabel.style.fontWeight = '600';
-        textLabel.style.fontSize = 'var(--text-sm)';
-        textSide.appendChild(textLabel);
-
-        var textDisplay = document.createElement('div');
-        textDisplay.className = 'scene-text-display';
-        textDisplay.textContent = scene.text;
-        textSide.appendChild(textDisplay);
-
-        var promptLabel = document.createElement('label');
-        promptLabel.textContent = 'Image prompt';
-        promptLabel.style.fontWeight = '600';
-        promptLabel.style.fontSize = 'var(--text-sm)';
-        promptLabel.style.marginTop = 'var(--space-sm)';
-        textSide.appendChild(promptLabel);
-
-        var promptInput = document.createElement('textarea');
-        promptInput.className = 'scene-prompt-input';
-        promptInput.placeholder = 'Describe the image for this scene...';
-        promptInput.value = scene.prompt || '';
-        promptInput.setAttribute('data-scene-index', index);
-        textSide.appendChild(promptInput);
-
-        // Button row
-        var btnRow = document.createElement('div');
-        btnRow.className = 'scene-btn-row';
-
-        var suggestBtn = document.createElement('button');
-        suggestBtn.className = 'btn btn-secondary';
-        suggestBtn.style.fontSize = 'var(--text-sm)';
-        suggestBtn.textContent = '\u2728 Suggest Prompt';
-
-        var genBtn = document.createElement('button');
-        genBtn.className = 'btn btn-primary';
-        genBtn.style.fontSize = 'var(--text-sm)';
-        genBtn.textContent = scene.imageUrl ? 'Regenerate' : 'Generate Image';
-
-        btnRow.appendChild(suggestBtn);
-        btnRow.appendChild(genBtn);
-        textSide.appendChild(btnRow);
-
-        body.appendChild(textSide);
-
-        // Image side
-        var imageSide = document.createElement('div');
-        imageSide.className = 'scene-image-side';
-
-        var imageHolder = document.createElement('div');
-        imageHolder.className = 'scene-image-holder' + (scene.imageUrl ? ' has-image' : '');
-
-        if (scene.imageUrl) {
-          var img = document.createElement('img');
-          img.src = scene.imageUrl;
-          img.alt = 'Scene ' + (index + 1) + ' image';
-          imageHolder.appendChild(img);
-        } else {
-          imageHolder.textContent = 'No image yet.\nGenerate one!';
-          imageHolder.style.whiteSpace = 'pre-line';
-        }
-
-        imageSide.appendChild(imageHolder);
-        body.appendChild(imageSide);
-
-        card.appendChild(body);
-        list.appendChild(card);
-
-        // Suggest prompt handler
-        suggestBtn.addEventListener('click', function () {
-          suggestBtn.disabled = true;
-          suggestBtn.textContent = 'Suggesting...';
-
-          fetch('/api/chat', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              system: 'You write concise image generation prompts for a kid\'s slideshow film. Given a scene description, write a short, vivid image prompt (1-2 sentences) that focuses on the visual scene, characters, setting, lighting, and mood. Output ONLY the prompt text. Make the images look cinematic and visually interesting for a widescreen film.',
-              messages: [
-                { role: 'user', content: 'Write an image generation prompt for this film scene:\n\n' + scene.text }
-              ]
-            })
-          })
-          .then(function (res) { return res.json(); })
-          .then(function (data) {
-            if (data.response) {
-              promptInput.value = data.response.trim();
-              scenes[index].prompt = data.response.trim();
-            }
-          })
-          .catch(function () { /* silent fail */ })
-          .finally(function () {
-            suggestBtn.disabled = false;
-            suggestBtn.textContent = '\u2728 Suggest Prompt';
-          });
-        });
-
-        // Generate image handler
-        genBtn.addEventListener('click', function () {
-          var prompt = promptInput.value.trim();
-          if (!prompt) {
-            alert('Please write or suggest an image prompt first.');
-            return;
-          }
-
-          scenes[index].prompt = prompt;
-          var fullPrompt = prompt + ', cinematic film still, widescreen, detailed, high quality';
-
-          genBtn.disabled = true;
-          suggestBtn.disabled = true;
-          genBtn.textContent = 'Generating...';
-
-          // Show spinner
-          clearChildren(imageHolder);
-          imageHolder.className = 'scene-image-holder';
-          var spinner = document.createElement('div');
-          spinner.className = 'loading-spinner';
-          imageHolder.appendChild(spinner);
-
-          fetch('/api/image', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ prompt: fullPrompt })
-          })
-          .then(function (res) { return res.json().then(function (d) { return { ok: res.ok, data: d }; }); })
-          .then(function (result) {
-            clearChildren(imageHolder);
-
-            if (!result.ok || !result.data.url) {
-              imageHolder.className = 'scene-image-holder';
-              imageHolder.textContent = result.data.error || 'Failed to generate. Try again.';
-              return;
-            }
-
-            scenes[index].imageUrl = result.data.url;
-            imageHolder.className = 'scene-image-holder has-image';
-            var newImg = document.createElement('img');
-            newImg.src = result.data.url;
-            newImg.alt = 'Scene ' + (index + 1) + ' image';
-            imageHolder.appendChild(newImg);
-
-            status.className = 'scene-card-status done';
-            status.textContent = 'Image ready';
-
-            // Check progress
-            checkImageProgress();
-
-            // Log
-            ActivityLogger.log('image', 'Scene ' + (index + 1) + ': ' + prompt, result.data.url);
-          })
-          .catch(function () {
-            clearChildren(imageHolder);
-            imageHolder.className = 'scene-image-holder';
-            imageHolder.textContent = 'Could not reach image service. Try again.';
-          })
-          .finally(function () {
-            genBtn.disabled = false;
-            suggestBtn.disabled = false;
-            genBtn.textContent = scenes[index].imageUrl ? 'Regenerate' : 'Generate Image';
-          });
-        });
-
-        // Auto-suggest prompt on first render if empty
-        if (!scene.prompt && scene.text) {
-          suggestBtn.click();
-        }
-      });
-    }
-
-    function checkImageProgress() {
-      var count = scenes.filter(function (s) { return s.imageUrl; }).length;
-      if (count >= 4 || (count >= scenes.length && scenes.length > 0)) {
-        taskCards.setComplete('generate-images', true);
-      }
-    }
-
-    // =============================================
-    // Step 3: Soundtrack
-    // =============================================
-    function saveSoundtrackState() {
-      musicUrl = document.getElementById('music-url').value.trim();
-      musicDescription = document.getElementById('music-description').value.trim();
-      if (musicUrl || musicDescription) {
-        taskCards.setComplete('soundtrack', true);
-      }
-    }
-
-    function loadSoundtrackState() {
-      document.getElementById('music-url').value = musicUrl;
-      document.getElementById('music-description').value = musicDescription;
-    }
-
-    // Auto-save soundtrack inputs on change
-    document.getElementById('music-url').addEventListener('input', function () {
-      musicUrl = this.value.trim();
-    });
-    document.getElementById('music-description').addEventListener('input', function () {
-      musicDescription = this.value.trim();
+    window.ChatWidget(textChatContainer, {
+      systemPrompt: 'You are a creative project advisor for kids aged 12-13. Help them brainstorm, write, and refine creative projects. You can help with: writing articles, stories, scripts, game designs, descriptions, dialogue, and any text content for their AI Creator Lab final project. Be encouraging, fun, and give specific suggestions. Keep responses concise and age-appropriate.',
+      placeholder: 'Ask for help with your project... (e.g., "Help me write an article about space for my AI magazine")'
     });
 
     // =============================================
-    // Step 4: Film Player
+    // Tab 2: Image AI (ImageGenerator)
     // =============================================
-    function renderFilmPlayer() {
-      saveSoundtrackState();
-      currentScene = 0;
+    var imageGenContainer = document.getElementById('image-gen');
 
-      // Filter scenes that have images
-      var playableScenes = scenes.filter(function (s) { return s.imageUrl; });
+    window.ImageGenerator(imageGenContainer, {
+      showGallery: true
+    });
 
-      var screen = document.getElementById('film-screen');
-      var filmEmpty = document.getElementById('film-empty');
-      var counter = document.getElementById('film-counter');
-      var prevBtn = document.getElementById('film-prev');
-      var nextBtn = document.getElementById('film-next');
+    // =============================================
+    // Tab 3: Code AI (CodePlayground)
+    // =============================================
+    var codeContainer = document.getElementById('code-playground');
 
-      // Clear existing images/captions from screen
-      var existingImgs = screen.querySelectorAll('img');
-      existingImgs.forEach(function (el) { el.remove(); });
-      var existingCaptions = screen.querySelectorAll('.film-caption');
-      existingCaptions.forEach(function (el) { el.remove(); });
-
-      if (playableScenes.length === 0) {
-        filmEmpty.style.display = '';
-        counter.textContent = 'Scene 0 / 0';
-        prevBtn.disabled = true;
-        nextBtn.disabled = true;
-        document.getElementById('autoplay-btn').disabled = true;
-      } else {
-        filmEmpty.style.display = 'none';
-
-        // Pre-load all scene images and captions
-        playableScenes.forEach(function (scene, idx) {
-          var sceneImg = document.createElement('img');
-          sceneImg.src = scene.imageUrl;
-          sceneImg.alt = 'Scene ' + (idx + 1);
-          sceneImg.setAttribute('data-scene-idx', idx);
-          if (idx === 0) sceneImg.classList.add('visible');
-          screen.appendChild(sceneImg);
-
-          var caption = document.createElement('div');
-          caption.className = 'film-caption' + (idx === 0 ? ' visible' : '');
-          caption.setAttribute('data-scene-idx', idx);
-          caption.textContent = scene.text;
-          screen.appendChild(caption);
-        });
-
-        currentScene = 0;
-        updatePlayerDisplay(playableScenes);
-        document.getElementById('autoplay-btn').disabled = false;
-      }
-
-      // Soundtrack display
-      var soundtrackDisplay = document.getElementById('soundtrack-display');
-      clearChildren(soundtrackDisplay);
-
-      if (musicUrl || musicDescription) {
-        var musicIcon = document.createElement('span');
-        musicIcon.textContent = '\uD83C\uDFB5 Soundtrack: ';
-        musicIcon.style.fontWeight = '600';
-        soundtrackDisplay.appendChild(musicIcon);
-
-        if (musicDescription) {
-          var descSpan = document.createElement('span');
-          descSpan.textContent = musicDescription;
-          soundtrackDisplay.appendChild(descSpan);
-        }
-
-        if (musicUrl) {
-          if (musicDescription) {
-            var sep = document.createElement('span');
-            sep.textContent = ' | ';
-            soundtrackDisplay.appendChild(sep);
-          }
-          var link = document.createElement('a');
-          link.href = musicUrl;
-          link.target = '_blank';
-          link.rel = 'noopener noreferrer';
-          link.textContent = 'Listen on Suno';
-          soundtrackDisplay.appendChild(link);
-        }
-      } else {
-        soundtrackDisplay.textContent = 'No soundtrack added yet. Go to Step 3 to add music!';
-      }
-
-      taskCards.setComplete('preview-film', true);
-    }
-
-    function updatePlayerDisplay(playableScenes) {
-      if (!playableScenes) {
-        playableScenes = scenes.filter(function (s) { return s.imageUrl; });
-      }
-
-      var screen = document.getElementById('film-screen');
-      var counter = document.getElementById('film-counter');
-      var prevBtn = document.getElementById('film-prev');
-      var nextBtn = document.getElementById('film-next');
-
-      // Hide all images and captions, show current
-      var imgs = screen.querySelectorAll('img');
-      var captions = screen.querySelectorAll('.film-caption');
-
-      imgs.forEach(function (el) {
-        var idx = parseInt(el.getAttribute('data-scene-idx'), 10);
-        if (idx === currentScene) {
-          el.classList.add('visible');
-        } else {
-          el.classList.remove('visible');
-        }
-      });
-
-      captions.forEach(function (el) {
-        var idx = parseInt(el.getAttribute('data-scene-idx'), 10);
-        if (idx === currentScene) {
-          el.classList.add('visible');
-        } else {
-          el.classList.remove('visible');
-        }
-      });
-
-      counter.textContent = 'Scene ' + (currentScene + 1) + ' / ' + playableScenes.length;
-      prevBtn.disabled = currentScene <= 0;
-      nextBtn.disabled = currentScene >= playableScenes.length - 1;
-    }
-
-    // Player controls
-    document.getElementById('film-prev').addEventListener('click', function () {
-      if (currentScene > 0) {
-        currentScene--;
-        updatePlayerDisplay();
+    window.CodePlayground(codeContainer, {
+      onRun: function () {
+        taskCards.setComplete('build-project', true);
       }
     });
 
-    document.getElementById('film-next').addEventListener('click', function () {
-      var playable = scenes.filter(function (s) { return s.imageUrl; });
-      if (currentScene < playable.length - 1) {
-        currentScene++;
-        updatePlayerDisplay();
+    // =============================================
+    // Tab 4: My Collection (Gallery)
+    // =============================================
+    var galleryContainer = document.getElementById('my-gallery');
+
+    window.Gallery(galleryContainer, {
+      columns: 3
+    });
+
+    // =============================================
+    // Project Notes — Auto-save
+    // =============================================
+    var projectNotes = document.getElementById('project-notes');
+    var notesSavedMsg = document.getElementById('notes-saved-msg');
+    var notesSaveTimer = null;
+
+    // Load
+    projectNotes.value = loadFromStorage('notes', '') || '';
+
+    projectNotes.addEventListener('input', function () {
+      clearTimeout(notesSaveTimer);
+      notesSaveTimer = setTimeout(function () {
+        saveToStorage('notes', projectNotes.value);
+        notesSavedMsg.style.display = 'block';
+        setTimeout(function () { notesSavedMsg.style.display = 'none'; }, 1500);
+      }, 800);
+    });
+
+    // =============================================
+    // Section 3: Presentation
+    // =============================================
+    var presAbout = document.getElementById('pres-about');
+    var presProcess = document.getElementById('pres-process');
+
+    // Load saved presentation text
+    presAbout.value = loadFromStorage('presAbout', '') || '';
+    presProcess.value = loadFromStorage('presProcess', '') || '';
+
+    // Auto-save presentation fields
+    presAbout.addEventListener('input', function () {
+      saveToStorage('presAbout', presAbout.value);
+    });
+    presProcess.addEventListener('input', function () {
+      saveToStorage('presProcess', presProcess.value);
+      if (presAbout.value.trim() && presProcess.value.trim()) {
+        taskCards.setComplete('write-presentation', true);
       }
     });
 
-    // Auto-play
-    var autoplayToggle = document.getElementById('autoplay-toggle');
-    var autoplaySpeedSelect = document.getElementById('autoplay-speed');
-    var autoplayBtn = document.getElementById('autoplay-btn');
-    var isPlaying = false;
+    // Launch Presentation Mode
+    var overlay = document.getElementById('presentation-overlay');
+    var presContent = document.getElementById('presentation-content');
+    var launchBtn = document.getElementById('launch-presentation-btn');
+    var closeBtn = document.getElementById('presentation-close');
 
-    autoplayToggle.addEventListener('change', function () {
-      autoplayBtn.disabled = !autoplayToggle.checked;
-      if (!autoplayToggle.checked) {
-        stopAutoplay();
+    launchBtn.addEventListener('click', function () {
+      // Build presentation content
+      clearChildren(presContent);
+
+      var title = planTitle.value.trim() || 'My Final Project';
+      var studentName = '';
+      try { studentName = sessionStorage.getItem('studentName') || ''; } catch (e) { /* ignore */ }
+
+      var h1 = document.createElement('h1');
+      h1.textContent = title;
+      presContent.appendChild(h1);
+
+      if (studentName) {
+        var author = document.createElement('p');
+        author.className = 'pres-author';
+        author.textContent = 'by ' + studentName;
+        presContent.appendChild(author);
       }
+
+      var aboutText = presAbout.value.trim();
+      if (aboutText) {
+        var aboutSection = document.createElement('div');
+        aboutSection.className = 'pres-section';
+        var aboutH2 = document.createElement('h2');
+        aboutH2.textContent = 'About My Project';
+        var aboutP = document.createElement('p');
+        aboutP.textContent = aboutText;
+        aboutSection.appendChild(aboutH2);
+        aboutSection.appendChild(aboutP);
+        presContent.appendChild(aboutSection);
+      }
+
+      var processText = presProcess.value.trim();
+      if (processText) {
+        var processSection = document.createElement('div');
+        processSection.className = 'pres-section';
+        var processH2 = document.createElement('h2');
+        processH2.textContent = 'My Creative Process';
+        var processP = document.createElement('p');
+        processP.textContent = processText;
+        processSection.appendChild(processH2);
+        processSection.appendChild(processP);
+        presContent.appendChild(processSection);
+      }
+
+      overlay.classList.add('visible');
+      taskCards.setComplete('present-celebrate', true);
     });
 
-    autoplayBtn.addEventListener('click', function () {
-      if (isPlaying) {
-        stopAutoplay();
-      } else {
-        startAutoplay();
-      }
+    closeBtn.addEventListener('click', function () {
+      overlay.classList.remove('visible');
     });
 
-    function startAutoplay() {
-      var playable = scenes.filter(function (s) { return s.imageUrl; });
-      if (playable.length === 0) return;
-
-      isPlaying = true;
-      autoplayBtn.textContent = '\u23F8 Pause';
-      currentScene = 0;
-      updatePlayerDisplay(playable);
-
-      var speed = parseInt(autoplaySpeedSelect.value, 10);
-      autoplayTimer = setInterval(function () {
-        currentScene++;
-        if (currentScene >= playable.length) {
-          currentScene = 0; // Loop
-        }
-        updatePlayerDisplay(playable);
-      }, speed);
-    }
-
-    function stopAutoplay() {
-      isPlaying = false;
-      autoplayBtn.textContent = '\u25B6 Play';
-      if (autoplayTimer) {
-        clearInterval(autoplayTimer);
-        autoplayTimer = null;
-      }
-    }
-
-    // Keyboard navigation for the player
     document.addEventListener('keydown', function (e) {
-      if (currentStep !== 4) return;
-      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
-
-      var playable = scenes.filter(function (s) { return s.imageUrl; });
-      if (playable.length === 0) return;
-
-      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
-        if (currentScene < playable.length - 1) {
-          currentScene++;
-          updatePlayerDisplay(playable);
-        }
-      } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
-        if (currentScene > 0) {
-          currentScene--;
-          updatePlayerDisplay(playable);
-        }
+      if (e.key === 'Escape' && overlay.classList.contains('visible')) {
+        overlay.classList.remove('visible');
       }
     });
 
     // =============================================
     // Export Button
     // =============================================
-    var downloadContainer = document.getElementById('download-section');
+    var exportContainer = document.getElementById('export-container');
 
-    window.ExportButton(downloadContainer, {
-      label: 'Download Film as HTML',
-      filename: 'my-ai-film.html',
+    window.ExportButton(exportContainer, {
+      label: 'Download Presentation',
+      filename: 'my-ai-project-presentation.html',
       format: 'html',
       getData: function () {
-        taskCards.setComplete('export', true);
-        return generateFilmHTML();
+        var title = planTitle.value.trim() || 'My Final Project';
+        var studentName = '';
+        try { studentName = sessionStorage.getItem('studentName') || ''; } catch (e) { /* ignore */ }
+        var about = presAbout.value.trim();
+        var process = presProcess.value.trim();
+
+        var html = [];
+        html.push('<!DOCTYPE html>');
+        html.push('<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">');
+        html.push('<title>' + escapeHtml(title) + '</title>');
+        html.push('<style>');
+        html.push('*{box-sizing:border-box;margin:0;padding:0}');
+        html.push('body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:linear-gradient(160deg,#1e2330,#2d1b69,#1e2330);color:#fff;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:60px 40px}');
+        html.push('.card{max-width:700px;width:100%;text-align:center}');
+        html.push('h1{font-size:2.8rem;font-weight:800;background:linear-gradient(135deg,#a78bfa,#60a5fa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:.3em}');
+        html.push('.author{font-size:1.1rem;color:rgba(255,255,255,.5);margin-bottom:2em}');
+        html.push('.section{text-align:left;margin-bottom:2em}');
+        html.push('.section h2{font-size:1.3rem;color:#a78bfa;margin-bottom:.4em}');
+        html.push('.section p{font-size:1.1rem;line-height:1.8;color:rgba(255,255,255,.85);white-space:pre-wrap}');
+        html.push('</style></head><body>');
+        html.push('<div class="card">');
+        html.push('<h1>' + escapeHtml(title) + '</h1>');
+        if (studentName) html.push('<p class="author">by ' + escapeHtml(studentName) + '</p>');
+        if (about) html.push('<div class="section"><h2>About My Project</h2><p>' + escapeHtml(about) + '</p></div>');
+        if (process) html.push('<div class="section"><h2>My Creative Process</h2><p>' + escapeHtml(process) + '</p></div>');
+        html.push('</div></body></html>');
+        return html.join('\n');
       }
     });
-
-    function generateFilmHTML() {
-      var playable = scenes.filter(function (s) { return s.imageUrl; });
-      var lines = [];
-      lines.push('<!DOCTYPE html>');
-      lines.push('<html lang="en">');
-      lines.push('<head>');
-      lines.push('<meta charset="UTF-8">');
-      lines.push('<meta name="viewport" content="width=device-width, initial-scale=1.0">');
-      lines.push('<title>My AI Film</title>');
-      lines.push('<style>');
-      lines.push('* { box-sizing: border-box; margin: 0; padding: 0; }');
-      lines.push('body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #111; color: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; }');
-      lines.push('.screen { position: relative; width: 90vw; max-width: 900px; aspect-ratio: 16/9; background: #000; border-radius: 12px; overflow: hidden; box-shadow: 0 8px 32px rgba(0,0,0,0.5); }');
-      lines.push('.screen img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 0.8s ease; }');
-      lines.push('.screen img.active { opacity: 1; }');
-      lines.push('.caption { position: absolute; bottom: 0; left: 0; right: 0; padding: 24px 32px; background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 100%); font-size: 1.2rem; text-align: center; line-height: 1.5; opacity: 0; transition: opacity 0.8s ease; }');
-      lines.push('.caption.active { opacity: 1; }');
-      lines.push('.controls { margin-top: 24px; display: flex; align-items: center; gap: 16px; }');
-      lines.push('.controls button { padding: 10px 24px; font-size: 1rem; font-weight: 600; border: 2px solid rgba(255,255,255,0.3); background: transparent; color: #fff; border-radius: 8px; cursor: pointer; transition: all 0.2s; }');
-      lines.push('.controls button:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.6); }');
-      lines.push('.controls button:disabled { opacity: 0.3; cursor: not-allowed; }');
-      lines.push('.counter { font-size: 0.9rem; color: rgba(255,255,255,0.6); min-width: 100px; text-align: center; }');
-      if (musicUrl || musicDescription) {
-        lines.push('.soundtrack { margin-top: 16px; font-size: 0.85rem; color: rgba(255,255,255,0.5); }');
-        lines.push('.soundtrack a { color: rgba(255,255,255,0.7); }');
-      }
-      lines.push('</style>');
-      lines.push('</head>');
-      lines.push('<body>');
-      lines.push('<div class="screen" id="screen">');
-
-      playable.forEach(function (scene, idx) {
-        lines.push('<img src="' + escapeHtml(scene.imageUrl) + '" alt="Scene ' + (idx + 1) + '"' + (idx === 0 ? ' class="active"' : '') + '>');
-        lines.push('<div class="caption' + (idx === 0 ? ' active' : '') + '" data-idx="' + idx + '">' + escapeHtml(scene.text) + '</div>');
-      });
-
-      lines.push('</div>');
-      lines.push('<div class="controls">');
-      lines.push('<button id="prev">&larr; Previous</button>');
-      lines.push('<span class="counter" id="counter">Scene 1 / ' + playable.length + '</span>');
-      lines.push('<button id="next">Next &rarr;</button>');
-      lines.push('</div>');
-
-      if (musicUrl || musicDescription) {
-        lines.push('<div class="soundtrack">');
-        var soundParts = [];
-        if (musicDescription) soundParts.push(escapeHtml(musicDescription));
-        if (musicUrl) soundParts.push('<a href="' + escapeHtml(musicUrl) + '" target="_blank">Listen to soundtrack</a>');
-        lines.push('&#x1F3B5; ' + soundParts.join(' | '));
-        lines.push('</div>');
-      }
-
-      lines.push('<scr' + 'ipt>');
-      lines.push('var cur=0,total=' + playable.length + ';');
-      lines.push('function go(d){');
-      lines.push('  var n=cur+d; if(n<0||n>=total)return; cur=n;');
-      lines.push('  document.querySelectorAll(".screen img").forEach(function(i,x){i.className=x===cur?"active":"";});');
-      lines.push('  document.querySelectorAll(".caption").forEach(function(c,x){c.className="caption"+(x===cur?" active":"");});');
-      lines.push('  document.getElementById("counter").textContent="Scene "+(cur+1)+" / "+total;');
-      lines.push('  document.getElementById("prev").disabled=cur<=0;');
-      lines.push('  document.getElementById("next").disabled=cur>=total-1;');
-      lines.push('}');
-      lines.push('document.getElementById("prev").addEventListener("click",function(){go(-1);});');
-      lines.push('document.getElementById("next").addEventListener("click",function(){go(1);});');
-      lines.push('document.addEventListener("keydown",function(e){');
-      lines.push('  if(e.key==="ArrowRight")go(1); if(e.key==="ArrowLeft")go(-1);');
-      lines.push('});');
-      lines.push('go(0);');
-      lines.push('</scr' + 'ipt>');
-      lines.push('</body>');
-      lines.push('</html>');
-
-      return lines.join('\n');
-    }
 
     // =============================================
     // Task Sidebar
@@ -1357,12 +866,16 @@
     var taskSidebar = document.getElementById('task-sidebar');
 
     var taskCards = window.TaskCards(taskSidebar, [
-      { id: 'write-story', title: 'Write your story', description: 'Chat with AI to create a 4-6 scene story' },
-      { id: 'generate-images', title: 'Generate at least 4 scene images', description: 'Create a visual for each scene' },
-      { id: 'soundtrack', title: 'Choose your soundtrack', description: 'Visit Suno or describe your music' },
-      { id: 'preview-film', title: 'Preview your film', description: 'Watch your mini film in the player' },
-      { id: 'export', title: 'Download your film', description: 'Save your creation as an HTML file' }
+      { id: 'choose-project',     title: 'Choose your project type',  description: 'Pick: Magazine, Film, Game, or Free Choice' },
+      { id: 'write-plan',         title: 'Write your plan',           description: 'Fill in your title, description, and steps' },
+      { id: 'build-project',      title: 'Build your project',        description: 'Use Text AI, Image AI, and Code AI to create' },
+      { id: 'write-presentation', title: 'Write your presentation',   description: 'Describe your project and creative process' },
+      { id: 'present-celebrate',  title: 'Present and celebrate!',    description: 'Launch presentation mode and share your work' }
     ]);
+
+    // Restore completed states
+    if (selectedProjectType) taskCards.setComplete('choose-project', true);
+    if (savedPlan && savedPlan.title && savedPlan.steps) taskCards.setComplete('write-plan', true);
 
     // =============================================
     // Utility

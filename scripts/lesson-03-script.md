@@ -1,291 +1,294 @@
-# Lesson 3: AI Artist — Teacher Script
-# 第三课：AI 艺术家 — 教师逐字稿
+# Lesson 3: AI Media — Sound, Scene, Action! — Teacher Script
+# 第三课：AI 媒体 — 声音、场景、开拍！— 教师逐字稿
 
-**Duration / 时长**: 43–45 minutes / 分钟
-**Materials / 材料**: Slides (`slides.html`), Interactive webpage (`index.html`), Student laptops, Pre-prepared AI vs. real images for guessing game
-**Goal / 目标**: Students learn to generate images with AI using text prompts, discover how prompt detail and style affect results, and create a mini art exhibition.
-**目标**: 学生学会使用文字提示用 AI 生成图片，发现提示的细节和风格如何影响结果，并创建一个迷你艺术展。
+**Duration / 时长**: 60 minutes / 分钟
+**Materials / 材料**: Slides (`slides.html`), Interactive webpage (`index.html`), Student laptops, 3 audio clips for guessing game (2 AI + 1 real, or mix)
+**Goal / 目标**: Students write lyrics and create music with AI (Suno), then combine text AI + image AI + music AI to produce a mini slideshow film.
+**目标**: 学生用 AI 写歌词并创作音乐（Suno），然后结合文本 AI + 图片 AI + 音乐 AI 制作一部迷你幻灯片电影。
 
 ---
 
 ## Pre-Class Preparation / 课前准备
 
 > **Important / 重要:**
-> Before class, prepare 4 images for the guessing game (Slide 2):
-> - 2 real photographs (e.g., a landscape, a street scene)
-> - 2 AI-generated images (e.g., a portrait, a fantasy scene)
+> 1. Prepare 3 short music clips for the guessing game (Slide 2):
+>    - Mix of real musician clips and AI-generated clips (from Suno or similar)
+>    - Pick clips where AI is surprisingly convincing
+>    - Have them ready to play from your computer
 >
-> Pick images where the AI ones are surprisingly realistic. Display them on your screen during the guessing game — the slide has placeholder text boxes that you'll supplement with the actual images.
+> 2. Have Suno.com open and ready to demo if needed
 >
-> 课前准备4张图片用于猜测游戏（幻灯片2）：
-> - 2张真实照片（如风景照、街景照）
-> - 2张AI生成的图片（如肖像画、奇幻场景）
+> 3. Make sure /api/chat and /api/image endpoints are running
 >
-> 选择那些AI生成看起来很真实的图片。在猜测游戏时在你的屏幕上展示它们——幻灯片上有占位文本框，你用实际图片来补充。
+> 课前准备：
+> 1. 准备3段短音乐片段用于猜测游戏（幻灯片2）：
+>    - 混合真人音乐家和 AI 生成的片段（来自 Suno 或类似工具）
+>    - 选择 AI 生成的听起来很逼真的片段
+>    - 准备好从你的电脑播放
+>
+> 2. 提前打开 Suno.com 准备演示
+>
+> 3. 确保 /api/chat 和 /api/image 接口正常运行
 
 ---
 
-## Warm-up / 概念热身 (8 minutes / 分钟)
+## Warm-up / 热身 (12 minutes / 分钟)
 
 ### [SLIDE 1 — Title] *(0:00)*
 
-EN: "Welcome back to AI Creator Lab! Last time, we used AI to write stories. Today we're going to take things to a whole new level — today we're going to make AI create PICTURES. That's right — you type words, and AI paints you a picture."
+EN: "Welcome back to AI Creator Lab! Today is a big day — we're going to use AI to make MUSIC and MOVIES. That's right — by the end of class, you'll have your own original song AND your own mini film. Sound, scene, action!"
 
-CN: "欢迎回到 AI 创造者实验室！上次我们用 AI 写了故事。今天我们要把事情提升到一个全新的水平——今天我们要让 AI 创造图片。没错——你输入文字，AI 就给你画一幅画。"
-
----
-
-### [SLIDE 2 — Guessing Game] *(0:01)*
-
-**[Show pre-prepared images on your screen alongside this slide / 在你的屏幕上展示预先准备的图片]**
-
-EN: "But first, let's play a game. I'm going to show you four images. Two of them were made by real photographers or real artists. And two were made entirely by AI. Your job: figure out which is which."
-
-CN: "但首先，我们来玩个游戏。我要给你们看四张图片。其中两张是真人摄影师或艺术家拍摄/创作的。另外两张完全是 AI 制作的。你们的任务：分辨哪些是哪些。"
-
-EN: "Take a good look at all four. Image A, B, C, and D. Talk to each other — which ones do you think AI made?"
-
-CN: "仔细看这四张图。图片 A、B、C 和 D。互相讨论一下——你们觉得哪些是 AI 做的？"
-
-**[Give students 30–60 seconds to discuss / 给学生 30-60 秒讨论]**
-
-EN: "Okay, what do you think? Raise your hand if you think Image A is AI."
-
-CN: "好了，你们怎么想？如果你觉得图片 A 是 AI 生成的，举手。"
-
-**[Go through each image, count hands / 逐一询问每张图片，数举手人数]**
+CN: "欢迎回到 AI 创造者实验室！今天是很重要的一天——我们要用 AI 做音乐和电影。没错——到课结束时，你会有自己的原创歌曲和自己的迷你电影。声音、场景、开拍！"
 
 ---
 
-### [SLIDE 3 — Reveal] *(0:03)*
+### [SLIDE 2 — "Real or AI?" Guessing Game] *(0:01)*
 
-EN: "The answer is... Images B and D were AI-generated! Could you tell? A lot of people can't! AI has gotten incredibly good at making images that look totally real."
+**[Play 3 music clips from your computer / 从你的电脑播放3段音乐]**
 
-CN: "答案是……图片 B 和 D 是 AI 生成的！你们能分辨出来吗？很多人分辨不出来！AI 已经变得非常擅长制作看起来完全真实的图片了。"
+EN: "But first, let's play a game. I'm going to play you three short music clips. Some are by real musicians, and some were made entirely by AI. Your job: figure out which is which."
 
-EN: "What surprised you? Was there one that you were sure was real but wasn't?"
+CN: "但首先，我们来玩个游戏。我要给你们播放三段短音乐。有些是真人音乐家演奏的，有些完全是 AI 制作的。你们的任务：分辨哪些是哪些。"
 
-CN: "什么让你惊讶了？有没有哪张你确信是真实的结果却不是？"
+EN: "Listen carefully to each one. After all three, I'll ask you to vote."
 
-**[Wait for student responses / 等待学生回答]**
+CN: "仔细听每一段。三段都播完后，我会让你们投票。"
 
----
+**[Play clip 1, pause, play clip 2, pause, play clip 3 / 播放片段1，暂停，播放片段2，暂停，播放片段3]**
 
-### [SLIDE 4 — How It Works] *(0:04)*
+EN: "Okay, time to vote! Raise your hand if you think Song 1 is AI... Song 2... Song 3..."
 
-EN: "So how does this work? It's actually the same idea as last week when we wrote stories. You DESCRIBE what you want in words, and AI CREATES it. Last time the output was text. This time? The output is an image."
+CN: "好了，投票时间！如果你觉得歌曲1是 AI 的，举手……歌曲2……歌曲3……"
 
-CN: "那这是怎么做到的呢？其实和上周我们写故事的原理一样。你用文字描述你想要的东西，AI 就创造出来。上次的输出是文字。这次呢？输出是图片。"
+**[Reveal answers, discuss / 揭示答案，讨论]**
 
-EN: "The text you type in is called a 'prompt' — and how you write that prompt makes a HUGE difference in what you get."
+EN: "AI music has gotten REALLY good. You can barely tell the difference sometimes! And today, YOU get to be a music producer."
 
-CN: "你输入的文字叫做'提示词'——你怎么写这个提示词会极大地影响你得到的结果。"
-
----
-
-### [SLIDE 5 — The Power of Details] *(0:05)*
-
-EN: "Look at this comparison. On the left, someone typed just 'a cat.' That's it. What do you think the AI gives you? Something pretty generic — just... a cat. Nothing special."
-
-CN: "看看这个对比。左边，有人只输入了'一只猫'。就这样。你觉得 AI 会给你什么？相当普通的东西——就是……一只猫。没什么特别的。"
-
-EN: "But on the right? Someone typed 'a fluffy orange cat wearing a tiny top hat, sitting on a velvet cushion, watercolor style.' Now AI knows EXACTLY what to paint — the color, the accessories, the pose, even the art style. And the result? Way more interesting."
-
-CN: "但右边呢？有人输入了'一只蓬松的橘猫戴着小礼帽，坐在天鹅绒垫子上，水彩画风格'。现在 AI 确切地知道要画什么——颜色、配饰、姿势，甚至艺术风格。结果呢？有趣得多。"
-
-EN: "So the lesson here is: the more details you give, the better the result."
-
-CN: "所以这里的教训是：你给的细节越多，结果越好。"
-
-**[Demo: Optional — open the lesson page and quickly demonstrate a vague vs. detailed prompt live / 可选演示：打开课程页面，现场快速演示一个模糊 vs. 详细的提示词]**
+CN: "AI 音乐已经变得非常好了。有时候你几乎分辨不出区别！今天，你们要成为音乐制作人。"
 
 ---
 
-### [SLIDE 6 — Style Matters] *(0:06)*
+### [SLIDE 3 — How AI Makes Music] *(0:04)*
 
-EN: "Another cool thing — you can ask for the same thing in different art styles. Look: 'a castle on a hill' can look like a realistic photo, a cartoon, a watercolor painting, or pixel art. Same castle, same hill — completely different vibe."
+EN: "So how does AI make music? Same idea as everything we've done before — you DESCRIBE what you want, and AI CREATES it. You give it a description, a genre, and maybe some lyrics, and it generates a full song with vocals, instruments, everything."
 
-CN: "还有一个很酷的事情——你可以要求用不同的艺术风格画同一个东西。看：'山丘上的城堡'可以看起来像真实的照片、卡通画、水彩画，或者像素艺术。同一个城堡，同一座山丘——完全不同的感觉。"
-
-EN: "You'll get to try all of these styles today on your page."
-
-CN: "今天你们可以在自己的页面上尝试所有这些风格。"
+CN: "那 AI 是怎么做音乐的呢？和我们之前做的一切一样——你描述你想要的，AI 就创造出来。你给它一个描述、一种风格，也许还有一些歌词，它就生成一首完整的歌，包括人声、乐器，所有的一切。"
 
 ---
 
-### [SLIDE 7 — Prompt Tips] *(0:07)*
+### [SLIDE 4 — Music Genre Showcase] *(0:05)*
 
-EN: "Here are four things to include when you write an image prompt."
+EN: "Just like art has different styles, music has different genres. Pop is catchy and fun. Hip-hop is rhythmic and bold. Classical is elegant. Electronic is danceable. Jazz is smooth. Rock is powerful. Today you can try any of these!"
 
-CN: "这里有四个写图片提示词时要包含的要素。"
-
-EN: "Number 1: WHAT is in the picture? What's the subject? A robot? A dragon? A bowl of ramen?"
-
-CN: "第一：图片里有什么？主题是什么？机器人？龙？一碗拉面？"
-
-EN: "Number 2: What STYLE? Realistic photo? Cartoon? Watercolor? Pixel art?"
-
-CN: "第二：什么风格？写实照片？卡通？水彩？像素艺术？"
-
-EN: "Number 3: What MOOD or COLORS? Is it bright and cheerful? Dark and mysterious? Golden sunset light?"
-
-CN: "第三：什么氛围或颜色？明亮欢快的？黑暗神秘的？金色的夕阳光线？"
-
-EN: "Number 4: Any SPECIAL DETAILS? Wearing a hat? Holding a book? Surrounded by flowers? The little details make it yours."
-
-CN: "第四：有什么特别的细节？戴着帽子？拿着书？被花朵包围？小细节让它变成你独有的。"
+CN: "就像艺术有不同的风格一样，音乐有不同的类型。流行乐朗朗上口又有趣。嘻哈有节奏感又大胆。古典乐优雅。电子乐适合跳舞。爵士乐很顺滑。摇滚很有力量。今天你可以尝试任何一种！"
 
 ---
 
-### [SLIDE 8 — Today's Mission] *(0:07)*
+### [SLIDE 5 — How to Describe Music to AI] *(0:06)*
 
-EN: "Your mission today: create your own AI Art Exhibition! You'll make at least three artworks in different styles, try the challenge mode, and pick your best work to give it a title. Think of yourself as an art director — you tell the AI what to paint!"
+EN: "When you describe music to AI, think about four things: Mood — is it happy, epic, chill, or mysterious? Genre — pop, rock, lo-fi? Instruments — guitar, piano, synth? And Theme — what is the song about? Summer? Adventure? Friendship? The more specific you are, the better your song will be."
 
-CN: "你们今天的任务：创建自己的 AI 艺术展！你们要用不同风格制作至少三件作品，尝试挑战模式，并选出你最好的作品给它起个标题。把自己想象成一个艺术总监——你告诉 AI 要画什么！"
-
----
-
-### [SLIDE 9 — Challenge Preview] *(0:08)*
-
-EN: "And once you've gotten the hang of it, there's a challenge mode. You'll get a description — like 'a cat wearing sunglasses' — and your job is to write a prompt that makes AI create that image. Three challenges, getting harder each time. It's like a puzzle, but with art!"
-
-CN: "等你们掌握了之后，还有一个挑战模式。你会得到一个描述——比如'一只戴太阳镜的猫'——你的任务是写一个提示词让 AI 创造出那个图片。三个挑战，一个比一个难。就像解谜一样，但用的是艺术！"
+CN: "当你向 AI 描述音乐时，想想四件事：氛围——是快乐的、史诗的、放松的还是神秘的？类型——流行、摇滚、lo-fi？乐器——吉他、钢琴、合成器？主题——歌曲是关于什么的？夏天？冒险？友谊？你越具体，你的歌就会越好。"
 
 ---
 
-### [SLIDE 10 — Let's Go!] *(0:08)*
+### [SLIDE 6 — What Makes a Great Movie?] *(0:08)*
 
-EN: "Alright — open your laptops and go to the Lesson 3 page!"
+EN: "Now let's talk about the second part of today — making a MOVIE. What makes a great movie? Four things: a good story, great visuals, music that sets the mood, and good pacing — how the story flows from scene to scene."
 
-CN: "好了——打开电脑，进入第三课的页面！"
+CN: "现在让我们谈谈今天的第二部分——做电影。什么让一部电影变得伟大？四件事：好故事、好画面、设定氛围的音乐，以及好的节奏——故事如何从一个场景流到下一个场景。"
+
+EN: "And guess what? We now have AI tools for ALL of these. Text AI for the story, Image AI for the visuals, and Music AI for the soundtrack."
+
+CN: "猜猜怎么着？我们现在有 AI 工具来做所有这些。文本 AI 写故事，图片 AI 做画面，音乐 AI 做配乐。"
 
 ---
 
-## Hands-on Project / 动手项目 (30 minutes / 分钟)
+### [SLIDE 7 — Review: All Tools] *(0:09)*
 
-### Phase 1: Free Exploration (5 min) *(0:08–0:13)*
+EN: "Look at this — Text AI can write stories, lyrics, and scripts. Image AI can create illustrations and scenes. Music AI can make songs and soundtracks. Today we combine ALL THREE into one project — your own mini film!"
 
-**[Switch from slides to monitoring student screens / 从幻灯片切换到巡视学生屏幕]**
+CN: "看——文本 AI 可以写故事、歌词和剧本。图片 AI 可以创建插图和场景。音乐 AI 可以做歌曲和配乐。今天我们把三者全部结合成一个项目——你自己的迷你电影！"
 
-EN: "You should see the AI Artist page with two tabs — Free Create and Challenge Mode. Start with Free Create. Just type anything you want to see — your favorite animal, a dream place, something silly. Try your first image!"
+---
 
-CN: "你应该看到 AI 艺术家页面，有两个标签——自由创作和挑战模式。从自由创作开始。输入你想看到的任何东西——你最喜欢的动物、一个梦想中的地方、或者什么搞笑的东西。试试你的第一张图片！"
+### [SLIDE 8 — Storyboard Concept] *(0:10)*
 
-**[Give students 5 minutes for first images / 给学生 5 分钟生成第一批图片]**
+EN: "Before we start, let me explain what a storyboard is. A storyboard is like a comic strip that plans out your film. Each box is one scene — what happens, what the viewer sees. Real Hollywood directors use storyboards to plan every scene. Today, YOU are the director, and AI is your crew."
+
+CN: "在我们开始之前，让我解释一下什么是故事板。故事板就像一个漫画条，规划你的电影。每个格子是一个场景——发生了什么，观众看到什么。真正的好莱坞导演用故事板来规划每个场景。今天，你就是导演，AI 是你的团队。"
+
+---
+
+### [SLIDE 9 — Workflow] *(0:11)*
+
+EN: "Here's your workflow today. Part 1: Write lyrics, then create music on Suno. Part 2: Write a film script with AI, generate images for each scene, add your soundtrack, and preview your film. Two big projects in one class!"
+
+CN: "这是你今天的工作流程。第一部分：写歌词，然后在 Suno 上创作音乐。第二部分：用 AI 写电影剧本，为每个场景生成图片，添加你的配乐，预览你的电影。一节课做两个大项目！"
+
+---
+
+## Part 1: AI Musician / AI 音乐家 (18 minutes / 分钟)
+
+### [SLIDE 10 — Tips for Scene Images] *(save for later reference)*
+
+### [SLIDE 11 — Your Mission] *(0:12)*
+
+EN: "Here's the plan. Part 1: Write lyrics with AI, then create a song on Suno. You have about 15 minutes for this. Part 2: Write your film script, generate scene images, add your music, and preview your film. Let's start with music! Open your laptops and go to Lesson 3."
+
+CN: "计划是这样的。第一部分：用 AI 写歌词，然后在 Suno 上创作歌曲。你有大约15分钟做这个。第二部分：写电影剧本，生成场景图片，添加音乐，预览电影。让我们从音乐开始！打开电脑，进入第三课。"
+
+### [SLIDE 12 — Lights, Camera, AI!] *(0:12)*
+
+**[Students open laptops / 学生打开电脑]**
+
+---
+
+### Phase 1A: Lyrics Workshop (7 min) *(0:12–0:19)*
+
+**[Switch from slides to monitoring / 从幻灯片切换到巡视]**
+
+EN: "You should see the Lesson 3 page with two tabs — Part 1: AI Musician and Part 2: AI Director. Start with Part 1. First, use the Lyrics Workshop to write lyrics with AI. Tell the AI what your song should be about — anything you want! A happy summer song, a funny rap about homework, an epic adventure anthem."
+
+CN: "你应该看到第三课页面，有两个标签——第一部分：AI 音乐家和第二部分：AI 导演。从第一部分开始。首先，使用歌词工作室用 AI 写歌词。告诉 AI 你的歌应该是关于什么的——任何你想要的！一首快乐的夏日歌曲、一首关于作业的搞笑说唱、一首史诗冒险赞歌。"
+
+EN: "Once you like your lyrics, click 'Copy Lyrics' to save them. Then scroll down to check out the music genres — pick one that fits your song."
+
+CN: "一旦你喜欢你的歌词，点击'复制歌词'保存。然后往下滚动看看音乐类型——选一个适合你歌曲的。"
+
+**[Give students 7 minutes / 给学生7分钟]**
 
 > **Contingency / 应对方案:**
-> EN: If image generation is slow: "While we wait for AI to paint, let's plan your next prompt! What else do you want to create?"
-> CN: 如果图片生成很慢："在等 AI 画画的时候，让我们计划下一个提示词！你还想创造什么？"
-
-> **Contingency / 应对方案:**
-> EN: If a student can't think of what to create: "Here are some ideas: your dream pet, a fantasy landscape, your favorite food as a character, something from outer space, an underwater city, or a mashup of two animals!"
-> CN: 如果学生想不出要创造什么："这里有一些想法：你梦想中的宠物、一个奇幻风景、你最喜欢的食物变成角色、太空中的东西、海底城市、或者两种动物的混合体！"
+> EN: If a student can't think of a topic: "What's something you care about? Your favorite hobby? Something funny that happened this week? Your dream vacation? Any topic works!"
+> CN: 如果学生想不出主题："你关心什么？你最喜欢的爱好？这周发生的搞笑的事？你梦想的假期？任何主题都行！"
 
 ---
 
-### Phase 2: Style Challenge (10 min) *(0:13–0:23)*
+### Phase 1B: Create on Suno (8 min) *(0:19–0:27)*
 
-EN: "Okay, you've got your first image. Now here's a mini-challenge: pick one thing you like — like a dragon, a robot, or a castle — and try generating it in THREE different styles. Click on different style cards to see how the same prompt looks completely different."
+EN: "Okay, now the fun part! Click the big purple button to open Suno Music Studio. Follow the step-by-step guide on the page. Toggle Custom mode on, paste your lyrics, type a style like 'upbeat pop' or 'chill lo-fi', and hit Create!"
 
-CN: "好的，你已经有了第一张图片。现在来一个小挑战：选一个你喜欢的东西——比如龙、机器人或城堡——然后尝试用三种不同的风格生成它。点击不同的风格卡片，看看同一个提示词看起来完全不同。"
+CN: "好了，现在是有趣的部分！点击大紫色按钮打开 Suno 音乐工作室。按照页面上的分步指南操作。打开自定义模式，粘贴你的歌词，输入一个风格比如'upbeat pop'或'chill lo-fi'，然后点创建！"
 
-EN: "Try Realistic, then Cartoon, then maybe Pixel Art or Watercolor. Same description, different look!"
+EN: "While your first song is generating, try a different style! Same lyrics, different genre. See how it changes the feel."
 
-CN: "试试写实风格，然后卡通风格，再试试像素艺术或水彩。同样的描述，不同的外观！"
+CN: "在你的第一首歌生成的时候，试试不同的风格！同样的歌词，不同的类型。看看感觉有什么变化。"
 
-**[Give students 10 minutes / 给学生 10 分钟]**
-
-> **Walk around and check in / 走动并查看:**
-> EN: Look for students who are just using basic prompts. Encourage them: "Try adding more details! What color is it? What's happening in the background? What time of day is it?"
-> CN: 注意使用基本提示词的学生。鼓励他们："试着加更多细节！它是什么颜色的？背景发生了什么？现在是什么时候？"
-
-> **Contingency / 应对方案:**
-> EN: If an image looks wrong or funny: "Great learning moment! What did the AI get wrong? What could we add to the prompt to fix it? Sometimes adding 'no' or being more specific helps."
-> CN: 如果图片看起来不对或搞笑："很好的学习机会！AI 画错了什么？我们可以在提示词中加什么来修正它？有时候加'没有'或者更具体的描述会有帮助。"
-
----
-
-### Phase 3: Challenge Mode (10 min) *(0:23–0:33)*
-
-EN: "Alright, time to test your skills! Switch to the Challenge Mode tab. You'll see a description, and your job is to write a prompt that makes AI generate an image matching that description."
-
-CN: "好了，是时候测试你的技能了！切换到挑战模式标签。你会看到一段描述，你的任务是写一个提示词让 AI 生成一张与描述匹配的图片。"
-
-EN: "Start with Challenge 1 — it's pretty easy. Then try Challenge 2, which needs more detail. Challenge 3 is the hardest — a complex scene with multiple things happening."
-
-CN: "从挑战 1 开始——比较简单。然后试试挑战 2，需要更多细节。挑战 3 是最难的——一个有多个元素的复杂场景。"
-
-EN: "Remember your prompt tips: What, Style, Mood, and Details!"
-
-CN: "记住你的提示词技巧：什么、风格、氛围和细节！"
-
-**[Give students 10 minutes / 给学生 10 分钟]**
+**[Give students 8 minutes / 给学生8分钟]**
 
 > **Walk around and help / 走动并帮助:**
-> EN: If a student is struggling with the hard challenge: "Think about it piece by piece. First, what's the main subject? Then where are they? Then what are they doing? Build your prompt one detail at a time."
-> CN: 如果学生在困难挑战上遇到困难："一步一步想。首先，主要的主体是什么？然后他们在哪里？然后他们在做什么？一次添加一个细节来构建你的提示词。"
+> EN: Help students with Suno if they get stuck. Common issues: forgetting to toggle Custom mode, or typing lyrics in the wrong field.
+> CN: 如果学生遇到困难，帮助他们使用 Suno。常见问题：忘记打开自定义模式，或在错误的字段输入歌词。
 
 ---
 
-### Phase 4: Pick Favorites & Add Titles (5 min) *(0:33–0:38)*
+### Phase 1C: Log Your Songs (3 min) *(0:27–0:30)*
 
-EN: "Nice work! Now go back to the Free Create tab and look at your gallery. You should have at least a few images there. Click on your favorite one — you'll be able to give it a title, like a real art exhibition."
+EN: "Nice work! Now go back to the lesson page and scroll down to 'My Songs.' Add your songs there — give them a title, the style you used, and any notes. This will help you remember which ones you made when we pick music for the film later."
 
-CN: "做得好！现在回到自由创作标签看看你的画廊。你应该至少有几张图片了。点击你最喜欢的那张——你可以给它起一个标题，就像真正的艺术展一样。"
+CN: "做得好！现在回到课程页面，往下滚到'我的歌曲'。在那里添加你的歌曲——给它们一个标题、你使用的风格和任何备注。这会帮你记住你做了哪些歌，以便我们稍后为电影选音乐。"
 
-EN: "If you have time, try writing a one-sentence 'artist statement' about your favorite piece — why you like it, what you were going for, or what the image means to you. Just in your head or you can tell me."
-
-CN: "如果你有时间，试着为你最喜欢的作品写一句话的'艺术家宣言'——为什么喜欢它，你想达到什么效果，或者这张图片对你意味着什么。在心里想想，或者告诉我。"
-
-**[Give students 5 minutes / 给学生 5 分钟]**
+**[Give students 3 minutes / 给学生3分钟]**
 
 ---
 
-## Show & Share / 展示分享 (5 minutes / 分钟) *(0:38–0:43)*
+## Part 2: AI Director / AI 导演 (22 minutes / 分钟)
 
-EN: "Alright, time for our mini art exhibition! Let's see your masterpieces. Who wants to show their best work first?"
+### Phase 2A: Write the Script (7 min) *(0:30–0:37)*
 
-CN: "好了，我们的迷你艺术展时间到了！让我们看看你的杰作。谁想先展示自己最好的作品？"
+EN: "Awesome! Now switch to the Part 2 tab — AI Director. This is where you become a film director! Step 1 is writing your script. Chat with the AI to brainstorm a story. Tell it your idea — a space adventure, a mystery at school, a funny day in the life of a pet — and the AI will help you organize it into 4 to 6 scenes."
 
-**[Wait for a volunteer / 等待志愿者]**
+CN: "太棒了！现在切换到第二部分标签——AI 导演。在这里你要成为电影导演！第一步是写剧本。和 AI 聊天来头脑风暴一个故事。告诉它你的想法——太空冒险、学校里的谜团、宠物有趣的一天——AI 会帮你把它组织成4到6个场景。"
 
-EN: "Show us the image on your screen. Tell us: what's the title, and what prompt did you use to create it?"
+EN: "Once the AI gives you scenes, click 'Use These Scenes' to load them into Step 2. If you don't like the story, keep chatting — tell the AI what to change!"
 
-CN: "在你的屏幕上展示这张图片。告诉我们：标题是什么，你用了什么提示词来创建它？"
+CN: "一旦 AI 给你场景，点击'使用这些场景'将它们加载到第二步。如果你不喜欢这个故事，继续聊——告诉 AI 要改什么！"
 
-**[Student 1 presents / 学生 1 展示]**
+**[Give students 7 minutes / 给学生7分钟]**
 
-EN: "That's awesome! And how about you?"
-
-CN: "太棒了！你呢？"
-
-**[Student 2 presents / 学生 2 展示]**
-
-EN: "Great work! Now a question for both of you: what did you learn about writing prompts? What made a prompt work well? What didn't work?"
-
-CN: "做得很好！现在问你们俩一个问题：关于写提示词你学到了什么？什么样的提示词效果好？什么不好？"
-
-**[Wait for responses / 等待回答]**
-
-EN: "Exactly. The more specific you are, the better the result. And trying different styles is a great way to see how the same idea can look completely different."
-
-CN: "没错。你越具体，结果越好。而且尝试不同的风格是看到同一个想法可以看起来完全不同的好方法。"
+> **Contingency / 应对方案:**
+> EN: If a student is stuck on a story idea: "Think about your favorite movie or book. What if you could remix it? A superhero who's afraid of heights? A chef who cooks for dragons? Start with a 'what if' question!"
+> CN: 如果学生在故事想法上卡住了："想想你最喜欢的电影或书。如果你能重新混合它呢？一个恐高的超级英雄？一个给龙做饭的厨师？从一个'如果'的问题开始！"
 
 ---
 
-## Wrap-up / 课程总结 (2 minutes / 分钟) *(0:43–0:45)*
+### Phase 2B: Generate Scene Images (10 min) *(0:37–0:47)*
 
-EN: "Today you learned that AI can create images from text descriptions. The key is your prompt — the more detail and style information you give, the better the result."
+EN: "Click 'Next' to go to Step 2 — Scenes. You'll see each scene from your story. For each one, you can write an image prompt or click 'Suggest Prompt' to let AI help. Then click 'Generate Image' to create the picture."
 
-CN: "今天你学到了 AI 可以从文字描述生成图片。关键是你的提示词——你给的细节和风格信息越多，结果越好。"
+CN: "点击'下一步'进入第二步——场景。你会看到故事中的每个场景。对于每个场景，你可以写一个图片提示或点击'建议提示'让 AI 帮忙。然后点击'生成图片'来创建画面。"
 
-EN: "Remember, AI is just a tool. YOU are the artist — you have the ideas, the vision, the creativity. AI just helps you bring it to life."
+EN: "Try to generate images for at least 4 scenes. Remember the tips from the slides — be specific, include mood, mention characters, think cinematic!"
 
-CN: "记住，AI 只是一个工具。你才是艺术家——你有想法、有远见、有创造力。AI 只是帮你把它变成现实。"
+CN: "尝试为至少4个场景生成图片。记住幻灯片上的提示——要具体，包含氛围，提到人物，想象电影画面！"
 
-EN: "Next week, we're going to combine everything — text AND images — to create AI picture books. See you then!"
+**[Give students 10 minutes / 给学生10分钟]**
 
-CN: "下周我们要把一切结合起来——文字和图片——创建 AI 绘本。下次见！"
+> **Walk around and help / 走动并帮助:**
+> EN: Image generation takes time. Encourage students to work on the next scene's prompt while waiting. "While that image loads, write the prompt for your next scene!"
+> CN: 图片生成需要时间。鼓励学生在等待时写下一个场景的提示。"在那张图片加载的时候，写下一个场景的提示！"
+
+> **Contingency / 应对方案:**
+> EN: If images are slow: "While we wait, let's review your prompts. Can you make them more specific? What time of day? What's the lighting like? What colors do you see?"
+> CN: 如果图片很慢："在等待的时候，让我们检查你的提示。你能让它们更具体吗？什么时间？光线怎样？你看到什么颜色？"
+
+---
+
+### Phase 2C: Soundtrack & Preview (5 min) *(0:47–0:52)*
+
+EN: "Great progress! Now click Next to go to Step 3 — Soundtrack. You can use the music you already made in Part 1! Paste the Suno link, or just describe the music you want. Then click Next to preview your film!"
+
+CN: "进展很好！现在点击下一步进入第三步——配乐。你可以使用你在第一部分已经做好的音乐！粘贴 Suno 链接，或者只是描述你想要的音乐。然后点击下一步预览你的电影！"
+
+EN: "In the Preview, use the arrow buttons to step through your film, or check the Auto-play box to watch it play automatically. You can also download it as an HTML file to keep forever!"
+
+CN: "在预览中，用箭头按钮逐步浏览你的电影，或勾选自动播放框来自动播放。你还可以把它下载为 HTML 文件永久保存！"
+
+**[Give students 5 minutes / 给学生5分钟]**
+
+---
+
+## Share / Film Premiere / 电影首映 (6 minutes / 分钟) *(0:52–0:58)*
+
+EN: "It's PREMIERE TIME! Who wants to show their film first? Bring your laptop up, or I'll show it on the screen. When you present, tell us: What's your film about? And play your favorite song from Part 1 too!"
+
+CN: "首映时间到了！谁想先展示自己的电影？把电脑拿上来，或者我在屏幕上展示。当你展示时，告诉我们：你的电影是关于什么的？也播放你第一部分中最喜欢的歌曲！"
+
+**[Wait for volunteer / 等待志愿者]**
+
+**[Student 1 presents — play their film on auto-play / 学生1展示——自动播放他们的电影]**
+
+EN: "Amazing! What did you like about making this? What was the hardest part?"
+
+CN: "太棒了！你觉得制作过程中什么最有趣？最难的部分是什么？"
+
+**[Student 2 presents / 学生2展示]**
+
+EN: "Great work! Let's hear your song too. What style did you use?"
+
+CN: "做得好！我们也来听听你的歌。你用了什么风格？"
+
+**[If time allows, 1-2 more students present / 如果时间允许，再让1-2个学生展示]**
+
+EN: "Give everyone a round of applause — you just made original music AND a mini film in one class!"
+
+CN: "给大家一个掌声——你们刚刚在一节课里做了原创音乐和迷你电影！"
+
+---
+
+## Wrap-up / 课程总结 (2 minutes / 分钟) *(0:58–1:00)*
+
+EN: "Today you combined ALL the AI tools we've learned — text, images, and music — into two creative projects. You wrote lyrics, made songs, wrote film scripts, generated scene images, and put it all together into a mini film."
+
+CN: "今天你们结合了我们学过的所有 AI 工具——文本、图片和音乐——做了两个创意项目。你们写了歌词、做了歌曲、写了电影剧本、生成了场景图片，把所有东西组合成了一部迷你电影。"
+
+EN: "Remember — AI is just a tool. YOU are the musician, the director, the creator. You had the ideas, you made the choices, you told the story. AI just helped you bring it to life."
+
+CN: "记住——AI 只是一个工具。你才是音乐家、导演、创造者。你有想法，你做选择，你讲故事。AI 只是帮你把它变成现实。"
+
+EN: "Great work today. See you next time!"
+
+CN: "今天做得很好。下次见！"
 
 ---
 
@@ -294,16 +297,15 @@ CN: "下周我们要把一切结合起来——文字和图片——创建 AI �
 | Time / 时间 | Section / 环节 | Activity / 活动 |
 |---|---|---|
 | 0:00–0:01 | Welcome | Slide 1 — Title & introduction |
-| 0:01–0:03 | Guessing Game | Slide 2 — "Which are AI?" |
-| 0:03–0:04 | Reveal | Slide 3 — Answers & discussion |
-| 0:04–0:05 | Concept | Slide 4 — How AI image generation works |
-| 0:05–0:06 | Demo | Slide 5 — Vague vs. detailed prompts |
-| 0:06–0:07 | Styles | Slide 6 — Same prompt, different styles |
-| 0:07–0:08 | Tips | Slides 7–9 — Prompt tips & mission |
-| 0:08 | Launch | Slide 10 — Students open laptops |
-| 0:08–0:13 | Free Explore | Students generate first images (Free Create) |
-| 0:13–0:23 | Style Challenge | Same subject in 3 different styles |
-| 0:23–0:33 | Challenge Mode | Students try challenge prompts |
-| 0:33–0:38 | Titles | Students pick favorites, add titles |
-| 0:38–0:43 | Share | Mini art exhibition & discussion |
-| 0:43–0:45 | Wrap-up | Recap key ideas, preview next lesson |
+| 0:01–0:04 | Guessing Game | Slide 2 — "Real or AI?" music clips |
+| 0:04–0:06 | How AI Music Works | Slides 3–5 — Genre, describing music |
+| 0:06–0:10 | What Makes a Movie? | Slides 6–8 — Film elements, tools review, storyboard |
+| 0:10–0:12 | Workflow & Mission | Slides 9–12 — Workflow overview, mission, launch |
+| 0:12–0:19 | Part 1A: Lyrics | Students write lyrics with AI ChatWidget |
+| 0:19–0:27 | Part 1B: Suno | Students create songs on Suno |
+| 0:27–0:30 | Part 1C: Log Songs | Students record their songs in My Songs |
+| 0:30–0:37 | Part 2A: Script | Students write film script with AI (Step 1) |
+| 0:37–0:47 | Part 2B: Images | Students generate scene images (Step 2) |
+| 0:47–0:52 | Part 2C: Preview | Soundtrack (Step 3) + Preview film (Step 4) |
+| 0:52–0:58 | Premiere | Students present films & songs |
+| 0:58–1:00 | Wrap-up | Recap key ideas |
