@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lesson 10: Final Project — Planning - AI Creator Lab</title>
+  <link rel="stylesheet" href="/shared/styles.css">
+  <style>
+    /* Project type cards */
+    .project-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: var(--space-lg);
+    }
+
+    .project-card {
+      background: var(--color-surface);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
+      padding: var(--space-xl);
+      border: 2px solid var(--color-border);
+      text-align: center;
+      cursor: pointer;
+      transition: box-shadow var(--transition-normal),
+                  transform var(--transition-normal),
+                  border-color var(--transition-normal);
+    }
+
+    .project-card:hover {
+      box-shadow: var(--shadow-md);
+      transform: translateY(-3px);
+    }
+
+    .project-card.card-selected {
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px var(--color-primary-light);
+    }
+
+    .project-card .project-emoji {
+      font-size: 3rem;
+      margin-bottom: var(--space-sm);
+    }
+
+    .project-card .project-name {
+      font-size: var(--text-lg);
+      font-weight: 700;
+      margin-bottom: var(--space-xs);
+    }
+
+    .project-card .project-desc {
+      font-size: var(--text-sm);
+      color: var(--color-text-muted);
+      line-height: 1.5;
+    }
+
+    /* Section spacing */
+    .lesson-section {
+      margin-bottom: var(--space-xl);
+      padding-bottom: var(--space-xl);
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .lesson-section:last-child {
+      border-bottom: none;
+    }
+
+    .section-heading {
+      font-size: var(--text-xl);
+      font-weight: 650;
+      margin-bottom: var(--space-lg);
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+    }
+
+    /* Planning form */
+    .plan-form {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-lg);
+    }
+
+    .plan-form .form-group {
+      gap: var(--space-xs);
+    }
+
+    /* Tools checklist */
+    .tools-checklist {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-md);
+      list-style: none;
+      padding: 0;
+    }
+
+    .tools-checklist li {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      padding: var(--space-sm) var(--space-md);
+      background: var(--color-bg);
+      border-radius: var(--radius-md);
+      font-size: var(--text-sm);
+      font-weight: 600;
+      cursor: pointer;
+      border: 1.5px solid var(--color-border);
+      transition: all var(--transition-fast);
+      user-select: none;
+    }
+
+    .tools-checklist li:hover {
+      border-color: var(--color-primary);
+    }
+
+    .tools-checklist li input[type="checkbox"] {
+      accent-color: var(--color-primary);
+    }
+
+    /* Skills recap banner */
+    .skills-banner {
+      background: linear-gradient(135deg, var(--color-primary-light) 0%, var(--color-secondary-light) 100%);
+      border-radius: var(--radius-lg);
+      padding: var(--space-lg);
+      margin-bottom: var(--space-lg);
+      text-align: center;
+    }
+
+    .skills-banner h3 {
+      margin-bottom: var(--space-md);
+      color: var(--color-secondary);
+    }
+
+    .skills-icons {
+      display: flex;
+      justify-content: center;
+      gap: var(--space-lg);
+      flex-wrap: wrap;
+    }
+
+    .skill-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--space-xs);
+    }
+
+    .skill-item .skill-emoji {
+      font-size: 2rem;
+    }
+
+    .skill-item .skill-label {
+      font-size: var(--text-sm);
+      font-weight: 600;
+      color: var(--color-text);
+    }
+
+    /* Selected project display */
+    .selected-project-display {
+      display: none;
+      background: var(--color-success-light);
+      border: 1.5px solid var(--color-success);
+      border-radius: var(--radius-md);
+      padding: var(--space-md);
+      margin-top: var(--space-md);
+      font-weight: 600;
+      color: #16a34a;
+    }
+
+    .selected-project-display.visible {
+      display: block;
+    }
+
+    /* Save status */
+    .save-status {
+      font-size: var(--text-sm);
+      color: var(--color-text-muted);
+      margin-top: var(--space-sm);
+      transition: color var(--transition-fast);
+    }
+
+    .save-status.saved {
+      color: var(--color-success);
+    }
+
+    /* Brainstorm and Materials side-by-side */
+    .tools-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-lg);
+    }
+
+    @media (max-width: 767px) {
+      .tools-row {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Lesson Header -->
+  <header class="lesson-header">
+    <div class="lesson-badge">
+      <span class="lesson-number">10</span>
+      <span class="lesson-title">Final Project: Planning</span>
+    </div>
+    <a href="/" class="back-link">&larr; Back to all lessons</a>
+  </header>
+
+  <!-- Page Layout -->
+  <div class="lesson-page">
+
+    <!-- Main Content Area -->
+    <main class="lesson-main" id="main-content">
+
+      <!-- Skills Recap Banner -->
+      <div class="skills-banner">
+        <h3>Look How Far You've Come!</h3>
+        <div class="skills-icons">
+          <div class="skill-item">
+            <span class="skill-emoji">&#x1F4AC;</span>
+            <span class="skill-label">Text AI</span>
+          </div>
+          <div class="skill-item">
+            <span class="skill-emoji">&#x1F3A8;</span>
+            <span class="skill-label">Image AI</span>
+          </div>
+          <div class="skill-item">
+            <span class="skill-emoji">&#x1F3B5;</span>
+            <span class="skill-label">Music AI</span>
+          </div>
+          <div class="skill-item">
+            <span class="skill-emoji">&#x1F3AC;</span>
+            <span class="skill-label">Film AI</span>
+          </div>
+          <div class="skill-item">
+            <span class="skill-emoji">&#x1F4BB;</span>
+            <span class="skill-label">Code AI</span>
+          </div>
+          <div class="skill-item">
+            <span class="skill-emoji">&#x1F3AE;</span>
+            <span class="skill-label">Game AI</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 1: Choose Your Project -->
+      <div class="lesson-section">
+        <h2 class="section-heading">&#x1F680; Choose Your Project</h2>
+        <p style="margin-bottom: var(--space-lg); color: var(--color-text-muted);">Pick the type of project you want to create for your final presentation. Click on a card to select it.</p>
+        <div class="project-grid" id="project-grid">
+          <!-- Rendered by JS -->
+        </div>
+        <div class="selected-project-display" id="selected-project-display"></div>
+      </div>
+
+      <!-- Section 2: Project Planning Form -->
+      <div class="lesson-section">
+        <h2 class="section-heading">&#x1F4DD; Write Your Plan</h2>
+        <div class="plan-form" id="plan-form">
+          <div class="form-group">
+            <label for="project-title">Project Title</label>
+            <input type="text" id="project-title" class="input" placeholder="Give your project a great name...">
+          </div>
+
+          <div class="form-group">
+            <label>Project Type</label>
+            <input type="text" id="project-type-display" class="input" placeholder="Select a project type above" readonly style="background: var(--color-bg); cursor: default;">
+          </div>
+
+          <div class="form-group">
+            <label for="project-description">Project Description</label>
+            <textarea id="project-description" class="textarea" placeholder="What will your project be about? What story do you want to tell? What experience do you want to create?"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label>Tools I'll Use</label>
+            <ul class="tools-checklist" id="tools-checklist">
+              <li><input type="checkbox" id="tool-text" value="Text AI"><label for="tool-text">&#x1F4AC; Text AI</label></li>
+              <li><input type="checkbox" id="tool-image" value="Image AI"><label for="tool-image">&#x1F3A8; Image AI</label></li>
+              <li><input type="checkbox" id="tool-music" value="Music AI"><label for="tool-music">&#x1F3B5; Music AI</label></li>
+              <li><input type="checkbox" id="tool-code" value="Code AI"><label for="tool-code">&#x1F4BB; Code AI</label></li>
+            </ul>
+          </div>
+
+          <div class="form-group">
+            <label for="project-steps">Step-by-Step Plan</label>
+            <textarea id="project-steps" class="textarea" placeholder="Break your project into steps. For example:&#10;1. Write the story outline&#10;2. Generate images for each scene&#10;3. Build the interactive page&#10;4. Add final touches"></textarea>
+          </div>
+
+          <div style="display: flex; gap: var(--space-md); align-items: center;">
+            <button class="btn btn-primary" id="save-plan-btn">Save My Plan</button>
+            <span class="save-status" id="save-status"></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 3: Brainstorm & Collect Materials -->
+      <div class="lesson-section">
+        <h2 class="section-heading">&#x1F4A1; Brainstorm &amp; Collect Materials</h2>
+        <div class="tools-row">
+          <div>
+            <h3 style="margin-bottom: var(--space-md);">&#x1F916; Brainstorm with AI</h3>
+            <div id="brainstorm-chat"></div>
+          </div>
+          <div>
+            <h3 style="margin-bottom: var(--space-md);">&#x1F5BC;&#xFE0F; Start Collecting Images</h3>
+            <div id="image-gen"></div>
+          </div>
+        </div>
+      </div>
+
+    </main>
+
+    <!-- Task Sidebar -->
+    <aside class="lesson-sidebar">
+      <div class="task-sidebar" id="task-sidebar"></div>
+    </aside>
+
+  </div>
+
+  <script src="/shared/components.js"></script>
+  <script>
+    // =============================================
+    // Section 1: Project Type Selection
+    // =============================================
+    var projectTypes = [
+      {
+        id: 'magazine',
+        emoji: '\uD83D\uDCF0',
+        name: 'AI Magazine',
+        desc: 'Create a multi-page digital magazine with articles, interviews, and AI-generated illustrations.'
+      },
+      {
+        id: 'film',
+        emoji: '\uD83C\uDFAC',
+        name: 'AI Short Film',
+        desc: 'Build a longer version of a mini-film with multiple scenes, narration, and a soundtrack.'
+      },
+      {
+        id: 'game',
+        emoji: '\uD83C\uDFAE',
+        name: 'AI Game',
+        desc: 'Design a more complex game with multiple levels, features, or a branching story.'
+      },
+      {
+        id: 'free',
+        emoji: '\u2728',
+        name: 'Free Choice',
+        desc: 'Combine any AI tools to create something entirely unique \u2014 the sky is the limit!'
+      }
+    ];
+
+    var projectGrid = document.getElementById('project-grid');
+    var selectedProjectDisplay = document.getElementById('selected-project-display');
+    var projectTypeDisplay = document.getElementById('project-type-display');
+    var selectedType = null;
+    var projectCards = [];
+
+    projectTypes.forEach(function (type) {
+      var card = document.createElement('div');
+      card.className = 'project-card';
+
+      var emojiEl = document.createElement('div');
+      emojiEl.className = 'project-emoji';
+      emojiEl.textContent = type.emoji;
+
+      var nameEl = document.createElement('div');
+      nameEl.className = 'project-name';
+      nameEl.textContent = type.name;
+
+      var descEl = document.createElement('div');
+      descEl.className = 'project-desc';
+      descEl.textContent = type.desc;
+
+      card.appendChild(emojiEl);
+      card.appendChild(nameEl);
+      card.appendChild(descEl);
+
+      card.addEventListener('click', function () {
+        projectCards.forEach(function (c) { c.classList.remove('card-selected'); });
+        card.classList.add('card-selected');
+        selectedType = type;
+        projectTypeDisplay.value = type.name;
+        selectedProjectDisplay.textContent = '\u2705 Selected: ' + type.name;
+        selectedProjectDisplay.classList.add('visible');
+        taskCards.setComplete('choose-type', true);
+        autosave();
+      });
+
+      projectCards.push(card);
+      projectGrid.appendChild(card);
+    });
+
+    // =============================================
+    // Section 2: Planning Form with Auto-save
+    // =============================================
+    var PLAN_KEY = 'finalProjectPlan';
+    var projectTitle = document.getElementById('project-title');
+    var projectDesc = document.getElementById('project-description');
+    var projectSteps = document.getElementById('project-steps');
+    var savePlanBtn = document.getElementById('save-plan-btn');
+    var saveStatus = document.getElementById('save-status');
+
+    function getPlanData() {
+      var tools = [];
+      document.querySelectorAll('#tools-checklist input[type="checkbox"]').forEach(function (cb) {
+        if (cb.checked) tools.push(cb.value);
+      });
+      return {
+        type: selectedType ? selectedType.id : '',
+        typeName: selectedType ? selectedType.name : '',
+        title: projectTitle.value.trim(),
+        description: projectDesc.value.trim(),
+        tools: tools,
+        steps: projectSteps.value.trim(),
+        savedAt: new Date().toISOString()
+      };
+    }
+
+    function savePlan() {
+      var data = getPlanData();
+      try {
+        localStorage.setItem(PLAN_KEY, JSON.stringify(data));
+        saveStatus.textContent = 'Saved!';
+        saveStatus.classList.add('saved');
+        setTimeout(function () {
+          saveStatus.textContent = '';
+          saveStatus.classList.remove('saved');
+        }, 2000);
+      } catch (e) {
+        saveStatus.textContent = 'Could not save. Try again.';
+      }
+    }
+
+    function autosave() {
+      try {
+        localStorage.setItem(PLAN_KEY, JSON.stringify(getPlanData()));
+      } catch (e) { /* ignore */ }
+    }
+
+    function loadPlan() {
+      try {
+        var saved = localStorage.getItem(PLAN_KEY);
+        if (!saved) return;
+        var data = JSON.parse(saved);
+
+        // Restore project type
+        if (data.type) {
+          projectCards.forEach(function (card, idx) {
+            if (projectTypes[idx].id === data.type) {
+              card.classList.add('card-selected');
+              selectedType = projectTypes[idx];
+              projectTypeDisplay.value = projectTypes[idx].name;
+              selectedProjectDisplay.textContent = '\u2705 Selected: ' + projectTypes[idx].name;
+              selectedProjectDisplay.classList.add('visible');
+            }
+          });
+        }
+
+        if (data.title) projectTitle.value = data.title;
+        if (data.description) projectDesc.value = data.description;
+        if (data.steps) projectSteps.value = data.steps;
+        if (data.tools && Array.isArray(data.tools)) {
+          data.tools.forEach(function (tool) {
+            var cb = document.querySelector('#tools-checklist input[value="' + tool + '"]');
+            if (cb) cb.checked = true;
+          });
+        }
+      } catch (e) { /* ignore */ }
+    }
+
+    savePlanBtn.addEventListener('click', function () {
+      savePlan();
+      if (projectTitle.value.trim() && projectDesc.value.trim()) {
+        taskCards.setComplete('write-plan', true);
+      }
+    });
+
+    // Autosave on input changes
+    [projectTitle, projectDesc, projectSteps].forEach(function (el) {
+      el.addEventListener('input', autosave);
+    });
+    document.querySelectorAll('#tools-checklist input[type="checkbox"]').forEach(function (cb) {
+      cb.addEventListener('change', autosave);
+    });
+
+    // Load saved plan on page load
+    loadPlan();
+
+    // =============================================
+    // Section 3: Brainstorm Chat + Image Generator
+    // =============================================
+    var brainstormChat = document.getElementById('brainstorm-chat');
+    window.ChatWidget(brainstormChat, {
+      systemPrompt: "You are a creative project advisor helping a student plan their AI-powered final project. Ask questions to help them refine their idea. Keep suggestions age-appropriate and achievable in 2 class sessions. Be encouraging and enthusiastic. If they tell you their project idea, help them break it into concrete steps and suggest which AI tools (text, image, music, code) would be most useful.",
+      placeholder: "Tell me about your project idea..."
+    });
+
+    var imageGen = document.getElementById('image-gen');
+    window.ImageGenerator(imageGen, {
+      showGallery: true
+    });
+
+    // =============================================
+    // Task Sidebar
+    // =============================================
+    var taskSidebar = document.getElementById('task-sidebar');
+    var taskCards = window.TaskCards(taskSidebar, [
+      { id: 'choose-type', title: 'Choose a project type', description: 'Pick Magazine, Film, Game, or Free Choice' },
+      { id: 'write-plan', title: 'Write your plan', description: 'Fill in the title, description, and steps' },
+      { id: 'brainstorm', title: 'Brainstorm with AI', description: 'Chat with the AI to refine your idea' },
+      { id: 'collect-materials', title: 'Start collecting materials', description: 'Generate some images or draft some text' }
+    ]);
+  </script>
+
+</body>
+</html>

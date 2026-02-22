@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Final Project: Planning - AI Creator Lab</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/white.css">
+  <link rel="stylesheet" href="/shared/slides-base.css">
+  <style>
+    /* Skills grid */
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      max-width: 800px;
+      margin: 28px auto 0;
+    }
+
+    .skills-grid .skill-card {
+      padding: 20px;
+      border-radius: 14px;
+      background: rgba(79, 110, 247, 0.06);
+      border: 2px solid rgba(79, 110, 247, 0.12);
+      text-align: center;
+    }
+
+    .skills-grid .skill-card .skill-emoji {
+      font-size: 2.5rem;
+      margin-bottom: 8px;
+    }
+
+    .skills-grid .skill-card .skill-name {
+      font-size: 1.2rem;
+      font-weight: 700;
+    }
+
+    .skills-grid .skill-card .skill-lesson {
+      font-size: 0.9rem;
+      color: var(--slide-muted);
+      margin-top: 4px;
+    }
+
+    /* Project options grid */
+    .project-options {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+      max-width: 800px;
+      margin: 28px auto 0;
+    }
+
+    .project-options .option-card {
+      padding: 24px;
+      border-radius: 14px;
+      text-align: center;
+    }
+
+    .project-options .option-card:nth-child(1) {
+      background: rgba(79, 110, 247, 0.08);
+      border: 2px solid rgba(79, 110, 247, 0.15);
+    }
+
+    .project-options .option-card:nth-child(2) {
+      background: rgba(124, 58, 237, 0.08);
+      border: 2px solid rgba(124, 58, 237, 0.15);
+    }
+
+    .project-options .option-card:nth-child(3) {
+      background: rgba(14, 165, 165, 0.08);
+      border: 2px solid rgba(14, 165, 165, 0.15);
+    }
+
+    .project-options .option-card:nth-child(4) {
+      background: rgba(245, 158, 11, 0.08);
+      border: 2px solid rgba(245, 158, 11, 0.15);
+    }
+
+    .project-options .option-emoji {
+      font-size: 2.8rem;
+      margin-bottom: 8px;
+    }
+
+    .project-options .option-name {
+      font-size: 1.3rem;
+      font-weight: 700;
+    }
+
+    .project-options .option-desc {
+      font-size: 1rem;
+      color: var(--slide-muted);
+      margin-top: 6px;
+    }
+
+    /* Great project traits */
+    .traits-list {
+      list-style: none;
+      text-align: left;
+      display: inline-block;
+      font-size: 1.5rem;
+      margin-top: 20px;
+    }
+
+    .traits-list li {
+      margin-bottom: 0.6em;
+      padding-left: 0.2em;
+    }
+
+    /* Planning template */
+    .plan-template {
+      background: rgba(79, 110, 247, 0.06);
+      border-radius: 14px;
+      padding: 28px 36px;
+      max-width: 650px;
+      margin: 24px auto 0;
+      text-align: left;
+      font-size: 1.3rem;
+      line-height: 2;
+    }
+
+    .plan-template .plan-label {
+      font-weight: 700;
+      color: var(--slide-primary);
+    }
+
+    /* Tips grid */
+    .tips-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      max-width: 800px;
+      margin: 28px auto 0;
+    }
+
+    .tips-grid .tip-card {
+      padding: 20px;
+      border-radius: 14px;
+      background: rgba(79, 110, 247, 0.06);
+      border: 2px solid rgba(79, 110, 247, 0.12);
+      text-align: center;
+    }
+
+    .tips-grid .tip-card .tip-emoji {
+      font-size: 2.2rem;
+      margin-bottom: 8px;
+    }
+
+    .tips-grid .tip-card .tip-text {
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- Slide 1: Title -->
+      <section>
+        <p class="slide-big-emoji">&#x1F680;</p>
+        <h1 class="slide-title">Final Project: Planning</h1>
+        <p>Time to put ALL your skills together!</p>
+        <p style="margin-top: 12px; font-size: 1.1rem; color: var(--slide-muted);">AI Creator Lab &middot; Lesson 10</p>
+      </section>
+
+      <!-- Slide 2: Look how far you've come -->
+      <section>
+        <h2>Look How Far You've Come! &#x1F31F;</h2>
+        <p style="font-size: 1.6rem; margin-top: 16px;">From your very first chat with AI<br>to creating stories, art, music, films, games, and code...</p>
+        <p style="font-size: 2rem; margin-top: 20px; font-weight: 700; color: var(--slide-secondary);">You are now AI Creators!</p>
+      </section>
+
+      <!-- Slide 3: Skills unlocked -->
+      <section>
+        <h2>Skills Unlocked &#x1F513;</h2>
+        <div class="skills-grid">
+          <div class="skill-card">
+            <div class="skill-emoji">&#x1F4AC;</div>
+            <div class="skill-name">Text AI</div>
+            <div class="skill-lesson">Lessons 1-2</div>
+          </div>
+          <div class="skill-card">
+            <div class="skill-emoji">&#x1F3A8;</div>
+            <div class="skill-name">Image AI</div>
+            <div class="skill-lesson">Lessons 3-4</div>
+          </div>
+          <div class="skill-card">
+            <div class="skill-emoji">&#x1F3B5;</div>
+            <div class="skill-name">Music AI</div>
+            <div class="skill-lesson">Lesson 5</div>
+          </div>
+          <div class="skill-card">
+            <div class="skill-emoji">&#x1F3AC;</div>
+            <div class="skill-name">Film AI</div>
+            <div class="skill-lesson">Lesson 6</div>
+          </div>
+          <div class="skill-card">
+            <div class="skill-emoji">&#x1F4BB;</div>
+            <div class="skill-name">Code AI</div>
+            <div class="skill-lesson">Lesson 7</div>
+          </div>
+          <div class="skill-card">
+            <div class="skill-emoji">&#x1F3AE;</div>
+            <div class="skill-name">Game AI</div>
+            <div class="skill-lesson">Lesson 8</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 4: Project Options -->
+      <section>
+        <h2>Choose Your Project &#x1F3AF;</h2>
+        <div class="project-options">
+          <div class="option-card">
+            <div class="option-emoji">&#x1F4F0;</div>
+            <div class="option-name">AI Magazine</div>
+            <div class="option-desc">Articles + AI illustrations</div>
+          </div>
+          <div class="option-card">
+            <div class="option-emoji">&#x1F3AC;</div>
+            <div class="option-name">AI Short Film</div>
+            <div class="option-desc">Multi-scene story with visuals</div>
+          </div>
+          <div class="option-card">
+            <div class="option-emoji">&#x1F3AE;</div>
+            <div class="option-name">AI Game</div>
+            <div class="option-desc">Complex game with levels</div>
+          </div>
+          <div class="option-card">
+            <div class="option-emoji">&#x2728;</div>
+            <div class="option-name">Free Choice</div>
+            <div class="option-desc">Combine any tools you want!</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 5: What makes a great project -->
+      <section>
+        <h2>What Makes a Great Project? &#x1F3C6;</h2>
+        <ul class="traits-list">
+          <li>&#x1F3A8; <strong>Creativity</strong> &mdash; Your unique ideas and style</li>
+          <li>&#x1F4AA; <strong>Effort</strong> &mdash; Time and care put into it</li>
+          <li>&#x2728; <strong>Personal Style</strong> &mdash; It feels like YOU</li>
+          <li>&#x1F6E0;&#xFE0F; <strong>AI Tools</strong> &mdash; Using what you learned</li>
+        </ul>
+      </section>
+
+      <!-- Slide 6: Planning Template -->
+      <section>
+        <h2>Your Plan &#x1F4CB;</h2>
+        <div class="plan-template">
+          <span class="plan-label">Title:</span> What's your project called?<br>
+          <span class="plan-label">Description:</span> What is it about?<br>
+          <span class="plan-label">Tools:</span> Which AI tools will you use?<br>
+          <span class="plan-label">Steps:</span> How will you build it?
+        </div>
+      </section>
+
+      <!-- Slide 7: Tips -->
+      <section>
+        <h2>Planning Tips &#x1F4A1;</h2>
+        <div class="tips-grid">
+          <div class="tip-card">
+            <div class="tip-emoji">&#x1F331;</div>
+            <div class="tip-text">Start small,<br>then add more</div>
+          </div>
+          <div class="tip-card">
+            <div class="tip-emoji">&#x1F504;</div>
+            <div class="tip-text">Iterate &mdash;<br>improve as you go</div>
+          </div>
+          <div class="tip-card">
+            <div class="tip-emoji">&#x1F64B;</div>
+            <div class="tip-text">Ask for help<br>when you're stuck</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 8: Let's plan! -->
+      <section>
+        <p class="slide-big-emoji">&#x1F4DD;</p>
+        <h2>Let's Plan!</h2>
+        <p style="font-size: 2rem; margin-top: 24px;">&#x1F449; Go to the <strong>Lesson 10</strong> page</p>
+        <p style="font-size: 1.6rem; margin-top: 16px; color: var(--slide-muted);">Choose your project, write your plan,<br>and start collecting materials!</p>
+        <p style="font-size: 2.5rem; margin-top: 32px;">Let's go! &#x1F680;</p>
+      </section>
+
+    </div>
+  </div>
+
+  <!-- Lesson badge overlay -->
+  <div class="lesson-badge">10</div>
+
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+  <script>
+    Reveal.initialize({
+      hash: true,
+      transition: 'slide',
+      width: 1280,
+      height: 720
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lesson 11: Final Project — Building - AI Creator Lab</title>
+  <link rel="stylesheet" href="/shared/styles.css">
+  <style>
+    /* Tab navigation */
+    .tool-tabs {
+      display: flex;
+      gap: var(--space-xs);
+      margin-bottom: var(--space-lg);
+      padding-bottom: var(--space-md);
+      border-bottom: 2px solid var(--color-border);
+      flex-wrap: wrap;
+    }
+
+    .tool-tab {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      padding: 0.55em 1.1em;
+      font-size: var(--text-md);
+      font-weight: 600;
+      font-family: inherit;
+      border: 2px solid var(--color-border);
+      background: var(--color-surface);
+      color: var(--color-text-muted);
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      white-space: nowrap;
+    }
+
+    .tool-tab:hover {
+      border-color: var(--color-primary);
+      color: var(--color-text);
+    }
+
+    .tool-tab.active {
+      background: var(--color-primary);
+      border-color: var(--color-primary);
+      color: #ffffff;
+    }
+
+    .tool-panel {
+      display: none;
+    }
+
+    .tool-panel.active {
+      display: block;
+    }
+
+    /* Section spacing */
+    .lesson-section {
+      margin-bottom: var(--space-xl);
+      padding-bottom: var(--space-xl);
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .lesson-section:last-child {
+      border-bottom: none;
+    }
+
+    .section-heading {
+      font-size: var(--text-xl);
+      font-weight: 650;
+      margin-bottom: var(--space-lg);
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+    }
+
+    /* Plan reminder card */
+    .plan-reminder {
+      background: linear-gradient(135deg, var(--color-primary-light) 0%, var(--color-secondary-light) 100%);
+      border-radius: var(--radius-lg);
+      padding: var(--space-lg);
+      margin-bottom: var(--space-lg);
+      border: 1px solid var(--color-border);
+    }
+
+    .plan-reminder h3 {
+      margin-bottom: var(--space-md);
+      color: var(--color-secondary);
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+    }
+
+    .plan-reminder .plan-detail {
+      margin-bottom: var(--space-sm);
+      font-size: var(--text-sm);
+      line-height: 1.6;
+    }
+
+    .plan-reminder .plan-label {
+      font-weight: 700;
+      color: var(--color-text);
+    }
+
+    .plan-reminder .plan-value {
+      color: var(--color-text-muted);
+    }
+
+    .plan-reminder .no-plan {
+      color: var(--color-text-muted);
+      font-style: italic;
+    }
+
+    /* Project notes */
+    .project-notes-section {
+      margin-top: var(--space-lg);
+    }
+
+    .project-notes-section label {
+      display: block;
+      font-size: var(--text-sm);
+      font-weight: 600;
+      margin-bottom: var(--space-xs);
+    }
+
+    /* Progress alert */
+    .mid-checkin-banner {
+      background: var(--color-warning-light);
+      border: 1.5px solid var(--color-warning);
+      border-radius: var(--radius-md);
+      padding: var(--space-md) var(--space-lg);
+      display: none;
+      align-items: center;
+      gap: var(--space-sm);
+      margin-bottom: var(--space-lg);
+    }
+
+    .mid-checkin-banner.visible {
+      display: flex;
+    }
+
+    .mid-checkin-banner .checkin-text {
+      font-weight: 600;
+      font-size: var(--text-sm);
+    }
+
+    .mid-checkin-dismiss {
+      margin-left: auto;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: var(--text-lg);
+      color: var(--color-text-muted);
+      padding: var(--space-xs);
+    }
+
+    /* Export row */
+    .export-row {
+      display: flex;
+      gap: var(--space-md);
+      align-items: center;
+      margin-top: var(--space-md);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Lesson Header -->
+  <header class="lesson-header">
+    <div class="lesson-badge">
+      <span class="lesson-number">11</span>
+      <span class="lesson-title">Final Project: Building</span>
+    </div>
+    <a href="/" class="back-link">&larr; Back to all lessons</a>
+  </header>
+
+  <!-- Page Layout -->
+  <div class="lesson-page">
+
+    <!-- Main Content Area -->
+    <main class="lesson-main" id="main-content">
+
+      <!-- Plan Reminder -->
+      <div class="plan-reminder" id="plan-reminder">
+        <h3>&#x1F4CB; Your Project Plan</h3>
+        <div id="plan-content">
+          <p class="no-plan">No saved plan found. You can still build your project below!</p>
+        </div>
+      </div>
+
+      <!-- Mid-session Check-in Banner -->
+      <div class="mid-checkin-banner" id="mid-checkin-banner">
+        <span style="font-size: 1.5rem;">&#x23F0;</span>
+        <div>
+          <div class="checkin-text">Mid-Session Check-in!</div>
+          <div style="font-size: var(--text-sm); color: var(--color-text-muted);">Time to review your progress with the teacher. How's it going? What do you need help with?</div>
+        </div>
+        <button class="mid-checkin-dismiss" id="dismiss-checkin" title="Dismiss">&times;</button>
+      </div>
+
+      <!-- Tool Workspace -->
+      <div class="lesson-section">
+        <h2 class="section-heading">&#x1F6E0;&#xFE0F; Your Workspace</h2>
+
+        <!-- Tab Navigation -->
+        <div class="tool-tabs" id="tool-tabs">
+          <button class="tool-tab active" data-tab="text">&#x1F4AC; Text AI</button>
+          <button class="tool-tab" data-tab="image">&#x1F3A8; Image AI</button>
+          <button class="tool-tab" data-tab="code">&#x1F4BB; Code AI</button>
+          <button class="tool-tab" data-tab="gallery">&#x1F5BC;&#xFE0F; My Gallery</button>
+        </div>
+
+        <!-- Tab Panels -->
+        <div class="tool-panel active" id="panel-text">
+          <div id="text-chat"></div>
+        </div>
+
+        <div class="tool-panel" id="panel-image">
+          <div id="image-gen"></div>
+        </div>
+
+        <div class="tool-panel" id="panel-code">
+          <div id="code-playground"></div>
+        </div>
+
+        <div class="tool-panel" id="panel-gallery">
+          <p style="color: var(--color-text-muted); margin-bottom: var(--space-md); font-size: var(--text-sm);">Your collected images appear here. Generate images in the "Image AI" tab to add to your gallery.</p>
+          <div id="gallery-container"></div>
+        </div>
+      </div>
+
+      <!-- Project Notes -->
+      <div class="lesson-section">
+        <h2 class="section-heading">&#x1F4DD; Project Notes</h2>
+        <div class="project-notes-section">
+          <label for="project-notes">Track your progress, ideas, and to-dos here:</label>
+          <textarea id="project-notes" class="textarea" placeholder="Write notes about your project...&#10;&#10;For example:&#10;- Finished the first scene&#10;- Need to generate more images&#10;- Want to change the background color"></textarea>
+        </div>
+        <div class="export-row">
+          <div id="export-btn-container"></div>
+          <span id="notes-save-status" class="save-status"></span>
+        </div>
+      </div>
+
+    </main>
+
+    <!-- Task Sidebar -->
+    <aside class="lesson-sidebar">
+      <div class="task-sidebar" id="task-sidebar"></div>
+    </aside>
+
+  </div>
+
+  <script src="/shared/components.js"></script>
+  <script>
+    // =============================================
+    // Load Project Plan from Lesson 10
+    // =============================================
+    var PLAN_KEY = 'finalProjectPlan';
+    var planContent = document.getElementById('plan-content');
+    var savedPlan = null;
+
+    try {
+      var raw = localStorage.getItem(PLAN_KEY);
+      if (raw) {
+        savedPlan = JSON.parse(raw);
+      }
+    } catch (e) { /* ignore */ }
+
+    if (savedPlan && savedPlan.title) {
+      var html = '';
+      var details = [
+        { label: 'Title', value: savedPlan.title },
+        { label: 'Type', value: savedPlan.typeName || savedPlan.type || '' },
+        { label: 'Description', value: savedPlan.description || '' },
+        { label: 'Tools', value: (savedPlan.tools || []).join(', ') || 'None selected' },
+        { label: 'Steps', value: savedPlan.steps || '' }
+      ];
+
+      // Clear and rebuild with DOM
+      while (planContent.firstChild) planContent.removeChild(planContent.firstChild);
+
+      details.forEach(function (d) {
+        if (!d.value) return;
+        var div = document.createElement('div');
+        div.className = 'plan-detail';
+
+        var labelSpan = document.createElement('span');
+        labelSpan.className = 'plan-label';
+        labelSpan.textContent = d.label + ': ';
+
+        var valueSpan = document.createElement('span');
+        valueSpan.className = 'plan-value';
+        valueSpan.textContent = d.value;
+
+        div.appendChild(labelSpan);
+        div.appendChild(valueSpan);
+        planContent.appendChild(div);
+      });
+    }
+
+    // =============================================
+    // Tab Navigation
+    // =============================================
+    var tabs = document.querySelectorAll('.tool-tab');
+    var panels = document.querySelectorAll('.tool-panel');
+
+    tabs.forEach(function (tab) {
+      tab.addEventListener('click', function () {
+        var target = tab.getAttribute('data-tab');
+
+        tabs.forEach(function (t) { t.classList.remove('active'); });
+        panels.forEach(function (p) { p.classList.remove('active'); });
+
+        tab.classList.add('active');
+        var panel = document.getElementById('panel-' + target);
+        if (panel) panel.classList.add('active');
+      });
+    });
+
+    // =============================================
+    // Tool Initialization
+    // =============================================
+
+    // Text AI (ChatWidget)
+    var textChat = document.getElementById('text-chat');
+    window.ChatWidget(textChat, {
+      systemPrompt: "You are a helpful creative assistant for a student working on their final AI project. Help them write content, brainstorm ideas, refine text, create descriptions, write stories, or anything else they need for their project. Be encouraging and helpful. Keep responses concise and age-appropriate for a 12-13 year old.",
+      placeholder: "Ask me to help with your project..."
+    });
+
+    // Image AI (ImageGenerator)
+    var imageGenContainer = document.getElementById('image-gen');
+    var gallery = null;
+
+    var imageGen = window.ImageGenerator(imageGenContainer, {
+      showGallery: true,
+      onGenerate: function (data) {
+        // Also add to the My Gallery tab
+        if (gallery && data && data.url) {
+          gallery.addImage(data.url, data.prompt || '');
+        }
+      }
+    });
+
+    // Code AI (CodePlayground)
+    var codePG = document.getElementById('code-playground');
+    window.CodePlayground(codePG, {});
+
+    // My Gallery
+    var galleryContainer = document.getElementById('gallery-container');
+    gallery = window.Gallery(galleryContainer, { columns: 3 });
+
+    // =============================================
+    // Project Notes (auto-save to localStorage)
+    // =============================================
+    var NOTES_KEY = 'projectNotes_lesson11';
+    var notesArea = document.getElementById('project-notes');
+    var notesSaveStatus = document.getElementById('notes-save-status');
+
+    // Load saved notes
+    try {
+      var savedNotes = localStorage.getItem(NOTES_KEY);
+      if (savedNotes) notesArea.value = savedNotes;
+    } catch (e) { /* ignore */ }
+
+    notesArea.addEventListener('input', function () {
+      try {
+        localStorage.setItem(NOTES_KEY, notesArea.value);
+      } catch (e) { /* ignore */ }
+    });
+
+    // =============================================
+    // Export Button
+    // =============================================
+    var exportContainer = document.getElementById('export-btn-container');
+    window.ExportButton(exportContainer, {
+      label: 'Export Project Notes',
+      getData: function () {
+        var plan = savedPlan ? JSON.stringify(savedPlan, null, 2) : 'No plan saved.';
+        return '=== FINAL PROJECT NOTES ===\n\n' +
+               '--- Plan ---\n' + plan + '\n\n' +
+               '--- Notes ---\n' + notesArea.value;
+      },
+      filename: 'my-project-notes.txt',
+      format: 'text'
+    });
+
+    // =============================================
+    // Mid-Session Check-in Banner (show after 20 min)
+    // =============================================
+    var checkinBanner = document.getElementById('mid-checkin-banner');
+    var dismissBtn = document.getElementById('dismiss-checkin');
+
+    // Show after 20 minutes
+    setTimeout(function () {
+      checkinBanner.classList.add('visible');
+      taskCards.setComplete('mid-checkin', true);
+    }, 20 * 60 * 1000);
+
+    dismissBtn.addEventListener('click', function () {
+      checkinBanner.classList.remove('visible');
+    });
+
+    // =============================================
+    // Task Sidebar
+    // =============================================
+    var taskSidebar = document.getElementById('task-sidebar');
+    var taskCards = window.TaskCards(taskSidebar, [
+      { id: 'review-plan', title: 'Review your plan', description: 'Check your plan from last class' },
+      { id: 'build-main', title: 'Build main content', description: 'Create the core of your project' },
+      { id: 'mid-checkin', title: 'Mid-session check-in', description: 'Talk with teacher about progress' },
+      { id: 'continue', title: 'Continue building', description: 'Keep adding to your project' },
+      { id: 'save-progress', title: 'Save your progress', description: 'Save notes and export your work' }
+    ]);
+  </script>
+
+</body>
+</html>

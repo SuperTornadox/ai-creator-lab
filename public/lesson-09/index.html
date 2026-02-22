@@ -1,0 +1,1248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lesson 9: AI Truth Challenge - AI Creator Lab</title>
+  <link rel="stylesheet" href="/shared/styles.css">
+  <style>
+    /* Tab navigation */
+    .level-tabs {
+      display: flex;
+      gap: var(--space-xs);
+      background: var(--color-surface);
+      border-radius: var(--radius-lg);
+      padding: var(--space-xs);
+      border: 1px solid var(--color-border);
+      margin-bottom: var(--space-lg);
+    }
+
+    .level-tab {
+      flex: 1;
+      padding: 0.7em 1em;
+      font-size: var(--text-md);
+      font-weight: 600;
+      font-family: inherit;
+      background: transparent;
+      color: var(--color-text-muted);
+      border: 2px solid transparent;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      transition: background var(--transition-fast),
+                  color var(--transition-fast),
+                  border-color var(--transition-fast);
+      text-align: center;
+    }
+
+    .level-tab:hover {
+      background: var(--color-bg);
+      color: var(--color-text);
+    }
+
+    .level-tab.active {
+      background: var(--color-primary);
+      color: #ffffff;
+      border-color: var(--color-primary);
+    }
+
+    .level-tab .tab-label {
+      display: block;
+      font-size: var(--text-sm);
+      font-weight: 500;
+      margin-top: 2px;
+    }
+
+    .level-tab.completed {
+      position: relative;
+    }
+
+    .level-tab.completed::after {
+      content: "\2713";
+      position: absolute;
+      top: 4px;
+      right: 8px;
+      font-size: var(--text-xs);
+      color: var(--color-success);
+      font-weight: 700;
+    }
+
+    .level-tab.active.completed::after {
+      color: #ffffff;
+    }
+
+    /* Level panels */
+    .level-panel {
+      display: none;
+    }
+
+    .level-panel.active {
+      display: block;
+    }
+
+    /* Score tracker bar */
+    .score-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: linear-gradient(135deg, #1e2330 0%, #2d3352 100%);
+      color: #ffffff;
+      border-radius: var(--radius-lg);
+      padding: var(--space-md) var(--space-lg);
+      margin-bottom: var(--space-lg);
+    }
+
+    .score-bar .score-label {
+      font-size: var(--text-sm);
+      font-weight: 500;
+      opacity: 0.8;
+    }
+
+    .score-bar .score-value {
+      font-size: var(--text-xl);
+      font-weight: 700;
+    }
+
+    .score-bar .score-section {
+      text-align: center;
+    }
+
+    /* Quiz card */
+    .quiz-card {
+      background: var(--color-surface);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--color-border);
+      padding: var(--space-xl);
+      margin-bottom: var(--space-lg);
+      transition: border-color var(--transition-normal);
+    }
+
+    .quiz-card.answered-correct {
+      border-color: var(--color-success);
+      background: var(--color-success-light);
+    }
+
+    .quiz-card.answered-wrong {
+      border-color: var(--color-error);
+      background: var(--color-error-light);
+    }
+
+    .quiz-number {
+      font-size: var(--text-sm);
+      font-weight: 700;
+      color: var(--color-primary);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: var(--space-sm);
+    }
+
+    .quiz-question {
+      font-size: var(--text-lg);
+      font-weight: 600;
+      margin-bottom: var(--space-lg);
+      line-height: 1.5;
+    }
+
+    .quiz-content {
+      background: var(--color-bg);
+      border-radius: var(--radius-md);
+      padding: var(--space-lg);
+      margin-bottom: var(--space-lg);
+      font-size: var(--text-md);
+      line-height: 1.7;
+      border-left: 4px solid var(--color-primary-light);
+    }
+
+    .quiz-content em {
+      color: var(--color-text-muted);
+      font-size: var(--text-sm);
+      display: block;
+      margin-top: var(--space-sm);
+    }
+
+    /* Answer buttons */
+    .answer-buttons {
+      display: flex;
+      gap: var(--space-md);
+      margin-bottom: var(--space-md);
+    }
+
+    .answer-btn {
+      flex: 1;
+      padding: 0.8em 1.5em;
+      font-size: var(--text-md);
+      font-weight: 650;
+      font-family: inherit;
+      border: 2px solid var(--color-border);
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      background: var(--color-surface);
+      color: var(--color-text);
+    }
+
+    .answer-btn:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .answer-btn.btn-real:hover:not(:disabled) {
+      border-color: var(--color-success);
+      background: var(--color-success-light);
+      color: #166534;
+    }
+
+    .answer-btn.btn-ai:hover:not(:disabled) {
+      border-color: var(--color-secondary);
+      background: var(--color-secondary-light);
+      color: #5b21b6;
+    }
+
+    .answer-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .answer-btn.selected-correct {
+      border-color: var(--color-success);
+      background: var(--color-success);
+      color: #ffffff;
+    }
+
+    .answer-btn.selected-wrong {
+      border-color: var(--color-error);
+      background: var(--color-error);
+      color: #ffffff;
+    }
+
+    .answer-btn.was-correct {
+      border-color: var(--color-success);
+      background: var(--color-success-light);
+    }
+
+    /* Explanation box */
+    .explanation {
+      display: none;
+      padding: var(--space-md) var(--space-lg);
+      border-radius: var(--radius-md);
+      font-size: var(--text-sm);
+      line-height: 1.6;
+      margin-top: var(--space-md);
+    }
+
+    .explanation.visible {
+      display: block;
+    }
+
+    .explanation.correct {
+      background: var(--color-success-light);
+      border: 1px solid var(--color-success);
+    }
+
+    .explanation.wrong {
+      background: var(--color-error-light);
+      border: 1px solid var(--color-error);
+    }
+
+    .explanation .explanation-title {
+      font-weight: 700;
+      font-size: var(--text-md);
+      margin-bottom: var(--space-xs);
+    }
+
+    /* Level completion card */
+    .level-complete {
+      display: none;
+      background: linear-gradient(135deg, var(--color-primary-light) 0%, var(--color-secondary-light) 100%);
+      border-radius: var(--radius-lg);
+      padding: var(--space-xl);
+      text-align: center;
+      margin-top: var(--space-lg);
+    }
+
+    .level-complete.visible {
+      display: block;
+    }
+
+    .level-complete .complete-emoji {
+      font-size: 3rem;
+      margin-bottom: var(--space-sm);
+    }
+
+    .level-complete h3 {
+      font-size: var(--text-xl);
+      margin-bottom: var(--space-sm);
+    }
+
+    .level-complete .complete-score {
+      font-size: var(--text-lg);
+      font-weight: 600;
+      color: var(--color-primary);
+      margin-bottom: var(--space-md);
+    }
+
+    .level-complete .complete-message {
+      font-size: var(--text-md);
+      color: var(--color-text-muted);
+      margin-bottom: var(--space-lg);
+    }
+
+    /* Bias experiment */
+    .experiment-setup {
+      background: var(--color-surface);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--color-border);
+      padding: var(--space-xl);
+      margin-bottom: var(--space-lg);
+    }
+
+    .experiment-prompt-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-md);
+      margin-top: var(--space-md);
+    }
+
+    .experiment-prompt-card {
+      background: var(--color-bg);
+      border-radius: var(--radius-md);
+      padding: var(--space-md);
+      border: 2px solid var(--color-border);
+      cursor: pointer;
+      transition: all var(--transition-fast);
+    }
+
+    .experiment-prompt-card:hover {
+      border-color: var(--color-primary);
+      box-shadow: var(--shadow-sm);
+      transform: translateY(-1px);
+    }
+
+    .experiment-prompt-card.card-selected {
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px var(--color-primary-light);
+    }
+
+    .experiment-prompt-card .prompt-label {
+      font-size: var(--text-sm);
+      font-weight: 700;
+      color: var(--color-primary);
+      margin-bottom: var(--space-xs);
+    }
+
+    .experiment-prompt-card .prompt-text {
+      font-size: var(--text-md);
+      line-height: 1.4;
+    }
+
+    .experiment-prompt-card .prompt-pair {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-xs);
+    }
+
+    .experiment-prompt-card .prompt-pair span {
+      background: var(--color-surface);
+      padding: var(--space-xs) var(--space-sm);
+      border-radius: var(--radius-sm);
+      font-size: var(--text-sm);
+    }
+
+    .chat-section {
+      margin-top: var(--space-lg);
+    }
+
+    .chat-section h3 {
+      margin-bottom: var(--space-md);
+    }
+
+    .observations-area {
+      margin-top: var(--space-lg);
+    }
+
+    .observations-area label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: var(--space-xs);
+    }
+
+    .discussion-prompts {
+      background: var(--color-accent-light);
+      border-radius: var(--radius-md);
+      padding: var(--space-lg);
+      margin-top: var(--space-lg);
+    }
+
+    .discussion-prompts h4 {
+      color: var(--color-accent-hover);
+      margin-bottom: var(--space-sm);
+    }
+
+    .discussion-prompts ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .discussion-prompts li {
+      padding: var(--space-xs) 0;
+      font-size: var(--text-md);
+      line-height: 1.6;
+    }
+
+    .discussion-prompts li::before {
+      content: "\1F4AC ";
+    }
+
+    /* Final results screen */
+    .final-results {
+      display: none;
+      text-align: center;
+    }
+
+    .final-results.visible {
+      display: block;
+    }
+
+    .final-results-card {
+      background: var(--color-surface);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-lg);
+      padding: var(--space-xl);
+      max-width: 600px;
+      margin: 0 auto var(--space-lg);
+    }
+
+    .final-results-card .results-emoji {
+      font-size: 4rem;
+      margin-bottom: var(--space-md);
+    }
+
+    .final-results-card h2 {
+      margin-bottom: var(--space-md);
+    }
+
+    .final-results-card .total-score {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--color-primary);
+      margin-bottom: var(--space-sm);
+    }
+
+    .final-results-card .score-breakdown {
+      display: flex;
+      justify-content: center;
+      gap: var(--space-lg);
+      margin: var(--space-lg) 0;
+    }
+
+    .final-results-card .score-item {
+      text-align: center;
+    }
+
+    .final-results-card .score-item .item-value {
+      font-size: var(--text-xl);
+      font-weight: 700;
+    }
+
+    .final-results-card .score-item .item-label {
+      font-size: var(--text-sm);
+      color: var(--color-text-muted);
+    }
+
+    .takeaways {
+      background: var(--color-bg);
+      border-radius: var(--radius-lg);
+      padding: var(--space-xl);
+      max-width: 600px;
+      margin: 0 auto;
+      text-align: left;
+    }
+
+    .takeaways h3 {
+      text-align: center;
+      margin-bottom: var(--space-md);
+    }
+
+    .takeaways ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .takeaways li {
+      padding: var(--space-sm) 0;
+      font-size: var(--text-md);
+      line-height: 1.6;
+      display: flex;
+      align-items: flex-start;
+      gap: var(--space-sm);
+    }
+
+    .takeaways li::before {
+      content: "\2714";
+      color: var(--color-success);
+      font-weight: 700;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    /* Section heading */
+    .section-heading {
+      font-size: var(--text-xl);
+      font-weight: 650;
+      margin-bottom: var(--space-lg);
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+    }
+
+    /* Intro box */
+    .level-intro {
+      background: var(--color-bg);
+      border-radius: var(--radius-md);
+      padding: var(--space-lg);
+      margin-bottom: var(--space-lg);
+      font-size: var(--text-md);
+      line-height: 1.6;
+    }
+
+    .level-intro strong {
+      color: var(--color-primary);
+    }
+
+    /* Responsive */
+    @media (max-width: 767px) {
+      .level-tabs {
+        flex-direction: column;
+      }
+
+      .answer-buttons {
+        flex-direction: column;
+      }
+
+      .experiment-prompt-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .score-bar {
+        flex-direction: column;
+        gap: var(--space-sm);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Lesson Header -->
+  <header class="lesson-header">
+    <div class="lesson-badge">
+      <span class="lesson-number">09</span>
+      <span class="lesson-title">AI Truth Challenge</span>
+    </div>
+    <a href="/" class="back-link">&larr; Back to all lessons</a>
+  </header>
+
+  <!-- Page Layout -->
+  <div class="lesson-page">
+
+    <!-- Main Content Area -->
+    <main class="lesson-main" id="main-content">
+
+      <!-- Score Tracker -->
+      <div class="score-bar" id="score-bar">
+        <div class="score-section">
+          <div class="score-label">Level 1</div>
+          <div class="score-value" id="score-level1">0/8</div>
+        </div>
+        <div class="score-section">
+          <div class="score-label">Level 2</div>
+          <div class="score-value" id="score-level2">0/6</div>
+        </div>
+        <div class="score-section">
+          <div class="score-label">Total Score</div>
+          <div class="score-value" id="score-total">0/14</div>
+        </div>
+      </div>
+
+      <!-- Tab Navigation -->
+      <div class="level-tabs" id="level-tabs">
+        <button class="level-tab active" data-level="1">
+          Level 1
+          <span class="tab-label">Real or AI?</span>
+        </button>
+        <button class="level-tab" data-level="2">
+          Level 2
+          <span class="tab-label">Who Wrote This?</span>
+        </button>
+        <button class="level-tab" data-level="3">
+          Level 3
+          <span class="tab-label">AI Bias Lab</span>
+        </button>
+        <button class="level-tab" data-level="results">
+          Results
+          <span class="tab-label">Final Score</span>
+        </button>
+      </div>
+
+      <!-- ================================================ -->
+      <!-- LEVEL 1: Real or AI? Image Challenge             -->
+      <!-- ================================================ -->
+      <div class="level-panel active" id="panel-level1">
+        <h2 class="section-heading">Level 1: Real or AI-Generated?</h2>
+        <div class="level-intro">
+          AI can now create incredibly realistic images. Can you tell the difference?
+          Read each description and decide: is this describing a <strong>real photograph</strong>
+          or an <strong>AI-generated image</strong>?
+        </div>
+        <div id="level1-questions"></div>
+        <div class="level-complete" id="level1-complete">
+          <div class="complete-emoji">&#x1F50D;</div>
+          <h3>Level 1 Complete!</h3>
+          <div class="complete-score" id="level1-final-score"></div>
+          <div class="complete-message" id="level1-message"></div>
+          <button class="btn btn-primary btn-lg" onclick="switchLevel('2')">Continue to Level 2 &rarr;</button>
+        </div>
+      </div>
+
+      <!-- ================================================ -->
+      <!-- LEVEL 2: Who Wrote This? Text Challenge          -->
+      <!-- ================================================ -->
+      <div class="level-panel" id="panel-level2">
+        <h2 class="section-heading">Level 2: Human or AI Writing?</h2>
+        <div class="level-intro">
+          AI can write essays, stories, and social media posts that sound very human.
+          Read each text snippet and decide: was this written by a <strong>human</strong>
+          or by <strong>AI</strong>? Look for clues!
+        </div>
+        <div id="level2-questions"></div>
+        <div class="level-complete" id="level2-complete">
+          <div class="complete-emoji">&#x1F4DD;</div>
+          <h3>Level 2 Complete!</h3>
+          <div class="complete-score" id="level2-final-score"></div>
+          <div class="complete-message" id="level2-message"></div>
+          <button class="btn btn-primary btn-lg" onclick="switchLevel('3')">Continue to Level 3 &rarr;</button>
+        </div>
+      </div>
+
+      <!-- ================================================ -->
+      <!-- LEVEL 3: AI Bias Experiment                      -->
+      <!-- ================================================ -->
+      <div class="level-panel" id="panel-level3">
+        <h2 class="section-heading">Level 3: AI Bias Experiment</h2>
+        <div class="level-intro">
+          AI learns from huge amounts of text written by people. But people have biases --
+          unfair assumptions about groups of people. So AI can pick up those same biases!
+          <strong>Your mission:</strong> test the AI to see if it shows bias.
+        </div>
+
+        <div class="experiment-setup">
+          <h3>Choose an Experiment</h3>
+          <p style="color: var(--color-text-muted); margin-bottom: var(--space-sm);">
+            Click a card below, then use the chat to ask both prompts. Compare the answers!
+          </p>
+          <div class="experiment-prompt-grid" id="experiment-prompts">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+
+        <div class="chat-section">
+          <h3>Ask the AI</h3>
+          <p style="color: var(--color-text-muted); margin-bottom: var(--space-md);">
+            Type or paste the prompts from your chosen experiment. Try both versions and compare the responses.
+          </p>
+          <div id="bias-chat"></div>
+        </div>
+
+        <div class="observations-area">
+          <label for="observations-text">What did you notice? Write your observations:</label>
+          <textarea id="observations-text" class="textarea"
+            placeholder="What differences did you see between the two AI responses? Did anything surprise you? Did the AI make any assumptions?"></textarea>
+        </div>
+
+        <div class="discussion-prompts">
+          <h4>Think About It</h4>
+          <ul>
+            <li>Did the AI describe people differently based on the job title?</li>
+            <li>Did the AI make assumptions about gender, age, or background?</li>
+            <li>Where do you think these biases come from?</li>
+            <li>If an AI is used to hire people or grade tests, why would bias be a problem?</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- ================================================ -->
+      <!-- FINAL RESULTS                                    -->
+      <!-- ================================================ -->
+      <div class="level-panel" id="panel-results">
+        <div class="final-results visible" id="final-results">
+          <div class="final-results-card">
+            <div class="results-emoji" id="results-emoji">&#x1F3C6;</div>
+            <h2>Challenge Complete!</h2>
+            <div class="total-score" id="final-total-score">0 / 14</div>
+            <div class="score-breakdown">
+              <div class="score-item">
+                <div class="item-value" id="final-l1-score">0/8</div>
+                <div class="item-label">Level 1: Images</div>
+              </div>
+              <div class="score-item">
+                <div class="item-value" id="final-l2-score">0/6</div>
+                <div class="item-label">Level 2: Text</div>
+              </div>
+            </div>
+            <p id="final-rating" style="font-size: var(--text-lg); font-weight: 600; color: var(--color-secondary);"></p>
+          </div>
+
+          <div class="takeaways">
+            <h3>Key Takeaways</h3>
+            <ul>
+              <li>AI-generated images often have subtle errors: extra fingers, warped text, oddly smooth skin, or inconsistent backgrounds.</li>
+              <li>AI-written text tends to be overly polished, uses many lists, and avoids strong personal opinions or messy emotions.</li>
+              <li>AI can reflect biases from its training data. It might make unfair assumptions about gender, culture, or appearance.</li>
+              <li>Always think critically about content you see online. Ask: Who made this? Why? Could it be AI-generated?</li>
+              <li>Being a smart "digital detective" means checking sources, looking for clues, and not believing everything at first glance.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+    </main>
+
+    <!-- Task Sidebar -->
+    <aside class="lesson-sidebar">
+      <div class="task-sidebar" id="task-sidebar"></div>
+    </aside>
+
+  </div>
+
+  <script src="/shared/components.js"></script>
+  <script>
+    // =============================================
+    // Data: Level 1 Questions (Real or AI Image?)
+    // =============================================
+    var level1Data = [
+      {
+        id: 'l1q1',
+        description: 'A photograph of a cat sitting on a windowsill, looking outside at the rain. The reflection in the glass shows a slightly blurry version of the room behind. There is a small chip in the corner of the windowsill.',
+        answer: 'real',
+        explanation: 'This is a real photo. The small imperfections -- like the chipped windowsill and the slightly blurry reflection -- are the kind of natural details real photographs capture. AI images tend to make everything look a bit too "perfect."'
+      },
+      {
+        id: 'l1q2',
+        description: 'A portrait of an elderly woman with kind eyes, wearing a hand-knit sweater. Her skin is remarkably smooth and glowing. Each strand of her silver hair is perfectly placed. The background is a softly blurred garden with no identifiable plants.',
+        answer: 'ai',
+        explanation: 'This is AI-generated. The giveaway is the "too perfect" quality: unrealistically smooth skin for an elderly person, every hair perfectly placed, and a generic blurred background. Real photos of elderly people show natural skin texture, stray hairs, and specific background details.'
+      },
+      {
+        id: 'l1q3',
+        description: 'A street food vendor in Bangkok at night, illuminated by the warm glow of a single bare lightbulb. Smoke rises from a grill. A hand-written price sign in Thai script is slightly crooked, and a plastic stool has a crack down the middle.',
+        answer: 'real',
+        explanation: 'This is a real photo. The crooked handwritten sign, the cracked plastic stool, and the specific cultural details all point to a genuine photograph. AI often struggles with rendering text in other languages accurately and rarely includes "ugly" imperfections like cracked furniture.'
+      },
+      {
+        id: 'l1q4',
+        description: 'A group of six friends at a beach bonfire, all smiling at the camera. Everyone has perfectly white teeth. One person in the back has a hand with six fingers. The sand around the fire looks slightly melted, like plastic.',
+        answer: 'ai',
+        explanation: 'This is AI-generated. The classic AI giveaway: a hand with six fingers! AI models frequently struggle with the correct number of fingers. The "too perfect" teeth and the unnatural sand texture are also common AI artifacts.'
+      },
+      {
+        id: 'l1q5',
+        description: 'A golden retriever mid-jump catching a frisbee in a park. The dog is slightly blurry because it is moving fast. The frisbee has a small logo that is partially readable. Grass stains are visible on the dog\'s belly.',
+        answer: 'real',
+        explanation: 'This is a real photo. Motion blur, partially readable logos, and grass stains are all messy, specific details that come from real-world photography. AI images tend to freeze action perfectly and avoid brand logos or readable text.'
+      },
+      {
+        id: 'l1q6',
+        description: 'An astronaut standing on what appears to be Mars, looking at a sunset. The astronaut\'s helmet visor perfectly reflects a stunning Martian landscape. The spacesuit has no visible brand markings or national flags. The sky transitions perfectly from orange to purple.',
+        answer: 'ai',
+        explanation: 'This is AI-generated. No human has been to Mars yet! Beyond that, the perfect visor reflection, the missing identifying marks on the suit, and the overly smooth color transition in the sky are hallmarks of AI generation. Real space photos always show agency logos and mission patches.'
+      },
+      {
+        id: 'l1q7',
+        description: 'A classroom of students during a science experiment. One student is laughing while another looks confused at a beaker of bubbling liquid. The whiteboard in the background has partially erased equations. A backpack strap hangs off a chair.',
+        answer: 'real',
+        explanation: 'This is a real photo. The natural, candid emotions (laughing, confused), the partially erased whiteboard, and small details like a dangling backpack strap are all signs of a genuine moment captured in a real setting. AI tends to pose everyone nicely.'
+      },
+      {
+        id: 'l1q8',
+        description: 'A cozy coffee shop interior with exposed brick walls. A latte sits on a wooden table with beautiful foam art. The menu board on the wall has text, but when you look closely, the words don\'t actually form real English -- they look like letters jumbled together.',
+        answer: 'ai',
+        explanation: 'This is AI-generated. The biggest clue is the jumbled, unreadable text on the menu board. AI models are notoriously bad at generating real, readable text in images. Everything else looks "right" -- which makes it a very convincing fake at first glance!'
+      }
+    ];
+
+    // =============================================
+    // Data: Level 2 Questions (Human or AI Text?)
+    // =============================================
+    var level2Data = [
+      {
+        id: 'l2q1',
+        text: 'My dog ate my homework yesterday. I know that sounds like the oldest excuse ever, but I literally watched him chew through my math worksheet while I was getting a snack. I even have teeth marks on what\'s left of it. Mrs. Patterson is NOT going to believe me lol.',
+        answer: 'human',
+        explanation: 'Written by a human. The casual tone ("NOT," "lol"), the very specific and slightly embarrassing detail about watching the dog do it, and the worry about the teacher\'s reaction are all very natural. AI tends to write more polished, less awkward text.'
+      },
+      {
+        id: 'l2q2',
+        text: 'Dogs are wonderful companions that bring joy and happiness to millions of families around the world. They are known for their loyalty, their playful nature, and their ability to provide comfort during difficult times. Whether big or small, dogs have a unique ability to form deep bonds with their human companions.',
+        answer: 'ai',
+        explanation: 'Written by AI. Notice how generic and "safe" this is -- it could describe dogs anywhere, anytime. There are no personal stories, no specific details, and every sentence is perfectly structured. The language is correct but feels like a textbook, not a person talking.'
+      },
+      {
+        id: 'l2q3',
+        text: 'ok so i just learned that octopuses have THREE hearts and BLUE blood?? like what?? how did i go 12 years without knowing this. also apparently they can change color AND texture. im sorry but thats basically a superpower. nature is wild.',
+        answer: 'human',
+        explanation: 'Written by a human. The lack of capitalization, the use of "??" and "im sorry but," the genuine surprise, and the exaggerated reactions are all very natural middle-school texting style. AI almost never writes this informally or with this kind of genuine enthusiasm.'
+      },
+      {
+        id: 'l2q4',
+        text: 'The ocean is a fascinating ecosystem that covers approximately 71% of the Earth\'s surface. It plays a crucial role in regulating the planet\'s climate, supporting biodiversity, and providing resources for human communities. From the smallest plankton to the largest whales, the ocean is home to an incredible diversity of life forms.',
+        answer: 'ai',
+        explanation: 'Written by AI. The precise statistic (71%), the perfectly organized structure (climate, biodiversity, resources), and the "from smallest to largest" comparison are typical AI patterns. It reads like a well-organized report but has no personality, no "I," and no opinion.'
+      },
+      {
+        id: 'l2q5',
+        text: 'I tried making pancakes this morning and somehow set off the smoke alarm twice. The first batch looked like hockey pucks. My sister said they could be used as actual weapons. The second batch was better but I put way too much syrup on them and now my hands are sticky and I have a math test in an hour. Great morning.',
+        answer: 'human',
+        explanation: 'Written by a human. The messy, real-life storytelling with one thing going wrong after another, the sister\'s sarcastic comment ("actual weapons"), and the unrelated math test stress are all signs of genuine, unpolished human writing. AI would make the story neater.'
+      },
+      {
+        id: 'l2q6',
+        text: 'Here are five effective strategies for improving your study habits:\n\n1. Create a dedicated study space free from distractions\n2. Break your study sessions into 25-minute focused blocks\n3. Use active recall techniques rather than passive re-reading\n4. Get adequate sleep to consolidate your learning\n5. Review material at spaced intervals for better retention\n\nBy implementing these strategies, you can significantly enhance your academic performance.',
+        answer: 'ai',
+        explanation: 'Written by AI. The numbered list format, the formal vocabulary ("implementing," "consolidate," "spaced intervals"), and the tidy conclusion sentence are classic AI writing patterns. A real student giving study advice would probably be way more casual and include personal experience.'
+      }
+    ];
+
+    // =============================================
+    // Data: Level 3 Bias Experiments
+    // =============================================
+    var biasExperiments = [
+      {
+        id: 'exp1',
+        label: 'Job Descriptions',
+        promptA: 'Describe what a typical nurse looks like and does during a workday.',
+        promptB: 'Describe what a typical engineer looks like and does during a workday.',
+        lookFor: 'Does the AI assume the nurse is female and the engineer is male? Does it describe their appearance differently?'
+      },
+      {
+        id: 'exp2',
+        label: 'Food & Culture',
+        promptA: 'Describe a typical family dinner in the United States.',
+        promptB: 'Describe a typical family dinner in India.',
+        lookFor: 'Does the AI use more "normal"-sounding language for one country? Does it describe one as more exotic or unusual?'
+      },
+      {
+        id: 'exp3',
+        label: 'Neighborhoods',
+        promptA: 'Describe a neighborhood where wealthy people live.',
+        promptB: 'Describe a neighborhood where people with less money live.',
+        lookFor: 'Does the AI use positive words for one and negative words for the other? Does it make assumptions about safety, cleanliness, or the people who live there?'
+      },
+      {
+        id: 'exp4',
+        label: 'Leaders & Role Models',
+        promptA: 'Describe a powerful world leader.',
+        promptB: 'Describe a caring schoolteacher.',
+        lookFor: 'Does the AI default to a specific gender for each role? What words does it use for "powerful" vs "caring" -- are they gendered?'
+      }
+    ];
+
+    // =============================================
+    // State
+    // =============================================
+    var level1Score = 0;
+    var level1Answered = 0;
+    var level2Score = 0;
+    var level2Answered = 0;
+
+    // =============================================
+    // Tab Switching
+    // =============================================
+    var tabs = document.querySelectorAll('.level-tab');
+    tabs.forEach(function (tab) {
+      tab.addEventListener('click', function () {
+        switchLevel(tab.dataset.level);
+      });
+    });
+
+    function switchLevel(level) {
+      // Update tabs
+      tabs.forEach(function (t) { t.classList.remove('active'); });
+      var targetTab = document.querySelector('.level-tab[data-level="' + level + '"]');
+      if (targetTab) targetTab.classList.add('active');
+
+      // Update panels
+      var panels = document.querySelectorAll('.level-panel');
+      panels.forEach(function (p) { p.classList.remove('active'); });
+
+      var targetPanel = document.getElementById('panel-level' + level);
+      if (!targetPanel) targetPanel = document.getElementById('panel-' + level);
+      if (targetPanel) targetPanel.classList.add('active');
+
+      // Update final results if switching to results
+      if (level === 'results') {
+        updateFinalResults();
+      }
+
+      // Scroll to top
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // =============================================
+    // Render Level 1 Questions
+    // =============================================
+    var level1Container = document.getElementById('level1-questions');
+
+    level1Data.forEach(function (q, index) {
+      var card = document.createElement('div');
+      card.className = 'quiz-card';
+      card.id = 'card-' + q.id;
+
+      var number = document.createElement('div');
+      number.className = 'quiz-number';
+      number.textContent = 'Question ' + (index + 1) + ' of ' + level1Data.length;
+
+      var question = document.createElement('div');
+      question.className = 'quiz-question';
+      question.textContent = 'Is this describing a real photo or an AI-generated image?';
+
+      var content = document.createElement('div');
+      content.className = 'quiz-content';
+      content.textContent = q.description;
+
+      var buttons = document.createElement('div');
+      buttons.className = 'answer-buttons';
+
+      var btnReal = document.createElement('button');
+      btnReal.className = 'answer-btn btn-real';
+      btnReal.textContent = 'Real Photo';
+      btnReal.addEventListener('click', function () {
+        handleAnswer(q, 'real', btnReal, btnAi, card, explanation);
+      });
+
+      var btnAi = document.createElement('button');
+      btnAi.className = 'answer-btn btn-ai';
+      btnAi.textContent = 'AI-Generated';
+      btnAi.addEventListener('click', function () {
+        handleAnswer(q, 'ai', btnAi, btnReal, card, explanation);
+      });
+
+      buttons.appendChild(btnReal);
+      buttons.appendChild(btnAi);
+
+      var explanation = document.createElement('div');
+      explanation.className = 'explanation';
+
+      card.appendChild(number);
+      card.appendChild(question);
+      card.appendChild(content);
+      card.appendChild(buttons);
+      card.appendChild(explanation);
+
+      level1Container.appendChild(card);
+    });
+
+    // =============================================
+    // Render Level 2 Questions
+    // =============================================
+    var level2Container = document.getElementById('level2-questions');
+
+    level2Data.forEach(function (q, index) {
+      var card = document.createElement('div');
+      card.className = 'quiz-card';
+      card.id = 'card-' + q.id;
+
+      var number = document.createElement('div');
+      number.className = 'quiz-number';
+      number.textContent = 'Question ' + (index + 1) + ' of ' + level2Data.length;
+
+      var question = document.createElement('div');
+      question.className = 'quiz-question';
+      question.textContent = 'Was this written by a human or by AI?';
+
+      var content = document.createElement('div');
+      content.className = 'quiz-content';
+      // Preserve line breaks in text
+      q.text.split('\n').forEach(function (line, i) {
+        if (i > 0) content.appendChild(document.createElement('br'));
+        content.appendChild(document.createTextNode(line));
+      });
+
+      var buttons = document.createElement('div');
+      buttons.className = 'answer-buttons';
+
+      var btnHuman = document.createElement('button');
+      btnHuman.className = 'answer-btn btn-real';
+      btnHuman.textContent = 'Human';
+      btnHuman.addEventListener('click', function () {
+        handleAnswer2(q, 'human', btnHuman, btnAi2, card, explanation);
+      });
+
+      var btnAi2 = document.createElement('button');
+      btnAi2.className = 'answer-btn btn-ai';
+      btnAi2.textContent = 'AI';
+      btnAi2.addEventListener('click', function () {
+        handleAnswer2(q, 'ai', btnAi2, btnHuman, card, explanation);
+      });
+
+      buttons.appendChild(btnHuman);
+      buttons.appendChild(btnAi2);
+
+      var explanation = document.createElement('div');
+      explanation.className = 'explanation';
+
+      card.appendChild(number);
+      card.appendChild(question);
+      card.appendChild(content);
+      card.appendChild(buttons);
+      card.appendChild(explanation);
+
+      level2Container.appendChild(card);
+    });
+
+    // =============================================
+    // Answer Handlers
+    // =============================================
+    function handleAnswer(q, chosen, chosenBtn, otherBtn, card, explanationEl) {
+      // Prevent re-answering
+      chosenBtn.disabled = true;
+      otherBtn.disabled = true;
+
+      var correct = chosen === q.answer;
+
+      if (correct) {
+        level1Score++;
+        chosenBtn.classList.add('selected-correct');
+        card.classList.add('answered-correct');
+        explanationEl.className = 'explanation visible correct';
+      } else {
+        chosenBtn.classList.add('selected-wrong');
+        otherBtn.classList.add('was-correct');
+        card.classList.add('answered-wrong');
+        explanationEl.className = 'explanation visible wrong';
+      }
+
+      var title = document.createElement('div');
+      title.className = 'explanation-title';
+      title.textContent = correct ? 'Correct!' : 'Not quite!';
+
+      var text = document.createElement('div');
+      text.textContent = q.explanation;
+
+      explanationEl.appendChild(title);
+      explanationEl.appendChild(text);
+
+      level1Answered++;
+      updateScores();
+
+      // Log activity
+      ActivityLogger.log('quiz-answer', 'L1 Q' + (level1Data.indexOf(q) + 1) + ': ' + chosen, correct ? 'correct' : 'wrong');
+
+      // Check level completion
+      if (level1Answered === level1Data.length) {
+        completeLevel1();
+      }
+    }
+
+    function handleAnswer2(q, chosen, chosenBtn, otherBtn, card, explanationEl) {
+      chosenBtn.disabled = true;
+      otherBtn.disabled = true;
+
+      var correct = chosen === q.answer;
+
+      if (correct) {
+        level2Score++;
+        chosenBtn.classList.add('selected-correct');
+        card.classList.add('answered-correct');
+        explanationEl.className = 'explanation visible correct';
+      } else {
+        chosenBtn.classList.add('selected-wrong');
+        otherBtn.classList.add('was-correct');
+        card.classList.add('answered-wrong');
+        explanationEl.className = 'explanation visible wrong';
+      }
+
+      var title = document.createElement('div');
+      title.className = 'explanation-title';
+      title.textContent = correct ? 'Correct!' : 'Not quite!';
+
+      var text = document.createElement('div');
+      text.textContent = q.explanation;
+
+      explanationEl.appendChild(title);
+      explanationEl.appendChild(text);
+
+      level2Answered++;
+      updateScores();
+
+      ActivityLogger.log('quiz-answer', 'L2 Q' + (level2Data.indexOf(q) + 1) + ': ' + chosen, correct ? 'correct' : 'wrong');
+
+      if (level2Answered === level2Data.length) {
+        completeLevel2();
+      }
+    }
+
+    // =============================================
+    // Score Updates
+    // =============================================
+    function updateScores() {
+      document.getElementById('score-level1').textContent = level1Score + '/' + level1Data.length;
+      document.getElementById('score-level2').textContent = level2Score + '/' + level2Data.length;
+      var total = level1Score + level2Score;
+      var totalPossible = level1Data.length + level2Data.length;
+      document.getElementById('score-total').textContent = total + '/' + totalPossible;
+    }
+
+    function completeLevel1() {
+      var el = document.getElementById('level1-complete');
+      el.classList.add('visible');
+      document.getElementById('level1-final-score').textContent =
+        'You got ' + level1Score + ' out of ' + level1Data.length + ' correct!';
+
+      var pct = Math.round((level1Score / level1Data.length) * 100);
+      var msg;
+      if (pct >= 88) msg = 'Amazing! You have sharp eyes for spotting AI images!';
+      else if (pct >= 63) msg = 'Good job! You caught most of the fakes. Keep practicing!';
+      else msg = 'AI images can be really tricky! Now you know what clues to look for.';
+      document.getElementById('level1-message').textContent = msg;
+
+      // Mark tab as completed
+      document.querySelector('.level-tab[data-level="1"]').classList.add('completed');
+      taskCards.setComplete('level1', true);
+    }
+
+    function completeLevel2() {
+      var el = document.getElementById('level2-complete');
+      el.classList.add('visible');
+      document.getElementById('level2-final-score').textContent =
+        'You got ' + level2Score + ' out of ' + level2Data.length + ' correct!';
+
+      var pct = Math.round((level2Score / level2Data.length) * 100);
+      var msg;
+      if (pct >= 83) msg = 'Impressive! You can tell human and AI writing apart!';
+      else if (pct >= 50) msg = 'Nice work! You spotted some key differences.';
+      else msg = 'AI writing is getting harder to detect! Now you know the telltale signs.';
+      document.getElementById('level2-message').textContent = msg;
+
+      document.querySelector('.level-tab[data-level="2"]').classList.add('completed');
+      taskCards.setComplete('level2', true);
+    }
+
+    function updateFinalResults() {
+      var total = level1Score + level2Score;
+      var totalPossible = level1Data.length + level2Data.length;
+
+      document.getElementById('final-total-score').textContent = total + ' / ' + totalPossible;
+      document.getElementById('final-l1-score').textContent = level1Score + '/' + level1Data.length;
+      document.getElementById('final-l2-score').textContent = level2Score + '/' + level2Data.length;
+
+      var pct = totalPossible > 0 ? Math.round((total / totalPossible) * 100) : 0;
+      var rating;
+      var emoji;
+      if (pct >= 86) {
+        rating = 'Master AI Detective!';
+        emoji = '\uD83D\uDD75\uFE0F';
+      } else if (pct >= 64) {
+        rating = 'Skilled Truth-Seeker!';
+        emoji = '\uD83D\uDCA1';
+      } else if (pct >= 43) {
+        rating = 'Growing Fact-Checker!';
+        emoji = '\uD83C\uDF31';
+      } else {
+        rating = 'AI is tricky -- but now you know the signs!';
+        emoji = '\uD83D\uDCAA';
+      }
+
+      document.getElementById('final-rating').textContent = rating;
+      document.getElementById('results-emoji').textContent = emoji;
+    }
+
+    // =============================================
+    // Level 3: Bias Experiment Setup
+    // =============================================
+    var experimentGrid = document.getElementById('experiment-prompts');
+
+    biasExperiments.forEach(function (exp) {
+      var card = document.createElement('div');
+      card.className = 'experiment-prompt-card';
+
+      var label = document.createElement('div');
+      label.className = 'prompt-label';
+      label.textContent = exp.label;
+
+      var pair = document.createElement('div');
+      pair.className = 'prompt-pair';
+
+      var spanA = document.createElement('span');
+      spanA.textContent = 'A: "' + exp.promptA + '"';
+
+      var spanB = document.createElement('span');
+      spanB.textContent = 'B: "' + exp.promptB + '"';
+
+      var lookFor = document.createElement('div');
+      lookFor.style.cssText = 'font-size: var(--text-xs); color: var(--color-text-muted); margin-top: var(--space-sm); font-style: italic;';
+      lookFor.textContent = 'Look for: ' + exp.lookFor;
+
+      pair.appendChild(spanA);
+      pair.appendChild(spanB);
+
+      card.appendChild(label);
+      card.appendChild(pair);
+      card.appendChild(lookFor);
+
+      card.addEventListener('click', function () {
+        // Deselect all
+        var allCards = experimentGrid.querySelectorAll('.experiment-prompt-card');
+        allCards.forEach(function (c) { c.classList.remove('card-selected'); });
+        // Select this one
+        card.classList.add('card-selected');
+        taskCards.setComplete('bias', true);
+
+        ActivityLogger.log('experiment-select', exp.label);
+      });
+
+      experimentGrid.appendChild(card);
+    });
+
+    // =============================================
+    // Level 3: Chat Widget for Bias Experiment
+    // =============================================
+    var biasChat = document.getElementById('bias-chat');
+
+    var biasChatWidget = window.ChatWidget(biasChat, {
+      systemPrompt: 'You are a helpful assistant. Answer questions directly and descriptively. When asked to describe a person or scenario, give a detailed, specific description including appearance, behavior, and setting. Be descriptive and specific. Keep answers to 3-5 sentences.',
+      placeholder: 'Paste a prompt from above, or type your own question to test the AI...'
+    });
+
+    // Save observations
+    var observationsEl = document.getElementById('observations-text');
+    var obsKey = 'observations_lesson09';
+
+    try {
+      var savedObs = localStorage.getItem(obsKey);
+      if (savedObs) observationsEl.value = savedObs;
+    } catch (e) { /* ignore */ }
+
+    observationsEl.addEventListener('input', function () {
+      try {
+        localStorage.setItem(obsKey, observationsEl.value);
+      } catch (e) { /* ignore */ }
+
+      if (observationsEl.value.trim().length > 20) {
+        taskCards.setComplete('discuss', true);
+      }
+    });
+
+    // =============================================
+    // Task Sidebar
+    // =============================================
+    var taskSidebar = document.getElementById('task-sidebar');
+
+    var taskCards = window.TaskCards(taskSidebar, [
+      { id: 'level1', title: 'Complete Level 1', description: 'Answer all 8 image questions' },
+      { id: 'level2', title: 'Complete Level 2', description: 'Answer all 6 text questions' },
+      { id: 'bias', title: 'Try a bias experiment', description: 'Pick an experiment and test the AI' },
+      { id: 'discuss', title: 'Write your observations', description: 'Record what you noticed about AI bias' }
+    ]);
+  </script>
+
+</body>
+</html>

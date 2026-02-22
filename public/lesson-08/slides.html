@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Game Designer - AI Creator Lab</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/white.css">
+  <link rel="stylesheet" href="/shared/slides-base.css">
+  <style>
+    /* Game type showcase grid */
+    .game-showcase {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      max-width: 900px;
+      margin: 28px auto 0;
+    }
+
+    .game-showcase .game-item {
+      padding: 24px 16px;
+      border-radius: 14px;
+      background: rgba(79, 110, 247, 0.06);
+      border: 2px solid rgba(79, 110, 247, 0.12);
+      text-align: center;
+    }
+
+    .game-showcase .game-item .game-emoji {
+      font-size: 2.8rem;
+      margin-bottom: 8px;
+    }
+
+    .game-showcase .game-item .game-name {
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .game-showcase .game-item .game-desc {
+      font-size: 0.95rem;
+      color: var(--slide-muted);
+    }
+
+    /* Design loop visual */
+    .loop-steps {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin: 32px auto 0;
+      max-width: 900px;
+      flex-wrap: wrap;
+    }
+
+    .loop-step {
+      padding: 18px 24px;
+      border-radius: 14px;
+      text-align: center;
+      min-width: 140px;
+    }
+
+    .loop-step.step-describe {
+      background: rgba(79, 110, 247, 0.1);
+      border: 2px solid rgba(79, 110, 247, 0.2);
+    }
+
+    .loop-step.step-generate {
+      background: rgba(124, 58, 237, 0.1);
+      border: 2px solid rgba(124, 58, 237, 0.2);
+    }
+
+    .loop-step.step-play {
+      background: rgba(14, 165, 165, 0.1);
+      border: 2px solid rgba(14, 165, 165, 0.2);
+    }
+
+    .loop-step.step-improve {
+      background: rgba(245, 158, 11, 0.1);
+      border: 2px solid rgba(245, 158, 11, 0.2);
+    }
+
+    .loop-step .step-emoji {
+      font-size: 2rem;
+      margin-bottom: 4px;
+    }
+
+    .loop-step .step-label {
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+
+    .loop-arrow {
+      font-size: 2rem;
+      color: var(--slide-muted);
+    }
+
+    .loop-back-arrow {
+      display: block;
+      text-align: center;
+      font-size: 1.3rem;
+      color: var(--slide-muted);
+      margin-top: 12px;
+    }
+
+    /* Example comparison */
+    .example-columns {
+      display: flex;
+      gap: 40px;
+      max-width: 900px;
+      margin: 28px auto 0;
+      align-items: stretch;
+    }
+
+    .example-columns .example-col {
+      flex: 1;
+      padding: 24px;
+      border-radius: 14px;
+      text-align: left;
+    }
+
+    .example-columns .example-col.col-prompt {
+      background: rgba(79, 110, 247, 0.08);
+      border: 2px solid rgba(79, 110, 247, 0.15);
+    }
+
+    .example-columns .example-col.col-result {
+      background: rgba(14, 165, 165, 0.08);
+      border: 2px solid rgba(14, 165, 165, 0.15);
+    }
+
+    .example-columns .example-col .col-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+      text-align: center;
+    }
+
+    .example-columns .example-col .col-content {
+      font-size: 1.05rem;
+      line-height: 1.6;
+    }
+
+    /* Concept box */
+    .concept-box {
+      background: rgba(79, 110, 247, 0.08);
+      border-radius: 14px;
+      padding: 24px 32px;
+      max-width: 750px;
+      margin: 20px auto 0;
+      font-size: 1.4rem;
+      line-height: 1.6;
+      color: var(--slide-text);
+    }
+
+    /* Prompt tips */
+    .prompt-tips {
+      list-style: none;
+      text-align: left;
+      display: inline-block;
+      margin-top: 20px;
+    }
+
+    .prompt-tips li {
+      padding: 8px 0;
+      font-size: 1.3rem;
+    }
+
+    /* Mission checklist */
+    .mission-steps {
+      list-style: none;
+      text-align: left;
+      display: inline-block;
+      font-size: 1.4rem;
+      margin-top: 20px;
+    }
+
+    .mission-steps li {
+      margin-bottom: 0.5em;
+      padding-left: 0.2em;
+    }
+
+    /* Review recap */
+    .recap-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      max-width: 800px;
+      margin: 24px auto 0;
+    }
+
+    .recap-grid .recap-item {
+      padding: 20px 16px;
+      border-radius: 14px;
+      background: rgba(124, 58, 237, 0.06);
+      border: 2px solid rgba(124, 58, 237, 0.12);
+      text-align: center;
+    }
+
+    .recap-grid .recap-item .recap-emoji {
+      font-size: 2rem;
+      margin-bottom: 6px;
+    }
+
+    .recap-grid .recap-item .recap-label {
+      font-size: 1rem;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- Slide 1: Title -->
+      <section>
+        <p class="slide-big-emoji">&#x1F3AE;</p>
+        <h1 class="slide-title">AI Game Designer</h1>
+        <p>Today: We build PLAYABLE GAMES with AI!</p>
+        <p style="margin-top: 12px; font-size: 1.1rem; color: var(--slide-muted);">AI Creator Lab &middot; Lesson 08</p>
+      </section>
+
+      <!-- Slide 2: Last week recap -->
+      <section>
+        <h2>Remember Last Time?</h2>
+        <div class="recap-grid">
+          <div class="recap-item">
+            <div class="recap-emoji">&#x1F4AC;</div>
+            <div class="recap-label">AI writes text</div>
+          </div>
+          <div class="recap-item">
+            <div class="recap-emoji">&#x1F3A8;</div>
+            <div class="recap-label">AI makes images</div>
+          </div>
+          <div class="recap-item">
+            <div class="recap-emoji">&#x1F4BB;</div>
+            <div class="recap-label">AI writes code</div>
+          </div>
+        </div>
+        <div class="concept-box" style="margin-top: 28px;">
+          You already know how to make AI write code.<br>
+          This week &mdash; we use that power to build <strong>real games!</strong>
+        </div>
+      </section>
+
+      <!-- Slide 3: What makes a game? -->
+      <section>
+        <h2>What Makes a Game? &#x1F914;</h2>
+        <div class="concept-box" style="text-align: left; max-width: 650px;">
+          <p>&#x1F3AF; <strong>Goals</strong> &mdash; What are you trying to do?</p>
+          <p>&#x1F4DC; <strong>Rules</strong> &mdash; What can and can't you do?</p>
+          <p>&#x1F525; <strong>Challenge</strong> &mdash; What makes it hard?</p>
+          <p>&#x1F389; <strong>Fun</strong> &mdash; What makes you want to keep playing?</p>
+        </div>
+        <p style="margin-top: 20px; font-size: 1.3rem; color: var(--slide-muted);">
+          Every great game has all four!
+        </p>
+      </section>
+
+      <!-- Slide 4: Game types showcase -->
+      <section>
+        <h2>Game Types You Can Build &#x1F3AE;</h2>
+        <div class="game-showcase">
+          <div class="game-item">
+            <div class="game-emoji">&#x2753;</div>
+            <div class="game-name">Quiz</div>
+            <div class="game-desc">Trivia &amp; questions</div>
+          </div>
+          <div class="game-item">
+            <div class="game-emoji">&#x2B50;</div>
+            <div class="game-name">Catch</div>
+            <div class="game-desc">Catch falling objects</div>
+          </div>
+          <div class="game-item">
+            <div class="game-emoji">&#x1F9E9;</div>
+            <div class="game-name">Maze</div>
+            <div class="game-desc">Navigate to the goal</div>
+          </div>
+          <div class="game-item">
+            <div class="game-emoji">&#x1F439;</div>
+            <div class="game-name">Whack-a-Mole</div>
+            <div class="game-desc">Click fast!</div>
+          </div>
+        </div>
+        <p style="margin-top: 20px; font-size: 1.3rem;">You pick the game &mdash; AI builds it for you!</p>
+      </section>
+
+      <!-- Slide 5: The game design loop -->
+      <section>
+        <h2>The Game Design Loop &#x1F504;</h2>
+        <div class="loop-steps">
+          <div class="loop-step step-describe">
+            <div class="step-emoji">&#x1F4DD;</div>
+            <div class="step-label">Describe</div>
+          </div>
+          <span class="loop-arrow">&rarr;</span>
+          <div class="loop-step step-generate">
+            <div class="step-emoji">&#x1F916;</div>
+            <div class="step-label">Generate</div>
+          </div>
+          <span class="loop-arrow">&rarr;</span>
+          <div class="loop-step step-play">
+            <div class="step-emoji">&#x1F3AE;</div>
+            <div class="step-label">Play</div>
+          </div>
+          <span class="loop-arrow">&rarr;</span>
+          <div class="loop-step step-improve">
+            <div class="step-emoji">&#x2B06;&#xFE0F;</div>
+            <div class="step-label">Improve</div>
+          </div>
+        </div>
+        <p class="loop-back-arrow">&#x21A9;&#xFE0F; Repeat! Each time your game gets better.</p>
+      </section>
+
+      <!-- Slide 6: How to describe a game to AI -->
+      <section>
+        <h2>How to Describe a Game to AI</h2>
+        <ul class="prompt-tips">
+          <li>&#x2705; <strong>Be specific</strong> &mdash; "3 lives, not 10"</li>
+          <li>&#x2705; <strong>Describe controls</strong> &mdash; "move with arrow keys"</li>
+          <li>&#x2705; <strong>Explain scoring</strong> &mdash; "get +10 for each catch"</li>
+          <li>&#x2705; <strong>Set the mood</strong> &mdash; "bright colors, fun for kids"</li>
+          <li>&#x274C; <strong>Avoid vague</strong> &mdash; "make something cool" &#x1F6AB;</li>
+        </ul>
+        <p style="margin-top: 20px; font-size: 1.2rem; color: var(--slide-muted);">
+          The more details you give, the better the game!
+        </p>
+      </section>
+
+      <!-- Slide 7: Example — description to game -->
+      <section>
+        <h2>Example: From Words to Game</h2>
+        <div class="example-columns">
+          <div class="example-col col-prompt">
+            <div class="col-title">&#x1F4DD; Your Description</div>
+            <div class="col-content">
+              "Make a whack-a-mole game. A 3x3 grid of holes. A hamster emoji pops up randomly. You have 30 seconds. Click the hamster to score. It gets faster over time. Show my score at the end."
+            </div>
+          </div>
+          <div class="example-col col-result">
+            <div class="col-title">&#x1F3AE; What AI Builds</div>
+            <div class="col-content">
+              A playable game with:<br>
+              &#x2705; 3x3 grid with animations<br>
+              &#x2705; 30-second countdown timer<br>
+              &#x2705; Score tracking<br>
+              &#x2705; Increasing difficulty<br>
+              &#x2705; Game over screen
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 8: Your mission -->
+      <section>
+        <p class="slide-big-emoji">&#x1F680;</p>
+        <h2>Your Mission</h2>
+        <p style="font-size: 1.8rem; margin-top: 16px;">
+          Design and build a <strong style="color: var(--slide-secondary);">playable game!</strong>
+        </p>
+        <ul class="mission-steps">
+          <li>&#x1F579;&#xFE0F; Pick a game type</li>
+          <li>&#x1F6E0;&#xFE0F; Generate your game with AI</li>
+          <li>&#x1F3AE; Play-test it &mdash; find what to fix</li>
+          <li>&#x2B06;&#xFE0F; Make at least 2 improvements</li>
+          <li>&#x1F4E6; Export and share!</li>
+        </ul>
+        <p style="font-size: 2.2rem; margin-top: 28px;">Let's go! &#x1F3AE;</p>
+      </section>
+
+    </div>
+  </div>
+
+  <!-- Lesson badge overlay -->
+  <div class="lesson-badge">08</div>
+
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+  <script>
+    Reveal.initialize({
+      hash: true,
+      transition: 'slide',
+      width: 1280,
+      height: 720
+    });
+  </script>
+</body>
+</html>

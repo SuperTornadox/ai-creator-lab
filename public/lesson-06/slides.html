@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Director - AI Creator Lab</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/white.css">
+  <link rel="stylesheet" href="/shared/slides-base.css">
+  <style>
+    /* Movie elements grid */
+    .movie-elements {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      max-width: 900px;
+      margin: 28px auto 0;
+    }
+
+    .movie-elements .element-item {
+      padding: 24px 16px;
+      border-radius: 14px;
+      background: rgba(79, 110, 247, 0.06);
+      border: 2px solid rgba(79, 110, 247, 0.12);
+      text-align: center;
+    }
+
+    .movie-elements .element-emoji {
+      font-size: 2.8rem;
+      margin-bottom: 8px;
+    }
+
+    .movie-elements .element-name {
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .movie-elements .element-desc {
+      font-size: 0.95rem;
+      color: var(--slide-muted);
+    }
+
+    /* Tool review cards */
+    .tools-review {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      max-width: 900px;
+      margin: 28px auto 0;
+    }
+
+    .tools-review .tool-card {
+      padding: 24px 16px;
+      border-radius: 14px;
+      text-align: center;
+    }
+
+    .tools-review .tool-card.card-text {
+      background: rgba(79, 110, 247, 0.08);
+      border: 2px solid rgba(79, 110, 247, 0.15);
+    }
+
+    .tools-review .tool-card.card-image {
+      background: rgba(124, 58, 237, 0.08);
+      border: 2px solid rgba(124, 58, 237, 0.15);
+    }
+
+    .tools-review .tool-card.card-music {
+      background: rgba(14, 165, 165, 0.08);
+      border: 2px solid rgba(14, 165, 165, 0.15);
+    }
+
+    .tools-review .tool-emoji {
+      font-size: 2.8rem;
+      margin-bottom: 8px;
+    }
+
+    .tools-review .tool-name {
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .tools-review .tool-desc {
+      font-size: 0.95rem;
+      color: var(--slide-muted);
+    }
+
+    /* Storyboard illustration */
+    .storyboard-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      max-width: 850px;
+      margin: 24px auto 0;
+    }
+
+    .storyboard-cell {
+      padding: 20px;
+      border-radius: 12px;
+      border: 2px solid rgba(79, 110, 247, 0.2);
+      background: rgba(79, 110, 247, 0.04);
+      text-align: center;
+    }
+
+    .storyboard-cell .cell-num {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--slide-primary);
+      margin-bottom: 8px;
+    }
+
+    .storyboard-cell .cell-icon {
+      font-size: 2rem;
+      margin-bottom: 6px;
+    }
+
+    .storyboard-cell .cell-text {
+      font-size: 0.95rem;
+      color: var(--slide-text);
+      line-height: 1.4;
+    }
+
+    /* Workflow steps */
+    .workflow-steps {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      max-width: 900px;
+      margin: 32px auto 0;
+      flex-wrap: wrap;
+    }
+
+    .workflow-step {
+      padding: 20px 24px;
+      border-radius: 14px;
+      text-align: center;
+      min-width: 140px;
+    }
+
+    .workflow-step.step-script {
+      background: rgba(79, 110, 247, 0.1);
+      border: 2px solid rgba(79, 110, 247, 0.2);
+    }
+
+    .workflow-step.step-images {
+      background: rgba(124, 58, 237, 0.1);
+      border: 2px solid rgba(124, 58, 237, 0.2);
+    }
+
+    .workflow-step.step-music {
+      background: rgba(14, 165, 165, 0.1);
+      border: 2px solid rgba(14, 165, 165, 0.2);
+    }
+
+    .workflow-step.step-combine {
+      background: rgba(245, 158, 11, 0.1);
+      border: 2px solid rgba(245, 158, 11, 0.2);
+    }
+
+    .workflow-step .step-emoji {
+      font-size: 2rem;
+      margin-bottom: 6px;
+    }
+
+    .workflow-step .step-label {
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+
+    .workflow-arrow {
+      font-size: 2rem;
+      color: var(--slide-muted);
+    }
+
+    /* Tips list */
+    .tips-list {
+      list-style: none;
+      text-align: left;
+      display: inline-block;
+      margin-top: 20px;
+    }
+
+    .tips-list li {
+      font-size: 1.4rem;
+      margin-bottom: 0.6em;
+      line-height: 1.5;
+    }
+
+    /* Concept box (reused) */
+    .concept-box {
+      background: rgba(79, 110, 247, 0.08);
+      border-radius: 14px;
+      padding: 24px 32px;
+      max-width: 750px;
+      margin: 20px auto 0;
+      font-size: 1.4rem;
+      line-height: 1.6;
+      color: var(--slide-text);
+    }
+
+    /* Mission checklist */
+    .mission-checklist {
+      list-style: none;
+      text-align: left;
+      display: inline-block;
+      font-size: 1.3rem;
+      margin-top: 16px;
+    }
+
+    .mission-checklist li {
+      margin-bottom: 0.5em;
+      padding-left: 0.2em;
+    }
+  </style>
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- Slide 1: Title -->
+      <section>
+        <p class="slide-big-emoji">&#x1F3AC;</p>
+        <h1 class="slide-title">AI Director</h1>
+        <p>Today: We make a MINI FILM with AI!</p>
+        <p style="margin-top: 12px; font-size: 1.1rem; color: var(--slide-muted);">AI Creator Lab &middot; Lesson 06</p>
+      </section>
+
+      <!-- Slide 2: What makes a movie? -->
+      <section>
+        <h2>What Makes a Movie? &#x1F3AC;</h2>
+        <div class="movie-elements">
+          <div class="element-item">
+            <div class="element-emoji">&#x1F4D6;</div>
+            <div class="element-name">Story</div>
+            <div class="element-desc">The plot &amp; characters</div>
+          </div>
+          <div class="element-item">
+            <div class="element-emoji">&#x1F5BC;&#xFE0F;</div>
+            <div class="element-name">Visuals</div>
+            <div class="element-desc">What you see on screen</div>
+          </div>
+          <div class="element-item">
+            <div class="element-emoji">&#x1F3B5;</div>
+            <div class="element-name">Music</div>
+            <div class="element-desc">The soundtrack &amp; mood</div>
+          </div>
+          <div class="element-item">
+            <div class="element-emoji">&#x23F1;&#xFE0F;</div>
+            <div class="element-name">Pacing</div>
+            <div class="element-desc">How the story flows</div>
+          </div>
+        </div>
+        <p style="margin-top: 24px; font-size: 1.3rem;">A great film combines ALL of these!</p>
+      </section>
+
+      <!-- Slide 3: Review tools learned -->
+      <section>
+        <h2>Tools We Have Learned</h2>
+        <div class="tools-review">
+          <div class="tool-card card-text">
+            <div class="tool-emoji">&#x1F4DD;</div>
+            <div class="tool-name">Text AI</div>
+            <div class="tool-desc">Stories, lyrics, scripts</div>
+          </div>
+          <div class="tool-card card-image">
+            <div class="tool-emoji">&#x1F3A8;</div>
+            <div class="tool-name">Image AI</div>
+            <div class="tool-desc">Illustrations, scenes</div>
+          </div>
+          <div class="tool-card card-music">
+            <div class="tool-emoji">&#x1F3B5;</div>
+            <div class="tool-name">Music AI</div>
+            <div class="tool-desc">Songs, soundtracks</div>
+          </div>
+        </div>
+        <p style="margin-top: 28px; font-size: 1.6rem;">
+          Today we combine <strong style="color: var(--slide-secondary);">ALL THREE</strong> into one project!
+        </p>
+      </section>
+
+      <!-- Slide 4: Today's mission -->
+      <section>
+        <h2>Today's Mission</h2>
+        <div class="concept-box">
+          Combine <strong>text AI + image AI + music AI</strong><br>
+          to create your own <strong style="color: var(--slide-secondary);">mini film!</strong>
+        </div>
+        <p style="font-size: 1.5rem; margin-top: 28px;">
+          A slideshow film = images + captions + soundtrack
+        </p>
+        <p style="font-size: 1.2rem; margin-top: 12px; color: var(--slide-muted);">
+          Think of it like a picture book that plays itself!
+        </p>
+      </section>
+
+      <!-- Slide 5: What is a storyboard? -->
+      <section>
+        <h2>What is a Storyboard? &#x1F4CB;</h2>
+        <div class="concept-box">
+          A <strong>storyboard</strong> is a visual plan for a film.<br>
+          It breaks the story into <strong>scenes</strong> &mdash; like a comic strip!
+        </div>
+        <p style="font-size: 1.3rem; margin-top: 24px;">
+          Real directors plan every scene before they start filming.
+        </p>
+        <p style="font-size: 1.3rem; margin-top: 8px;">
+          Today, <strong>you</strong> are the director. AI is your crew!
+        </p>
+      </section>
+
+      <!-- Slide 6: Example scene breakdown -->
+      <section>
+        <h2>Example: Space Adventure &#x1F680;</h2>
+        <div class="storyboard-grid">
+          <div class="storyboard-cell">
+            <div class="cell-num">Scene 1</div>
+            <div class="cell-icon">&#x1F680;</div>
+            <div class="cell-text">A kid finds a rocket ship in the backyard</div>
+          </div>
+          <div class="storyboard-cell">
+            <div class="cell-num">Scene 2</div>
+            <div class="cell-icon">&#x1F30C;</div>
+            <div class="cell-text">The rocket blasts off into space</div>
+          </div>
+          <div class="storyboard-cell">
+            <div class="cell-num">Scene 3</div>
+            <div class="cell-icon">&#x1FA90;</div>
+            <div class="cell-text">They discover a colorful new planet</div>
+          </div>
+          <div class="storyboard-cell">
+            <div class="cell-num">Scene 4</div>
+            <div class="cell-icon">&#x1F47E;</div>
+            <div class="cell-text">Friendly aliens invite them to a party</div>
+          </div>
+          <div class="storyboard-cell">
+            <div class="cell-num">Scene 5</div>
+            <div class="cell-icon">&#x1F389;</div>
+            <div class="cell-text">The biggest space dance party ever</div>
+          </div>
+          <div class="storyboard-cell">
+            <div class="cell-num">Scene 6</div>
+            <div class="cell-icon">&#x1F30D;</div>
+            <div class="cell-text">Flying home with alien friends waving goodbye</div>
+          </div>
+        </div>
+        <p style="margin-top: 16px; font-size: 1.1rem; color: var(--slide-muted);">Each scene = one image + one caption in your film</p>
+      </section>
+
+      <!-- Slide 7: Workflow overview -->
+      <section>
+        <h2>Your Workflow</h2>
+        <div class="workflow-steps">
+          <div class="workflow-step step-script">
+            <div class="step-emoji">&#x1F4DD;</div>
+            <div class="step-label">1. Script</div>
+          </div>
+          <span class="workflow-arrow">&rarr;</span>
+          <div class="workflow-step step-images">
+            <div class="step-emoji">&#x1F3A8;</div>
+            <div class="step-label">2. Images</div>
+          </div>
+          <span class="workflow-arrow">&rarr;</span>
+          <div class="workflow-step step-music">
+            <div class="step-emoji">&#x1F3B5;</div>
+            <div class="step-label">3. Music</div>
+          </div>
+          <span class="workflow-arrow">&rarr;</span>
+          <div class="workflow-step step-combine">
+            <div class="step-emoji">&#x1F3AC;</div>
+            <div class="step-label">4. Combine!</div>
+          </div>
+        </div>
+        <p style="margin-top: 28px; font-size: 1.3rem;">
+          Write your story &rarr; Generate scene images &rarr; Pick music &rarr; Watch your film!
+        </p>
+      </section>
+
+      <!-- Slide 8: Tips for great scenes -->
+      <section>
+        <h2>Tips for Great Scene Images &#x1F3A8;</h2>
+        <ul class="tips-list">
+          <li>&#x2705; Be <strong>specific</strong> &mdash; "a golden sunset over a mountain lake" beats "nature"</li>
+          <li>&#x2705; Include <strong>mood</strong> &mdash; "mysterious dark forest" or "bright cheerful kitchen"</li>
+          <li>&#x2705; Mention <strong>characters</strong> &mdash; "a brave kid in a red cape"</li>
+          <li>&#x2705; Think <strong>cinematic</strong> &mdash; imagine it on a movie screen!</li>
+        </ul>
+      </section>
+
+      <!-- Slide 9: Let's start! -->
+      <section>
+        <p class="slide-big-emoji">&#x1F3AC;</p>
+        <h2>Your Mission</h2>
+        <div class="concept-box" style="margin-top: 16px; font-size: 1.2rem;">
+          &#x2705; Write a 4-6 scene story with AI<br>
+          &#x2705; Generate an image for each scene<br>
+          &#x2705; Choose a soundtrack on Suno<br>
+          &#x2705; Preview your mini film<br>
+          &#x2705; Download and share at the "premiere"!
+        </div>
+        <p style="font-size: 2rem; margin-top: 24px;">&#x1F449; Open <strong>Lesson 6</strong> and start directing!</p>
+        <p style="font-size: 2.5rem; margin-top: 16px;">Lights, camera, AI! &#x1F3AC;</p>
+      </section>
+
+    </div>
+  </div>
+
+  <!-- Lesson badge overlay -->
+  <div class="lesson-badge">06</div>
+
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+  <script>
+    Reveal.initialize({
+      hash: true,
+      transition: 'slide',
+      width: 1280,
+      height: 720
+    });
+  </script>
+</body>
+</html>
