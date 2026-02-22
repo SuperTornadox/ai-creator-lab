@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Musician - AI Creator Lab</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/white.css">
+  <link rel="stylesheet" href="/shared/slides-base.css">
+  <style>
+    /* Guessing game: 3 song rows */
+    .song-guess-list {
+      list-style: none;
+      text-align: left;
+      display: inline-block;
+      margin-top: 24px;
+    }
+
+    .song-guess-list li {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      padding: 16px 24px;
+      margin-bottom: 12px;
+      background: rgba(79, 110, 247, 0.06);
+      border-radius: 14px;
+      border: 2px solid rgba(79, 110, 247, 0.12);
+      font-size: 1.4rem;
+    }
+
+    .song-guess-list .song-label {
+      font-weight: 700;
+      color: var(--slide-primary);
+      min-width: 100px;
+    }
+
+    .song-guess-list .guess-options {
+      display: flex;
+      gap: 16px;
+    }
+
+    .song-guess-list .guess-option {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 1.2rem;
+      cursor: pointer;
+    }
+
+    .song-guess-list .guess-option input[type="checkbox"] {
+      width: 20px;
+      height: 20px;
+      accent-color: var(--slide-primary);
+    }
+
+    /* Genre showcase grid */
+    .genre-showcase {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      max-width: 900px;
+      margin: 28px auto 0;
+    }
+
+    .genre-showcase .genre-item {
+      padding: 24px 16px;
+      border-radius: 14px;
+      background: rgba(79, 110, 247, 0.06);
+      border: 2px solid rgba(79, 110, 247, 0.12);
+      text-align: center;
+    }
+
+    .genre-showcase .genre-item .genre-emoji {
+      font-size: 2.8rem;
+      margin-bottom: 8px;
+    }
+
+    .genre-showcase .genre-item .genre-name {
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .genre-showcase .genre-item .genre-desc {
+      font-size: 0.95rem;
+      color: var(--slide-muted);
+    }
+
+    /* Two-column tools layout */
+    .tools-columns {
+      display: flex;
+      gap: 40px;
+      max-width: 900px;
+      margin: 28px auto 0;
+      align-items: stretch;
+    }
+
+    .tools-columns .tool-col {
+      flex: 1;
+      padding: 28px;
+      border-radius: 14px;
+      text-align: center;
+    }
+
+    .tools-columns .tool-col.col-page {
+      background: rgba(79, 110, 247, 0.08);
+      border: 2px solid rgba(79, 110, 247, 0.15);
+    }
+
+    .tools-columns .tool-col.col-suno {
+      background: rgba(124, 58, 237, 0.08);
+      border: 2px solid rgba(124, 58, 237, 0.15);
+    }
+
+    .tools-columns .tool-col .tool-emoji {
+      font-size: 3rem;
+      margin-bottom: 12px;
+    }
+
+    .tools-columns .tool-col .tool-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .tools-columns .tool-col .tool-desc {
+      font-size: 1.1rem;
+      color: var(--slide-muted);
+    }
+
+    /* Mission checklist */
+    .mission-steps {
+      list-style: none;
+      text-align: left;
+      display: inline-block;
+      font-size: 1.5rem;
+      margin-top: 20px;
+    }
+
+    .mission-steps li {
+      margin-bottom: 0.5em;
+      padding-left: 0.2em;
+    }
+
+    /* Concept box (reused from base patterns) */
+    .concept-box {
+      background: rgba(79, 110, 247, 0.08);
+      border-radius: 14px;
+      padding: 24px 32px;
+      max-width: 750px;
+      margin: 20px auto 0;
+      font-size: 1.4rem;
+      line-height: 1.6;
+      color: var(--slide-text);
+    }
+  </style>
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- Slide 1: Title -->
+      <section>
+        <p class="slide-big-emoji">&#x1F3B5;</p>
+        <h1 class="slide-title">AI Musician</h1>
+        <p>Today: We make MUSIC with AI!</p>
+        <p style="margin-top: 12px; font-size: 1.1rem; color: var(--slide-muted);">AI Creator Lab &middot; Lesson 05</p>
+      </section>
+
+      <!-- Slide 2: Guessing Game -->
+      <section>
+        <h2>Real Musician or AI? &#x1F914;</h2>
+        <ul class="song-guess-list">
+          <li>
+            <span class="song-label">Song 1</span>
+            <span>___</span>
+            <div class="guess-options">
+              <label class="guess-option"><input type="checkbox"> Real</label>
+              <label class="guess-option"><input type="checkbox"> AI</label>
+            </div>
+          </li>
+          <li>
+            <span class="song-label">Song 2</span>
+            <span>___</span>
+            <div class="guess-options">
+              <label class="guess-option"><input type="checkbox"> Real</label>
+              <label class="guess-option"><input type="checkbox"> AI</label>
+            </div>
+          </li>
+          <li>
+            <span class="song-label">Song 3</span>
+            <span>___</span>
+            <div class="guess-options">
+              <label class="guess-option"><input type="checkbox"> Real</label>
+              <label class="guess-option"><input type="checkbox"> AI</label>
+            </div>
+          </li>
+        </ul>
+      </section>
+
+      <!-- Slide 3: Reveal -->
+      <section>
+        <h2>AI Music Is Getting REALLY Good! &#x1F92F;</h2>
+        <div class="concept-box">
+          AI can now create <strong>full songs</strong> with<br>
+          vocals, instruments, everything!
+        </div>
+        <p style="font-size: 1.5rem; margin-top: 28px; color: var(--slide-muted);">
+          Could you tell the difference?
+        </p>
+      </section>
+
+      <!-- Slide 4: How it works -->
+      <section>
+        <h2>Same Idea as Before</h2>
+        <div class="concept-box">
+          You <strong>DESCRIBE</strong> what you want<br>
+          &rarr; AI <strong>CREATES</strong> it
+        </div>
+        <p style="font-size: 1.8rem; margin-top: 28px;">
+          Genre + Mood + Lyrics = <strong style="color: var(--slide-secondary);">Your Song &#x1F3B6;</strong>
+        </p>
+      </section>
+
+      <!-- Slide 5: Style Showcase -->
+      <section>
+        <h2>Music Styles &#x1F3B6;</h2>
+        <div class="genre-showcase">
+          <div class="genre-item">
+            <div class="genre-emoji">&#x1F3B5;</div>
+            <div class="genre-name">Pop</div>
+            <div class="genre-desc">Catchy &amp; fun</div>
+          </div>
+          <div class="genre-item">
+            <div class="genre-emoji">&#x1F3B8;</div>
+            <div class="genre-name">Rock</div>
+            <div class="genre-desc">Powerful &amp; bold</div>
+          </div>
+          <div class="genre-item">
+            <div class="genre-emoji">&#x1F3A7;</div>
+            <div class="genre-name">Lo-fi</div>
+            <div class="genre-desc">Chill &amp; cozy</div>
+          </div>
+          <div class="genre-item">
+            <div class="genre-emoji">&#x1F3B9;</div>
+            <div class="genre-name">Electronic</div>
+            <div class="genre-desc">Danceable &amp; modern</div>
+          </div>
+        </div>
+        <p style="margin-top: 20px; font-size: 1.3rem;">Different genres = completely different vibes!</p>
+      </section>
+
+      <!-- Slide 6: Today's Tools -->
+      <section>
+        <h2>Today's Tools</h2>
+        <div class="tools-columns">
+          <div class="tool-col col-page">
+            <div class="tool-emoji">&#x1F4DD;</div>
+            <div class="tool-title">Our Page</div>
+            <div class="tool-desc">Lyrics helper<br>+ Style explorer</div>
+          </div>
+          <div class="tool-col col-suno">
+            <div class="tool-emoji">&#x1F3B5;</div>
+            <div class="tool-title">Suno</div>
+            <div class="tool-desc">Music generation<br>(the magic happens here!)</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 7: Today's Mission -->
+      <section>
+        <p class="slide-big-emoji">&#x1F3A4;</p>
+        <h2>Today's Mission</h2>
+        <p style="font-size: 1.8rem; margin-top: 16px;">Create your own <strong style="color: var(--slide-secondary);">original song!</strong></p>
+        <ul class="mission-steps">
+          <li>&#x270D;&#xFE0F; Write lyrics &rarr; &#x1F3B6; Choose style &rarr; &#x1F3B5; Generate on Suno</li>
+        </ul>
+        <div class="concept-box" style="margin-top: 20px; font-size: 1.2rem;">
+          &#x2705; Write lyrics with AI help<br>
+          &#x2705; Pick a music genre<br>
+          &#x2705; Create at least 2 songs on Suno<br>
+          &#x2705; Pick your "hit single"
+        </div>
+      </section>
+
+      <!-- Slide 8: Let's go! -->
+      <section>
+        <h2>Open your laptops!</h2>
+        <p style="font-size: 2rem; margin-top: 24px;">&#x1F449; Go to the <strong>Lesson 5</strong> page</p>
+        <p style="font-size: 2.5rem; margin-top: 32px;">Let's go! &#x1F680;</p>
+      </section>
+
+    </div>
+  </div>
+
+  <!-- Lesson badge overlay -->
+  <div class="lesson-badge">05</div>
+
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+  <script>
+    Reveal.initialize({
+      hash: true,
+      transition: 'slide',
+      width: 1280,
+      height: 720
+    });
+  </script>
+</body>
+</html>

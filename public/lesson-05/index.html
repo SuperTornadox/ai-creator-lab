@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lesson 5: AI Musician - AI Creator Lab</title>
+  <link rel="stylesheet" href="/shared/styles.css">
+  <style>
+    /* Genre cards grid */
+    .genre-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: var(--space-md);
+    }
+
+    .genre-card {
+      background: var(--color-surface);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-sm);
+      padding: var(--space-lg);
+      border: 2px solid var(--color-border);
+      text-align: center;
+      cursor: pointer;
+      transition: box-shadow var(--transition-normal),
+                  transform var(--transition-normal),
+                  border-color var(--transition-normal);
+    }
+
+    .genre-card:hover {
+      box-shadow: var(--shadow-md);
+      transform: translateY(-2px);
+    }
+
+    .genre-card.card-selected {
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px var(--color-primary-light);
+    }
+
+    .genre-card .genre-emoji {
+      font-size: 2.5rem;
+      margin-bottom: var(--space-sm);
+    }
+
+    .genre-card .genre-name {
+      font-size: var(--text-lg);
+      font-weight: 650;
+      margin-bottom: var(--space-xs);
+    }
+
+    .genre-card .genre-desc {
+      font-size: var(--text-sm);
+      color: var(--color-text-muted);
+    }
+
+    /* Suno launch section */
+    .launch-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-sm);
+      padding: 0.8em 2em;
+      font-size: var(--text-xl);
+      font-weight: 700;
+      font-family: inherit;
+      background: linear-gradient(135deg, var(--color-secondary), var(--color-primary));
+      color: #ffffff;
+      border: none;
+      border-radius: var(--radius-lg);
+      cursor: pointer;
+      transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+      text-decoration: none;
+    }
+
+    .launch-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lg);
+      color: #ffffff;
+    }
+
+    .launch-btn:active {
+      transform: scale(0.97);
+    }
+
+    /* Steps card */
+    .steps-card {
+      background: var(--color-surface);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--color-border);
+      padding: var(--space-xl);
+      margin-top: var(--space-lg);
+    }
+
+    .steps-card h3 {
+      margin-bottom: var(--space-md);
+    }
+
+    .steps-list {
+      list-style: none;
+      padding: 0;
+      counter-reset: step-counter;
+    }
+
+    .steps-list li {
+      counter-increment: step-counter;
+      display: flex;
+      align-items: flex-start;
+      gap: var(--space-md);
+      padding: var(--space-sm) 0;
+      font-size: var(--text-md);
+      line-height: 1.6;
+    }
+
+    .steps-list li::before {
+      content: counter(step-counter);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      min-width: 28px;
+      background: var(--color-primary);
+      color: #ffffff;
+      border-radius: 50%;
+      font-size: var(--text-sm);
+      font-weight: 700;
+    }
+
+    /* Tips box */
+    .tips-box {
+      background: var(--color-accent-light);
+      border-radius: var(--radius-md);
+      padding: var(--space-lg);
+      margin-top: var(--space-md);
+    }
+
+    .tips-box h4 {
+      margin-bottom: var(--space-sm);
+      color: var(--color-accent-hover);
+    }
+
+    .tips-box ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .tips-box li {
+      padding: var(--space-xs) 0;
+      font-size: var(--text-sm);
+      line-height: 1.6;
+    }
+
+    .tips-box li::before {
+      content: "\2728 ";
+    }
+
+    /* Song collection */
+    .song-entry {
+      background: var(--color-surface);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--color-border);
+      padding: var(--space-md);
+      display: flex;
+      align-items: center;
+      gap: var(--space-md);
+      margin-bottom: var(--space-sm);
+    }
+
+    .song-entry .song-info {
+      flex: 1;
+      display: flex;
+      gap: var(--space-md);
+      flex-wrap: wrap;
+    }
+
+    .song-entry .song-title {
+      font-weight: 650;
+      font-size: var(--text-md);
+    }
+
+    .song-entry .song-style {
+      color: var(--color-text-muted);
+      font-size: var(--text-sm);
+    }
+
+    .song-entry .song-notes {
+      color: var(--color-text-muted);
+      font-size: var(--text-sm);
+      font-style: italic;
+    }
+
+    .song-entry .hit-toggle {
+      display: flex;
+      align-items: center;
+      gap: var(--space-xs);
+      cursor: pointer;
+      font-size: var(--text-sm);
+      user-select: none;
+      white-space: nowrap;
+    }
+
+    .song-entry .hit-toggle input {
+      accent-color: var(--color-warning);
+    }
+
+    .song-entry .hit-star {
+      font-size: 1.2rem;
+    }
+
+    .song-entry .hit-star.active {
+      color: var(--color-warning);
+    }
+
+    .song-entry .delete-btn {
+      background: none;
+      border: none;
+      font-size: var(--text-md);
+      color: var(--color-text-muted);
+      cursor: pointer;
+      padding: var(--space-xs);
+      border-radius: var(--radius-sm);
+    }
+
+    .song-entry .delete-btn:hover {
+      color: var(--color-error);
+      background: var(--color-error-light);
+    }
+
+    /* Add song form */
+    .add-song-form {
+      display: flex;
+      gap: var(--space-sm);
+      align-items: flex-end;
+      flex-wrap: wrap;
+      margin-top: var(--space-md);
+    }
+
+    .add-song-form .form-group {
+      flex: 1;
+      min-width: 120px;
+    }
+
+    /* Lyrics area */
+    .lyrics-area {
+      margin-top: var(--space-md);
+    }
+
+    .lyrics-area label {
+      display: block;
+      font-size: var(--text-sm);
+      font-weight: 600;
+      margin-bottom: var(--space-xs);
+    }
+
+    .copy-btn {
+      margin-top: var(--space-sm);
+    }
+
+    .copy-btn.copied {
+      background: var(--color-success);
+      border-color: var(--color-success);
+      color: #ffffff;
+    }
+
+    /* Section spacing */
+    .lesson-section {
+      margin-bottom: var(--space-xl);
+      padding-bottom: var(--space-xl);
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .lesson-section:last-child {
+      border-bottom: none;
+    }
+
+    .section-heading {
+      font-size: var(--text-xl);
+      font-weight: 650;
+      margin-bottom: var(--space-lg);
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+    }
+
+    /* Empty state */
+    .empty-state {
+      text-align: center;
+      padding: var(--space-xl);
+      color: var(--color-text-muted);
+      font-size: var(--text-sm);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Lesson Header -->
+  <header class="lesson-header">
+    <div class="lesson-badge">
+      <span class="lesson-number">05</span>
+      <span class="lesson-title">AI Musician</span>
+    </div>
+    <a href="/" class="back-link">&larr; Back to all lessons</a>
+  </header>
+
+  <!-- Page Layout -->
+  <div class="lesson-page">
+
+    <!-- Main Content Area -->
+    <main class="lesson-main" id="main-content">
+
+      <!-- Section 1: Lyrics Workshop -->
+      <div class="lesson-section">
+        <h2 class="section-heading">&#x270D;&#xFE0F; Write Your Song Lyrics</h2>
+        <div id="lyrics-chat"></div>
+        <div class="lyrics-area">
+          <button class="btn btn-secondary copy-btn" id="copy-lyrics-btn">&#x1F4CB; Copy Lyrics</button>
+        </div>
+        <div class="lyrics-area">
+          <label for="final-lyrics">Your Final Lyrics</label>
+          <textarea id="final-lyrics" class="textarea" placeholder="Paste and edit your lyrics here..."></textarea>
+        </div>
+      </div>
+
+      <!-- Section 2: Music Style Explorer -->
+      <div class="lesson-section">
+        <h2 class="section-heading">&#x1F3B6; Explore Music Styles</h2>
+        <div class="genre-grid" id="genre-grid">
+          <!-- Genre cards rendered by JS -->
+        </div>
+      </div>
+
+      <!-- Section 3: Suno Launch Pad -->
+      <div class="lesson-section">
+        <h2 class="section-heading">&#x1F3A4; Create Your Music on Suno</h2>
+        <div class="text-center">
+          <a href="https://suno.com/create" target="_blank" rel="noopener noreferrer" class="launch-btn">
+            &#x1F3B5; Open Suno Music Studio &rarr;
+          </a>
+        </div>
+
+        <div class="steps-card">
+          <h3>Step-by-Step Guide</h3>
+          <ol class="steps-list">
+            <li>Click "Create" on the Suno page</li>
+            <li>Toggle "Custom" mode on</li>
+            <li>Paste your lyrics (or leave empty for instrumental)</li>
+            <li>Type your style (e.g., "upbeat pop" or "chill lo-fi")</li>
+            <li>Click "Create" and wait for your song!</li>
+            <li>Try at least 2-3 different styles</li>
+          </ol>
+        </div>
+
+        <div class="tips-box">
+          <h4>&#x1F4A1; Tips</h4>
+          <ul>
+            <li>Style keywords that work well: upbeat, chill, epic, dreamy, funky, acoustic</li>
+            <li>Try combining styles: "jazz pop" or "electronic rock"</li>
+            <li>Don't like it? Just create again with different keywords!</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Section 4: My Music Collection -->
+      <div class="lesson-section">
+        <h2 class="section-heading">&#x1F3B5; My Songs</h2>
+        <div id="song-list"></div>
+        <div class="add-song-form" id="add-song-form">
+          <div class="form-group">
+            <label>Song Title</label>
+            <input type="text" class="input" id="song-title-input" placeholder="My Song">
+          </div>
+          <div class="form-group">
+            <label>Style</label>
+            <input type="text" class="input" id="song-style-input" placeholder="e.g., upbeat pop">
+          </div>
+          <div class="form-group">
+            <label>Notes</label>
+            <input type="text" class="input" id="song-notes-input" placeholder="How did it turn out?">
+          </div>
+          <button class="btn btn-primary" id="add-song-btn">Add Song</button>
+        </div>
+      </div>
+
+    </main>
+
+    <!-- Task Sidebar -->
+    <aside class="lesson-sidebar">
+      <div class="task-sidebar" id="task-sidebar"></div>
+    </aside>
+
+  </div>
+
+  <script src="/shared/components.js"></script>
+  <script>
+    // =============================================
+    // Section 1: Lyrics Workshop (ChatWidget)
+    // =============================================
+    var lyricsChat = document.getElementById('lyrics-chat');
+
+    var lyricsChatWidget = window.ChatWidget(lyricsChat, {
+      systemPrompt: "You are a fun, creative songwriting assistant for kids aged 12-13. Help them write song lyrics. Keep lyrics clean, fun, and catchy. When they describe what the song should be about, write 1-2 verses and a chorus. Keep it short (8-16 lines total). Use simple, relatable language. If they want changes, modify the lyrics accordingly.",
+      placeholder: "Describe your song idea... (e.g., 'a happy song about summer vacation')"
+    });
+
+    // Copy Lyrics button
+    var copyBtn = document.getElementById('copy-lyrics-btn');
+    copyBtn.addEventListener('click', function () {
+      var messages = lyricsChatWidget.getMessages();
+      // Find the latest assistant message
+      var latestLyrics = '';
+      for (var i = messages.length - 1; i >= 0; i--) {
+        if (messages[i].role === 'assistant') {
+          latestLyrics = messages[i].content;
+          break;
+        }
+      }
+      if (!latestLyrics) {
+        copyBtn.textContent = '\u274C No lyrics yet!';
+        setTimeout(function () {
+          copyBtn.textContent = '\uD83D\uDCCB Copy Lyrics';
+          copyBtn.classList.remove('copied');
+        }, 2000);
+        return;
+      }
+      navigator.clipboard.writeText(latestLyrics).then(function () {
+        copyBtn.textContent = '\u2705 Copied!';
+        copyBtn.classList.add('copied');
+        // Also paste into the final lyrics textarea
+        document.getElementById('final-lyrics').value = latestLyrics;
+        taskCards.setComplete('write-lyrics', true);
+        setTimeout(function () {
+          copyBtn.textContent = '\uD83D\uDCCB Copy Lyrics';
+          copyBtn.classList.remove('copied');
+        }, 2000);
+      }).catch(function () {
+        // Fallback: put into textarea at minimum
+        document.getElementById('final-lyrics').value = latestLyrics;
+        copyBtn.textContent = '\u2705 Pasted into textarea!';
+        taskCards.setComplete('write-lyrics', true);
+        setTimeout(function () {
+          copyBtn.textContent = '\uD83D\uDCCB Copy Lyrics';
+          copyBtn.classList.remove('copied');
+        }, 2000);
+      });
+    });
+
+    // =============================================
+    // Section 2: Music Style Explorer
+    // =============================================
+    var genres = [
+      { emoji: '\uD83C\uDFB5', name: 'Pop', desc: 'Catchy, upbeat, radio-friendly' },
+      { emoji: '\uD83C\uDFA4', name: 'Hip-Hop', desc: 'Rhythmic, energetic, beat-driven' },
+      { emoji: '\uD83C\uDFB8', name: 'Rock', desc: 'Guitar-heavy, powerful, bold' },
+      { emoji: '\uD83C\uDFBB', name: 'Classical', desc: 'Orchestral, elegant, timeless' },
+      { emoji: '\uD83C\uDFB7', name: 'Jazz', desc: 'Smooth, improvisational, cool' },
+      { emoji: '\uD83C\uDFB9', name: 'Electronic', desc: 'Synth-powered, danceable, modern' },
+      { emoji: '\uD83E\uDD20', name: 'Country', desc: 'Storytelling, acoustic, warm' },
+      { emoji: '\uD83C\uDFA7', name: 'Lo-fi', desc: 'Relaxed, cozy, chill beats' }
+    ];
+
+    var genreGrid = document.getElementById('genre-grid');
+    var selectedGenre = null;
+
+    genres.forEach(function (genre) {
+      var card = document.createElement('div');
+      card.className = 'genre-card';
+
+      var emojiEl = document.createElement('div');
+      emojiEl.className = 'genre-emoji';
+      emojiEl.textContent = genre.emoji;
+
+      var nameEl = document.createElement('div');
+      nameEl.className = 'genre-name';
+      nameEl.textContent = genre.name;
+
+      var descEl = document.createElement('div');
+      descEl.className = 'genre-desc';
+      descEl.textContent = genre.desc;
+
+      card.appendChild(emojiEl);
+      card.appendChild(nameEl);
+      card.appendChild(descEl);
+
+      card.addEventListener('click', function () {
+        // Deselect all
+        var allCards = genreGrid.querySelectorAll('.genre-card');
+        allCards.forEach(function (c) { c.classList.remove('card-selected'); });
+        // Select this one
+        card.classList.add('card-selected');
+        selectedGenre = genre.name;
+        taskCards.setComplete('pick-style', true);
+      });
+
+      genreGrid.appendChild(card);
+    });
+
+    // =============================================
+    // Section 4: My Music Collection
+    // =============================================
+    var songs = [];
+    var songListEl = document.getElementById('song-list');
+    var songTitleInput = document.getElementById('song-title-input');
+    var songStyleInput = document.getElementById('song-style-input');
+    var songNotesInput = document.getElementById('song-notes-input');
+    var addSongBtn = document.getElementById('add-song-btn');
+
+    // Load from localStorage
+    var songStorageKey = 'songs_' + window.location.pathname;
+    try {
+      var saved = localStorage.getItem(songStorageKey);
+      if (saved) {
+        songs = JSON.parse(saved);
+      }
+    } catch (e) { /* ignore */ }
+
+    function saveSongs() {
+      try {
+        localStorage.setItem(songStorageKey, JSON.stringify(songs));
+      } catch (e) { /* ignore */ }
+    }
+
+    function renderSongs() {
+      // Clear
+      while (songListEl.firstChild) {
+        songListEl.removeChild(songListEl.firstChild);
+      }
+
+      if (songs.length === 0) {
+        var empty = document.createElement('div');
+        empty.className = 'empty-state';
+        empty.textContent = 'No songs yet. Create some music on Suno, then add them here!';
+        songListEl.appendChild(empty);
+        return;
+      }
+
+      songs.forEach(function (song, index) {
+        var entry = document.createElement('div');
+        entry.className = 'song-entry';
+
+        var info = document.createElement('div');
+        info.className = 'song-info';
+
+        var titleEl = document.createElement('span');
+        titleEl.className = 'song-title';
+        titleEl.textContent = song.title;
+
+        var styleEl = document.createElement('span');
+        styleEl.className = 'song-style';
+        styleEl.textContent = song.style;
+
+        info.appendChild(titleEl);
+        info.appendChild(styleEl);
+
+        if (song.notes) {
+          var notesEl = document.createElement('span');
+          notesEl.className = 'song-notes';
+          notesEl.textContent = song.notes;
+          info.appendChild(notesEl);
+        }
+
+        // Hit single toggle
+        var hitLabel = document.createElement('label');
+        hitLabel.className = 'hit-toggle';
+
+        var hitCheckbox = document.createElement('input');
+        hitCheckbox.type = 'checkbox';
+        hitCheckbox.checked = !!song.hit;
+
+        var starEl = document.createElement('span');
+        starEl.className = 'hit-star' + (song.hit ? ' active' : '');
+        starEl.textContent = song.hit ? '\u2B50' : '\u2606';
+
+        var hitText = document.createElement('span');
+        hitText.textContent = 'Hit Single';
+
+        hitCheckbox.addEventListener('change', (function (idx, star) {
+          return function () {
+            songs[idx].hit = this.checked;
+            star.className = 'hit-star' + (this.checked ? ' active' : '');
+            star.textContent = this.checked ? '\u2B50' : '\u2606';
+            saveSongs();
+            if (this.checked) {
+              taskCards.setComplete('pick-hit', true);
+            }
+          };
+        })(index, starEl));
+
+        hitLabel.appendChild(hitCheckbox);
+        hitLabel.appendChild(starEl);
+        hitLabel.appendChild(hitText);
+
+        // Delete button
+        var deleteBtn = document.createElement('button');
+        deleteBtn.className = 'delete-btn';
+        deleteBtn.textContent = '\u2715';
+        deleteBtn.title = 'Remove song';
+        deleteBtn.addEventListener('click', (function (idx) {
+          return function () {
+            songs.splice(idx, 1);
+            saveSongs();
+            renderSongs();
+          };
+        })(index));
+
+        entry.appendChild(info);
+        entry.appendChild(hitLabel);
+        entry.appendChild(deleteBtn);
+        songListEl.appendChild(entry);
+      });
+
+      // Update task progress
+      if (songs.length >= 1) {
+        taskCards.setComplete('create-song', true);
+      }
+      if (songs.length >= 2) {
+        taskCards.setComplete('try-styles', true);
+      }
+    }
+
+    addSongBtn.addEventListener('click', function () {
+      var title = songTitleInput.value.trim();
+      var style = songStyleInput.value.trim();
+      var notes = songNotesInput.value.trim();
+
+      if (!title) {
+        songTitleInput.focus();
+        return;
+      }
+
+      songs.push({
+        title: title,
+        style: style || 'Unknown',
+        notes: notes,
+        hit: false
+      });
+
+      saveSongs();
+      renderSongs();
+
+      // Clear inputs
+      songTitleInput.value = '';
+      songStyleInput.value = '';
+      songNotesInput.value = '';
+      songTitleInput.focus();
+    });
+
+    // Allow Enter key in the last input to add song
+    songNotesInput.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        addSongBtn.click();
+      }
+    });
+
+    // Initial render
+    renderSongs();
+
+    // =============================================
+    // Task Sidebar
+    // =============================================
+    var taskSidebar = document.getElementById('task-sidebar');
+
+    var taskCards = window.TaskCards(taskSidebar, [
+      { id: 'choose-topic', title: 'Choose a topic for your song', description: 'What is your song about?' },
+      { id: 'write-lyrics', title: 'Write lyrics with AI help', description: 'Use the lyrics workshop above' },
+      { id: 'pick-style', title: 'Pick a music style', description: 'Explore the genre cards' },
+      { id: 'create-song', title: 'Open Suno and create your song', description: 'Use the launch pad to create music' },
+      { id: 'try-styles', title: 'Try at least 2 different styles', description: 'Experiment with different genres' },
+      { id: 'pick-hit', title: 'Pick your "hit single"', description: 'Mark your favorite song with a star' }
+    ]);
+  </script>
+
+</body>
+</html>
