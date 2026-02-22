@@ -72,6 +72,6 @@ module.exports = async function handler(req, res) {
       return res.status(429).json({ error: "The AI is too busy right now. Please wait a moment and try again." });
     }
 
-    return res.status(500).json({ error: "Something went wrong talking to the AI. Please try again." });
+    return res.status(500).json({ error: "Something went wrong talking to the AI. Please try again.", debug: err.message || String(err) });
   }
 };
