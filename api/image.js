@@ -1,5 +1,3 @@
-const OpenAI = require("openai");
-
 // Simple in-memory rate limiter (resets on cold start)
 const rateLimit = new Map();
 
@@ -15,7 +13,6 @@ function checkRateLimit(ip, maxPerMinute) {
 }
 
 module.exports = async function handler(req, res) {
-  // CORS preflight
   if (req.method === "OPTIONS") {
     return res.status(200).end();
   }
@@ -24,57 +21,52 @@ module.exports = async function handler(req, res) {
     return res.status(405).json({ error: "Method not allowed" });
   }
 
-  // Rate limit: 10 requests per minute per IP
   const ip = req.headers["x-forwarded-for"] || req.socket?.remoteAddress || "unknown";
   if (!checkRateLimit(ip, 10)) {
-    return res.status(429).json({ error: "Too many image requests. Please wait a moment and try again." });
+    return res.status(429).json({ error: "Too many requests. Please wait a moment and try again." });
   }
 
   try {
     const { prompt, size, style } = req.body;
 
     if (!prompt || typeof prompt !== "string" || prompt.trim().length === 0) {
-      return res.status(400).json({ error: "Please provide a prompt describing the image you want." });
+      return res.status(400).json({ error: "Please describe the image you want to create." });
     }
 
     const apiKey = process.env.OPENAI_API_KEY;
     if (!apiKey) {
-      console.error("OPENAI_API_KEY is not configured");
-      return res.status(500).json({ error: "The image service is not configured. Please contact your teacher." });
+      return res.status(500).json({ error: "The AI service is not configured. Please contact your teacher." });
     }
 
-    const client = new OpenAI({ apiKey });
-
-    const response = await client.images.generate({
-      model: "dall-e-3",
-      prompt: prompt.trim(),
-      n: 1,
-      size: size || "1024x1024",
-      style: style || "vivid",
+    const response = await fetch("https://api.openai.com/v1/images/generations", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${apiKey}`,
+      },
+      body: JSON.stringify({
+        model: "dall-e-3",
+        prompt: prompt.trim(),
+        n: 1,
+        size: size || "1024x1024",
+        style: style || "vivid",
+      }),
     });
 
-    const imageUrl = response.data[0]?.url;
-    if (!imageUrl) {
-      return res.status(500).json({ error: "The image was generated but no URL was returned. Please try again." });
+    const data = await response.json();
+
+    if (!response.ok) {
+      console.error("OpenAI Image API error:", data);
+      if (data.error?.code === "content_policy_violation") {
+        return res.status(400).json({ error: "That image description isn't allowed. Try something different!" });
+      }
+      return res.status(500).json({ error: "Image generation failed", debug: JSON.stringify(data) });
     }
 
-    return res.status(200).json({ url: imageUrl });
+    const url = data.data?.[0]?.url || "";
+    return res.status(200).json({ url });
   } catch (err) {
     console.error("Image API error:", err);
-
-    if (err.status === 401) {
-      return res.status(500).json({ error: "The image service key is invalid. Please contact your teacher." });
-    }
-    if (err.status === 429) {
-      return res.status(429).json({ error: "The image service is too busy right now. Please wait a moment and try again." });
-    }
-    if (err.code === "content_policy_violation") {
-      return res.status(400).json({ error: "That prompt isn't allowed. Try describing something different!" });
-    }
-    if (err.code === "billing_hard_limit_reached") {
-      return res.status(503).json({ error: "The image service has reached its usage limit. Please contact your teacher." });
-    }
-
-    return res.status(500).json({ error: "Something went wrong creating the image. Please try again." });
+    return res.status(500).json({ error: "Something went wrong generating the image. Please try again.", debug: err.message });
   }
 };

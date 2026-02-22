@@ -1,5 +1,3 @@
-const OpenAI = require("openai");
-
 // Simple in-memory rate limiter (resets on cold start)
 const rateLimit = new Map();
 
@@ -18,7 +16,6 @@ const SYSTEM_PROMPT =
   "You are a coding assistant for kids. Generate complete, runnable HTML pages with inline CSS and JS. Keep code simple and fun. Always include visual output. Never use external dependencies. Return ONLY the HTML code, no explanations or markdown code fences.";
 
 module.exports = async function handler(req, res) {
-  // CORS preflight
   if (req.method === "OPTIONS") {
     return res.status(200).end();
   }
@@ -27,7 +24,6 @@ module.exports = async function handler(req, res) {
     return res.status(405).json({ error: "Method not allowed" });
   }
 
-  // Rate limit: 20 requests per minute per IP
   const ip = req.headers["x-forwarded-for"] || req.socket?.remoteAddress || "unknown";
   if (!checkRateLimit(ip, 20)) {
     return res.status(429).json({ error: "Too many requests. Please wait a moment and try again." });
@@ -42,49 +38,42 @@ module.exports = async function handler(req, res) {
 
     const apiKey = process.env.OPENAI_API_KEY;
     if (!apiKey) {
-      console.error("OPENAI_API_KEY is not configured");
       return res.status(500).json({ error: "The AI service is not configured. Please contact your teacher." });
     }
-
-    const client = new OpenAI({ apiKey });
 
     const messages = [{ role: "system", content: SYSTEM_PROMPT }];
 
     if (currentCode) {
-      messages.push({
-        role: "user",
-        content: `Here is my current code:\n\n${currentCode}`,
-      });
-      messages.push({
-        role: "assistant",
-        content: "I can see your current code. What changes would you like me to make?",
-      });
+      messages.push({ role: "user", content: `Here is my current code:\n\n${currentCode}` });
+      messages.push({ role: "assistant", content: "I can see your current code. What changes would you like me to make?" });
     }
 
-    messages.push({
-      role: "user",
-      content: prompt.trim(),
+    messages.push({ role: "user", content: prompt.trim() });
+
+    const response = await fetch("https://api.openai.com/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${apiKey}`,
+      },
+      body: JSON.stringify({
+        model: "gpt-4o-mini",
+        max_tokens: 4096,
+        messages,
+      }),
     });
 
-    const response = await client.chat.completions.create({
-      model: "gpt-4o-mini",
-      max_tokens: 4096,
-      messages,
-    });
+    const data = await response.json();
 
-    const code = response.choices[0]?.message?.content || "";
+    if (!response.ok) {
+      console.error("OpenAI API error:", data);
+      return res.status(500).json({ error: "AI service error", debug: JSON.stringify(data) });
+    }
 
+    const code = data.choices?.[0]?.message?.content || "";
     return res.status(200).json({ code });
   } catch (err) {
     console.error("Code API error:", err);
-
-    if (err.status === 401) {
-      return res.status(500).json({ error: "The AI service key is invalid. Please contact your teacher." });
-    }
-    if (err.status === 429) {
-      return res.status(429).json({ error: "The AI is too busy right now. Please wait a moment and try again." });
-    }
-
-    return res.status(500).json({ error: "Something went wrong generating code. Please try again." });
+    return res.status(500).json({ error: "Something went wrong generating code. Please try again.", debug: err.message });
   }
 };

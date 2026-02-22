@@ -1,8 +1,5 @@
 {
   "name": "ai-creator-lab",
   "version": "1.0.0",
-  "private": true,
-  "dependencies": {
-    "openai": "^4.78.0"
-  }
+  "private": true
 }

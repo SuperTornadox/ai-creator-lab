@@ -1,5 +1,3 @@
-const OpenAI = require("openai");
-
 // Simple in-memory rate limiter (resets on cold start)
 const rateLimit = new Map();
 
@@ -15,7 +13,6 @@ function checkRateLimit(ip, maxPerMinute) {
 }
 
 module.exports = async function handler(req, res) {
-  // CORS preflight
   if (req.method === "OPTIONS") {
     return res.status(200).end();
   }
@@ -24,7 +21,6 @@ module.exports = async function handler(req, res) {
     return res.status(405).json({ error: "Method not allowed" });
   }
 
-  // Rate limit: 30 requests per minute per IP
   const ip = req.headers["x-forwarded-for"] || req.socket?.remoteAddress || "unknown";
   if (!checkRateLimit(ip, 30)) {
     return res.status(429).json({ error: "Too many requests. Please wait a moment and try again." });
@@ -39,11 +35,8 @@ module.exports = async function handler(req, res) {
 
     const apiKey = process.env.OPENAI_API_KEY;
     if (!apiKey) {
-      console.error("OPENAI_API_KEY is not configured");
       return res.status(500).json({ error: "The AI service is not configured. Please contact your teacher." });
     }
-
-    const client = new OpenAI({ apiKey });
 
     const openaiMessages = [];
     if (system) {
@@ -53,25 +46,36 @@ module.exports = async function handler(req, res) {
       openaiMessages.push({ role: msg.role, content: msg.content });
     }
 
-    const response = await client.chat.completions.create({
-      model: "gpt-4o-mini",
-      max_tokens: 1024,
-      messages: openaiMessages,
+    const response = await fetch("https://api.openai.com/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${apiKey}`,
+      },
+      body: JSON.stringify({
+        model: "gpt-4o-mini",
+        max_tokens: 1024,
+        messages: openaiMessages,
+      }),
     });
 
-    const text = response.choices[0]?.message?.content || "";
+    const data = await response.json();
 
+    if (!response.ok) {
+      console.error("OpenAI API error:", data);
+      if (response.status === 401) {
+        return res.status(500).json({ error: "The AI service key is invalid. Please contact your teacher." });
+      }
+      if (response.status === 429) {
+        return res.status(429).json({ error: "The AI is too busy right now. Please wait a moment and try again." });
+      }
+      return res.status(500).json({ error: "AI service error", debug: JSON.stringify(data) });
+    }
+
+    const text = data.choices?.[0]?.message?.content || "";
     return res.status(200).json({ response: text });
   } catch (err) {
     console.error("Chat API error:", err);
-
-    if (err.status === 401) {
-      return res.status(500).json({ error: "The AI service key is invalid. Please contact your teacher." });
-    }
-    if (err.status === 429) {
-      return res.status(429).json({ error: "The AI is too busy right now. Please wait a moment and try again." });
-    }
-
     return res.status(500).json({ error: "Something went wrong talking to the AI. Please try again.", debug: err.message || String(err) });
   }
 };
