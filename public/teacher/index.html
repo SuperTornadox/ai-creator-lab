@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Teacher Dashboard - AI Creator Lab</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background: #f8fafc;
+      color: #1e293b;
+      min-height: 100vh;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #4f46e5, #7c3aed);
+      color: #fff;
+      padding: 1rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .header h1 { font-size: 1.3rem; font-weight: 600; }
+
+    .header-controls {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .status-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #22c55e;
+      display: inline-block;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    .status-text { font-size: 0.85rem; opacity: 0.9; }
+
+    .btn {
+      padding: 0.4rem 1rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 500;
+    }
+
+    .btn-clear {
+      background: rgba(255,255,255,0.2);
+      color: #fff;
+    }
+
+    .btn-clear:hover { background: rgba(255,255,255,0.3); }
+
+    .main {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 1.5rem;
+    }
+
+    .stats {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .stat-card {
+      flex: 1;
+      background: #fff;
+      border-radius: 12px;
+      padding: 1rem 1.2rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    }
+
+    .stat-value { font-size: 1.8rem; font-weight: 700; color: #4f46e5; }
+    .stat-label { font-size: 0.8rem; color: #94a3b8; margin-top: 0.2rem; }
+
+    .filters {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .filter-btn {
+      padding: 0.4rem 0.9rem;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 20px;
+      background: #fff;
+      cursor: pointer;
+      font-size: 0.82rem;
+      color: #64748b;
+      transition: all 0.15s;
+    }
+
+    .filter-btn:hover { border-color: #a5b4fc; }
+    .filter-btn.active {
+      background: #4f46e5;
+      color: #fff;
+      border-color: #4f46e5;
+    }
+
+    .feed { display: flex; flex-direction: column; gap: 0.6rem; }
+
+    .feed-empty {
+      text-align: center;
+      padding: 3rem;
+      color: #94a3b8;
+      font-size: 1.1rem;
+    }
+
+    .feed-item {
+      background: #fff;
+      border-radius: 10px;
+      padding: 0.8rem 1rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+      border-left: 4px solid #e2e8f0;
+      animation: slideIn 0.3s ease;
+    }
+
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(-8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .feed-item[data-type="chat"] { border-left-color: #6366f1; }
+    .feed-item[data-type="image"] { border-left-color: #f59e0b; }
+    .feed-item[data-type="code-generate"],
+    .feed-item[data-type="code-update"] { border-left-color: #10b981; }
+    .feed-item[data-type="start"] { border-left-color: #94a3b8; }
+
+    .feed-meta {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.4rem;
+      font-size: 0.78rem;
+    }
+
+    .feed-student {
+      font-weight: 600;
+      color: #4f46e5;
+      background: #eef2ff;
+      padding: 0.15rem 0.5rem;
+      border-radius: 10px;
+    }
+
+    .feed-type {
+      padding: 0.15rem 0.5rem;
+      border-radius: 10px;
+      font-weight: 500;
+      font-size: 0.72rem;
+    }
+
+    .feed-type[data-type="chat"] { background: #eef2ff; color: #4f46e5; }
+    .feed-type[data-type="image"] { background: #fef3c7; color: #b45309; }
+    .feed-type[data-type="code-generate"],
+    .feed-type[data-type="code-update"] { background: #d1fae5; color: #047857; }
+    .feed-type[data-type="start"] { background: #f1f5f9; color: #64748b; }
+
+    .feed-lesson { color: #94a3b8; }
+    .feed-time { color: #94a3b8; margin-left: auto; }
+
+    .feed-content { font-size: 0.9rem; line-height: 1.5; }
+
+    .feed-prompt {
+      background: #f8fafc;
+      border-radius: 6px;
+      padding: 0.5rem 0.7rem;
+      margin-bottom: 0.4rem;
+      color: #334155;
+    }
+
+    .feed-response {
+      background: #faf5ff;
+      border-radius: 6px;
+      padding: 0.5rem 0.7rem;
+      color: #6b21a8;
+      max-height: 120px;
+      overflow-y: auto;
+      font-size: 0.85rem;
+    }
+
+    .feed-image-preview { margin-top: 0.4rem; }
+
+    .feed-image-preview img {
+      max-width: 200px;
+      max-height: 150px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .feed-image-preview img:hover { opacity: 0.85; }
+
+    @media (max-width: 640px) {
+      .stats { flex-direction: column; }
+      .main { padding: 1rem; }
+      .header { padding: 0.8rem 1rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>Teacher Dashboard</h1>
+    <div class="header-controls">
+      <span class="status-dot"></span>
+      <span class="status-text">Live - refreshing every 3s</span>
+      <button class="btn btn-clear" id="clearBtn">Clear Feed</button>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="stats">
+      <div class="stat-card">
+        <div class="stat-value" id="stat-students">0</div>
+        <div class="stat-label">Active Students</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="stat-interactions">0</div>
+        <div class="stat-label">Total Interactions</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="stat-images">0</div>
+        <div class="stat-label">Images Generated</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="stat-code">0</div>
+        <div class="stat-label">Code Projects</div>
+      </div>
+    </div>
+
+    <div class="filters" id="filters">
+      <button class="filter-btn active" data-filter="all">All</button>
+      <button class="filter-btn" data-filter="chat">Chat</button>
+      <button class="filter-btn" data-filter="image">Image</button>
+      <button class="filter-btn" data-filter="code">Code</button>
+    </div>
+
+    <div class="feed" id="feed">
+      <div class="feed-empty">Waiting for student activity...</div>
+    </div>
+  </div>
+
+  <script>
+    var allActivities = [];
+    var lastTimestamp = 0;
+    var activeFilter = 'all';
+    var seenIds = new Set();
+
+    var TYPE_LABELS = {
+      'chat': 'Chat',
+      'image': 'Image',
+      'code-generate': 'New Code',
+      'code-update': 'Code Edit',
+      'start': 'Joined',
+    };
+
+    async function fetchActivities() {
+      try {
+        var res = await fetch('/api/activity?since=' + lastTimestamp);
+        var data = await res.json();
+        if (data.activities && data.activities.length > 0) {
+          var newItems = data.activities.filter(function (a) {
+            if (seenIds.has(a.id)) return false;
+            seenIds.add(a.id);
+            return true;
+          });
+          if (newItems.length > 0) {
+            allActivities = allActivities.concat(newItems);
+            lastTimestamp = data.serverTime || Date.now();
+            renderFeed();
+            updateStats();
+          }
+        }
+      } catch (e) {
+        // Silently retry next cycle
+      }
+    }
+
+    function makeEl(tag, className, text) {
+      var el = document.createElement(tag);
+      if (className) el.className = className;
+      if (text) el.textContent = text;
+      return el;
+    }
+
+    function buildFeedItem(item) {
+      var el = makeEl('div', 'feed-item');
+      el.setAttribute('data-type', item.type);
+
+      // Meta row
+      var meta = makeEl('div', 'feed-meta');
+
+      var studentSpan = makeEl('span', 'feed-student', item.student);
+      meta.appendChild(studentSpan);
+
+      var typeSpan = makeEl('span', 'feed-type', TYPE_LABELS[item.type] || item.type);
+      typeSpan.setAttribute('data-type', item.type);
+      meta.appendChild(typeSpan);
+
+      var lessonSpan = makeEl('span', 'feed-lesson', item.lesson);
+      meta.appendChild(lessonSpan);
+
+      var time = new Date(item.timestamp);
+      var timeStr = time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+      var timeSpan = makeEl('span', 'feed-time', timeStr);
+      meta.appendChild(timeSpan);
+
+      el.appendChild(meta);
+
+      // Content
+      var content = makeEl('div', 'feed-content');
+
+      if (item.type === 'start') {
+        var p = makeEl('div', 'feed-prompt', item.content);
+        content.appendChild(p);
+      } else if (item.type === 'image') {
+        var promptDiv = makeEl('div', 'feed-prompt', 'Prompt: ' + item.content);
+        content.appendChild(promptDiv);
+        if (item.response && item.response.indexOf('http') === 0) {
+          var imgWrap = makeEl('div', 'feed-image-preview');
+          var img = document.createElement('img');
+          img.src = item.response;
+          img.alt = 'Generated image';
+          img.addEventListener('click', function () { window.open(img.src); });
+          imgWrap.appendChild(img);
+          content.appendChild(imgWrap);
+        }
+      } else if (item.type === 'chat') {
+        var pDiv = makeEl('div', 'feed-prompt', 'Student: ' + item.content);
+        content.appendChild(pDiv);
+        var rDiv = makeEl('div', 'feed-response', 'AI: ' + item.response);
+        content.appendChild(rDiv);
+      } else if (item.type.indexOf('code') === 0) {
+        var cDiv = makeEl('div', 'feed-prompt', 'Prompt: ' + item.content);
+        content.appendChild(cDiv);
+      }
+
+      el.appendChild(content);
+      return el;
+    }
+
+    function renderFeed() {
+      var feed = document.getElementById('feed');
+      var filtered = allActivities;
+
+      if (activeFilter !== 'all') {
+        filtered = allActivities.filter(function (a) {
+          if (activeFilter === 'code') return a.type.indexOf('code') === 0;
+          return a.type === activeFilter;
+        });
+      }
+
+      // Clear feed
+      while (feed.firstChild) feed.removeChild(feed.firstChild);
+
+      if (filtered.length === 0) {
+        feed.appendChild(makeEl('div', 'feed-empty', 'No activity yet for this filter.'));
+        return;
+      }
+
+      // Show newest first
+      var sorted = filtered.slice().reverse();
+      sorted.forEach(function (item) {
+        feed.appendChild(buildFeedItem(item));
+      });
+    }
+
+    function updateStats() {
+      var students = new Set();
+      var interactions = 0;
+      var images = 0;
+      var code = 0;
+
+      allActivities.forEach(function (a) {
+        students.add(a.student);
+        if (a.type !== 'start') interactions++;
+        if (a.type === 'image') images++;
+        if (a.type.indexOf('code') === 0) code++;
+      });
+
+      document.getElementById('stat-students').textContent = students.size;
+      document.getElementById('stat-interactions').textContent = interactions;
+      document.getElementById('stat-images').textContent = images;
+      document.getElementById('stat-code').textContent = code;
+    }
+
+    document.getElementById('clearBtn').addEventListener('click', function () {
+      allActivities = [];
+      seenIds.clear();
+      lastTimestamp = Date.now();
+      renderFeed();
+      updateStats();
+    });
+
+    document.getElementById('filters').addEventListener('click', function (e) {
+      if (e.target.classList.contains('filter-btn')) {
+        document.querySelectorAll('.filter-btn').forEach(function (b) { b.classList.remove('active'); });
+        e.target.classList.add('active');
+        activeFilter = e.target.getAttribute('data-filter');
+        renderFeed();
+      }
+    });
+
+    // Start polling
+    fetchActivities();
+    setInterval(fetchActivities, 3000);
+  </script>
+</body>
+</html>

@@ -19,6 +19,122 @@ function clearChildren(el) {
 }
 
 /* ==========================================================================
+   0. ActivityLogger
+   ==========================================================================
+
+   Tracks student interactions and sends them to /api/activity.
+   Auto-prompts for student name on first load (stored in sessionStorage).
+   Lesson is auto-detected from the URL path.
+
+   Usage: Call window.ActivityLogger.init() at page load, then components
+   auto-log interactions via window.ActivityLogger.log(type, content, response).
+   ========================================================================== */
+var ActivityLogger = (function () {
+  var studentName = '';
+  var lesson = 'unknown';
+  var initialized = false;
+
+  function detectLesson() {
+    var match = window.location.pathname.match(/lesson-(\d+)/);
+    if (match) return 'lesson-' + match[1];
+    return window.location.pathname.replace(/\//g, '') || 'home';
+  }
+
+  function showNamePrompt() {
+    return new Promise(function (resolve) {
+      var saved = sessionStorage.getItem('studentName');
+      if (saved) { resolve(saved); return; }
+
+      var overlay = document.createElement('div');
+      overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:99999;display:flex;align-items:center;justify-content:center;';
+
+      var box = document.createElement('div');
+      box.style.cssText = 'background:#fff;border-radius:16px;padding:2rem;max-width:360px;width:90%;text-align:center;font-family:system-ui,sans-serif;';
+
+      var title = document.createElement('h2');
+      title.textContent = "What's your name?";
+      title.style.cssText = 'margin:0 0 0.5rem;font-size:1.4rem;';
+
+      var sub = document.createElement('p');
+      sub.textContent = 'Your teacher will use this to see your work.';
+      sub.style.cssText = 'color:#666;margin:0 0 1rem;font-size:0.9rem;';
+
+      var input = document.createElement('input');
+      input.type = 'text';
+      input.placeholder = 'Enter your name...';
+      input.style.cssText = 'width:100%;padding:0.7rem;border:2px solid #e5e7eb;border-radius:8px;font-size:1rem;box-sizing:border-box;margin-bottom:1rem;';
+
+      var btn = document.createElement('button');
+      btn.textContent = "Let's go!";
+      btn.style.cssText = 'width:100%;padding:0.7rem;background:#6366f1;color:#fff;border:none;border-radius:8px;font-size:1rem;cursor:pointer;';
+      btn.disabled = true;
+
+      input.addEventListener('input', function () {
+        btn.disabled = input.value.trim().length === 0;
+      });
+
+      function submit() {
+        var name = input.value.trim();
+        if (!name) return;
+        sessionStorage.setItem('studentName', name);
+        overlay.remove();
+        resolve(name);
+      }
+
+      btn.addEventListener('click', submit);
+      input.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter') submit();
+      });
+
+      box.appendChild(title);
+      box.appendChild(sub);
+      box.appendChild(input);
+      box.appendChild(btn);
+      overlay.appendChild(box);
+      document.body.appendChild(overlay);
+      input.focus();
+    });
+  }
+
+  function log(type, content, response) {
+    if (!studentName) return;
+    try {
+      fetch('/api/activity', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          student: studentName,
+          type: type,
+          content: content || '',
+          response: response || '',
+          lesson: lesson,
+        }),
+      }).catch(function () { /* silently ignore logging errors */ });
+    } catch (e) { /* ignore */ }
+  }
+
+  return {
+    init: function () {
+      if (initialized) return Promise.resolve();
+      initialized = true;
+      lesson = detectLesson();
+      // Skip name prompt on teacher pages
+      if (window.location.pathname.indexOf('/teacher') !== -1) {
+        return Promise.resolve();
+      }
+      return showNamePrompt().then(function (name) {
+        studentName = name;
+        // Log that student started the lesson
+        log('start', 'Opened ' + lesson);
+      });
+    },
+    log: log,
+    getName: function () { return studentName; },
+    getLesson: function () { return lesson; },
+  };
+})();
+
+/* ==========================================================================
    1. ChatWidget
    ==========================================================================
 
@@ -187,6 +303,9 @@ function createChatWidget(container, options) {
       var reply = data.response || '';
       messages.push({ role: 'assistant', content: reply });
       renderMessage('assistant', reply);
+
+      // Log activity for teacher dashboard
+      ActivityLogger.log('chat', text, reply);
 
       if (onMessage) {
         onMessage(messages);
@@ -424,6 +543,9 @@ function createImageGenerator(container, options) {
 
       // Track image
       images.push({ url: url, caption: prompt });
+
+      // Log activity for teacher dashboard
+      ActivityLogger.log('image', prompt + ' [' + selectedStyle.label + ']', url);
 
       // Add to gallery if enabled
       if (galleryEl) {
@@ -953,6 +1075,9 @@ function createCodePlayground(container, options) {
       iframe.srcdoc = currentCode;
       codePanel.textContent = currentCode;
 
+      // Log activity for teacher dashboard
+      ActivityLogger.log('code-generate', prompt, currentCode.slice(0, 300));
+
       if (onRun) {
         onRun(currentCode);
       }
@@ -1001,6 +1126,9 @@ function createCodePlayground(container, options) {
       currentCode = data.code || '';
       iframe.srcdoc = currentCode;
       codePanel.textContent = currentCode;
+
+      // Log activity for teacher dashboard
+      ActivityLogger.log('code-update', modification, currentCode.slice(0, 300));
 
       if (onRun) {
         onRun(currentCode);
@@ -1197,9 +1325,17 @@ function showFullscreen(url, caption) {
    with a simple script include.
    ========================================================================== */
 
+window.ActivityLogger = ActivityLogger;
 window.ChatWidget = createChatWidget;
 window.ImageGenerator = createImageGenerator;
 window.TaskCards = createTaskCards;
 window.ExportButton = createExportButton;
 window.CodePlayground = createCodePlayground;
 window.Gallery = createGallery;
+
+// Auto-initialize activity logging when components.js is loaded
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', function () { ActivityLogger.init(); });
+} else {
+  ActivityLogger.init();
+}
