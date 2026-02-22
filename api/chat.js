@@ -1,4 +1,4 @@
-const Anthropic = require("@anthropic-ai/sdk");
+const OpenAI = require("openai");
 
 // Simple in-memory rate limiter (resets on cold start)
 const rateLimit = new Map();
@@ -37,30 +37,29 @@ module.exports = async function handler(req, res) {
       return res.status(400).json({ error: "Please provide a messages array with at least one message." });
     }
 
-    const apiKey = process.env.ANTHROPIC_API_KEY;
+    const apiKey = process.env.OPENAI_API_KEY;
     if (!apiKey) {
-      console.error("ANTHROPIC_API_KEY is not configured");
+      console.error("OPENAI_API_KEY is not configured");
       return res.status(500).json({ error: "The AI service is not configured. Please contact your teacher." });
     }
 
-    const client = new Anthropic({ apiKey });
+    const client = new OpenAI({ apiKey });
 
-    const requestParams = {
-      model: "claude-sonnet-4-20250514",
-      max_tokens: 1024,
-      messages,
-    };
-
+    const openaiMessages = [];
     if (system) {
-      requestParams.system = system;
+      openaiMessages.push({ role: "system", content: system });
+    }
+    for (const msg of messages) {
+      openaiMessages.push({ role: msg.role, content: msg.content });
     }
 
-    const response = await client.messages.create(requestParams);
+    const response = await client.chat.completions.create({
+      model: "gpt-4o",
+      max_tokens: 1024,
+      messages: openaiMessages,
+    });
 
-    const text = response.content
-      .filter((block) => block.type === "text")
-      .map((block) => block.text)
-      .join("");
+    const text = response.choices[0]?.message?.content || "";
 
     return res.status(200).json({ response: text });
   } catch (err) {
@@ -71,9 +70,6 @@ module.exports = async function handler(req, res) {
     }
     if (err.status === 429) {
       return res.status(429).json({ error: "The AI is too busy right now. Please wait a moment and try again." });
-    }
-    if (err.status === 529) {
-      return res.status(503).json({ error: "The AI service is temporarily overloaded. Please try again later." });
     }
 
     return res.status(500).json({ error: "Something went wrong talking to the AI. Please try again." });
