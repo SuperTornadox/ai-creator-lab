@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI App Inventor &mdash; Build Something Useful! - AI Creator Lab</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/white.css">
+  <link rel="stylesheet" href="/shared/slides-base.css">
+  <style>
+    /* App showcase cards */
+    .app-showcase {
+      display: flex;
+      gap: 18px;
+      max-width: 1000px;
+      margin: 28px auto 0;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .app-showcase .app-item {
+      flex: 1;
+      min-width: 160px;
+      max-width: 200px;
+      padding: 20px 14px;
+      border-radius: 14px;
+      text-align: center;
+      background: rgba(79, 110, 247, 0.06);
+      border: 2px solid rgba(79, 110, 247, 0.12);
+    }
+
+    .app-showcase .app-item-emoji {
+      font-size: 2.5rem;
+      margin-bottom: 8px;
+    }
+
+    .app-showcase .app-item-name {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .app-showcase .app-item-desc {
+      font-size: 0.85rem;
+      color: var(--slide-muted);
+    }
+
+    /* Comparison columns */
+    .compare-cols {
+      display: flex;
+      gap: 40px;
+      max-width: 900px;
+      margin: 28px auto 0;
+      align-items: stretch;
+    }
+
+    .compare-col {
+      flex: 1;
+      padding: 28px 24px;
+      border-radius: 14px;
+      text-align: center;
+    }
+
+    .compare-col.col-game {
+      background: rgba(245, 158, 11, 0.08);
+      border: 2px solid rgba(245, 158, 11, 0.2);
+    }
+
+    .compare-col.col-app {
+      background: rgba(79, 110, 247, 0.08);
+      border: 2px solid rgba(79, 110, 247, 0.2);
+    }
+
+    .compare-col h3 {
+      margin-bottom: 12px;
+      font-size: 1.4rem;
+    }
+
+    .compare-col p {
+      font-size: 1.15rem !important;
+      line-height: 1.6;
+      text-align: left;
+    }
+
+    /* Concept box */
+    .concept-box {
+      background: rgba(79, 110, 247, 0.08);
+      border-radius: 14px;
+      padding: 24px 32px;
+      max-width: 800px;
+      margin: 24px auto 0;
+      font-size: 1.3rem;
+      line-height: 1.6;
+      color: var(--slide-text);
+    }
+
+    /* Famous app timeline */
+    .app-timeline {
+      display: flex;
+      gap: 24px;
+      max-width: 900px;
+      margin: 28px auto 0;
+      justify-content: center;
+    }
+
+    .app-timeline .tl-card {
+      flex: 1;
+      padding: 24px 18px;
+      border-radius: 14px;
+      text-align: center;
+    }
+
+    .app-timeline .tl-card.tl-insta {
+      background: rgba(239, 68, 68, 0.06);
+      border: 2px solid rgba(239, 68, 68, 0.15);
+    }
+
+    .app-timeline .tl-card.tl-twitter {
+      background: rgba(79, 110, 247, 0.06);
+      border: 2px solid rgba(79, 110, 247, 0.15);
+    }
+
+    .app-timeline .tl-card.tl-google {
+      background: rgba(34, 197, 94, 0.06);
+      border: 2px solid rgba(34, 197, 94, 0.15);
+    }
+
+    .app-timeline .tl-emoji {
+      font-size: 2.5rem;
+      margin-bottom: 8px;
+    }
+
+    .app-timeline .tl-name {
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .app-timeline .tl-started {
+      font-size: 0.95rem;
+      color: var(--slide-muted);
+      margin-bottom: 4px;
+    }
+
+    .app-timeline .tl-now {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--slide-primary);
+    }
+
+    /* Four pillars */
+    .pillars {
+      display: flex;
+      gap: 20px;
+      max-width: 950px;
+      margin: 28px auto 0;
+    }
+
+    .pillars .pillar {
+      flex: 1;
+      padding: 24px 16px;
+      border-radius: 14px;
+      text-align: center;
+      background: rgba(79, 110, 247, 0.06);
+      border: 2px solid rgba(79, 110, 247, 0.12);
+    }
+
+    .pillars .pillar-emoji {
+      font-size: 2.5rem;
+      margin-bottom: 8px;
+    }
+
+    .pillars .pillar-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .pillars .pillar-desc {
+      font-size: 0.9rem;
+      color: var(--slide-muted);
+    }
+
+    /* Tips list */
+    .tips-list {
+      list-style: none;
+      text-align: left;
+      display: inline-block;
+      margin-top: 20px;
+    }
+
+    .tips-list li {
+      font-size: 1.35rem;
+      margin-bottom: 0.6em;
+      line-height: 1.5;
+    }
+
+    /* UX grid */
+    .ux-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+      max-width: 800px;
+      margin: 28px auto 0;
+    }
+
+    .ux-grid .ux-card {
+      padding: 20px;
+      border-radius: 14px;
+      text-align: center;
+    }
+
+    .ux-grid .ux-card:nth-child(1) {
+      background: rgba(79, 110, 247, 0.06);
+      border: 2px solid rgba(79, 110, 247, 0.12);
+    }
+
+    .ux-grid .ux-card:nth-child(2) {
+      background: rgba(124, 58, 237, 0.06);
+      border: 2px solid rgba(124, 58, 237, 0.12);
+    }
+
+    .ux-grid .ux-card:nth-child(3) {
+      background: rgba(14, 165, 165, 0.06);
+      border: 2px solid rgba(14, 165, 165, 0.12);
+    }
+
+    .ux-grid .ux-card:nth-child(4) {
+      background: rgba(34, 197, 94, 0.06);
+      border: 2px solid rgba(34, 197, 94, 0.12);
+    }
+
+    .ux-grid .ux-emoji {
+      font-size: 2.2rem;
+      margin-bottom: 6px;
+    }
+
+    .ux-grid .ux-name {
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-bottom: 2px;
+    }
+
+    .ux-grid .ux-desc {
+      font-size: 0.9rem;
+      color: var(--slide-muted);
+    }
+
+    /* Power features grid */
+    .power-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      max-width: 950px;
+      margin: 24px auto 0;
+    }
+
+    .power-grid .power-item {
+      padding: 16px 10px;
+      border-radius: 12px;
+      text-align: center;
+      background: rgba(124, 58, 237, 0.06);
+      border: 2px solid rgba(124, 58, 237, 0.1);
+    }
+
+    .power-grid .power-emoji {
+      font-size: 1.8rem;
+      margin-bottom: 4px;
+    }
+
+    .power-grid .power-name {
+      font-size: 0.95rem;
+      font-weight: 700;
+    }
+
+    /* Workflow steps */
+    .workflow {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      margin: 32px auto 0;
+      max-width: 900px;
+    }
+
+    .workflow .wf-step {
+      padding: 20px 24px;
+      border-radius: 14px;
+      text-align: center;
+      font-size: 1.15rem;
+      font-weight: 600;
+    }
+
+    .workflow .wf-step:nth-child(1) {
+      background: rgba(79, 110, 247, 0.1);
+      border: 2px solid rgba(79, 110, 247, 0.2);
+    }
+
+    .workflow .wf-step:nth-child(3) {
+      background: rgba(124, 58, 237, 0.1);
+      border: 2px solid rgba(124, 58, 237, 0.2);
+    }
+
+    .workflow .wf-step:nth-child(5) {
+      background: rgba(14, 165, 165, 0.1);
+      border: 2px solid rgba(14, 165, 165, 0.2);
+    }
+
+    .workflow .wf-step:nth-child(7) {
+      background: rgba(34, 197, 94, 0.1);
+      border: 2px solid rgba(34, 197, 94, 0.2);
+    }
+
+    .workflow .wf-arrow {
+      font-size: 1.8rem;
+      color: var(--slide-muted);
+    }
+
+    /* Mission checklist */
+    .mission-list {
+      list-style: none;
+      text-align: left;
+      display: inline-block;
+      margin-top: 20px;
+    }
+
+    .mission-list li {
+      font-size: 1.5rem;
+      margin-bottom: 0.5em;
+      line-height: 1.4;
+    }
+  </style>
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- Slide 1: Title -->
+      <section>
+        <p class="slide-big-emoji">&#x1F4F1;</p>
+        <h1 class="slide-title">AI App Inventor</h1>
+        <p style="font-size: 1.8rem;">Build Something Useful!</p>
+        <p style="margin-top: 12px; font-size: 1.1rem; color: var(--slide-muted);">AI Creator Lab &middot; Lesson 08</p>
+      </section>
+
+      <!-- Slide 2: Games vs Apps -->
+      <section>
+        <h2>Games vs Apps &#x1F3AE; &#x1F4F1;</h2>
+        <div class="compare-cols">
+          <div class="compare-col col-game">
+            <h3>&#x1F3AE; Games</h3>
+            <p>- Fun to play<br>
+               - Entertainment<br>
+               - Made for fun<br>
+               - You play them</p>
+          </div>
+          <div class="compare-col col-app">
+            <h3>&#x1F4F1; Apps</h3>
+            <p>- Solve a problem<br>
+               - Save time or effort<br>
+               - Made to be useful<br>
+               - You USE them</p>
+          </div>
+        </div>
+        <p style="margin-top: 28px; font-size: 1.5rem;">
+          Both are programs &mdash; but apps <strong style="color: var(--slide-primary);">solve real problems!</strong>
+        </p>
+      </section>
+
+      <!-- Slide 3: Famous apps started simple -->
+      <section>
+        <h2>Big Apps Started Small &#x1F680;</h2>
+        <div class="app-timeline">
+          <div class="tl-card tl-insta">
+            <div class="tl-emoji">&#x1F4F8;</div>
+            <div class="tl-name">Instagram</div>
+            <div class="tl-started">Started as: just photo filters</div>
+            <div class="tl-now">Now: 2 billion users</div>
+          </div>
+          <div class="tl-card tl-twitter">
+            <div class="tl-emoji">&#x1F426;</div>
+            <div class="tl-name">Twitter / X</div>
+            <div class="tl-started">Started as: 140-character texts</div>
+            <div class="tl-now">Now: global news platform</div>
+          </div>
+          <div class="tl-card tl-google">
+            <div class="tl-emoji">&#x1F50D;</div>
+            <div class="tl-name">Google</div>
+            <div class="tl-started">Started as: one search box</div>
+            <div class="tl-now">Now: everything</div>
+          </div>
+        </div>
+        <p style="margin-top: 28px; font-size: 1.4rem; color: var(--slide-muted);">
+          Every great app started with <strong>one simple idea</strong>.
+        </p>
+      </section>
+
+      <!-- Slide 4: What makes a great app? -->
+      <section>
+        <h2>What Makes a Great App? &#x2B50;</h2>
+        <div class="pillars">
+          <div class="pillar">
+            <div class="pillar-emoji">&#x1F527;</div>
+            <div class="pillar-title">Useful</div>
+            <div class="pillar-desc">Solves a real problem</div>
+          </div>
+          <div class="pillar">
+            <div class="pillar-emoji">&#x1F44C;</div>
+            <div class="pillar-title">Easy</div>
+            <div class="pillar-desc">Anyone can use it</div>
+          </div>
+          <div class="pillar">
+            <div class="pillar-emoji">&#x1F3A8;</div>
+            <div class="pillar-title">Beautiful</div>
+            <div class="pillar-desc">Looks clean &amp; modern</div>
+          </div>
+          <div class="pillar">
+            <div class="pillar-emoji">&#x1F4BE;</div>
+            <div class="pillar-title">Reliable</div>
+            <div class="pillar-desc">Saves your data</div>
+          </div>
+        </div>
+        <p style="margin-top: 28px; font-size: 1.6rem; font-weight: 700; color: var(--slide-secondary);">
+          Useful + Easy + Beautiful = Great App
+        </p>
+      </section>
+
+      <!-- Slide 5: App showcase -->
+      <section>
+        <h2>5 Apps You Can Build Today &#x1F4F1;</h2>
+        <div class="app-showcase">
+          <div class="app-item">
+            <div class="app-item-emoji">&#x1F9EE;</div>
+            <div class="app-item-name">Calculator Pro</div>
+            <div class="app-item-desc">Scientific calc with history</div>
+          </div>
+          <div class="app-item">
+            <div class="app-item-emoji">&#x2753;</div>
+            <div class="app-item-name">Quiz Maker</div>
+            <div class="app-item-desc">Create &amp; take quizzes</div>
+          </div>
+          <div class="app-item">
+            <div class="app-item-emoji">&#x1F30D;</div>
+            <div class="app-item-name">Translator</div>
+            <div class="app-item-desc">Translate text to any language</div>
+          </div>
+          <div class="app-item">
+            <div class="app-item-emoji">&#x2705;</div>
+            <div class="app-item-name">Habit Tracker</div>
+            <div class="app-item-desc">Daily checklist with streaks</div>
+          </div>
+          <div class="app-item">
+            <div class="app-item-emoji">&#x1F4DA;</div>
+            <div class="app-item-name">Flashcards</div>
+            <div class="app-item-desc">Create &amp; study decks</div>
+          </div>
+        </div>
+        <p style="margin-top: 24px; font-size: 1.3rem; color: var(--slide-muted);">Pick the one that excites you most!</p>
+      </section>
+
+      <!-- Slide 6: How to describe an app to AI -->
+      <section>
+        <h2>How to Describe an App to AI &#x1F4AC;</h2>
+        <ul class="tips-list">
+          <li>&#x1F4CB; <strong>Features</strong> &mdash; What should the app DO?</li>
+          <li>&#x1F5BC;&#xFE0F; <strong>Layout</strong> &mdash; Where do things go on screen?</li>
+          <li>&#x1F504; <strong>Behavior</strong> &mdash; What happens when you click/type?</li>
+          <li>&#x1F4BE; <strong>Data</strong> &mdash; What needs to be saved or remembered?</li>
+        </ul>
+        <div class="concept-box" style="margin-top: 20px; font-size: 1.15rem;">
+          The more specific your description, the better the AI builds it!<br>
+          "Make a calculator" &#x2192; okay<br>
+          "Make a calculator with history, dark theme, and keyboard input" &#x2192; <strong>great!</strong>
+        </div>
+      </section>
+
+      <!-- Slide 7: UI/UX basics -->
+      <section>
+        <h2>UI/UX Basics &#x1F3A8;</h2>
+        <p style="font-size: 1.3rem; margin-bottom: 8px;">Make your app easy &amp; pleasant to use:</p>
+        <div class="ux-grid">
+          <div class="ux-card">
+            <div class="ux-emoji">&#x1F3F7;&#xFE0F;</div>
+            <div class="ux-name">Clear Labels</div>
+            <div class="ux-desc">Every button says what it does</div>
+          </div>
+          <div class="ux-card">
+            <div class="ux-emoji">&#x1F534;</div>
+            <div class="ux-name">Obvious Buttons</div>
+            <div class="ux-desc">Big, colorful, easy to find</div>
+          </div>
+          <div class="ux-card">
+            <div class="ux-emoji">&#x2705;</div>
+            <div class="ux-name">Feedback</div>
+            <div class="ux-desc">Show success or error messages</div>
+          </div>
+          <div class="ux-card">
+            <div class="ux-emoji">&#x1F3A8;</div>
+            <div class="ux-name">Consistent Design</div>
+            <div class="ux-desc">Same colors, fonts, spacing</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 8: Power features preview -->
+      <section>
+        <h2>Power Features &#x26A1;</h2>
+        <p style="font-size: 1.3rem; margin-bottom: 8px;">Upgrade your app like a real developer:</p>
+        <div class="power-grid">
+          <div class="power-item">
+            <div class="power-emoji">&#x1F4BE;</div>
+            <div class="power-name">localStorage</div>
+          </div>
+          <div class="power-item">
+            <div class="power-emoji">&#x1F319;</div>
+            <div class="power-name">Dark Mode</div>
+          </div>
+          <div class="power-item">
+            <div class="power-emoji">&#x2328;&#xFE0F;</div>
+            <div class="power-name">Keyboard Shortcuts</div>
+          </div>
+          <div class="power-item">
+            <div class="power-emoji">&#x26A0;&#xFE0F;</div>
+            <div class="power-name">Validation</div>
+          </div>
+          <div class="power-item">
+            <div class="power-emoji">&#x21A9;&#xFE0F;</div>
+            <div class="power-name">Undo</div>
+          </div>
+          <div class="power-item">
+            <div class="power-emoji">&#x1F4E4;</div>
+            <div class="power-name">Export</div>
+          </div>
+          <div class="power-item">
+            <div class="power-emoji">&#x1F4CB;</div>
+            <div class="power-name">Tabs / Pages</div>
+          </div>
+          <div class="power-item">
+            <div class="power-emoji">&#x2699;&#xFE0F;</div>
+            <div class="power-name">Settings</div>
+          </div>
+        </div>
+        <p style="margin-top: 20px; font-size: 1.2rem; color: var(--slide-muted);">
+          Just tell the AI what feature to add!
+        </p>
+      </section>
+
+      <!-- Slide 9: Real developer workflow -->
+      <section>
+        <h2>Real Developer Workflow &#x1F468;&#x200D;&#x1F4BB;</h2>
+        <div class="workflow">
+          <div class="wf-step">&#x1F4CB; Plan</div>
+          <div class="wf-arrow">&rarr;</div>
+          <div class="wf-step">&#x1F528; Build</div>
+          <div class="wf-arrow">&rarr;</div>
+          <div class="wf-step">&#x1F9EA; Test</div>
+          <div class="wf-arrow">&rarr;</div>
+          <div class="wf-step">&#x2B06;&#xFE0F; Improve</div>
+        </div>
+        <div class="concept-box" style="margin-top: 24px; font-size: 1.2rem;">
+          Real developers don't build perfect apps on the first try.<br>
+          They build, test, find problems, and <strong>iterate</strong>.<br>
+          That's exactly what you'll do today!
+        </div>
+      </section>
+
+      <!-- Slide 10: User testing -->
+      <section>
+        <h2>User Testing &#x1F9D1;&#x200D;&#x1F4BB;</h2>
+        <p class="slide-question">Watch someone ELSE use your app.</p>
+        <ul class="tips-list" style="margin-top: 24px;">
+          <li>&#x1F440; <strong>Watch silently</strong> &mdash; Don't tell them what to do</li>
+          <li>&#x1F914; <strong>Notice confusion</strong> &mdash; Where do they hesitate?</li>
+          <li>&#x2753; <strong>Ask questions</strong> &mdash; "What did you expect to happen?"</li>
+          <li>&#x1F4DD; <strong>Take notes</strong> &mdash; Use feedback to improve</li>
+        </ul>
+        <p style="margin-top: 24px; font-size: 1.3rem; color: var(--slide-secondary); font-weight: 600;">
+          If they need your help to use it, the app needs improvement!
+        </p>
+      </section>
+
+      <!-- Slide 11: Your mission -->
+      <section>
+        <p class="slide-big-emoji">&#x1F3AF;</p>
+        <h2>Your Mission</h2>
+        <ol class="mission-list">
+          <li>&#x1F4F1; <strong>Build</strong> &mdash; Pick a template and generate your app</li>
+          <li>&#x26A1; <strong>Upgrade</strong> &mdash; Add at least 1 power feature</li>
+          <li>&#x1F9EA; <strong>Test</strong> &mdash; Have your partner try your app</li>
+          <li>&#x1F4E4; <strong>Export</strong> &mdash; Download and keep your creation!</li>
+        </ol>
+        <p style="font-size: 1.3rem; margin-top: 24px; color: var(--slide-muted);">
+          Part 1: Build (25 min) &rarr; Part 2: Upgrade (25 min) &rarr; Share (10 min)
+        </p>
+      </section>
+
+      <!-- Slide 12: Let's invent! -->
+      <section>
+        <p class="slide-big-emoji">&#x1F6E0;&#xFE0F;</p>
+        <h2>Open your laptops!</h2>
+        <p style="font-size: 2rem; margin-top: 24px;">&#x1F449; Go to <strong>Lesson 8</strong></p>
+        <p style="font-size: 1.4rem; margin-top: 16px; color: var(--slide-muted);">
+          Pick your app. Describe it to AI. Build it. Upgrade it.
+        </p>
+        <p style="font-size: 2.5rem; margin-top: 32px; font-weight: 700; color: var(--slide-secondary);">
+          Let's invent! &#x1F680;
+        </p>
+      </section>
+
+    </div>
+  </div>
+
+  <!-- Lesson badge overlay -->
+  <div class="lesson-badge">08</div>
+
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+  <script>
+    Reveal.initialize({
+      hash: true,
+      transition: 'slide',
+      width: 1280,
+      height: 720
+    });
+  </script>
+</body>
+</html>

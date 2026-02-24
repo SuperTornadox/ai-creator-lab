@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Chatbot Creator - AI Creator Lab</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/white.css">
+  <link rel="stylesheet" href="/shared/slides-base.css">
+  <style>
+    /* Personality showcase grid */
+    .personality-showcase {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      max-width: 900px;
+      margin: 24px auto 0;
+    }
+
+    .personality-showcase .ps-card {
+      padding: 20px 14px;
+      border-radius: 14px;
+      text-align: center;
+    }
+
+    .personality-showcase .ps-card.ps-tutor {
+      background: rgba(79, 110, 247, 0.08);
+      border: 2px solid rgba(79, 110, 247, 0.15);
+    }
+
+    .personality-showcase .ps-card.ps-comedian {
+      background: rgba(245, 158, 11, 0.08);
+      border: 2px solid rgba(245, 158, 11, 0.15);
+    }
+
+    .personality-showcase .ps-card.ps-adventure {
+      background: rgba(34, 197, 94, 0.08);
+      border: 2px solid rgba(34, 197, 94, 0.15);
+    }
+
+    .personality-showcase .ps-card.ps-sage {
+      background: rgba(124, 58, 237, 0.08);
+      border: 2px solid rgba(124, 58, 237, 0.15);
+    }
+
+    .personality-showcase .ps-card.ps-sports {
+      background: rgba(239, 68, 68, 0.08);
+      border: 2px solid rgba(239, 68, 68, 0.15);
+    }
+
+    .personality-showcase .ps-card.ps-custom {
+      background: rgba(14, 165, 165, 0.08);
+      border: 2px solid rgba(14, 165, 165, 0.15);
+    }
+
+    .personality-showcase .ps-emoji {
+      font-size: 2.4rem;
+      margin-bottom: 6px;
+    }
+
+    .personality-showcase .ps-name {
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+
+    .personality-showcase .ps-desc {
+      font-size: 0.85rem;
+      color: var(--slide-muted);
+      margin-top: 2px;
+    }
+
+    /* System prompt demo */
+    .prompt-demo {
+      background: #1e2330;
+      color: #a5f3a5;
+      font-family: 'SF Mono', 'Cascadia Code', monospace;
+      border-radius: 14px;
+      padding: 24px 28px;
+      text-align: left;
+      font-size: 1.1rem;
+      line-height: 1.6;
+      max-width: 800px;
+      margin: 20px auto 0;
+    }
+
+    .prompt-demo .prompt-label-tag {
+      color: #60a5fa;
+      font-weight: 700;
+    }
+
+    /* Comparison side-by-side */
+    .demo-comparison {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      max-width: 950px;
+      margin: 24px auto 0;
+    }
+
+    .demo-comparison .demo-col {
+      padding: 20px;
+      border-radius: 14px;
+      text-align: left;
+    }
+
+    .demo-comparison .demo-col.demo-tutor {
+      background: rgba(79, 110, 247, 0.08);
+      border: 2px solid rgba(79, 110, 247, 0.15);
+    }
+
+    .demo-comparison .demo-col.demo-pirate {
+      background: rgba(245, 158, 11, 0.08);
+      border: 2px solid rgba(245, 158, 11, 0.15);
+    }
+
+    .demo-comparison .demo-label {
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+
+    .demo-comparison .demo-q {
+      font-size: 1rem;
+      color: var(--slide-muted);
+      margin-bottom: 8px;
+      font-style: italic;
+    }
+
+    .demo-comparison .demo-a {
+      font-size: 1.15rem;
+      line-height: 1.5;
+    }
+
+    /* Great chatbot traits */
+    .chatbot-traits {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      max-width: 850px;
+      margin: 24px auto 0;
+    }
+
+    .chatbot-traits .trait-card {
+      padding: 24px 16px;
+      border-radius: 14px;
+      background: rgba(79, 110, 247, 0.06);
+      border: 2px solid rgba(79, 110, 247, 0.12);
+      text-align: center;
+    }
+
+    .chatbot-traits .trait-emoji {
+      font-size: 2.8rem;
+      margin-bottom: 8px;
+    }
+
+    .chatbot-traits .trait-name {
+      font-size: 1.2rem;
+      font-weight: 700;
+    }
+
+    .chatbot-traits .trait-desc {
+      font-size: 0.9rem;
+      color: var(--slide-muted);
+      margin-top: 4px;
+    }
+
+    /* UI pattern cards */
+    .ui-patterns {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      max-width: 950px;
+      margin: 24px auto 0;
+    }
+
+    .ui-patterns .ui-card {
+      padding: 20px 14px;
+      border-radius: 14px;
+      background: rgba(124, 58, 237, 0.06);
+      border: 2px solid rgba(124, 58, 237, 0.12);
+      text-align: center;
+    }
+
+    .ui-patterns .ui-emoji {
+      font-size: 2.2rem;
+      margin-bottom: 6px;
+    }
+
+    .ui-patterns .ui-name {
+      font-size: 1rem;
+      font-weight: 700;
+    }
+
+    .ui-patterns .ui-desc {
+      font-size: 0.8rem;
+      color: var(--slide-muted);
+      margin-top: 2px;
+    }
+
+    /* Chat interface mockup (illustrative) */
+    .chat-mockup {
+      background: #f0f2f5;
+      border-radius: 14px;
+      padding: 20px;
+      max-width: 500px;
+      margin: 20px auto 0;
+      text-align: left;
+    }
+
+    .chat-mockup .mock-header {
+      text-align: center;
+      font-weight: 700;
+      font-size: 1.1rem;
+      padding-bottom: 12px;
+      border-bottom: 2px solid #e0e3e8;
+      margin-bottom: 12px;
+    }
+
+    .chat-mockup .mock-bubble {
+      padding: 10px 14px;
+      border-radius: 12px;
+      margin-bottom: 8px;
+      font-size: 1rem;
+      max-width: 80%;
+      line-height: 1.4;
+    }
+
+    .chat-mockup .mock-bot {
+      background: #fff;
+      border: 1px solid #e0e3e8;
+    }
+
+    .chat-mockup .mock-user {
+      background: var(--slide-primary);
+      color: #fff;
+      margin-left: auto;
+    }
+
+    .chat-mockup .mock-input {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .chat-mockup .mock-input-box {
+      flex: 1;
+      padding: 10px;
+      border-radius: 10px;
+      border: 2px solid #e0e3e8;
+      background: #fff;
+      font-size: 0.9rem;
+      color: var(--slide-muted);
+    }
+
+    .chat-mockup .mock-send {
+      padding: 8px 16px;
+      border-radius: 10px;
+      background: var(--slide-primary);
+      color: #fff;
+      font-weight: 700;
+      font-size: 0.9rem;
+      border: none;
+    }
+
+    /* Conversation tips */
+    .convo-tips {
+      list-style: none;
+      text-align: left;
+      display: inline-block;
+      margin-top: 20px;
+    }
+
+    .convo-tips li {
+      font-size: 1.4rem;
+      margin-bottom: 0.6em;
+      line-height: 1.5;
+    }
+
+    /* Mission box */
+    .mission-box {
+      background: rgba(79, 110, 247, 0.08);
+      border-radius: 14px;
+      padding: 24px 32px;
+      max-width: 750px;
+      margin: 20px auto 0;
+      font-size: 1.4rem;
+      line-height: 1.6;
+      color: var(--slide-text);
+    }
+
+    /* Template options */
+    .template-options {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      max-width: 950px;
+      margin: 24px auto 0;
+    }
+
+    .template-options .to-card {
+      padding: 22px 14px;
+      border-radius: 14px;
+      text-align: center;
+    }
+
+    .template-options .to-card.to-messenger {
+      background: rgba(79, 110, 247, 0.08);
+      border: 2px solid rgba(79, 110, 247, 0.15);
+    }
+
+    .template-options .to-card.to-terminal {
+      background: rgba(30, 35, 48, 0.08);
+      border: 2px solid rgba(30, 35, 48, 0.2);
+    }
+
+    .template-options .to-card.to-kawaii {
+      background: rgba(236, 72, 153, 0.08);
+      border: 2px solid rgba(236, 72, 153, 0.15);
+    }
+
+    .template-options .to-card.to-pro {
+      background: rgba(14, 165, 165, 0.08);
+      border: 2px solid rgba(14, 165, 165, 0.15);
+    }
+
+    .template-options .to-emoji {
+      font-size: 2.4rem;
+      margin-bottom: 6px;
+    }
+
+    .template-options .to-name {
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+
+    .template-options .to-desc {
+      font-size: 0.8rem;
+      color: var(--slide-muted);
+      margin-top: 2px;
+    }
+  </style>
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- Slide 1: Title -->
+      <section>
+        <p class="slide-big-emoji">&#x1F916;</p>
+        <h1 class="slide-title">AI Chatbot Creator</h1>
+        <p>Design a Digital Friend!</p>
+        <p style="margin-top: 12px; font-size: 1.1rem; color: var(--slide-muted);">AI Creator Lab &middot; Lesson 07</p>
+      </section>
+
+      <!-- Slide 2: What makes a great chatbot? -->
+      <section>
+        <h2>What Makes a Great Chatbot? &#x1F914;</h2>
+        <div class="chatbot-traits">
+          <div class="trait-card">
+            <div class="trait-emoji">&#x1F3AD;</div>
+            <div class="trait-name">Personality</div>
+            <div class="trait-desc">A unique voice and character</div>
+          </div>
+          <div class="trait-card">
+            <div class="trait-emoji">&#x1F9E0;</div>
+            <div class="trait-name">Knowledge</div>
+            <div class="trait-desc">Knows about specific topics</div>
+          </div>
+          <div class="trait-card">
+            <div class="trait-emoji">&#x1F91D;</div>
+            <div class="trait-name">Helpfulness</div>
+            <div class="trait-desc">Gives useful and fun responses</div>
+          </div>
+        </div>
+        <p style="margin-top: 28px; font-size: 1.4rem;">
+          Today you'll build a chatbot with <strong>all three</strong>!
+        </p>
+      </section>
+
+      <!-- Slide 3: System prompts explained -->
+      <section>
+        <h2>The Secret Instructions &#x1F510;</h2>
+        <p style="font-size: 1.5rem; margin-bottom: 8px;">Every chatbot has a <strong>system prompt</strong></p>
+        <p style="font-size: 1.2rem; color: var(--slide-muted);">Hidden instructions that tell the AI <em>who to be</em></p>
+        <div class="prompt-demo">
+          <span class="prompt-label-tag">System Prompt:</span><br>
+          You are Captain Quack, a pirate duck.<br>
+          You speak like a pirate and love<br>
+          telling jokes about the ocean.<br>
+          You are an expert in Science and Space.
+        </div>
+        <p style="margin-top: 20px; font-size: 1.3rem;">
+          The user never sees this &mdash; but it shapes <strong>every</strong> response!
+        </p>
+      </section>
+
+      <!-- Slide 4: Personality types showcase -->
+      <section>
+        <h2>Choose Your Personality &#x1F3AD;</h2>
+        <div class="personality-showcase">
+          <div class="ps-card ps-tutor">
+            <div class="ps-emoji">&#x1F4DA;</div>
+            <div class="ps-name">Helpful Tutor</div>
+            <div class="ps-desc">Patient, explains simply</div>
+          </div>
+          <div class="ps-card ps-comedian">
+            <div class="ps-emoji">&#x1F923;</div>
+            <div class="ps-name">Funny Comedian</div>
+            <div class="ps-desc">Tells jokes, uses humor</div>
+          </div>
+          <div class="ps-card ps-adventure">
+            <div class="ps-emoji">&#x2694;&#xFE0F;</div>
+            <div class="ps-name">Adventure Guide</div>
+            <div class="ps-desc">Dramatic quest narrator</div>
+          </div>
+          <div class="ps-card ps-sage">
+            <div class="ps-emoji">&#x1F9D9;</div>
+            <div class="ps-name">Wise Sage</div>
+            <div class="ps-desc">Philosophical wisdom</div>
+          </div>
+          <div class="ps-card ps-sports">
+            <div class="ps-emoji">&#x1F3C8;</div>
+            <div class="ps-name">Sports Commentator</div>
+            <div class="ps-desc">Energetic play-by-play</div>
+          </div>
+          <div class="ps-card ps-custom">
+            <div class="ps-emoji">&#x270F;&#xFE0F;</div>
+            <div class="ps-name">Custom Character</div>
+            <div class="ps-desc">Your imagination!</div>
+          </div>
+        </div>
+        <p style="margin-top: 20px; font-size: 1.2rem; color: var(--slide-muted);">+ Knowledge areas + Speaking style = Your unique bot!</p>
+      </section>
+
+      <!-- Slide 5: Same question, different personalities -->
+      <section>
+        <h2>Same Question, Different Answers &#x1F4AC;</h2>
+        <p style="font-size: 1.2rem; color: var(--slide-muted); margin-bottom: 4px;">Question: "Why is the sky blue?"</p>
+        <div class="demo-comparison">
+          <div class="demo-col demo-tutor">
+            <div class="demo-label">&#x1F4DA; Helpful Tutor</div>
+            <div class="demo-a">"Great question! Sunlight is made of all colors. When it hits the atmosphere, blue light gets scattered the most because it travels in shorter waves. That's called Rayleigh scattering!"</div>
+          </div>
+          <div class="demo-col demo-pirate">
+            <div class="demo-label">&#x1F3F4;&#x200D;&#x2620;&#xFE0F; Pirate Talk Comedian</div>
+            <div class="demo-a">"Arr matey! The sky be blue 'cause the ocean be so vain, it convinced the whole sky to match its outfit! Shiver me timbers! But really, it's all about light gettin' scattered, savvy?"</div>
+          </div>
+        </div>
+        <p style="margin-top: 20px; font-size: 1.3rem;">
+          The <strong>system prompt</strong> changes everything!
+        </p>
+      </section>
+
+      <!-- Slide 6: Part 1 mission -->
+      <section>
+        <p class="slide-big-emoji">&#x1F3A8;</p>
+        <h2>Part 1 Mission: Design Your Chatbot</h2>
+        <div class="mission-box">
+          <strong>Step 1:</strong> Give your bot a name<br>
+          <strong>Step 2:</strong> Pick a personality type<br>
+          <strong>Step 3:</strong> Choose knowledge areas<br>
+          <strong>Step 4:</strong> Select a speaking style<br>
+          <strong>Step 5:</strong> Generate your system prompt<br>
+          <strong>Step 6:</strong> Test it out!
+        </div>
+        <p style="font-size: 1.8rem; margin-top: 24px;">&#x1F449; Open <strong>Lesson 7</strong> and start designing!</p>
+      </section>
+
+      <!-- Slide 7: What makes a great chat interface? -->
+      <section>
+        <h2>What Makes a Great Chat Interface? &#x1F4F1;</h2>
+        <div class="chat-mockup">
+          <div class="mock-header">&#x1F916; BotBuddy</div>
+          <div class="mock-bubble mock-bot">Hi! I'm BotBuddy. Ask me anything!</div>
+          <div class="mock-bubble mock-user">Tell me a fun fact</div>
+          <div class="mock-bubble mock-bot">Did you know octopuses have three hearts? &#x1F419;</div>
+          <div class="mock-input">
+            <div class="mock-input-box">Type a message...</div>
+            <div class="mock-send">Send</div>
+          </div>
+        </div>
+        <p style="margin-top: 20px; font-size: 1.2rem; color: var(--slide-muted);">Good design makes your bot feel <strong>real</strong></p>
+      </section>
+
+      <!-- Slide 8: Chat UI patterns -->
+      <section>
+        <h2>Chat UI Building Blocks &#x1F9F1;</h2>
+        <div class="ui-patterns">
+          <div class="ui-card">
+            <div class="ui-emoji">&#x1F4AC;</div>
+            <div class="ui-name">Chat Bubbles</div>
+            <div class="ui-desc">User vs. bot styling</div>
+          </div>
+          <div class="ui-card">
+            <div class="ui-emoji">&#x1F3A8;</div>
+            <div class="ui-name">Colors</div>
+            <div class="ui-desc">Theme sets the mood</div>
+          </div>
+          <div class="ui-card">
+            <div class="ui-emoji">&#x1F600;</div>
+            <div class="ui-name">Avatars</div>
+            <div class="ui-desc">Give your bot a face</div>
+          </div>
+          <div class="ui-card">
+            <div class="ui-emoji">&#x1F552;</div>
+            <div class="ui-name">Timestamps</div>
+            <div class="ui-desc">When messages were sent</div>
+          </div>
+        </div>
+        <div class="template-options" style="margin-top: 24px;">
+          <div class="to-card to-messenger">
+            <div class="to-emoji">&#x1F4AC;</div>
+            <div class="to-name">Messenger</div>
+            <div class="to-desc">Clean chat bubbles</div>
+          </div>
+          <div class="to-card to-terminal">
+            <div class="to-emoji">&#x1F5A5;&#xFE0F;</div>
+            <div class="to-name">Terminal</div>
+            <div class="to-desc">Hacker aesthetic</div>
+          </div>
+          <div class="to-card to-kawaii">
+            <div class="to-emoji">&#x1F338;</div>
+            <div class="to-name">Kawaii</div>
+            <div class="to-desc">Cute pastels</div>
+          </div>
+          <div class="to-card to-pro">
+            <div class="to-emoji">&#x1F4BC;</div>
+            <div class="to-name">Professional</div>
+            <div class="to-desc">Business-like</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 9: Part 2 mission -->
+      <section>
+        <p class="slide-big-emoji">&#x1F4BB;</p>
+        <h2>Part 2 Mission: Build the Interface</h2>
+        <div class="mission-box">
+          <strong>Step 1:</strong> Pick a design template<br>
+          <strong>Step 2:</strong> Generate the visual interface with AI<br>
+          <strong>Step 3:</strong> Upgrade it! Add avatars, animations, quick-reply buttons<br>
+          <strong>Step 4:</strong> Make it your own
+        </div>
+        <p style="font-size: 1.5rem; margin-top: 24px;">The twist: you design the <strong>look</strong> of your chatbot app!</p>
+      </section>
+
+      <!-- Slide 10: Conversation design tips -->
+      <section>
+        <h2>Conversation Design Tips &#x1F4A1;</h2>
+        <ul class="convo-tips">
+          <li>&#x1F44B; <strong>Welcome message</strong> &mdash; greet the user right away</li>
+          <li>&#x2753; <strong>Suggested questions</strong> &mdash; help users know what to ask</li>
+          <li>&#x1F3AD; <strong>Stay in character</strong> &mdash; your bot should be consistent</li>
+          <li>&#x1F4CF; <strong>Keep it short</strong> &mdash; nobody wants to read a novel</li>
+          <li>&#x1F600; <strong>Be friendly</strong> &mdash; even error messages can be fun</li>
+        </ul>
+      </section>
+
+      <!-- Slide 11: Your full mission -->
+      <section>
+        <h2>Your Full Mission &#x1F680;</h2>
+        <div class="mission-box" style="font-size: 1.3rem;">
+          &#x2705; <strong>Part 1 (25 min):</strong> Design your chatbot's personality and test it<br><br>
+          &#x2705; <strong>Part 2 (25 min):</strong> Build a standalone chatbot app interface<br><br>
+          &#x2705; <strong>Share (10 min):</strong> Export your app and test each other's bots!
+        </div>
+        <p style="margin-top: 24px; font-size: 1.4rem; color: var(--slide-muted);">
+          Checklist on the right side of Lesson 7 tracks your progress
+        </p>
+      </section>
+
+      <!-- Slide 12: Let's build! -->
+      <section>
+        <p class="slide-big-emoji">&#x1F916;</p>
+        <h1 class="slide-title">Let's Build!</h1>
+        <p style="font-size: 1.6rem; margin-top: 16px;">
+          Open <strong>Lesson 7</strong> and create your chatbot
+        </p>
+        <p style="font-size: 1.3rem; margin-top: 20px; color: var(--slide-muted);">
+          Name it. Give it personality. Make it talk. Design its look.
+        </p>
+        <p style="font-size: 2rem; margin-top: 28px; font-weight: 700; color: var(--slide-secondary);">
+          Your chatbot is waiting to be born!
+        </p>
+      </section>
+
+    </div>
+  </div>
+
+  <!-- Lesson badge overlay -->
+  <div class="lesson-badge">07</div>
+
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+  <script>
+    Reveal.initialize({
+      hash: true,
+      transition: 'slide',
+      width: 1280,
+      height: 720
+    });
+  </script>
+</body>
+</html>

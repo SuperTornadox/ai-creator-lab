@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Lesson 6: Final Project — Plan, Build, Present! - AI Creator Lab</title>
+  <title>Lesson 6: AI Animation Studio - AI Creator Lab</title>
   <link rel="stylesheet" href="/shared/styles.css">
   <style>
     /* ===== Section Dividers ===== */
@@ -26,14 +26,89 @@
       gap: var(--space-sm);
     }
 
-    /* ===== Project Type Cards ===== */
-    .project-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-      gap: var(--space-md);
+    /* ===== Welcome Banner ===== */
+    .welcome-banner {
+      background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+      border-radius: var(--radius-lg);
+      padding: var(--space-xl) var(--space-xl) var(--space-lg);
+      text-align: center;
+      margin-bottom: var(--space-xl);
+      position: relative;
+      overflow: hidden;
+      color: #ffffff;
     }
 
-    .project-card {
+    .welcome-banner::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(2px 2px at 20% 30%, #fff 0%, transparent 100%),
+        radial-gradient(2px 2px at 80% 20%, #fff 0%, transparent 100%),
+        radial-gradient(1px 1px at 40% 70%, #fff 0%, transparent 100%),
+        radial-gradient(1px 1px at 60% 50%, #fff 0%, transparent 100%),
+        radial-gradient(2px 2px at 90% 80%, #fff 0%, transparent 100%),
+        radial-gradient(1px 1px at 10% 90%, #fff 0%, transparent 100%),
+        radial-gradient(1px 1px at 50% 15%, #fff 0%, transparent 100%);
+      opacity: 0.4;
+      animation: twinkle 3s ease-in-out infinite alternate;
+    }
+
+    @keyframes twinkle {
+      0% { opacity: 0.3; }
+      100% { opacity: 0.6; }
+    }
+
+    .welcome-banner h2 {
+      position: relative;
+      font-size: var(--text-2xl);
+      font-weight: 800;
+      margin-bottom: var(--space-sm);
+      background: linear-gradient(135deg, #ff6ec4, #7873f5, #4adede);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .welcome-banner p {
+      position: relative;
+      color: rgba(255, 255, 255, 0.8);
+      font-size: var(--text-md);
+      max-width: 600px;
+      margin-inline: auto;
+      line-height: 1.6;
+    }
+
+    /* ===== Part Divider ===== */
+    .part-divider {
+      text-align: center;
+      padding: var(--space-xl) 0;
+      border-top: 3px solid var(--color-secondary);
+      border-bottom: 3px solid var(--color-secondary);
+      margin: var(--space-xl) 0;
+      background: linear-gradient(135deg, var(--color-secondary-light), var(--color-primary-light));
+      border-radius: var(--radius-lg);
+    }
+
+    .part-divider h2 {
+      font-size: var(--text-2xl);
+      margin-bottom: var(--space-xs);
+    }
+
+    .part-divider p {
+      color: var(--color-text-muted);
+      font-size: var(--text-md);
+    }
+
+    /* ===== Challenge Cards Grid ===== */
+    .challenge-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: var(--space-md);
+      margin-bottom: var(--space-lg);
+    }
+
+    .challenge-card {
       background: var(--color-surface);
       border-radius: var(--radius-md);
       box-shadow: var(--shadow-sm);
@@ -46,321 +121,267 @@
                   border-color var(--transition-normal);
     }
 
-    .project-card:hover {
+    .challenge-card:hover {
       box-shadow: var(--shadow-md);
-      transform: translateY(-2px);
+      transform: translateY(-3px);
     }
 
-    .project-card.card-selected {
+    .challenge-card.card-selected {
       border-color: var(--color-primary);
       box-shadow: 0 0 0 3px var(--color-primary-light);
     }
 
-    .project-card .project-emoji {
+    .challenge-card .challenge-emoji {
       font-size: 2.5rem;
       margin-bottom: var(--space-sm);
     }
 
-    .project-card .project-name {
-      font-size: var(--text-lg);
+    .challenge-card .challenge-name {
+      font-size: var(--text-md);
       font-weight: 650;
       margin-bottom: var(--space-xs);
     }
 
-    .project-card .project-desc {
+    .challenge-card .challenge-desc {
       font-size: var(--text-sm);
       color: var(--color-text-muted);
+      line-height: 1.4;
     }
 
-    /* ===== Planning Form ===== */
-    .plan-form {
-      background: var(--color-surface);
-      border: 1.5px solid var(--color-border);
-      border-radius: var(--radius-lg);
-      padding: var(--space-xl);
-      margin-top: var(--space-lg);
-    }
-
-    .plan-form h3 {
-      margin-bottom: var(--space-md);
-    }
-
-    .plan-form .form-group {
-      margin-bottom: var(--space-md);
-    }
-
-    .plan-form label {
-      display: block;
-      font-size: var(--text-sm);
-      font-weight: 600;
-      margin-bottom: var(--space-xs);
-    }
-
-    .plan-form .tool-checkboxes {
-      display: flex;
-      flex-wrap: wrap;
-      gap: var(--space-md);
-      margin-top: var(--space-xs);
-    }
-
-    .plan-form .tool-checkboxes label {
-      display: flex;
-      align-items: center;
-      gap: var(--space-xs);
-      font-weight: 500;
-      cursor: pointer;
-    }
-
-    .plan-form .tool-checkboxes input[type="checkbox"] {
-      accent-color: var(--color-primary);
-      width: 18px;
-      height: 18px;
-    }
-
-    .plan-saved-msg {
-      display: none;
-      color: var(--color-success);
-      font-size: var(--text-sm);
-      font-weight: 600;
+    .challenge-card .difficulty {
+      display: inline-block;
       margin-top: var(--space-sm);
-    }
-
-    /* ===== Build Tabs ===== */
-    .build-tabs {
-      display: flex;
-      gap: var(--space-xs);
-      margin-bottom: var(--space-lg);
-      padding-bottom: var(--space-md);
-      border-bottom: 2px solid var(--color-border);
-      flex-wrap: wrap;
-    }
-
-    .build-tab-btn {
-      display: flex;
-      align-items: center;
-      gap: var(--space-sm);
-      padding: 0.5em 1.2em;
-      font-size: var(--text-sm);
-      font-weight: 600;
-      font-family: inherit;
-      border: 2px solid var(--color-border);
-      background: var(--color-surface);
-      color: var(--color-text-muted);
-      border-radius: var(--radius-md);
-      cursor: pointer;
-      transition: all 0.15s ease;
-      white-space: nowrap;
-    }
-
-    .build-tab-btn:hover {
-      border-color: var(--color-primary);
-      color: var(--color-text);
-    }
-
-    .build-tab-btn.active {
-      background: var(--color-primary);
-      border-color: var(--color-primary);
-      color: #ffffff;
-    }
-
-    .build-panel {
-      display: none;
-    }
-
-    .build-panel.active {
-      display: block;
-    }
-
-    /* ===== Project Notes ===== */
-    .project-notes-area {
-      margin-top: var(--space-lg);
-      padding-top: var(--space-lg);
-      border-top: 1px solid var(--color-border);
-    }
-
-    .project-notes-area label {
-      display: block;
-      font-size: var(--text-sm);
-      font-weight: 600;
-      margin-bottom: var(--space-xs);
-    }
-
-    .notes-saved-msg {
-      display: none;
-      color: var(--color-success);
       font-size: var(--text-xs);
-      font-weight: 600;
-      margin-top: var(--space-xs);
+      font-weight: 700;
+      padding: 0.2em 0.6em;
+      border-radius: var(--radius-full);
     }
 
-    /* ===== Presentation Prep ===== */
-    .present-form {
-      display: flex;
-      flex-direction: column;
-      gap: var(--space-lg);
+    .difficulty-easy {
+      background: var(--color-success-light);
+      color: #16a34a;
     }
 
-    .present-form label {
+    .difficulty-medium {
+      background: var(--color-warning-light);
+      color: #b45309;
+    }
+
+    .difficulty-hard {
+      background: var(--color-secondary-light);
+      color: var(--color-secondary);
+    }
+
+    /* ===== Art Style Cards ===== */
+    .art-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: var(--space-md);
+      margin-bottom: var(--space-lg);
+    }
+
+    .art-card {
+      background: var(--color-surface);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
+      padding: var(--space-xl) var(--space-lg);
+      border: 2px solid var(--color-border);
+      text-align: center;
+      cursor: pointer;
+      transition: box-shadow var(--transition-normal),
+                  transform var(--transition-normal),
+                  border-color var(--transition-normal);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .art-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, transparent 50%, rgba(124, 58, 237, 0.04) 100%);
+      pointer-events: none;
+    }
+
+    .art-card:hover {
+      box-shadow: var(--shadow-md);
+      transform: translateY(-4px);
+    }
+
+    .art-card.card-selected {
+      border-color: var(--color-secondary);
+      box-shadow: 0 0 0 3px var(--color-secondary-light);
+    }
+
+    .art-card .art-emoji {
+      font-size: 3rem;
+      margin-bottom: var(--space-sm);
       display: block;
-      font-size: var(--text-sm);
-      font-weight: 600;
+    }
+
+    .art-card .art-name {
+      font-size: var(--text-lg);
+      font-weight: 700;
       margin-bottom: var(--space-xs);
     }
 
-    .present-actions {
-      display: flex;
+    .art-card .art-desc {
+      font-size: var(--text-sm);
+      color: var(--color-text-muted);
+      line-height: 1.5;
+    }
+
+    /* ===== Upgrade Tips Grid ===== */
+    .tips-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
       gap: var(--space-md);
-      flex-wrap: wrap;
-      align-items: center;
+    }
+
+    .tip-card {
+      background: var(--color-surface);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--color-border);
+      padding: var(--space-md) var(--space-lg);
+      transition: box-shadow var(--transition-normal),
+                  transform var(--transition-normal);
+      cursor: pointer;
+    }
+
+    .tip-card:hover {
+      box-shadow: var(--shadow-sm);
+      transform: translateY(-2px);
+    }
+
+    .tip-card .tip-emoji {
+      font-size: 1.8rem;
+      margin-bottom: var(--space-xs);
+    }
+
+    .tip-card .tip-title {
+      font-size: var(--text-md);
+      font-weight: 650;
+      margin-bottom: var(--space-xs);
+    }
+
+    .tip-card .tip-desc {
+      font-size: var(--text-sm);
+      color: var(--color-text-muted);
+      line-height: 1.5;
+    }
+
+    /* ===== Tips Box ===== */
+    .tips-box {
+      background: var(--color-accent-light);
+      border-radius: var(--radius-md);
+      padding: var(--space-lg);
       margin-top: var(--space-md);
     }
 
-    /* ===== Presentation Mode Overlay ===== */
-    .presentation-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      z-index: 99999;
-      background: linear-gradient(160deg, #1e2330 0%, #2d1b69 50%, #1e2330 100%);
-      color: #ffffff;
-      overflow-y: auto;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    .tips-box h4 {
+      margin-bottom: var(--space-sm);
+      color: var(--color-accent-hover);
     }
 
-    .presentation-overlay.visible {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-start;
-      padding: 60px 40px;
+    .tips-box ul {
+      list-style: none;
+      padding: 0;
     }
 
-    .presentation-close {
-      position: fixed;
-      top: 20px;
-      right: 24px;
-      background: rgba(255,255,255,0.15);
-      border: none;
-      color: #ffffff;
-      font-size: 1.5rem;
-      width: 44px;
-      height: 44px;
-      border-radius: 50%;
-      cursor: pointer;
-      transition: background 0.2s;
-      z-index: 100000;
+    .tips-box li {
+      padding: var(--space-xs) 0;
+      font-size: var(--text-sm);
+      line-height: 1.6;
     }
 
-    .presentation-close:hover {
-      background: rgba(255,255,255,0.3);
+    .tips-box li::before {
+      content: "\2728 ";
     }
 
-    .presentation-content {
-      max-width: 800px;
-      width: 100%;
-      text-align: center;
-    }
-
-    .presentation-content h1 {
-      font-size: 3rem;
-      font-weight: 800;
-      margin-bottom: 0.3em;
-      background: linear-gradient(135deg, #a78bfa, #60a5fa);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-
-    .presentation-content .pres-author {
-      font-size: 1.2rem;
-      color: rgba(255,255,255,0.6);
-      margin-bottom: 2em;
-    }
-
-    .presentation-content .pres-section {
-      text-align: left;
-      margin-bottom: 2em;
-    }
-
-    .presentation-content .pres-section h2 {
-      font-size: 1.4rem;
-      font-weight: 700;
-      color: #a78bfa;
-      margin-bottom: 0.5em;
-    }
-
-    .presentation-content .pres-section p {
-      font-size: 1.15rem;
-      line-height: 1.8;
-      color: rgba(255,255,255,0.85);
-      white-space: pre-wrap;
-    }
-
-    /* ===== Graduation Section ===== */
-    .graduation-section {
-      background: linear-gradient(135deg, #4f6ef7 0%, #7c3aed 40%, #ec4899 70%, #f59e0b 100%);
+    /* ===== Concept Box ===== */
+    .concept-box {
+      background: linear-gradient(135deg, rgba(124, 58, 237, 0.06), rgba(79, 110, 247, 0.06));
       border-radius: var(--radius-lg);
-      padding: var(--space-xl) var(--space-xl) var(--space-xl);
-      color: #ffffff;
-      text-align: center;
-    }
-
-    .graduation-section h2 {
-      font-size: 2rem;
-      font-weight: 800;
-      margin-bottom: var(--space-xs);
-    }
-
-    .graduation-section .grad-subtitle {
-      font-size: var(--text-lg);
-      opacity: 0.9;
+      padding: var(--space-lg);
       margin-bottom: var(--space-lg);
+      border: 1px solid rgba(124, 58, 237, 0.12);
     }
 
-    .skills-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-      gap: var(--space-md);
-      margin-bottom: var(--space-lg);
-    }
-
-    .skill-badge {
-      background: rgba(255,255,255,0.18);
-      backdrop-filter: blur(6px);
-      border-radius: var(--radius-md);
-      padding: var(--space-md);
-      text-align: center;
-    }
-
-    .skill-badge .skill-emoji {
-      font-size: 2rem;
-      margin-bottom: var(--space-xs);
-    }
-
-    .skill-badge .skill-name {
-      font-size: var(--text-sm);
-      font-weight: 700;
-    }
-
-    .skill-badge .skill-lesson {
-      font-size: var(--text-xs);
-      opacity: 0.75;
-    }
-
-    .graduation-message {
+    .concept-box h3 {
       font-size: var(--text-lg);
-      line-height: 1.7;
-      opacity: 0.95;
-      max-width: 600px;
-      margin: 0 auto;
+      margin-bottom: var(--space-sm);
+      color: var(--color-secondary);
     }
 
-    /* ===== Collection Gallery ===== */
-    .collection-empty {
-      text-align: center;
-      padding: var(--space-xl);
+    .concept-box p {
+      font-size: var(--text-md);
+      line-height: 1.6;
       color: var(--color-text-muted);
+    }
+
+    /* ===== Playground containers ===== */
+    .playground-wrapper {
+      min-height: 500px;
+    }
+
+    .playground-wrapper .flex {
+      flex-wrap: wrap;
+    }
+
+    /* ===== Export section ===== */
+    .export-section {
+      background: var(--color-success-light);
+      border-radius: var(--radius-md);
+      padding: var(--space-lg);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-md);
+      flex-wrap: wrap;
+    }
+
+    .export-section .export-info {
+      flex: 1;
+      min-width: 200px;
+    }
+
+    .export-section .export-info h3 {
+      margin-bottom: var(--space-xs);
+    }
+
+    .export-section .export-info p {
       font-size: var(--text-sm);
+      color: var(--color-text-muted);
+    }
+
+    /* ===== Motion words highlight ===== */
+    .motion-word {
+      display: inline-block;
+      background: linear-gradient(135deg, var(--color-primary-light), var(--color-secondary-light));
+      padding: 0.15em 0.5em;
+      border-radius: var(--radius-sm);
+      font-weight: 600;
+      font-size: var(--text-sm);
+      margin: 2px;
+    }
+
+    /* ===== Responsive ===== */
+    @media (max-width: 767px) {
+      .playground-wrapper .flex {
+        flex-direction: column;
+      }
+
+      .challenge-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .art-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .tips-grid {
+        grid-template-columns: 1fr 1fr;
+      }
     }
   </style>
 </head>
@@ -370,7 +391,7 @@
   <header class="lesson-header">
     <div class="lesson-badge">
       <span class="lesson-number">06</span>
-      <span class="lesson-title">Final Project</span>
+      <span class="lesson-title">AI Animation Studio</span>
     </div>
     <a href="/" class="back-link">&larr; Back to all lessons</a>
   </header>
@@ -381,145 +402,96 @@
     <!-- Main Content Area -->
     <main class="lesson-main" id="main-content">
 
-      <!-- ===== Section 1: Choose & Plan ===== -->
-      <div class="lesson-section">
-        <h2 class="section-heading">&#x1F3AF; Choose Your Project</h2>
-        <div class="project-grid" id="project-grid">
-          <!-- rendered by JS -->
-        </div>
+      <!-- ===== Welcome Banner ===== -->
+      <div class="welcome-banner">
+        <h2>&#x1F3AC; Turn Code into Moving Art!</h2>
+        <p>
+          Today you become an animator. Describe what you imagine, and AI will write the code to bring it to life. No coding experience needed &mdash; just your creativity!
+        </p>
+      </div>
 
-        <div class="plan-form" id="plan-form">
-          <h3>&#x1F4DD; My Project Plan</h3>
-          <div class="form-group">
-            <label for="plan-title">Project Title</label>
-            <input type="text" class="input" id="plan-title" placeholder="Give your project a cool name...">
-          </div>
-          <div class="form-group">
-            <label for="plan-description">What is your project about?</label>
-            <textarea class="textarea" id="plan-description" rows="2" placeholder="Describe your project in 1-2 sentences..."></textarea>
-          </div>
-          <div class="form-group">
-            <label>Tools I'll use</label>
-            <div class="tool-checkboxes">
-              <label><input type="checkbox" id="tool-text" value="text"> &#x1F4DD; Text AI</label>
-              <label><input type="checkbox" id="tool-image" value="image"> &#x1F3A8; Image AI</label>
-              <label><input type="checkbox" id="tool-code" value="code"> &#x1F4BB; Code AI</label>
-              <label><input type="checkbox" id="tool-music" value="music"> &#x1F3B5; Music (Suno)</label>
-            </div>
-          </div>
-          <div class="form-group">
-            <label for="plan-steps">My Plan (3-5 steps)</label>
-            <textarea class="textarea" id="plan-steps" rows="5" placeholder="Step 1: ...&#10;Step 2: ...&#10;Step 3: ..."></textarea>
-          </div>
-          <button class="btn btn-primary" id="save-plan-btn">&#x1F4BE; Save My Plan</button>
-          <div class="plan-saved-msg" id="plan-saved-msg">&#x2705; Plan saved!</div>
+      <!-- ===== PART 1: Animation Playground ===== -->
+      <div class="lesson-section">
+        <h2 class="section-heading">&#x1F3AF; Part 1: Animation Playground</h2>
+        <p class="mb-md" style="color: var(--color-text-muted); font-size: var(--text-sm);">
+          Click any animation challenge below to load its description into the playground. Start with Easy and work your way up!
+        </p>
+
+        <div class="challenge-grid" id="animation-grid">
+          <!-- Rendered by JS -->
         </div>
       </div>
 
-      <!-- ===== Section 2: Build ===== -->
+      <!-- Code Playground Part 1 -->
       <div class="lesson-section">
-        <h2 class="section-heading">&#x1F528; Build Your Project</h2>
+        <h2 class="section-heading">&#x1F3A8; Animation Playground</h2>
+        <div class="playground-wrapper" id="playground-part1"></div>
 
-        <nav class="build-tabs" id="build-tabs">
-          <button class="build-tab-btn active" data-tab="tab-text">&#x1F4DD; Text AI</button>
-          <button class="build-tab-btn" data-tab="tab-image">&#x1F3A8; Image AI</button>
-          <button class="build-tab-btn" data-tab="tab-code">&#x1F4BB; Code AI</button>
-          <button class="build-tab-btn" data-tab="tab-collection">&#x1F5BC;&#xFE0F; My Collection</button>
-        </nav>
-
-        <!-- Tab 1: Text AI -->
-        <div class="build-panel active" id="tab-text">
-          <div id="text-chat"></div>
-        </div>
-
-        <!-- Tab 2: Image AI -->
-        <div class="build-panel" id="tab-image">
-          <div id="image-gen"></div>
-        </div>
-
-        <!-- Tab 3: Code AI -->
-        <div class="build-panel" id="tab-code">
-          <div id="code-playground"></div>
-        </div>
-
-        <!-- Tab 4: My Collection -->
-        <div class="build-panel" id="tab-collection">
-          <div id="my-gallery"></div>
-        </div>
-
-        <!-- Project Notes -->
-        <div class="project-notes-area">
-          <label for="project-notes">&#x1F4D3; Project Notes (auto-saves)</label>
-          <textarea class="textarea" id="project-notes" rows="4" placeholder="Keep track of ideas, prompts that worked well, things to try next..."></textarea>
-          <div class="notes-saved-msg" id="notes-saved-msg">&#x2705; Saved</div>
+        <div class="tips-box">
+          <h4>&#x1F4A1; Animation Descriptions Need MOTION Words!</h4>
+          <ul>
+            <li>Use words like: <span class="motion-word">float</span> <span class="motion-word">bounce</span> <span class="motion-word">spin</span> <span class="motion-word">fade</span> <span class="motion-word">grow</span> <span class="motion-word">shrink</span> <span class="motion-word">pulse</span> <span class="motion-word">orbit</span></li>
+            <li>Describe the MOVEMENT: "particles spray upward then fall back down with gravity"</li>
+            <li>Specify COLORS: "rainbow gradient" or "neon green on black background"</li>
+            <li>Mention SPEED: "slowly rotating" vs "rapidly spinning"</li>
+            <li>Add INTERACTION: "when I click" or "follows the mouse"</li>
+          </ul>
         </div>
       </div>
 
-      <!-- ===== Section 3: Present ===== -->
-      <div class="lesson-section">
-        <h2 class="section-heading">&#x1F3A4; Prepare Your Presentation</h2>
-
-        <div class="present-form">
-          <div class="form-group">
-            <label for="pres-about">About My Project</label>
-            <textarea class="textarea" id="pres-about" rows="4" placeholder="Describe your project: What is it? What does it do? Why did you choose this idea?"></textarea>
-          </div>
-          <div class="form-group">
-            <label for="pres-process">My Creative Process</label>
-            <textarea class="textarea" id="pres-process" rows="4" placeholder="How did you make it? What tools did you use? What challenges did you face? What did you learn?"></textarea>
-          </div>
-        </div>
-
-        <div class="present-actions">
-          <button class="btn btn-primary" id="launch-presentation-btn">&#x1F680; Launch Presentation Mode</button>
-          <div id="export-container"></div>
-        </div>
+      <!-- ===== PART 2 DIVIDER ===== -->
+      <div class="part-divider">
+        <h2>&#x1F3A8; Part 2: Generative Art Gallery</h2>
+        <p>Art made by rules + randomness = unique every time!</p>
       </div>
 
-      <!-- ===== Section 4: Graduation ===== -->
+      <!-- Generative Art Concept -->
       <div class="lesson-section">
-        <div class="graduation-section">
-          <h2>&#x1F393; Congratulations!</h2>
-          <p class="grad-subtitle">You're now an AI Creator!</p>
-
-          <div class="skills-grid">
-            <div class="skill-badge">
-              <div class="skill-emoji">&#x1F4DD;</div>
-              <div class="skill-name">Text AI</div>
-              <div class="skill-lesson">Lesson 1 & 2</div>
-            </div>
-            <div class="skill-badge">
-              <div class="skill-emoji">&#x1F3A8;</div>
-              <div class="skill-name">Image AI</div>
-              <div class="skill-lesson">Lesson 3</div>
-            </div>
-            <div class="skill-badge">
-              <div class="skill-emoji">&#x1F3B5;</div>
-              <div class="skill-name">Music AI</div>
-              <div class="skill-lesson">Lesson 4</div>
-            </div>
-            <div class="skill-badge">
-              <div class="skill-emoji">&#x1F3AC;</div>
-              <div class="skill-name">Film Making</div>
-              <div class="skill-lesson">Lesson 5</div>
-            </div>
-            <div class="skill-badge">
-              <div class="skill-emoji">&#x1F4BB;</div>
-              <div class="skill-name">Code AI</div>
-              <div class="skill-lesson">Lesson 6</div>
-            </div>
-            <div class="skill-badge">
-              <div class="skill-emoji">&#x1F9E0;</div>
-              <div class="skill-name">AI Ethics</div>
-              <div class="skill-lesson">Every Lesson</div>
-            </div>
-          </div>
-
-          <p class="graduation-message">
-            You have learned to use AI as a creative partner &mdash; for writing, art, music, film, and code.
-            These skills will only grow as AI keeps evolving. Keep creating, keep experimenting, and never stop being curious.
-            The future belongs to creators like YOU!
+        <div class="concept-box">
+          <h3>&#x1F9EA; What is Generative Art?</h3>
+          <p>
+            Generative art is art created by a set of rules combined with randomness.
+            The computer follows the rules you describe, but adds unpredictable elements &mdash;
+            so every time you run it, you get something <strong>unique</strong>.
+            Think of it like giving nature a paintbrush: you set the boundaries, but the results always surprise you!
           </p>
+        </div>
+
+        <h2 class="section-heading">&#x1F5BC;&#xFE0F; Choose an Art Style</h2>
+        <p style="margin-bottom: var(--space-lg); color: var(--color-text-muted);">
+          Click a style card to load its prompt into the playground below.
+        </p>
+        <div class="art-grid" id="art-grid">
+          <!-- Art style cards rendered by JS -->
+        </div>
+      </div>
+
+      <!-- Code Playground Part 2 -->
+      <div class="lesson-section">
+        <h2 class="section-heading">&#x1F3A8; Generative Art Studio</h2>
+        <div class="playground-wrapper" id="playground-part2"></div>
+      </div>
+
+      <!-- Make It Interactive -->
+      <div class="lesson-section">
+        <h2 class="section-heading">&#x26A1; Make It Interactive &mdash; Upgrade Ideas</h2>
+        <p style="margin-bottom: var(--space-lg); color: var(--color-text-muted);">
+          Already have a working animation or art piece? Click a tip below to copy an upgrade idea into the "What to change?" box.
+        </p>
+        <div class="tips-grid" id="upgrade-grid">
+          <!-- Upgrade tip cards rendered by JS -->
+        </div>
+      </div>
+
+      <!-- ===== SHARE & EXPORT ===== -->
+      <div class="lesson-section">
+        <h2 class="section-heading">&#x1F4E6; Save Your Animations</h2>
+        <div class="export-section">
+          <div class="export-info">
+            <h3>Download your animation as an HTML file</h3>
+            <p>Open it in any browser to watch your animation again, or share it with friends and family!</p>
+          </div>
+          <div id="export-btn"></div>
         </div>
       </div>
 
@@ -532,332 +504,329 @@
 
   </div>
 
-  <!-- Presentation Mode Overlay -->
-  <div class="presentation-overlay" id="presentation-overlay">
-    <button class="presentation-close" id="presentation-close">&times;</button>
-    <div class="presentation-content" id="presentation-content">
-      <!-- filled by JS -->
-    </div>
-  </div>
-
   <script src="/shared/components.js"></script>
   <script>
     // =============================================
-    // LocalStorage Keys
+    // Animation Challenge Data (Part 1)
     // =============================================
-    var STORAGE_PREFIX = 'lesson06_';
-    function storageKey(name) { return STORAGE_PREFIX + name; }
-
-    function saveToStorage(key, value) {
-      try { localStorage.setItem(storageKey(key), JSON.stringify(value)); } catch (e) { /* ignore */ }
-    }
-
-    function loadFromStorage(key, fallback) {
-      try {
-        var v = localStorage.getItem(storageKey(key));
-        return v ? JSON.parse(v) : fallback;
-      } catch (e) { return fallback; }
-    }
-
-    // =============================================
-    // Section 1: Choose Your Project
-    // =============================================
-    var projectTypes = [
-      { id: 'magazine', emoji: '\uD83D\uDCF0', name: 'AI Magazine', desc: 'Create articles & illustrations for a magazine' },
-      { id: 'film',     emoji: '\uD83C\uDFAC', name: 'AI Short Film', desc: 'Write a story and generate scene images' },
-      { id: 'game',     emoji: '\uD83C\uDFAE', name: 'AI Game', desc: 'Design and code a simple game with AI help' },
-      { id: 'free',     emoji: '\u2728',        name: 'Free Choice', desc: 'Your own idea! Combine any AI tools' }
+    var animationChallenges = [
+      {
+        emoji: '\uD83C\uDF08',
+        name: 'Rainbow Wave',
+        desc: 'Colorful bars that wave back and forth',
+        difficulty: 'easy',
+        prompt: 'Create a full-page animation of colorful vertical bars that wave back and forth like a sine wave. Use rainbow colors (red, orange, yellow, green, blue, indigo, violet) for the bars. Each bar should move up and down smoothly but slightly offset from its neighbor so it creates a flowing wave effect. The bars should fill the whole screen on a dark background. Use canvas or CSS animations. Make it smooth and hypnotic.'
+      },
+      {
+        emoji: '\u26F2',
+        name: 'Particle Fountain',
+        desc: 'Particles spray upward and fall back down',
+        difficulty: 'easy',
+        prompt: 'Create a full-page particle fountain animation using HTML canvas. Particles should continuously spray upward from the bottom center of the screen like a water fountain. Each particle should be a small colorful circle (random bright colors). Particles should shoot up with random speeds and angles, then slow down and fall back down due to gravity. Particles should fade out as they fall. Use a dark/black background. Spawn about 5-10 new particles per frame for a constant stream. Make it beautiful and mesmerizing.'
+      },
+      {
+        emoji: '\u2B50',
+        name: 'Starfield',
+        desc: 'Stars flying toward you (classic screensaver)',
+        difficulty: 'medium',
+        prompt: 'Create a classic starfield animation using HTML canvas. Stars should start as tiny dots in the center of the screen and fly outward toward the edges, getting bigger and brighter as they get closer (simulating flying through space). Stars should be white dots on a pure black background. Start with about 200 stars. When a star leaves the screen, it should respawn at the center. Stars closer to the edges should move faster than stars near the center to create a 3D depth effect. Make it smooth and feel like you are flying through space at warp speed.'
+      },
+      {
+        emoji: '\uD83E\uDDEA',
+        name: 'Lava Lamp',
+        desc: 'Smooth blobby shapes floating and merging',
+        difficulty: 'medium',
+        prompt: 'Create a lava lamp animation using HTML canvas. Draw several large, smooth, blobby circles (metaball-style if possible, or just overlapping semi-transparent circles) that float slowly upward and downward within the screen. Use warm colors like red, orange, magenta, and pink with semi-transparency so blobs blend when they overlap. The blobs should drift slowly and smoothly, bouncing gently off the top and bottom edges. Use a dark purple or deep blue background. Make 6-8 blobs of varying sizes. The movement should feel organic, relaxing, and smooth.'
+      },
+      {
+        emoji: '\uD83D\uDCBB',
+        name: 'Matrix Rain',
+        desc: 'Falling green characters like The Matrix',
+        difficulty: 'hard',
+        prompt: 'Create the classic Matrix digital rain effect using HTML canvas. Green characters (use random letters, numbers, and symbols) should fall down the screen in columns. Each column should have characters that appear at the top and cascade downward. The leading character in each column should be bright white/green, and characters behind it should fade to darker green. Characters should randomly change as they fall. Use a black background. Fill the entire screen width with columns. Different columns should fall at different speeds and start at random times. Make it look exactly like the iconic Matrix movie effect.'
+      },
+      {
+        emoji: '\uD83C\uDF86',
+        name: 'Fireworks Show',
+        desc: 'Click anywhere to launch fireworks!',
+        difficulty: 'hard',
+        prompt: 'Create an interactive fireworks animation using HTML canvas. When the user clicks anywhere on the screen, a firework rocket should launch from the bottom center upward toward the click position. When the rocket reaches the target, it should explode into many small particles that spread outward in a circle, then fade and fall down with gravity. Each explosion should use a random bright color (red, gold, blue, green, magenta, cyan). Particles should leave a slight trail as they move. Use a dark night-sky background (very dark blue or black). Allow multiple fireworks at the same time. Add a subtle twinkle of stars in the background. Make the explosions feel satisfying and spectacular!'
+      }
     ];
 
-    var projectGrid = document.getElementById('project-grid');
-    var selectedProjectType = loadFromStorage('projectType', null);
+    // =============================================
+    // Art Style Data (Part 2)
+    // =============================================
+    var artStyles = [
+      {
+        emoji: '\uD83C\uDF00',
+        name: 'Spiral Patterns',
+        desc: 'Colorful spirals that grow from the center, creating hypnotic patterns',
+        prompt: 'Create a generative art piece using HTML canvas that draws colorful spirals growing outward from the center of the screen. Use multiple spiral arms (like a galaxy) with different colors from a rainbow palette. Each spiral arm should be made of small circles or dots that get bigger as they move outward. Add slight randomness to the positions so no two runs look exactly the same. The spirals should draw themselves slowly so you can watch them grow. Use a dark background. Make it beautiful and mesmerizing. The drawing should animate - slowly revealing the spiral over about 10 seconds, then start over with new random variations.'
+      },
+      {
+        emoji: '\u25B3',
+        name: 'Geometric Tiles',
+        desc: 'Repeating shapes that create mesmerizing patterns',
+        prompt: 'Create a generative art piece using HTML canvas that fills the screen with a grid of geometric tiles. Each tile should contain a randomly chosen pattern: diagonal lines, circles, triangles, or quarter-circles. Use a limited color palette of 4-5 harmonious colors (like navy, teal, coral, gold, cream). Each tile should be about 60-80 pixels. Add slight randomness so the pattern is different each time. The tiles should draw themselves one by one with a brief delay so you can watch the pattern emerge across the screen. Use clean, crisp lines. Make it look like modern graphic design art.'
+      },
+      {
+        emoji: '\uD83C\uDF33',
+        name: 'Nature Simulation',
+        desc: 'Simple flocking birds or a growing fractal tree',
+        prompt: 'Create a nature simulation using HTML canvas. Draw a tree that grows from the bottom center of the screen using recursive branching. The trunk should start thick and branches should get thinner and shorter as they split. Each branch splits into 2-3 smaller branches at slightly random angles. Add green leaves (small filled circles) at the branch tips. The tree should animate its growth - starting from the trunk and branching outward so you can watch it grow over about 8 seconds. Use brown for the trunk/branches and various greens for leaves. Add a light blue sky background and green ground. Each time the page loads, the tree should look slightly different due to random angles.'
+      },
+      {
+        emoji: '\uD83C\uDFA8',
+        name: 'Abstract Painter',
+        desc: 'Random brush strokes in complementary colors',
+        prompt: 'Create a generative abstract painting using HTML canvas. The canvas should slowly fill with random brush strokes. Each stroke should be a thick, slightly curved line with random length, position, and angle. Use a palette of complementary colors (like deep blue with orange, or purple with gold) with varying opacity. Some strokes should be thin and some thick. Add occasional splatter effects (clusters of small dots). The painting should build up slowly over time, adding one stroke every 200ms, so you can watch it being painted. After about 50 strokes, pause for 3 seconds showing the finished piece, then clear and start a new painting with a different color palette. Use a white or off-white background.'
+      }
+    ];
 
-    projectTypes.forEach(function (proj) {
+    // =============================================
+    // Upgrade / Interactive Tips Data
+    // =============================================
+    var upgradeTips = [
+      {
+        emoji: '\uD83D\uDDB1\uFE0F',
+        title: 'Mouse Follower',
+        desc: 'Elements follow the cursor around the screen',
+        mod: 'Add mouse interaction: make the main elements follow the mouse cursor position. When the mouse moves, the closest elements should drift toward the cursor smoothly. Add a glowing trail effect behind the cursor.'
+      },
+      {
+        emoji: '\uD83D\uDC46',
+        title: 'Click to Create',
+        desc: 'Clicking spawns new elements at that position',
+        mod: 'Add click interaction: when the user clicks anywhere on the canvas, spawn a burst of new colorful elements at that position. Each click should create 10-20 new particles or shapes that explode outward from the click point, then fade away. Use a random color for each click burst.'
+      },
+      {
+        emoji: '\uD83C\uDFA8',
+        title: 'Color Shift on Hover',
+        desc: 'Colors change as you move the mouse',
+        mod: 'Add a color-shifting effect: the overall color palette should change based on the mouse position. Moving the mouse left-to-right shifts the hue, and moving up-to-down shifts the brightness. This makes the entire animation change colors as the user explores with their mouse.'
+      },
+      {
+        emoji: '\uD83C\uDFB5',
+        title: 'Music Visualizer',
+        desc: 'Elements bounce and pulse to a simulated beat',
+        mod: 'Add a music visualizer effect: create a simulated beat (a repeating pulse every 500ms) that makes the elements react. On each beat, elements should briefly grow larger, flash brighter, or bounce with extra energy. Add a visual "pulse" ring that expands from the center on each beat. You can use setInterval to create the rhythm.'
+      },
+      {
+        emoji: '\uD83C\uDF0D',
+        title: 'Gravity Simulation',
+        desc: 'Elements attract and orbit each other',
+        mod: 'Add gravity physics: make the elements attract each other like planets. Larger elements should have stronger gravity. Smaller elements should orbit around larger ones. When two elements get very close, they should merge into a larger element. Add trails behind moving elements so you can see their orbital paths.'
+      },
+      {
+        emoji: '\u23EF\uFE0F',
+        title: 'Speed Controls',
+        desc: 'Slow motion and fast forward buttons',
+        mod: 'Add speed controls: create three buttons at the top of the screen - "Slow Motion" (0.25x speed), "Normal" (1x speed), and "Fast Forward" (3x speed). Also add a "Pause/Play" button. Style the buttons to look clean and modern with rounded corners. The current speed should be highlighted.'
+      }
+    ];
+
+    // =============================================
+    // Part 1: Animation Challenge Cards
+    // =============================================
+    var animationGrid = document.getElementById('animation-grid');
+
+    animationChallenges.forEach(function (challenge) {
       var card = document.createElement('div');
-      card.className = 'project-card' + (selectedProjectType === proj.id ? ' card-selected' : '');
+      card.className = 'challenge-card';
 
       var emojiEl = document.createElement('div');
-      emojiEl.className = 'project-emoji';
-      emojiEl.textContent = proj.emoji;
+      emojiEl.className = 'challenge-emoji';
+      emojiEl.textContent = challenge.emoji;
 
       var nameEl = document.createElement('div');
-      nameEl.className = 'project-name';
-      nameEl.textContent = proj.name;
+      nameEl.className = 'challenge-name';
+      nameEl.textContent = challenge.name;
 
       var descEl = document.createElement('div');
-      descEl.className = 'project-desc';
-      descEl.textContent = proj.desc;
+      descEl.className = 'challenge-desc';
+      descEl.textContent = challenge.desc;
+
+      var diffLabel = document.createElement('span');
+      diffLabel.className = 'difficulty';
+      if (challenge.difficulty === 'easy') {
+        diffLabel.classList.add('difficulty-easy');
+        diffLabel.textContent = 'Easy';
+      } else if (challenge.difficulty === 'medium') {
+        diffLabel.classList.add('difficulty-medium');
+        diffLabel.textContent = 'Medium';
+      } else {
+        diffLabel.classList.add('difficulty-hard');
+        diffLabel.textContent = 'Hard';
+      }
+
+      card.appendChild(emojiEl);
+      card.appendChild(nameEl);
+      card.appendChild(descEl);
+      card.appendChild(diffLabel);
+
+      card.addEventListener('click', function () {
+        var allCards = animationGrid.querySelectorAll('.challenge-card');
+        allCards.forEach(function (c) { c.classList.remove('card-selected'); });
+        card.classList.add('card-selected');
+
+        var genTextarea = document.querySelector('#playground-part1 textarea');
+        if (genTextarea) {
+          genTextarea.value = challenge.prompt;
+          genTextarea.focus();
+        }
+
+        document.getElementById('playground-part1').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+
+      animationGrid.appendChild(card);
+    });
+
+    // =============================================
+    // Part 1: Code Playground
+    // =============================================
+    var playgroundPart1Container = document.getElementById('playground-part1');
+    var part1GenCount = 0;
+
+    var playgroundPart1 = window.CodePlayground(playgroundPart1Container, {
+      onRun: function (code) {
+        if (code && code.length > 50) {
+          part1GenCount++;
+          if (part1GenCount >= 1) {
+            taskCards.setComplete('first-animation', true);
+          }
+          if (part1GenCount >= 3) {
+            taskCards.setComplete('three-animations', true);
+          }
+        }
+      }
+    });
+
+    // =============================================
+    // Part 2: Art Style Selector
+    // =============================================
+    var artGrid = document.getElementById('art-grid');
+
+    artStyles.forEach(function (art) {
+      var card = document.createElement('div');
+      card.className = 'art-card';
+
+      var emojiEl = document.createElement('span');
+      emojiEl.className = 'art-emoji';
+      emojiEl.textContent = art.emoji;
+
+      var nameEl = document.createElement('div');
+      nameEl.className = 'art-name';
+      nameEl.textContent = art.name;
+
+      var descEl = document.createElement('div');
+      descEl.className = 'art-desc';
+      descEl.textContent = art.desc;
 
       card.appendChild(emojiEl);
       card.appendChild(nameEl);
       card.appendChild(descEl);
 
       card.addEventListener('click', function () {
-        var allCards = projectGrid.querySelectorAll('.project-card');
+        var allCards = artGrid.querySelectorAll('.art-card');
         allCards.forEach(function (c) { c.classList.remove('card-selected'); });
         card.classList.add('card-selected');
-        selectedProjectType = proj.id;
-        saveToStorage('projectType', proj.id);
-        taskCards.setComplete('choose-project', true);
+
+        var promptArea = document.querySelector('#playground-part2 textarea');
+        if (promptArea) {
+          promptArea.value = art.prompt;
+          promptArea.focus();
+          document.getElementById('playground-part2').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        taskCards.setComplete('try-generative', true);
       });
 
-      projectGrid.appendChild(card);
+      artGrid.appendChild(card);
     });
 
-    if (selectedProjectType) {
-      taskCards && taskCards.setComplete && taskCards.setComplete('choose-project', true);
-    }
-
     // =============================================
-    // Planning Form — Load & Save
+    // Part 2: Code Playground (Generative Art)
     // =============================================
-    var planTitle = document.getElementById('plan-title');
-    var planDescription = document.getElementById('plan-description');
-    var planSteps = document.getElementById('plan-steps');
-    var savePlanBtn = document.getElementById('save-plan-btn');
-    var planSavedMsg = document.getElementById('plan-saved-msg');
-    var toolText = document.getElementById('tool-text');
-    var toolImage = document.getElementById('tool-image');
-    var toolCode = document.getElementById('tool-code');
-    var toolMusic = document.getElementById('tool-music');
+    var playgroundPart2Container = document.getElementById('playground-part2');
+    var part2GenCount = 0;
 
-    // Load saved plan
-    var savedPlan = loadFromStorage('plan', null);
-    if (savedPlan) {
-      planTitle.value = savedPlan.title || '';
-      planDescription.value = savedPlan.description || '';
-      planSteps.value = savedPlan.steps || '';
-      if (savedPlan.tools) {
-        toolText.checked = savedPlan.tools.indexOf('text') !== -1;
-        toolImage.checked = savedPlan.tools.indexOf('image') !== -1;
-        toolCode.checked = savedPlan.tools.indexOf('code') !== -1;
-        toolMusic.checked = savedPlan.tools.indexOf('music') !== -1;
-      }
-    }
-
-    savePlanBtn.addEventListener('click', function () {
-      var tools = [];
-      if (toolText.checked) tools.push('text');
-      if (toolImage.checked) tools.push('image');
-      if (toolCode.checked) tools.push('code');
-      if (toolMusic.checked) tools.push('music');
-
-      var plan = {
-        title: planTitle.value.trim(),
-        description: planDescription.value.trim(),
-        steps: planSteps.value.trim(),
-        tools: tools
-      };
-      saveToStorage('plan', plan);
-
-      planSavedMsg.style.display = 'block';
-      setTimeout(function () { planSavedMsg.style.display = 'none'; }, 2000);
-
-      if (plan.title && plan.steps) {
-        taskCards.setComplete('write-plan', true);
+    var playgroundPart2 = window.CodePlayground(playgroundPart2Container, {
+      onRun: function (code) {
+        part2GenCount++;
+        if (part2GenCount >= 1) {
+          taskCards.setComplete('try-generative', true);
+        }
+        if (part2GenCount >= 2) {
+          taskCards.setComplete('make-interactive', true);
+        }
       }
     });
 
     // =============================================
-    // Section 2: Build — Tab Navigation
+    // Upgrade / Interactive Tips
     // =============================================
-    var tabBtns = document.querySelectorAll('.build-tab-btn');
-    var tabPanels = document.querySelectorAll('.build-panel');
+    var upgradeGrid = document.getElementById('upgrade-grid');
+    var tipClickCount = 0;
 
-    tabBtns.forEach(function (btn) {
-      btn.addEventListener('click', function () {
-        var target = btn.getAttribute('data-tab');
+    upgradeTips.forEach(function (tip) {
+      var card = document.createElement('div');
+      card.className = 'tip-card';
 
-        tabBtns.forEach(function (b) { b.classList.remove('active'); });
-        btn.classList.add('active');
+      var emojiEl = document.createElement('div');
+      emojiEl.className = 'tip-emoji';
+      emojiEl.textContent = tip.emoji;
 
-        tabPanels.forEach(function (p) { p.classList.remove('active'); });
-        document.getElementById(target).classList.add('active');
+      var titleEl = document.createElement('div');
+      titleEl.className = 'tip-title';
+      titleEl.textContent = tip.title;
+
+      var descEl = document.createElement('div');
+      descEl.className = 'tip-desc';
+      descEl.textContent = tip.desc;
+
+      card.appendChild(emojiEl);
+      card.appendChild(titleEl);
+      card.appendChild(descEl);
+
+      card.addEventListener('click', function () {
+        // Load the modification into the Part 2 playground's update textarea
+        var textareas = document.querySelectorAll('#playground-part2 textarea');
+        if (textareas.length >= 2) {
+          textareas[1].value = tip.mod;
+          textareas[1].focus();
+          document.getElementById('playground-part2').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        tipClickCount++;
+        if (tipClickCount >= 1) {
+          taskCards.setComplete('make-interactive', true);
+        }
       });
-    });
 
-    // =============================================
-    // Tab 1: Text AI (ChatWidget)
-    // =============================================
-    var textChatContainer = document.getElementById('text-chat');
-
-    window.ChatWidget(textChatContainer, {
-      systemPrompt: 'You are a creative project advisor for kids aged 12-13. Help them brainstorm, write, and refine creative projects. You can help with: writing articles, stories, scripts, game designs, descriptions, dialogue, and any text content for their AI Creator Lab final project. Be encouraging, fun, and give specific suggestions. Keep responses concise and age-appropriate.',
-      placeholder: 'Ask for help with your project... (e.g., "Help me write an article about space for my AI magazine")'
-    });
-
-    // =============================================
-    // Tab 2: Image AI (ImageGenerator)
-    // =============================================
-    var imageGenContainer = document.getElementById('image-gen');
-
-    window.ImageGenerator(imageGenContainer, {
-      showGallery: true
-    });
-
-    // =============================================
-    // Tab 3: Code AI (CodePlayground)
-    // =============================================
-    var codeContainer = document.getElementById('code-playground');
-
-    window.CodePlayground(codeContainer, {
-      onRun: function () {
-        taskCards.setComplete('build-project', true);
-      }
-    });
-
-    // =============================================
-    // Tab 4: My Collection (Gallery)
-    // =============================================
-    var galleryContainer = document.getElementById('my-gallery');
-
-    window.Gallery(galleryContainer, {
-      columns: 3
-    });
-
-    // =============================================
-    // Project Notes — Auto-save
-    // =============================================
-    var projectNotes = document.getElementById('project-notes');
-    var notesSavedMsg = document.getElementById('notes-saved-msg');
-    var notesSaveTimer = null;
-
-    // Load
-    projectNotes.value = loadFromStorage('notes', '') || '';
-
-    projectNotes.addEventListener('input', function () {
-      clearTimeout(notesSaveTimer);
-      notesSaveTimer = setTimeout(function () {
-        saveToStorage('notes', projectNotes.value);
-        notesSavedMsg.style.display = 'block';
-        setTimeout(function () { notesSavedMsg.style.display = 'none'; }, 1500);
-      }, 800);
-    });
-
-    // =============================================
-    // Section 3: Presentation
-    // =============================================
-    var presAbout = document.getElementById('pres-about');
-    var presProcess = document.getElementById('pres-process');
-
-    // Load saved presentation text
-    presAbout.value = loadFromStorage('presAbout', '') || '';
-    presProcess.value = loadFromStorage('presProcess', '') || '';
-
-    // Auto-save presentation fields
-    presAbout.addEventListener('input', function () {
-      saveToStorage('presAbout', presAbout.value);
-    });
-    presProcess.addEventListener('input', function () {
-      saveToStorage('presProcess', presProcess.value);
-      if (presAbout.value.trim() && presProcess.value.trim()) {
-        taskCards.setComplete('write-presentation', true);
-      }
-    });
-
-    // Launch Presentation Mode
-    var overlay = document.getElementById('presentation-overlay');
-    var presContent = document.getElementById('presentation-content');
-    var launchBtn = document.getElementById('launch-presentation-btn');
-    var closeBtn = document.getElementById('presentation-close');
-
-    launchBtn.addEventListener('click', function () {
-      // Build presentation content
-      clearChildren(presContent);
-
-      var title = planTitle.value.trim() || 'My Final Project';
-      var studentName = '';
-      try { studentName = sessionStorage.getItem('studentName') || ''; } catch (e) { /* ignore */ }
-
-      var h1 = document.createElement('h1');
-      h1.textContent = title;
-      presContent.appendChild(h1);
-
-      if (studentName) {
-        var author = document.createElement('p');
-        author.className = 'pres-author';
-        author.textContent = 'by ' + studentName;
-        presContent.appendChild(author);
-      }
-
-      var aboutText = presAbout.value.trim();
-      if (aboutText) {
-        var aboutSection = document.createElement('div');
-        aboutSection.className = 'pres-section';
-        var aboutH2 = document.createElement('h2');
-        aboutH2.textContent = 'About My Project';
-        var aboutP = document.createElement('p');
-        aboutP.textContent = aboutText;
-        aboutSection.appendChild(aboutH2);
-        aboutSection.appendChild(aboutP);
-        presContent.appendChild(aboutSection);
-      }
-
-      var processText = presProcess.value.trim();
-      if (processText) {
-        var processSection = document.createElement('div');
-        processSection.className = 'pres-section';
-        var processH2 = document.createElement('h2');
-        processH2.textContent = 'My Creative Process';
-        var processP = document.createElement('p');
-        processP.textContent = processText;
-        processSection.appendChild(processH2);
-        processSection.appendChild(processP);
-        presContent.appendChild(processSection);
-      }
-
-      overlay.classList.add('visible');
-      taskCards.setComplete('present-celebrate', true);
-    });
-
-    closeBtn.addEventListener('click', function () {
-      overlay.classList.remove('visible');
-    });
-
-    document.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape' && overlay.classList.contains('visible')) {
-        overlay.classList.remove('visible');
-      }
+      upgradeGrid.appendChild(card);
     });
 
     // =============================================
     // Export Button
     // =============================================
-    var exportContainer = document.getElementById('export-container');
+    var exportContainer = document.getElementById('export-btn');
 
     window.ExportButton(exportContainer, {
-      label: 'Download Presentation',
-      filename: 'my-ai-project-presentation.html',
-      format: 'html',
+      label: 'Download My Animation',
       getData: function () {
-        var title = planTitle.value.trim() || 'My Final Project';
-        var studentName = '';
-        try { studentName = sessionStorage.getItem('studentName') || ''; } catch (e) { /* ignore */ }
-        var about = presAbout.value.trim();
-        var process = presProcess.value.trim();
-
-        var html = [];
-        html.push('<!DOCTYPE html>');
-        html.push('<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">');
-        html.push('<title>' + escapeHtml(title) + '</title>');
-        html.push('<style>');
-        html.push('*{box-sizing:border-box;margin:0;padding:0}');
-        html.push('body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:linear-gradient(160deg,#1e2330,#2d1b69,#1e2330);color:#fff;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:60px 40px}');
-        html.push('.card{max-width:700px;width:100%;text-align:center}');
-        html.push('h1{font-size:2.8rem;font-weight:800;background:linear-gradient(135deg,#a78bfa,#60a5fa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:.3em}');
-        html.push('.author{font-size:1.1rem;color:rgba(255,255,255,.5);margin-bottom:2em}');
-        html.push('.section{text-align:left;margin-bottom:2em}');
-        html.push('.section h2{font-size:1.3rem;color:#a78bfa;margin-bottom:.4em}');
-        html.push('.section p{font-size:1.1rem;line-height:1.8;color:rgba(255,255,255,.85);white-space:pre-wrap}');
-        html.push('</style></head><body>');
-        html.push('<div class="card">');
-        html.push('<h1>' + escapeHtml(title) + '</h1>');
-        if (studentName) html.push('<p class="author">by ' + escapeHtml(studentName) + '</p>');
-        if (about) html.push('<div class="section"><h2>About My Project</h2><p>' + escapeHtml(about) + '</p></div>');
-        if (process) html.push('<div class="section"><h2>My Creative Process</h2><p>' + escapeHtml(process) + '</p></div>');
-        html.push('</div></body></html>');
-        return html.join('\n');
-      }
+        var code = playgroundPart2.getCode();
+        if (!code) {
+          code = playgroundPart1.getCode();
+        }
+        if (!code) {
+          return '<!-- No animation generated yet! Go back and create something first. -->';
+        }
+        taskCards.setComplete('export-animation', true);
+        return code;
+      },
+      filename: 'my-ai-animation.html',
+      format: 'html'
     });
 
     // =============================================
@@ -866,33 +835,13 @@
     var taskSidebar = document.getElementById('task-sidebar');
 
     var taskCards = window.TaskCards(taskSidebar, [
-      { id: 'choose-project',     title: 'Choose your project type',  description: 'Pick: Magazine, Film, Game, or Free Choice' },
-      { id: 'write-plan',         title: 'Write your plan',           description: 'Fill in your title, description, and steps' },
-      { id: 'build-project',      title: 'Build your project',        description: 'Use Text AI, Image AI, and Code AI to create' },
-      { id: 'write-presentation', title: 'Write your presentation',   description: 'Describe your project and creative process' },
-      { id: 'present-celebrate',  title: 'Present and celebrate!',    description: 'Launch presentation mode and share your work' }
+      { id: 'first-animation', title: 'Create your first animation', description: 'Generate any animation from the Part 1 challenges' },
+      { id: 'three-animations', title: 'Try 3 animation challenges', description: 'Generate at least 3 different animations in Part 1' },
+      { id: 'try-generative', title: 'Create generative art', description: 'Pick an art style and generate it in Part 2' },
+      { id: 'make-interactive', title: 'Make it interactive', description: 'Use an upgrade tip or your own idea to add interaction' },
+      { id: 'export-animation', title: 'Export your best animation', description: 'Download your favorite creation as an HTML file' },
+      { id: 'share', title: 'Share with the class', description: 'Show your favorite animation to your partner' }
     ]);
-
-    // Restore completed states
-    if (selectedProjectType) taskCards.setComplete('choose-project', true);
-    if (savedPlan && savedPlan.title && savedPlan.steps) taskCards.setComplete('write-plan', true);
-
-    // =============================================
-    // Utility
-    // =============================================
-    function clearChildren(el) {
-      while (el.firstChild) {
-        el.removeChild(el.firstChild);
-      }
-    }
-
-    function escapeHtml(str) {
-      return str
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;');
-    }
   </script>
 
 </body>

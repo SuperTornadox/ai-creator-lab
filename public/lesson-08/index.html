@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lesson 8: AI App Inventor &mdash; Build Something Useful! - AI Creator Lab</title>
+  <link rel="stylesheet" href="/shared/styles.css">
+  <style>
+    /* ===== Section Dividers ===== */
+    .lesson-section {
+      margin-bottom: var(--space-xl);
+      padding-bottom: var(--space-xl);
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .lesson-section:last-child {
+      border-bottom: none;
+    }
+
+    .section-heading {
+      font-size: var(--text-xl);
+      font-weight: 650;
+      margin-bottom: var(--space-lg);
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+    }
+
+    /* ===== Welcome Banner ===== */
+    .welcome-banner {
+      background: linear-gradient(135deg, #4f6ef7 0%, #7c3aed 50%, #0ea5a5 100%);
+      border-radius: var(--radius-lg);
+      padding: var(--space-xl);
+      color: #ffffff;
+      text-align: center;
+      margin-bottom: var(--space-xl);
+    }
+
+    .welcome-banner h1 {
+      font-size: 2rem;
+      font-weight: 800;
+      margin-bottom: var(--space-xs);
+    }
+
+    .welcome-banner .welcome-sub {
+      font-size: var(--text-lg);
+      opacity: 0.9;
+    }
+
+    /* ===== Concept Box ===== */
+    .concept-box {
+      background: var(--color-bg);
+      border-radius: var(--radius-md);
+      padding: var(--space-lg);
+      margin-bottom: var(--space-lg);
+      font-size: var(--text-md);
+      line-height: 1.7;
+      border-left: 4px solid var(--color-primary);
+    }
+
+    .concept-box strong {
+      color: var(--color-primary);
+    }
+
+    /* ===== App Template Cards ===== */
+    .app-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: var(--space-md);
+      margin-bottom: var(--space-lg);
+    }
+
+    .app-card {
+      background: var(--color-surface);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-sm);
+      padding: var(--space-lg);
+      border: 2px solid var(--color-border);
+      cursor: pointer;
+      transition: box-shadow var(--transition-normal),
+                  transform var(--transition-normal),
+                  border-color var(--transition-normal);
+    }
+
+    .app-card:hover {
+      box-shadow: var(--shadow-md);
+      transform: translateY(-2px);
+    }
+
+    .app-card.card-selected {
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px var(--color-primary-light);
+    }
+
+    .app-card .app-emoji {
+      font-size: 2.2rem;
+      margin-bottom: var(--space-sm);
+    }
+
+    .app-card .app-name {
+      font-size: var(--text-lg);
+      font-weight: 650;
+      margin-bottom: var(--space-xs);
+    }
+
+    .app-card .app-desc {
+      font-size: var(--text-sm);
+      color: var(--color-text-muted);
+      line-height: 1.5;
+    }
+
+    /* ===== Tips Box ===== */
+    .tips-box {
+      background: var(--color-accent-light);
+      border-radius: var(--radius-md);
+      padding: var(--space-lg);
+      margin-top: var(--space-lg);
+    }
+
+    .tips-box h3 {
+      color: var(--color-accent-hover);
+      margin-bottom: var(--space-sm);
+    }
+
+    .tips-box ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .tips-box li {
+      padding: var(--space-xs) 0;
+      font-size: var(--text-md);
+      line-height: 1.6;
+    }
+
+    /* ===== Upgrade Tip Cards ===== */
+    .upgrade-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: var(--space-md);
+      margin-bottom: var(--space-lg);
+    }
+
+    .upgrade-card {
+      background: var(--color-surface);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-sm);
+      padding: var(--space-md) var(--space-lg);
+      border: 1.5px solid var(--color-border);
+      cursor: pointer;
+      transition: box-shadow var(--transition-normal),
+                  transform var(--transition-normal),
+                  border-color var(--transition-normal);
+    }
+
+    .upgrade-card:hover {
+      box-shadow: var(--shadow-md);
+      transform: translateY(-2px);
+      border-color: var(--color-secondary);
+    }
+
+    .upgrade-card.card-selected {
+      border-color: var(--color-secondary);
+      box-shadow: 0 0 0 3px var(--color-secondary-light);
+    }
+
+    .upgrade-card .upgrade-emoji {
+      font-size: 1.5rem;
+      margin-bottom: var(--space-xs);
+    }
+
+    .upgrade-card .upgrade-name {
+      font-size: var(--text-md);
+      font-weight: 650;
+      margin-bottom: 2px;
+    }
+
+    .upgrade-card .upgrade-desc {
+      font-size: var(--text-sm);
+      color: var(--color-text-muted);
+      line-height: 1.4;
+    }
+
+    /* ===== UX Best Practices Box ===== */
+    .ux-box {
+      background: linear-gradient(135deg, var(--color-primary-light) 0%, var(--color-secondary-light) 100%);
+      border-radius: var(--radius-lg);
+      padding: var(--space-xl);
+      margin-bottom: var(--space-lg);
+    }
+
+    .ux-box h3 {
+      margin-bottom: var(--space-md);
+    }
+
+    .ux-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: var(--space-md);
+    }
+
+    .ux-item {
+      background: var(--color-surface);
+      border-radius: var(--radius-md);
+      padding: var(--space-md);
+      text-align: center;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .ux-item .ux-emoji {
+      font-size: 1.8rem;
+      margin-bottom: var(--space-xs);
+    }
+
+    .ux-item .ux-title {
+      font-size: var(--text-sm);
+      font-weight: 700;
+      margin-bottom: 2px;
+    }
+
+    .ux-item .ux-desc {
+      font-size: var(--text-xs);
+      color: var(--color-text-muted);
+      line-height: 1.4;
+    }
+
+    /* ===== Share Section ===== */
+    .share-section {
+      background: var(--color-surface);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--color-border);
+      padding: var(--space-xl);
+      text-align: center;
+    }
+
+    .share-section h3 {
+      margin-bottom: var(--space-sm);
+    }
+
+    .share-section p {
+      color: var(--color-text-muted);
+      margin-bottom: var(--space-lg);
+    }
+
+    .share-actions {
+      display: flex;
+      gap: var(--space-md);
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    /* Responsive */
+    @media (max-width: 767px) {
+      .app-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .upgrade-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .ux-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Lesson Header -->
+  <header class="lesson-header">
+    <div class="lesson-badge">
+      <span class="lesson-number">08</span>
+      <span class="lesson-title">AI App Inventor</span>
+    </div>
+    <a href="/" class="back-link">&larr; Back to all lessons</a>
+  </header>
+
+  <!-- Page Layout -->
+  <div class="lesson-page">
+
+    <!-- Main Content Area -->
+    <main class="lesson-main" id="main-content">
+
+      <!-- ===== Welcome Banner ===== -->
+      <div class="welcome-banner">
+        <h1>&#x1F4F1; AI App Inventor</h1>
+        <div class="welcome-sub">Build apps people actually want to use!</div>
+      </div>
+
+      <!-- ===== Part 1: Starter Apps ===== -->
+      <div class="lesson-section">
+        <h2 class="section-heading">&#x1F680; Part 1: Starter Apps</h2>
+
+        <div class="concept-box">
+          What is the difference between a "toy" program and a real <strong>app</strong>?
+          An app <strong>solves a real problem</strong>. It helps people do something
+          faster, easier, or better. Today you will build a mini-app that someone would
+          actually want to use!
+        </div>
+
+        <h3 style="margin-bottom: var(--space-md);">Choose an app to build:</h3>
+        <div class="app-grid" id="app-grid">
+          <!-- rendered by JS -->
+        </div>
+
+        <div id="playground-1"></div>
+
+        <div class="tips-box">
+          <h3>&#x1F4A1; What makes an app useful?</h3>
+          <ul>
+            <li>&#x2705; <strong>Solves a problem</strong> &mdash; Does something people need</li>
+            <li>&#x2705; <strong>Easy to use</strong> &mdash; Anyone can figure it out quickly</li>
+            <li>&#x2705; <strong>Looks good</strong> &mdash; Clean design makes people trust it</li>
+            <li>&#x2705; <strong>Saves data</strong> &mdash; Your work is not lost when you close it</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- ===== Part 2: Power Features ===== -->
+      <div class="lesson-section">
+        <h2 class="section-heading">&#x26A1; Part 2: Power Features</h2>
+
+        <p style="margin-bottom: var(--space-lg); color: var(--color-text-muted);">
+          Click an upgrade to fill in the modification prompt, then hit "Update" to add it to your app!
+        </p>
+
+        <div class="upgrade-grid" id="upgrade-grid">
+          <!-- rendered by JS -->
+        </div>
+
+        <!-- UI/UX Best Practices -->
+        <div class="ux-box">
+          <h3>&#x1F3A8; UI/UX Best Practices</h3>
+          <div class="ux-grid">
+            <div class="ux-item">
+              <div class="ux-emoji">&#x1F3F7;&#xFE0F;</div>
+              <div class="ux-title">Clear Labels</div>
+              <div class="ux-desc">Every button and input should say what it does</div>
+            </div>
+            <div class="ux-item">
+              <div class="ux-emoji">&#x1F534;</div>
+              <div class="ux-title">Obvious Buttons</div>
+              <div class="ux-desc">Big enough to click, colored to stand out</div>
+            </div>
+            <div class="ux-item">
+              <div class="ux-emoji">&#x2705;</div>
+              <div class="ux-title">Feedback</div>
+              <div class="ux-desc">Show when something worked or failed</div>
+            </div>
+            <div class="ux-item">
+              <div class="ux-emoji">&#x1F3A8;</div>
+              <div class="ux-title">Consistency</div>
+              <div class="ux-desc">Same colors, fonts, and spacing everywhere</div>
+            </div>
+          </div>
+        </div>
+
+        <div id="playground-2"></div>
+      </div>
+
+      <!-- ===== Share & Export ===== -->
+      <div class="lesson-section">
+        <h2 class="section-heading">&#x1F4E4; Share &amp; Export</h2>
+
+        <div class="share-section">
+          <h3>&#x1F389; Time to share!</h3>
+          <p>Download your app and let your classmate try it. Watch how they use it &mdash; do they get confused anywhere?</p>
+          <div class="share-actions" id="export-container">
+            <!-- Export button rendered by JS -->
+          </div>
+        </div>
+      </div>
+
+    </main>
+
+    <!-- Task Sidebar -->
+    <aside class="lesson-sidebar">
+      <div class="task-sidebar" id="task-sidebar"></div>
+    </aside>
+
+  </div>
+
+  <script src="/shared/components.js"></script>
+  <script>
+    // =============================================
+    // App Template Data
+    // =============================================
+    var appTemplates = [
+      {
+        id: 'calculator',
+        emoji: '\uD83E\uDDEE',
+        name: 'Calculator Pro',
+        desc: 'Scientific calculator with history of past calculations',
+        prompt: 'Build a scientific calculator app as a single HTML page. It should have: (1) A large display showing the current expression and result. (2) Number buttons 0-9, decimal point, and operator buttons for +, -, *, /. (3) Scientific function buttons for sin, cos, tan, sqrt, power, and pi. (4) A calculation history panel on the side that shows previous calculations and their results, newest at top. (5) A "Clear History" button. (6) Use a modern dark theme with rounded buttons and smooth hover effects. (7) Keyboard input support so users can type numbers too. Make it look professional with a clean grid layout for buttons.'
+      },
+      {
+        id: 'quiz',
+        emoji: '\u2753',
+        name: 'Quiz Maker',
+        desc: 'Create your OWN quiz that others can take',
+        prompt: 'Build a quiz maker app as a single HTML page with TWO modes. CREATOR MODE: (1) A form to add questions with a question text field, 4 answer option fields, and a dropdown to select the correct answer. (2) An "Add Question" button that saves the question to a list. (3) A preview showing all added questions with ability to delete any question. (4) A "Start Quiz" button that switches to player mode. PLAYER MODE: (1) Shows one question at a time with 4 clickable answer buttons. (2) Highlights green for correct, red for wrong. (3) A progress bar showing question number out of total. (4) A final score screen with percentage and a "Play Again" button. (5) A "Back to Creator" button. Use localStorage to save the quiz. Make it colorful and fun with a clean modern design.'
+      },
+      {
+        id: 'translator',
+        emoji: '\uD83C\uDF0D',
+        name: 'Language Translator',
+        desc: 'Type text, pick a language, see the translation',
+        prompt: 'Build a language translator app as a single HTML page. It should have: (1) A large text input area on the left for the original text. (2) A language selector dropdown on the right with options: Spanish, French, Chinese, Japanese, Korean, German, Italian, Portuguese. (3) A large "Translate" button in the center. (4) A result display area on the right showing the translation (for now use placeholder text that says "Translation would appear here - connect to a translation API for real results" and show a sample translation). (5) A "Swap" button to swap source and target. (6) A translation history list below showing past translations. (7) A "Copy" button next to the result. (8) A "Clear History" button. Use a two-column layout with a clean blue-and-white color scheme. Make it look like Google Translate but simpler.'
+      },
+      {
+        id: 'habits',
+        emoji: '\u2705',
+        name: 'Habit Tracker',
+        desc: 'Daily checklist with streak counter',
+        prompt: 'Build a habit tracker app as a single HTML page. It should have: (1) An "Add Habit" input field and button at the top. (2) Each habit shows as a card with: the habit name, a checkbox for today, a streak counter showing consecutive days completed (use a fire emoji for streaks of 3+), and a delete button. (3) A date display at the top showing today\'s date. (4) A progress ring or bar showing "X of Y habits done today." (5) Use localStorage to save habits and their completion status by date. (6) When all habits are completed for the day, show a celebration message. (7) Use a warm, motivating color scheme with greens and oranges. Make it feel like a wellness app with clean rounded cards and satisfying checkbox animations.'
+      },
+      {
+        id: 'flashcards',
+        emoji: '\uD83D\uDCDA',
+        name: 'Flashcard App',
+        desc: 'Create and study flashcard decks',
+        prompt: 'Build a flashcard study app as a single HTML page with TWO views. DECK MANAGER: (1) An "Add Card" form with Front text and Back text inputs, plus an "Add" button. (2) A list showing all cards in the current deck with the front text visible and a delete button. (3) A card counter showing total cards. (4) A "Study Now" button to switch to study mode. STUDY MODE: (1) A large card that shows the front side. (2) Clicking or pressing Space flips the card to show the back with a smooth 3D flip animation. (3) "Got it" and "Study Again" buttons below the card. (4) Cards marked "Study Again" are repeated. (5) A progress indicator showing cards remaining. (6) A results screen showing how many you got right. (7) Use localStorage to save the deck. Use a clean design with a large centered card and subtle shadow effects.'
+      }
+    ];
+
+    // =============================================
+    // Upgrade Feature Data
+    // =============================================
+    var upgradeFeatures = [
+      {
+        id: 'localstorage',
+        emoji: '\uD83D\uDCBE',
+        name: 'Save Data (localStorage)',
+        desc: 'Remember data between sessions',
+        modPrompt: 'Add localStorage support so all user data is saved and loaded when the page opens again. Save data on every change automatically.'
+      },
+      {
+        id: 'darkmode',
+        emoji: '\uD83C\uDF19',
+        name: 'Dark Mode Toggle',
+        desc: 'Switch between light and dark themes',
+        modPrompt: 'Add a dark mode toggle button in the top-right corner. When clicked, switch all colors to a dark theme (dark backgrounds, light text). Save the preference in localStorage. Use a moon/sun emoji that changes with the mode.'
+      },
+      {
+        id: 'keyboard',
+        emoji: '\u2328\uFE0F',
+        name: 'Keyboard Shortcuts',
+        desc: 'Control the app with keyboard keys',
+        modPrompt: 'Add keyboard shortcuts to the app. Show a small "?" help button that reveals a shortcuts cheat sheet overlay. Add at least 3 useful keyboard shortcuts (like Ctrl+S to save, Escape to close, Enter to submit). Show a brief toast notification when a shortcut is used.'
+      },
+      {
+        id: 'validation',
+        emoji: '\u26A0\uFE0F',
+        name: 'Input Validation',
+        desc: 'Show helpful errors for wrong input',
+        modPrompt: 'Add input validation to all form fields. Show red border and a helpful error message below the field when input is invalid (empty required fields, wrong format, etc). Show green border when input is valid. Prevent form submission until all required fields are valid.'
+      },
+      {
+        id: 'undo',
+        emoji: '\u21A9\uFE0F',
+        name: 'Undo Button',
+        desc: 'Take back the last action',
+        modPrompt: 'Add an undo button that reverses the last action (like deleting an item, adding an item, or clearing data). Keep a stack of up to 10 previous states. Show a brief notification saying "Undone!" when undo is used. Disable the undo button when there is nothing to undo.'
+      },
+      {
+        id: 'export',
+        emoji: '\uD83D\uDCE4',
+        name: 'Print / Export',
+        desc: 'Download or print your data',
+        modPrompt: 'Add an export/download button that saves the app data as a nicely formatted text file. Also add a "Print" button that opens the browser print dialog with a clean print-friendly layout. Add a small export icon next to each button.'
+      },
+      {
+        id: 'tabs',
+        emoji: '\uD83D\uDCCB',
+        name: 'Tabs / Pages',
+        desc: 'Multiple views in one app',
+        modPrompt: 'Add a tab navigation bar at the top with at least 2-3 tabs (e.g., Main, History, Settings). Each tab shows a different view. Use smooth transitions between tabs. Highlight the active tab. Remember which tab was last active.'
+      },
+      {
+        id: 'settings',
+        emoji: '\u2699\uFE0F',
+        name: 'Settings Panel',
+        desc: 'Let users customize the app',
+        modPrompt: 'Add a settings panel accessible from a gear icon in the top corner. Include: font size selector (Small/Medium/Large), color theme picker (3-4 color options), and a reset to defaults button. Save settings in localStorage. Apply settings immediately when changed.'
+      }
+    ];
+
+    // =============================================
+    // Render App Template Cards
+    // =============================================
+    var appGrid = document.getElementById('app-grid');
+    var selectedApp = null;
+    var playground1 = null;
+
+    appTemplates.forEach(function (app) {
+      var card = document.createElement('div');
+      card.className = 'app-card';
+
+      var emoji = document.createElement('div');
+      emoji.className = 'app-emoji';
+      emoji.textContent = app.emoji;
+
+      var name = document.createElement('div');
+      name.className = 'app-name';
+      name.textContent = app.name;
+
+      var desc = document.createElement('div');
+      desc.className = 'app-desc';
+      desc.textContent = app.desc;
+
+      card.appendChild(emoji);
+      card.appendChild(name);
+      card.appendChild(desc);
+
+      card.addEventListener('click', function () {
+        var allCards = appGrid.querySelectorAll('.app-card');
+        allCards.forEach(function (c) { c.classList.remove('card-selected'); });
+        card.classList.add('card-selected');
+        selectedApp = app;
+
+        // Fill the CodePlayground generate prompt
+        if (playground1) {
+          var genInput = document.querySelector('#playground-1 .textarea');
+          if (genInput) {
+            genInput.value = app.prompt;
+            genInput.focus();
+          }
+        }
+
+        taskCards.setComplete('choose-app', true);
+        ActivityLogger.log('app-select', app.name);
+      });
+
+      appGrid.appendChild(card);
+    });
+
+    // =============================================
+    // CodePlayground 1 (Starter Apps)
+    // =============================================
+    var playgroundContainer1 = document.getElementById('playground-1');
+
+    playground1 = window.CodePlayground(playgroundContainer1, {
+      onRun: function (code) {
+        if (code && code.length > 100) {
+          taskCards.setComplete('generate-app', true);
+        }
+      },
+      guidedTasks: [
+        {
+          title: 'Calculator Pro',
+          description: 'A scientific calculator with calculation history',
+          prompt: appTemplates[0].prompt
+        },
+        {
+          title: 'Quiz Maker',
+          description: 'Create quizzes that others can take',
+          prompt: appTemplates[1].prompt
+        },
+        {
+          title: 'Language Translator',
+          description: 'Type text and see translations',
+          prompt: appTemplates[2].prompt
+        },
+        {
+          title: 'Habit Tracker',
+          description: 'Daily habit checklist with streaks',
+          prompt: appTemplates[3].prompt
+        },
+        {
+          title: 'Flashcard App',
+          description: 'Create and study flashcard decks',
+          prompt: appTemplates[4].prompt
+        }
+      ]
+    });
+
+    // =============================================
+    // Render Upgrade Feature Cards
+    // =============================================
+    var upgradeGrid = document.getElementById('upgrade-grid');
+    var appliedUpgrades = {};
+
+    upgradeFeatures.forEach(function (feat) {
+      var card = document.createElement('div');
+      card.className = 'upgrade-card';
+
+      var emoji = document.createElement('div');
+      emoji.className = 'upgrade-emoji';
+      emoji.textContent = feat.emoji;
+
+      var name = document.createElement('div');
+      name.className = 'upgrade-name';
+      name.textContent = feat.name;
+
+      var desc = document.createElement('div');
+      desc.className = 'upgrade-desc';
+      desc.textContent = feat.desc;
+
+      card.appendChild(emoji);
+      card.appendChild(name);
+      card.appendChild(desc);
+
+      card.addEventListener('click', function () {
+        card.classList.toggle('card-selected');
+
+        if (card.classList.contains('card-selected')) {
+          appliedUpgrades[feat.id] = true;
+        } else {
+          delete appliedUpgrades[feat.id];
+        }
+
+        // Fill the second CodePlayground modification prompt
+        var modInput = document.querySelector('#playground-2 .textarea');
+        if (modInput) {
+          modInput.value = feat.modPrompt;
+          modInput.focus();
+        }
+
+        // Check if at least 1 upgrade selected
+        if (Object.keys(appliedUpgrades).length >= 1) {
+          taskCards.setComplete('choose-upgrade', true);
+        }
+
+        ActivityLogger.log('upgrade-select', feat.name);
+      });
+
+      upgradeGrid.appendChild(card);
+    });
+
+    // =============================================
+    // CodePlayground 2 (Power Features)
+    // =============================================
+    var playgroundContainer2 = document.getElementById('playground-2');
+
+    var playground2 = window.CodePlayground(playgroundContainer2, {
+      onRun: function (code) {
+        if (code && code.length > 100) {
+          taskCards.setComplete('apply-upgrade', true);
+        }
+      },
+      guidedTasks: [
+        {
+          title: 'Add Dark Mode',
+          description: 'Toggle between light and dark themes',
+          prompt: upgradeFeatures[1].modPrompt
+        },
+        {
+          title: 'Add localStorage',
+          description: 'Save user data between sessions',
+          prompt: upgradeFeatures[0].modPrompt
+        },
+        {
+          title: 'Add Settings Panel',
+          description: 'Let users customize the app',
+          prompt: upgradeFeatures[7].modPrompt
+        }
+      ]
+    });
+
+    // =============================================
+    // Export Button
+    // =============================================
+    var exportContainer = document.getElementById('export-container');
+
+    window.ExportButton(exportContainer, {
+      label: 'Download My App',
+      filename: 'my-ai-app.html',
+      format: 'html',
+      getData: function () {
+        // Try to get code from playground 2 first (upgraded version), fall back to playground 1
+        var code = playground2.getCode();
+        if (!code || code.length < 50) {
+          code = playground1.getCode();
+        }
+        if (!code || code.length < 50) {
+          return '<!DOCTYPE html><html><body><h1>No app generated yet!</h1><p>Go back and generate an app first.</p></body></html>';
+        }
+
+        taskCards.setComplete('export-share', true);
+        ActivityLogger.log('export', 'Downloaded app HTML');
+        return code;
+      }
+    });
+
+    // =============================================
+    // Task Sidebar
+    // =============================================
+    var taskSidebar = document.getElementById('task-sidebar');
+
+    var taskCards = window.TaskCards(taskSidebar, [
+      { id: 'choose-app',     title: 'Choose an app template',   description: 'Pick one of the 5 app ideas to build' },
+      { id: 'generate-app',   title: 'Generate your app',        description: 'Use the CodePlayground to create your app' },
+      { id: 'choose-upgrade', title: 'Pick a power feature',     description: 'Select at least 1 upgrade to add' },
+      { id: 'apply-upgrade',  title: 'Upgrade your app',         description: 'Apply a power feature using the second playground' },
+      { id: 'export-share',   title: 'Export and share',         description: 'Download your app and let someone try it' }
+    ]);
+  </script>
+
+</body>
+</html>

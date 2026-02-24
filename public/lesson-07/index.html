@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lesson 7: AI Chatbot Creator - AI Creator Lab</title>
+  <link rel="stylesheet" href="/shared/styles.css">
+  <style>
+    /* ===== Section Dividers ===== */
+    .lesson-section {
+      margin-bottom: var(--space-xl);
+      padding-bottom: var(--space-xl);
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .lesson-section:last-child {
+      border-bottom: none;
+    }
+
+    .section-heading {
+      font-size: var(--text-xl);
+      font-weight: 650;
+      margin-bottom: var(--space-lg);
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+    }
+
+    /* ===== Welcome Banner ===== */
+    .welcome-banner {
+      background: linear-gradient(135deg, #4f6ef7 0%, #7c3aed 50%, #ec4899 100%);
+      border-radius: var(--radius-lg);
+      padding: var(--space-xl) var(--space-lg);
+      color: #ffffff;
+      text-align: center;
+      margin-bottom: var(--space-xl);
+    }
+
+    .welcome-banner h1 {
+      font-size: 2rem;
+      font-weight: 800;
+      margin-bottom: var(--space-xs);
+    }
+
+    .welcome-banner p {
+      font-size: var(--text-lg);
+      opacity: 0.9;
+    }
+
+    /* ===== Personality Cards ===== */
+    .personality-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+      gap: var(--space-md);
+    }
+
+    .personality-card {
+      background: var(--color-surface);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-sm);
+      padding: var(--space-lg) var(--space-md);
+      border: 2px solid var(--color-border);
+      text-align: center;
+      cursor: pointer;
+      transition: box-shadow var(--transition-normal),
+                  transform var(--transition-normal),
+                  border-color var(--transition-normal);
+    }
+
+    .personality-card:hover {
+      box-shadow: var(--shadow-md);
+      transform: translateY(-2px);
+    }
+
+    .personality-card.card-selected {
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px var(--color-primary-light);
+    }
+
+    .personality-card .personality-emoji {
+      font-size: 2.2rem;
+      margin-bottom: var(--space-sm);
+    }
+
+    .personality-card .personality-name {
+      font-size: var(--text-md);
+      font-weight: 650;
+      margin-bottom: var(--space-xs);
+    }
+
+    .personality-card .personality-desc {
+      font-size: var(--text-xs);
+      color: var(--color-text-muted);
+      line-height: 1.4;
+    }
+
+    /* ===== Knowledge Checkboxes ===== */
+    .knowledge-checkboxes {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-md);
+      margin-top: var(--space-xs);
+    }
+
+    .knowledge-checkboxes label {
+      display: flex;
+      align-items: center;
+      gap: var(--space-xs);
+      font-weight: 500;
+      cursor: pointer;
+      font-size: var(--text-sm);
+    }
+
+    .knowledge-checkboxes input[type="checkbox"] {
+      accent-color: var(--color-primary);
+      width: 18px;
+      height: 18px;
+    }
+
+    /* ===== Speaking Style Select ===== */
+    .style-row {
+      display: flex;
+      gap: var(--space-md);
+      align-items: flex-end;
+      flex-wrap: wrap;
+    }
+
+    .style-row .form-group {
+      flex: 1;
+      min-width: 200px;
+    }
+
+    /* ===== System Prompt Display ===== */
+    .prompt-display {
+      background: #1e2330;
+      color: #a5f3a5;
+      font-family: 'SF Mono', 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+      font-size: var(--text-sm);
+      border-radius: var(--radius-md);
+      padding: var(--space-lg);
+      line-height: 1.6;
+      min-height: 120px;
+      resize: vertical;
+      width: 100%;
+      border: 2px solid #2d3352;
+    }
+
+    .prompt-display:focus {
+      outline: none;
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px var(--color-primary-light);
+    }
+
+    .prompt-label {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: var(--space-xs);
+    }
+
+    .prompt-label span {
+      font-size: var(--text-xs);
+      color: var(--color-text-muted);
+    }
+
+    /* ===== Button Row ===== */
+    .btn-row {
+      display: flex;
+      gap: var(--space-md);
+      flex-wrap: wrap;
+      margin-top: var(--space-md);
+    }
+
+    /* ===== Design Template Cards ===== */
+    .template-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: var(--space-md);
+      margin-bottom: var(--space-lg);
+    }
+
+    .template-card {
+      background: var(--color-surface);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-sm);
+      padding: var(--space-lg) var(--space-md);
+      border: 2px solid var(--color-border);
+      text-align: center;
+      cursor: pointer;
+      transition: box-shadow var(--transition-normal),
+                  transform var(--transition-normal),
+                  border-color var(--transition-normal);
+    }
+
+    .template-card:hover {
+      box-shadow: var(--shadow-md);
+      transform: translateY(-2px);
+    }
+
+    .template-card.card-selected {
+      border-color: var(--color-secondary);
+      box-shadow: 0 0 0 3px var(--color-secondary-light);
+    }
+
+    .template-card .template-emoji {
+      font-size: 2rem;
+      margin-bottom: var(--space-sm);
+    }
+
+    .template-card .template-name {
+      font-size: var(--text-md);
+      font-weight: 650;
+      margin-bottom: var(--space-xs);
+    }
+
+    .template-card .template-desc {
+      font-size: var(--text-xs);
+      color: var(--color-text-muted);
+    }
+
+    /* ===== Upgrade Tips ===== */
+    .upgrade-tips {
+      background: var(--color-surface);
+      border: 1.5px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: var(--space-lg);
+      margin-top: var(--space-lg);
+    }
+
+    .upgrade-tips h3 {
+      margin-bottom: var(--space-md);
+    }
+
+    .tip-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: var(--space-sm);
+      list-style: none;
+    }
+
+    .tip-list li {
+      padding: var(--space-sm) var(--space-md);
+      background: var(--color-bg);
+      border-radius: var(--radius-sm);
+      font-size: var(--text-sm);
+      cursor: pointer;
+      transition: background var(--transition-fast);
+    }
+
+    .tip-list li:hover {
+      background: var(--color-primary-light);
+    }
+
+    /* ===== Chat Test Area ===== */
+    .chat-test-area {
+      background: var(--color-surface);
+      border: 1.5px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: var(--space-lg);
+      margin-top: var(--space-lg);
+    }
+
+    .chat-test-area h3 {
+      margin-bottom: var(--space-md);
+    }
+
+    /* ===== Share Section ===== */
+    .share-section {
+      background: linear-gradient(135deg, rgba(79,110,247,0.06) 0%, rgba(124,58,237,0.06) 100%);
+      border-radius: var(--radius-lg);
+      padding: var(--space-xl);
+      text-align: center;
+    }
+
+    .share-section h3 {
+      font-size: var(--text-lg);
+      margin-bottom: var(--space-sm);
+    }
+
+    .share-section p {
+      color: var(--color-text-muted);
+      margin-bottom: var(--space-lg);
+    }
+
+    .share-actions {
+      display: flex;
+      gap: var(--space-md);
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    /* ===== Custom character textarea ===== */
+    .custom-personality-area {
+      display: none;
+      margin-top: var(--space-md);
+    }
+
+    .custom-personality-area.visible {
+      display: block;
+    }
+
+    /* ===== Name input highlight ===== */
+    .bot-name-input {
+      font-size: var(--text-lg);
+      font-weight: 600;
+      text-align: center;
+      max-width: 400px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Lesson Header -->
+  <header class="lesson-header">
+    <div class="lesson-badge">
+      <span class="lesson-number">07</span>
+      <span class="lesson-title">AI Chatbot Creator</span>
+    </div>
+    <a href="/" class="back-link">&larr; Back to all lessons</a>
+  </header>
+
+  <!-- Page Layout -->
+  <div class="lesson-page">
+
+    <!-- Main Content Area -->
+    <main class="lesson-main" id="main-content">
+
+      <!-- Welcome Banner -->
+      <div class="welcome-banner">
+        <h1>&#x1F916; AI Chatbot Creator</h1>
+        <p>Create an AI character that talks back!</p>
+      </div>
+
+      <!-- ===== Part 1: Design Your Chatbot ===== -->
+      <div class="lesson-section">
+        <h2 class="section-heading">&#x1F3A8; Part 1: Chatbot Personality Workshop</h2>
+
+        <!-- Bot Name -->
+        <div class="form-group mb-lg">
+          <label for="bot-name">Name your chatbot</label>
+          <input type="text" class="input bot-name-input" id="bot-name" placeholder="e.g. Professor Pixel, Captain Quack, Dr. Giggles...">
+        </div>
+
+        <!-- Personality Type -->
+        <div class="form-group mb-lg">
+          <label>Pick a personality type</label>
+          <div class="personality-grid" id="personality-grid">
+            <!-- rendered by JS -->
+          </div>
+        </div>
+
+        <!-- Custom character area -->
+        <div class="custom-personality-area" id="custom-personality-area">
+          <div class="form-group">
+            <label for="custom-personality">Describe your custom character</label>
+            <textarea class="textarea" id="custom-personality" rows="3" placeholder="e.g. A time-traveling librarian who has visited every century and loves sharing fun facts from the past and future..."></textarea>
+          </div>
+        </div>
+
+        <!-- Knowledge Areas -->
+        <div class="form-group mb-lg">
+          <label>Knowledge areas (pick as many as you want)</label>
+          <div class="knowledge-checkboxes" id="knowledge-checkboxes">
+            <!-- rendered by JS -->
+          </div>
+        </div>
+
+        <!-- Speaking Style -->
+        <div class="style-row mb-lg">
+          <div class="form-group">
+            <label for="speaking-style">Speaking style</label>
+            <select class="select" id="speaking-style">
+              <option value="Formal">Formal</option>
+              <option value="Casual" selected>Casual</option>
+              <option value="Pirate Talk">Pirate Talk</option>
+              <option value="Shakespeare">Shakespeare</option>
+              <option value="Gen-Z Slang">Gen-Z Slang</option>
+              <option value="Robot Speak">Robot Speak</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Generate & Prompt Display -->
+        <div class="btn-row">
+          <button class="btn btn-primary btn-lg" id="generate-prompt-btn">&#x2728; Generate System Prompt</button>
+        </div>
+
+        <div class="form-group mt-lg">
+          <div class="prompt-label">
+            <label for="system-prompt-display">Your system prompt</label>
+            <span>You can edit this!</span>
+          </div>
+          <textarea class="prompt-display" id="system-prompt-display" placeholder="Click 'Generate System Prompt' to see the magic instructions for your chatbot..."></textarea>
+        </div>
+
+        <div class="btn-row">
+          <button class="btn btn-primary btn-lg" id="test-chatbot-btn" disabled>&#x1F4AC; Test My Chatbot</button>
+        </div>
+
+        <!-- Chat Test Area -->
+        <div class="chat-test-area hidden" id="chat-test-area">
+          <h3>&#x1F916; Chat with your bot</h3>
+          <div id="chat-test-container"></div>
+        </div>
+      </div>
+
+      <!-- ===== Part 2: Build a Chatbot App ===== -->
+      <div class="lesson-section">
+        <h2 class="section-heading">&#x1F4BB; Part 2: Build a Chatbot App</h2>
+        <p class="mb-lg" style="color: var(--color-text-muted);">Now design the LOOK of your chatbot's interface. Pick a template to start, then use AI to generate the visual design.</p>
+
+        <!-- Design Template Cards -->
+        <div class="form-group mb-lg">
+          <label>Pick a design template to start</label>
+          <div class="template-grid" id="template-grid">
+            <!-- rendered by JS -->
+          </div>
+        </div>
+
+        <!-- Code Playground -->
+        <div id="code-playground"></div>
+
+        <!-- Upgrade Tips -->
+        <div class="upgrade-tips">
+          <h3>&#x1F680; Upgrade Your Bot</h3>
+          <p style="color: var(--color-text-muted); margin-bottom: var(--space-md); font-size: var(--text-sm);">Click a tip to add it to your prompt!</p>
+          <ul class="tip-list" id="tip-list">
+            <!-- rendered by JS -->
+          </ul>
+        </div>
+      </div>
+
+      <!-- ===== Share & Export ===== -->
+      <div class="lesson-section">
+        <div class="share-section">
+          <h3>&#x1F389; Share Your Chatbot</h3>
+          <p>Export your chatbot app and test each other's creations!</p>
+          <div class="share-actions" id="share-actions">
+            <!-- export button rendered by JS -->
+          </div>
+        </div>
+      </div>
+
+    </main>
+
+    <!-- Task Sidebar -->
+    <aside class="lesson-sidebar">
+      <div class="task-sidebar" id="task-sidebar"></div>
+    </aside>
+
+  </div>
+
+  <script src="/shared/components.js"></script>
+  <script>
+    // =============================================
+    // Personality Types
+    // =============================================
+    var personalityTypes = [
+      { id: 'tutor',        emoji: '\uD83D\uDCDA', name: 'Helpful Tutor',        desc: 'Patient, explains things simply' },
+      { id: 'comedian',     emoji: '\uD83E\uDD23', name: 'Funny Comedian',       desc: 'Tells jokes, uses humor' },
+      { id: 'adventure',    emoji: '\u2694\uFE0F',  name: 'Adventure Guide',      desc: 'Narrates quests, dramatic flair' },
+      { id: 'sage',         emoji: '\uD83E\uDDD9',  name: 'Wise Sage',            desc: 'Philosophical, gives life advice' },
+      { id: 'sports',       emoji: '\uD83C\uDFC8',  name: 'Sports Commentator',   desc: 'Energetic, sports metaphors' },
+      { id: 'custom',       emoji: '\u270F\uFE0F',  name: 'Custom Character',     desc: 'Write your own personality!' }
+    ];
+
+    var personalityDescriptions = {
+      tutor:     'You are a patient and encouraging tutor. You explain things in simple terms, break down complex ideas into easy steps, and always cheer the student on when they get something right.',
+      comedian:  'You are a hilarious comedian. You tell jokes, use puns, and find the funny side of everything. You keep conversations light and entertaining while still being helpful.',
+      adventure: 'You are a dramatic adventure guide. You narrate everything like an epic quest, describe scenes vividly, and make even simple questions feel like an exciting journey.',
+      sage:      'You are a wise sage from ancient times. You speak thoughtfully, share philosophical insights, and give life advice with calm wisdom. You sometimes use short parables or metaphors.',
+      sports:    'You are an energetic sports commentator. You use sports metaphors, get excited about everything, and narrate conversations like a play-by-play broadcast. Every answer is a highlight reel!',
+      custom:    ''
+    };
+
+    var selectedPersonality = null;
+    var personalityGrid = document.getElementById('personality-grid');
+    var customArea = document.getElementById('custom-personality-area');
+    var personalityCardElements = [];
+
+    personalityTypes.forEach(function (p) {
+      var card = document.createElement('div');
+      card.className = 'personality-card';
+
+      var emoji = document.createElement('div');
+      emoji.className = 'personality-emoji';
+      emoji.textContent = p.emoji;
+
+      var name = document.createElement('div');
+      name.className = 'personality-name';
+      name.textContent = p.name;
+
+      var desc = document.createElement('div');
+      desc.className = 'personality-desc';
+      desc.textContent = p.desc;
+
+      card.appendChild(emoji);
+      card.appendChild(name);
+      card.appendChild(desc);
+
+      card.addEventListener('click', function () {
+        personalityCardElements.forEach(function (c) { c.classList.remove('card-selected'); });
+        card.classList.add('card-selected');
+        selectedPersonality = p.id;
+
+        if (p.id === 'custom') {
+          customArea.classList.add('visible');
+        } else {
+          customArea.classList.remove('visible');
+        }
+      });
+
+      personalityCardElements.push(card);
+      personalityGrid.appendChild(card);
+    });
+
+    // =============================================
+    // Knowledge Areas
+    // =============================================
+    var knowledgeAreas = [
+      { id: 'science', emoji: '\uD83E\uDD2F', label: 'Science' },
+      { id: 'history', emoji: '\uD83C\uDFDB\uFE0F', label: 'History' },
+      { id: 'math',    emoji: '\uD83D\uDCCA', label: 'Math' },
+      { id: 'animals', emoji: '\uD83D\uDC3E', label: 'Animals' },
+      { id: 'space',   emoji: '\uD83D\uDE80', label: 'Space' },
+      { id: 'food',    emoji: '\uD83C\uDF55', label: 'Food' },
+      { id: 'music',   emoji: '\uD83C\uDFB5', label: 'Music' },
+      { id: 'movies',  emoji: '\uD83C\uDFAC', label: 'Movies' },
+      { id: 'gaming',  emoji: '\uD83C\uDFAE', label: 'Gaming' }
+    ];
+
+    var knowledgeContainer = document.getElementById('knowledge-checkboxes');
+
+    knowledgeAreas.forEach(function (area) {
+      var label = document.createElement('label');
+      var checkbox = document.createElement('input');
+      checkbox.type = 'checkbox';
+      checkbox.value = area.id;
+      checkbox.id = 'knowledge-' + area.id;
+      label.appendChild(checkbox);
+      label.appendChild(document.createTextNode(' ' + area.emoji + ' ' + area.label));
+      knowledgeContainer.appendChild(label);
+    });
+
+    // =============================================
+    // Generate System Prompt
+    // =============================================
+    var generatePromptBtn = document.getElementById('generate-prompt-btn');
+    var systemPromptDisplay = document.getElementById('system-prompt-display');
+    var testChatbotBtn = document.getElementById('test-chatbot-btn');
+    var botNameInput = document.getElementById('bot-name');
+    var speakingStyleSelect = document.getElementById('speaking-style');
+    var customPersonalityInput = document.getElementById('custom-personality');
+
+    generatePromptBtn.addEventListener('click', function () {
+      var botName = botNameInput.value.trim() || 'Chatbot';
+      var personality = selectedPersonality;
+      var style = speakingStyleSelect.value;
+
+      // Gather selected knowledge areas
+      var selectedKnowledge = [];
+      knowledgeAreas.forEach(function (area) {
+        var cb = document.getElementById('knowledge-' + area.id);
+        if (cb && cb.checked) {
+          selectedKnowledge.push(area.label);
+        }
+      });
+
+      // Build system prompt
+      var promptParts = [];
+      promptParts.push('You are ' + botName + '.');
+
+      // Personality
+      if (personality === 'custom') {
+        var customDesc = customPersonalityInput.value.trim();
+        if (customDesc) {
+          promptParts.push(customDesc);
+        } else {
+          promptParts.push('You have a unique and interesting personality.');
+        }
+      } else if (personality && personalityDescriptions[personality]) {
+        promptParts.push(personalityDescriptions[personality]);
+      } else {
+        promptParts.push('You are friendly and helpful.');
+      }
+
+      // Knowledge areas
+      if (selectedKnowledge.length > 0) {
+        promptParts.push('You are especially knowledgeable about: ' + selectedKnowledge.join(', ') + '. You love weaving these topics into your conversations.');
+      }
+
+      // Speaking style
+      var styleInstructions = {
+        'Formal': 'You speak in a formal, polished manner with proper grammar and vocabulary.',
+        'Casual': 'You speak casually and naturally, like talking to a friend.',
+        'Pirate Talk': 'You speak like a pirate! Use "arr", "matey", "shiver me timbers", and other pirate expressions.',
+        'Shakespeare': 'You speak in the style of Shakespeare, using "thee", "thou", "hath", "forsooth", and poetic language.',
+        'Gen-Z Slang': 'You speak using Gen-Z slang like "no cap", "fr fr", "slay", "based", "lowkey", "bestie", etc.',
+        'Robot Speak': 'You speak like a robot. Use phrases like "PROCESSING...", "AFFIRMATIVE", "DOES NOT COMPUTE", and add technical/mechanical language.'
+      };
+
+      if (styleInstructions[style]) {
+        promptParts.push(styleInstructions[style]);
+      }
+
+      // General rules
+      promptParts.push('Keep your responses concise and fun. You are talking to middle school students (ages 11-13). Never say anything inappropriate. Stay in character at all times!');
+
+      var fullPrompt = promptParts.join('\n\n');
+      systemPromptDisplay.value = fullPrompt;
+      testChatbotBtn.disabled = false;
+
+      taskCards.setComplete('design-personality', true);
+      ActivityLogger.log('generate-prompt', 'Generated prompt for: ' + botName + ' (' + (personality || 'none') + ')', fullPrompt.slice(0, 300));
+    });
+
+    // =============================================
+    // Test My Chatbot
+    // =============================================
+    var chatTestArea = document.getElementById('chat-test-area');
+    var chatTestContainer = document.getElementById('chat-test-container');
+    var currentChatWidget = null;
+
+    testChatbotBtn.addEventListener('click', function () {
+      var prompt = systemPromptDisplay.value.trim();
+      if (!prompt) return;
+
+      // Clear previous chat
+      while (chatTestContainer.firstChild) {
+        chatTestContainer.removeChild(chatTestContainer.firstChild);
+      }
+
+      chatTestArea.classList.remove('hidden');
+
+      var botName = botNameInput.value.trim() || 'Bot';
+
+      currentChatWidget = window.ChatWidget(chatTestContainer, {
+        systemPrompt: prompt,
+        placeholder: 'Say something to ' + botName + '...',
+        avatarAI: botName.charAt(0).toUpperCase(),
+        avatarUser: 'You'
+      });
+
+      taskCards.setComplete('test-chatbot', true);
+
+      // Scroll to chat area
+      chatTestArea.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+
+    // =============================================
+    // Part 2: Design Templates
+    // =============================================
+    var designTemplates = [
+      { id: 'messenger', emoji: '\uD83D\uDCAC', name: 'Messenger Style', desc: 'Chat bubbles, like iMessage' },
+      { id: 'terminal',  emoji: '\uD83D\uDDA5\uFE0F', name: 'Terminal Style',   desc: 'Green text on black, hacker look' },
+      { id: 'kawaii',    emoji: '\uD83C\uDF38', name: 'Cute Kawaii',      desc: 'Pastel colors, rounded, emoji-heavy' },
+      { id: 'pro',       emoji: '\uD83D\uDCBC', name: 'Professional',     desc: 'Clean, business-like assistant' }
+    ];
+
+    var templateDescriptions = {
+      messenger: 'A messenger-style chat interface with rounded chat bubbles. User messages are blue on the right side, bot messages are light gray on the left side. Include a header bar with the bot name and avatar. Modern and clean like iMessage.',
+      terminal:  'A terminal/hacker style chat interface with a black background and green monospace text. Messages appear one after another like a command line. Include a blinking cursor. Dark theme with a retro computer feel.',
+      kawaii:    'A cute kawaii-style chat interface with pastel pink and purple colors. Very rounded corners, soft shadows, and lots of emoji. The bot avatar should be a cute face. Bubbly, playful, and adorable design.',
+      pro:       'A professional assistant interface with a clean white design, subtle shadows, and a blue accent color. Include a header with the assistant name and a clean sidebar. Business-like and sophisticated.'
+    };
+
+    var selectedTemplate = null;
+    var templateGrid = document.getElementById('template-grid');
+    var templateCardElements = [];
+
+    designTemplates.forEach(function (t) {
+      var card = document.createElement('div');
+      card.className = 'template-card';
+
+      var emoji = document.createElement('div');
+      emoji.className = 'template-emoji';
+      emoji.textContent = t.emoji;
+
+      var name = document.createElement('div');
+      name.className = 'template-name';
+      name.textContent = t.name;
+
+      var desc = document.createElement('div');
+      desc.className = 'template-desc';
+      desc.textContent = t.desc;
+
+      card.appendChild(emoji);
+      card.appendChild(name);
+      card.appendChild(desc);
+
+      card.addEventListener('click', function () {
+        templateCardElements.forEach(function (c) { c.classList.remove('card-selected'); });
+        card.classList.add('card-selected');
+        selectedTemplate = t.id;
+
+        // Pre-fill the playground prompt
+        var botName = botNameInput.value.trim() || 'My Chatbot';
+        var basePrompt = 'Build a chatbot interface called "' + botName + '". ' + templateDescriptions[t.id];
+        basePrompt += ' Include a text input at the bottom and a send button. Add a welcome message from the bot saying "Hi! I\'m ' + botName + '. Ask me anything!" When the user types a message and clicks send, show their message in the chat, then show a simulated bot reply like "That\'s a great question! Let me think about it..." after a short delay. Make the interface fill the whole page.';
+
+        // Find the playground textarea and fill it
+        var playgroundTextarea = document.querySelector('#code-playground textarea');
+        if (playgroundTextarea) {
+          playgroundTextarea.value = basePrompt;
+        }
+      });
+
+      templateCardElements.push(card);
+      templateGrid.appendChild(card);
+    });
+
+    // =============================================
+    // Code Playground
+    // =============================================
+    var codeContainer = document.getElementById('code-playground');
+
+    var playground = window.CodePlayground(codeContainer, {
+      onRun: function (code) {
+        taskCards.setComplete('build-interface', true);
+      }
+    });
+
+    // =============================================
+    // Upgrade Tips
+    // =============================================
+    var upgradeTips = [
+      { emoji: '\uD83D\uDE00', text: 'Add an avatar/emoji for the bot', prompt: 'Add a large emoji avatar for the bot at the top of the chat, and a smaller emoji next to each bot message.' },
+      { emoji: '\u23F3',       text: 'Add typing indicator animation', prompt: 'Add a "typing..." animation with bouncing dots that appears for 1 second before each bot reply.' },
+      { emoji: '\u26A1',       text: 'Add quick-reply buttons', prompt: 'Add 3-4 quick reply buttons below the chat (like "Tell me a joke", "Fun fact", "Help me study", "Surprise me") that fill in the message input when clicked.' },
+      { emoji: '\uD83D\uDC4B', text: 'Add a welcome message', prompt: 'Add an animated welcome message that appears when the page loads, with the bot introducing itself.' },
+      { emoji: '\uD83D\uDD52', text: 'Add message timestamps', prompt: 'Add timestamps showing the current time (like "2:34 PM") below each message in small gray text.' },
+      { emoji: '\uD83C\uDFA8', text: 'Change the theme/colors', prompt: 'Change the color scheme to use a gradient background and more vibrant colors. Make it look more unique and eye-catching.' }
+    ];
+
+    var tipList = document.getElementById('tip-list');
+
+    upgradeTips.forEach(function (tip) {
+      var li = document.createElement('li');
+      li.textContent = tip.emoji + ' ' + tip.text;
+
+      li.addEventListener('click', function () {
+        // Find the modification textarea in the playground and fill it
+        var modTextareas = document.querySelectorAll('#code-playground textarea');
+        // The modification textarea is typically the second one
+        if (modTextareas.length >= 2) {
+          modTextareas[1].value = tip.prompt;
+          modTextareas[1].focus();
+        }
+        taskCards.setComplete('upgrade-bot', true);
+      });
+
+      tipList.appendChild(li);
+    });
+
+    // =============================================
+    // Share & Export
+    // =============================================
+    var shareActions = document.getElementById('share-actions');
+
+    window.ExportButton(shareActions, {
+      label: 'Download My Chatbot App',
+      filename: 'my-chatbot-app.html',
+      format: 'html',
+      getData: function () {
+        var code = playground.getCode();
+        if (code) {
+          taskCards.setComplete('share-export', true);
+          return code;
+        }
+        return '<!DOCTYPE html><html><body><p>Generate your chatbot app first!</p></body></html>';
+      }
+    });
+
+    // =============================================
+    // Task Sidebar
+    // =============================================
+    var taskSidebar = document.getElementById('task-sidebar');
+
+    var taskCards = window.TaskCards(taskSidebar, [
+      { id: 'design-personality', title: 'Design your chatbot personality', description: 'Pick a name, personality, knowledge, and style' },
+      { id: 'test-chatbot',       title: 'Test your chatbot',              description: 'Generate a system prompt and chat with your bot' },
+      { id: 'build-interface',    title: 'Build the chatbot interface',    description: 'Pick a template and generate the UI' },
+      { id: 'upgrade-bot',        title: 'Upgrade your bot',               description: 'Add at least one upgrade from the tips' },
+      { id: 'share-export',       title: 'Export and share',               description: 'Download your chatbot app' }
+    ]);
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lesson 10: AI Toolbox — Combine Everything! - AI Creator Lab</title>
+  <link rel="stylesheet" href="/shared/styles.css">
+  <style>
+    /* ===== Section Dividers ===== */
+    .lesson-section {
+      margin-bottom: var(--space-xl);
+      padding-bottom: var(--space-xl);
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .lesson-section:last-child {
+      border-bottom: none;
+    }
+
+    .section-heading {
+      font-size: var(--text-xl);
+      font-weight: 650;
+      margin-bottom: var(--space-lg);
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+    }
+
+    /* ===== Mega-Project Cards ===== */
+    .mega-project-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: var(--space-md);
+    }
+
+    .mega-card {
+      background: var(--color-surface);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
+      padding: var(--space-lg);
+      border: 2px solid var(--color-border);
+      cursor: pointer;
+      transition: box-shadow var(--transition-normal),
+                  transform var(--transition-normal),
+                  border-color var(--transition-normal);
+    }
+
+    .mega-card:hover {
+      box-shadow: var(--shadow-md);
+      transform: translateY(-3px);
+    }
+
+    .mega-card.card-selected {
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px var(--color-primary-light);
+    }
+
+    .mega-card .mega-emoji {
+      font-size: 2.5rem;
+      margin-bottom: var(--space-sm);
+    }
+
+    .mega-card .mega-name {
+      font-size: var(--text-lg);
+      font-weight: 700;
+      margin-bottom: var(--space-xs);
+    }
+
+    .mega-card .mega-desc {
+      font-size: var(--text-sm);
+      color: var(--color-text-muted);
+      line-height: 1.5;
+      margin-bottom: var(--space-sm);
+    }
+
+    .mega-card .mega-tools {
+      display: flex;
+      gap: var(--space-xs);
+      flex-wrap: wrap;
+    }
+
+    .mega-card .tool-tag {
+      font-size: var(--text-xs);
+      font-weight: 600;
+      padding: 0.15em 0.5em;
+      border-radius: var(--radius-full);
+      background: var(--color-primary-light);
+      color: var(--color-primary);
+    }
+
+    /* ===== Workflow Guide ===== */
+    .workflow-guide {
+      background: var(--color-surface);
+      border: 1.5px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: var(--space-lg);
+      margin-bottom: var(--space-lg);
+    }
+
+    .workflow-guide h3 {
+      margin-bottom: var(--space-md);
+    }
+
+    .workflow-steps {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-sm);
+    }
+
+    .workflow-step {
+      display: flex;
+      align-items: center;
+      gap: var(--space-md);
+      padding: var(--space-sm) var(--space-md);
+      background: var(--color-bg);
+      border-radius: var(--radius-md);
+      transition: background var(--transition-fast);
+    }
+
+    .workflow-step:hover {
+      background: var(--color-primary-light);
+    }
+
+    .workflow-step .step-number {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--color-primary);
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: var(--text-sm);
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .workflow-step .step-content {
+      flex: 1;
+    }
+
+    .workflow-step .step-title {
+      font-size: var(--text-md);
+      font-weight: 600;
+    }
+
+    .workflow-step .step-hint {
+      font-size: var(--text-xs);
+      color: var(--color-text-muted);
+    }
+
+    .workflow-step .step-tab {
+      font-size: var(--text-xs);
+      font-weight: 600;
+      padding: 0.15em 0.5em;
+      border-radius: var(--radius-full);
+      background: var(--color-secondary-light);
+      color: var(--color-secondary);
+      white-space: nowrap;
+    }
+
+    /* ===== Build Tabs ===== */
+    .build-tabs {
+      display: flex;
+      gap: var(--space-xs);
+      margin-bottom: var(--space-lg);
+      padding-bottom: var(--space-md);
+      border-bottom: 2px solid var(--color-border);
+      flex-wrap: wrap;
+    }
+
+    .build-tab-btn {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      padding: 0.5em 1.2em;
+      font-size: var(--text-sm);
+      font-weight: 600;
+      font-family: inherit;
+      border: 2px solid var(--color-border);
+      background: var(--color-surface);
+      color: var(--color-text-muted);
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      transition: all 0.15s ease;
+      white-space: nowrap;
+    }
+
+    .build-tab-btn:hover {
+      border-color: var(--color-primary);
+      color: var(--color-text);
+    }
+
+    .build-tab-btn.active {
+      background: var(--color-primary);
+      border-color: var(--color-primary);
+      color: #ffffff;
+    }
+
+    .build-panel {
+      display: none;
+    }
+
+    .build-panel.active {
+      display: block;
+    }
+
+    /* ===== Project Notes ===== */
+    .project-notes-area {
+      margin-top: var(--space-lg);
+      padding-top: var(--space-lg);
+      border-top: 1px solid var(--color-border);
+    }
+
+    .project-notes-area label {
+      display: block;
+      font-size: var(--text-sm);
+      font-weight: 600;
+      margin-bottom: var(--space-xs);
+    }
+
+    .notes-saved-msg {
+      display: none;
+      color: var(--color-success);
+      font-size: var(--text-xs);
+      font-weight: 600;
+      margin-top: var(--space-xs);
+    }
+
+    /* ===== Collection empty state ===== */
+    .collection-empty {
+      text-align: center;
+      padding: var(--space-xl);
+      color: var(--color-text-muted);
+      font-size: var(--text-sm);
+    }
+
+    /* ===== Share Section ===== */
+    .share-section {
+      background: linear-gradient(135deg, var(--color-primary-light) 0%, var(--color-secondary-light) 100%);
+      border-radius: var(--radius-lg);
+      padding: var(--space-xl);
+      text-align: center;
+    }
+
+    .share-section h3 {
+      font-size: var(--text-xl);
+      margin-bottom: var(--space-sm);
+    }
+
+    .share-section p {
+      color: var(--color-text-muted);
+      margin-bottom: var(--space-lg);
+      line-height: 1.6;
+    }
+
+    .share-actions {
+      display: flex;
+      gap: var(--space-md);
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    /* ===== Tips banner ===== */
+    .tips-banner {
+      background: var(--color-accent-light);
+      border-radius: var(--radius-md);
+      padding: var(--space-md) var(--space-lg);
+      margin-bottom: var(--space-lg);
+      font-size: var(--text-sm);
+      line-height: 1.6;
+    }
+
+    .tips-banner strong {
+      color: var(--color-accent-hover);
+    }
+
+    .tips-banner ul {
+      margin-top: var(--space-sm);
+      padding-left: var(--space-lg);
+    }
+
+    .tips-banner li {
+      margin-bottom: var(--space-xs);
+    }
+
+    /* ===== Responsive ===== */
+    @media (max-width: 767px) {
+      .mega-project-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .build-tabs {
+        flex-direction: column;
+      }
+
+      .workflow-step {
+        flex-wrap: wrap;
+      }
+
+      .share-actions {
+        flex-direction: column;
+        align-items: center;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Lesson Header -->
+  <header class="lesson-header">
+    <div class="lesson-badge">
+      <span class="lesson-number">10</span>
+      <span class="lesson-title">AI Toolbox &mdash; Combine Everything!</span>
+    </div>
+    <a href="/" class="back-link">&larr; Back to all lessons</a>
+  </header>
+
+  <!-- Page Layout -->
+  <div class="lesson-page">
+
+    <!-- Main Content Area -->
+    <main class="lesson-main" id="main-content">
+
+      <!-- ===== Section 1: Choose Your Mega-Project ===== -->
+      <div class="lesson-section">
+        <h2 class="section-heading">&#x1F3AF; Choose Your Mega-Project</h2>
+        <p style="color: var(--color-text-muted); margin-bottom: var(--space-lg);">
+          Pick one project to build today using <strong>all three AI tools</strong> &mdash; Text AI, Image AI, and Code AI.
+        </p>
+        <div class="mega-project-grid" id="mega-project-grid">
+          <!-- rendered by JS -->
+        </div>
+      </div>
+
+      <!-- ===== Section 2: Workflow Guide ===== -->
+      <div class="lesson-section" id="workflow-section" style="display: none;">
+        <div class="workflow-guide">
+          <h3>&#x1F4CB; Workflow Guide</h3>
+          <p style="font-size: var(--text-sm); color: var(--color-text-muted); margin-bottom: var(--space-md);">
+            Follow these steps to build your project. You can jump between tabs at any time!
+          </p>
+          <div class="workflow-steps">
+            <div class="workflow-step">
+              <div class="step-number">1</div>
+              <div class="step-content">
+                <div class="step-title">Plan your project</div>
+                <div class="step-hint">Write down what content you need: text, images, and layout</div>
+              </div>
+              <span class="step-tab">Notes</span>
+            </div>
+            <div class="workflow-step">
+              <div class="step-number">2</div>
+              <div class="step-content">
+                <div class="step-title">Write your text content</div>
+                <div class="step-hint">Use the chat to brainstorm and write articles, descriptions, or copy</div>
+              </div>
+              <span class="step-tab">Text AI</span>
+            </div>
+            <div class="workflow-step">
+              <div class="step-number">3</div>
+              <div class="step-content">
+                <div class="step-title">Generate your images</div>
+                <div class="step-hint">Create illustrations, photos, or artwork for your project</div>
+              </div>
+              <span class="step-tab">Image AI</span>
+            </div>
+            <div class="workflow-step">
+              <div class="step-number">4</div>
+              <div class="step-content">
+                <div class="step-title">Build your layout with code</div>
+                <div class="step-hint">Combine your text and image URLs into a web page</div>
+              </div>
+              <span class="step-tab">Code AI</span>
+            </div>
+            <div class="workflow-step">
+              <div class="step-number">5</div>
+              <div class="step-content">
+                <div class="step-title">Iterate and polish</div>
+                <div class="step-hint">Go back to any tool to improve, refine, and finish your project</div>
+              </div>
+              <span class="step-tab">All tabs</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="tips-banner">
+          <strong>&#x1F4A1; Pro Tips for Combining AI Tools:</strong>
+          <ul>
+            <li><strong>Text &rarr; Code:</strong> Copy text from the chat and paste it into your Code AI prompt (e.g., "Make a page with this article: ...")</li>
+            <li><strong>Image &rarr; Code:</strong> Right-click any generated image, copy the URL, and reference it in your code prompt</li>
+            <li><strong>Work step by step:</strong> Get your text right first, then images, then assemble everything in code</li>
+            <li><strong>Iterate!</strong> You can always go back to any tab and generate more content</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- ===== Section 3: Build Workspace ===== -->
+      <div class="lesson-section" id="build-section" style="display: none;">
+        <h2 class="section-heading">&#x1F528; Build Workspace</h2>
+
+        <nav class="build-tabs" id="build-tabs">
+          <button class="build-tab-btn active" data-tab="tab-text">&#x1F4DD; Text AI</button>
+          <button class="build-tab-btn" data-tab="tab-image">&#x1F3A8; Image AI</button>
+          <button class="build-tab-btn" data-tab="tab-code">&#x1F4BB; Code AI</button>
+          <button class="build-tab-btn" data-tab="tab-collection">&#x1F5BC;&#xFE0F; My Collection</button>
+        </nav>
+
+        <!-- Tab 1: Text AI -->
+        <div class="build-panel active" id="tab-text">
+          <div id="text-chat"></div>
+        </div>
+
+        <!-- Tab 2: Image AI -->
+        <div class="build-panel" id="tab-image">
+          <div id="image-gen"></div>
+        </div>
+
+        <!-- Tab 3: Code AI -->
+        <div class="build-panel" id="tab-code">
+          <div id="code-playground"></div>
+        </div>
+
+        <!-- Tab 4: My Collection -->
+        <div class="build-panel" id="tab-collection">
+          <div id="collection-placeholder" class="collection-empty">
+            Images you generate will appear here. Switch to the <strong>Image AI</strong> tab to create some!
+          </div>
+          <div id="my-gallery"></div>
+        </div>
+
+        <!-- Project Notes -->
+        <div class="project-notes-area">
+          <label for="project-notes">&#x1F4D3; Project Notes (auto-saves)</label>
+          <textarea class="textarea" id="project-notes" rows="4" placeholder="Keep track of ideas, prompts that worked, image URLs to use in code, things to try next..."></textarea>
+          <div class="notes-saved-msg" id="notes-saved-msg">&#x2705; Saved</div>
+        </div>
+      </div>
+
+      <!-- ===== Section 4: Share & Export ===== -->
+      <div class="lesson-section" id="share-section" style="display: none;">
+        <div class="share-section">
+          <h3>&#x1F680; Share Your Creation</h3>
+          <p>
+            You built a complete project using Text AI, Image AI, and Code AI!<br>
+            Export your final code project as an HTML file to save and share.
+          </p>
+          <div class="share-actions" id="share-actions">
+            <!-- Export button rendered by JS -->
+          </div>
+        </div>
+      </div>
+
+    </main>
+
+    <!-- Task Sidebar -->
+    <aside class="lesson-sidebar">
+      <div class="task-sidebar" id="task-sidebar"></div>
+    </aside>
+
+  </div>
+
+  <script src="/shared/components.js"></script>
+  <script>
+    // =============================================
+    // LocalStorage Keys
+    // =============================================
+    var STORAGE_PREFIX = 'lesson10_';
+    function storageKey(name) { return STORAGE_PREFIX + name; }
+
+    function saveToStorage(key, value) {
+      try { localStorage.setItem(storageKey(key), JSON.stringify(value)); } catch (e) { /* ignore */ }
+    }
+
+    function loadFromStorage(key, fallback) {
+      try {
+        var v = localStorage.getItem(storageKey(key));
+        return v ? JSON.parse(v) : fallback;
+      } catch (e) { return fallback; }
+    }
+
+    // =============================================
+    // Mega-Project Types
+    // =============================================
+    var megaProjects = [
+      {
+        id: 'magazine',
+        emoji: '\uD83D\uDCF0',
+        name: 'AI Magazine',
+        desc: 'Write articles with ChatWidget, generate a cover and illustrations with Image AI, then build the magazine layout with Code AI.',
+        tools: ['Text AI', 'Image AI', 'Code AI'],
+        systemHint: 'You are helping a student create a magazine. Help them write articles, headlines, captions, and editorial content. Be creative and fun. Keep responses concise.'
+      },
+      {
+        id: 'product',
+        emoji: '\uD83D\uDE80',
+        name: 'AI Product Pitch',
+        desc: 'Invent a product, write marketing copy with Text AI, design the product image, and build a landing page with Code AI.',
+        tools: ['Text AI', 'Image AI', 'Code AI'],
+        systemHint: 'You are helping a student create a product pitch. Help them brainstorm product ideas, write catchy slogans, product descriptions, and marketing copy. Be enthusiastic and creative.'
+      },
+      {
+        id: 'tutorial',
+        emoji: '\uD83D\uDCDA',
+        name: 'AI Tutorial',
+        desc: 'Write a how-to guide on any topic with Text AI, generate step illustrations, and build an interactive tutorial page.',
+        tools: ['Text AI', 'Image AI', 'Code AI'],
+        systemHint: 'You are helping a student write a tutorial or how-to guide. Help them organize steps clearly, write explanations, and create engaging instructional content. Keep it simple and fun.'
+      },
+      {
+        id: 'travel',
+        emoji: '\u2708\uFE0F',
+        name: 'AI Travel Guide',
+        desc: 'Write about a real or imaginary destination, generate travel photos, and build a travel website with Code AI.',
+        tools: ['Text AI', 'Image AI', 'Code AI'],
+        systemHint: 'You are helping a student create a travel guide. Help them write descriptions of places, food, activities, and culture. Be vivid and descriptive. The destination can be real or imaginary.'
+      }
+    ];
+
+    // =============================================
+    // Section 1: Choose Your Mega-Project
+    // =============================================
+    var megaGrid = document.getElementById('mega-project-grid');
+    var selectedProject = loadFromStorage('selectedProject', null);
+
+    megaProjects.forEach(function (proj) {
+      var card = document.createElement('div');
+      card.className = 'mega-card' + (selectedProject === proj.id ? ' card-selected' : '');
+
+      var emojiEl = document.createElement('div');
+      emojiEl.className = 'mega-emoji';
+      emojiEl.textContent = proj.emoji;
+
+      var nameEl = document.createElement('div');
+      nameEl.className = 'mega-name';
+      nameEl.textContent = proj.name;
+
+      var descEl = document.createElement('div');
+      descEl.className = 'mega-desc';
+      descEl.textContent = proj.desc;
+
+      var toolsRow = document.createElement('div');
+      toolsRow.className = 'mega-tools';
+      proj.tools.forEach(function (t) {
+        var tag = document.createElement('span');
+        tag.className = 'tool-tag';
+        tag.textContent = t;
+        toolsRow.appendChild(tag);
+      });
+
+      card.appendChild(emojiEl);
+      card.appendChild(nameEl);
+      card.appendChild(descEl);
+      card.appendChild(toolsRow);
+
+      card.addEventListener('click', function () {
+        var allCards = megaGrid.querySelectorAll('.mega-card');
+        allCards.forEach(function (c) { c.classList.remove('card-selected'); });
+        card.classList.add('card-selected');
+        selectedProject = proj.id;
+        saveToStorage('selectedProject', proj.id);
+        taskCards.setComplete('choose-project', true);
+        showBuildSections();
+        updateChatSystemPrompt(proj.systemHint);
+        ActivityLogger.log('project-select', proj.name);
+      });
+
+      megaGrid.appendChild(card);
+    });
+
+    // =============================================
+    // Show/Hide Build Sections
+    // =============================================
+    function showBuildSections() {
+      document.getElementById('workflow-section').style.display = '';
+      document.getElementById('build-section').style.display = '';
+      document.getElementById('share-section').style.display = '';
+    }
+
+    if (selectedProject) {
+      showBuildSections();
+    }
+
+    // =============================================
+    // Build Workspace: Tab Navigation
+    // =============================================
+    var tabBtns = document.querySelectorAll('.build-tab-btn');
+    var tabPanels = document.querySelectorAll('.build-panel');
+
+    tabBtns.forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var target = btn.getAttribute('data-tab');
+
+        tabBtns.forEach(function (b) { b.classList.remove('active'); });
+        btn.classList.add('active');
+
+        tabPanels.forEach(function (p) { p.classList.remove('active'); });
+        document.getElementById(target).classList.add('active');
+      });
+    });
+
+    // =============================================
+    // Tab 1: Text AI (ChatWidget)
+    // =============================================
+    var textChatContainer = document.getElementById('text-chat');
+    var currentSystemPrompt = 'You are a creative assistant helping a student (age 12-13) build a creative project using AI tools. Help them brainstorm, write text content, and plan their project. Be encouraging, specific, and concise. Keep responses to 2-4 paragraphs.';
+
+    // Build with initial or project-specific prompt
+    if (selectedProject) {
+      var proj = megaProjects.find(function (p) { return p.id === selectedProject; });
+      if (proj) currentSystemPrompt = proj.systemHint;
+    }
+
+    var chatWidget = window.ChatWidget(textChatContainer, {
+      systemPrompt: currentSystemPrompt,
+      placeholder: 'Ask for help with your project... (e.g., "Write a short article about space travel for my magazine")'
+    });
+
+    function updateChatSystemPrompt(prompt) {
+      // The ChatWidget uses the system prompt per-request,
+      // so we rebuild for the new project context.
+      // Note: chat history is kept for the session.
+      currentSystemPrompt = prompt;
+    }
+
+    // =============================================
+    // Tab 2: Image AI (ImageGenerator)
+    // =============================================
+    var imageGenContainer = document.getElementById('image-gen');
+    var galleryContainer = document.getElementById('my-gallery');
+    var collectionPlaceholder = document.getElementById('collection-placeholder');
+
+    // Create shared gallery for the Collection tab
+    var myGallery = window.Gallery(galleryContainer, { columns: 3 });
+
+    var imageGen = window.ImageGenerator(imageGenContainer, {
+      showGallery: true,
+      onGenerate: function (data) {
+        // Also add to the collection gallery
+        myGallery.addImage(data.url, data.prompt);
+        collectionPlaceholder.style.display = 'none';
+        taskCards.setComplete('use-image', true);
+      }
+    });
+
+    // =============================================
+    // Tab 3: Code AI (CodePlayground)
+    // =============================================
+    var codeContainer = document.getElementById('code-playground');
+
+    var codePlayground = window.CodePlayground(codeContainer, {
+      onRun: function () {
+        taskCards.setComplete('use-code', true);
+      }
+    });
+
+    // =============================================
+    // Project Notes — Auto-save
+    // =============================================
+    var projectNotes = document.getElementById('project-notes');
+    var notesSavedMsg = document.getElementById('notes-saved-msg');
+    var notesSaveTimer = null;
+
+    // Load
+    projectNotes.value = loadFromStorage('notes', '') || '';
+
+    projectNotes.addEventListener('input', function () {
+      clearTimeout(notesSaveTimer);
+      notesSaveTimer = setTimeout(function () {
+        saveToStorage('notes', projectNotes.value);
+        notesSavedMsg.style.display = 'block';
+        setTimeout(function () { notesSavedMsg.style.display = 'none'; }, 1500);
+      }, 800);
+    });
+
+    // =============================================
+    // Share & Export
+    // =============================================
+    var shareActionsContainer = document.getElementById('share-actions');
+
+    window.ExportButton(shareActionsContainer, {
+      label: 'Download My Project',
+      filename: 'my-ai-toolbox-project.html',
+      format: 'html',
+      getData: function () {
+        var code = codePlayground.getCode();
+        if (code) {
+          taskCards.setComplete('export-share', true);
+          return code;
+        }
+        // Fallback: export project notes if no code was generated
+        var notes = projectNotes.value.trim();
+        var projName = selectedProject || 'project';
+        var fallback = '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>AI Toolbox Project</title></head>';
+        fallback += '<body style="font-family:sans-serif;padding:2rem;max-width:700px;margin:0 auto;">';
+        fallback += '<h1>My AI Toolbox Project: ' + escapeHtml(projName) + '</h1>';
+        fallback += '<p>No code was generated yet. Here are my project notes:</p>';
+        fallback += '<pre style="background:#f5f5f5;padding:1rem;border-radius:8px;white-space:pre-wrap;">' + escapeHtml(notes || '(empty)') + '</pre>';
+        fallback += '</body></html>';
+        taskCards.setComplete('export-share', true);
+        return fallback;
+      }
+    });
+
+    // =============================================
+    // Task Sidebar
+    // =============================================
+    var taskSidebar = document.getElementById('task-sidebar');
+
+    var taskCards = window.TaskCards(taskSidebar, [
+      { id: 'choose-project', title: 'Choose a mega-project', description: 'Pick: Magazine, Product Pitch, Tutorial, or Travel Guide' },
+      { id: 'use-text', title: 'Use Text AI', description: 'Write content using the chat' },
+      { id: 'use-image', title: 'Use Image AI', description: 'Generate at least one image' },
+      { id: 'use-code', title: 'Use Code AI', description: 'Build your layout with code' },
+      { id: 'export-share', title: 'Export & share', description: 'Download your project and show it off!' }
+    ]);
+
+    // Restore completed states from selection
+    if (selectedProject) {
+      taskCards.setComplete('choose-project', true);
+    }
+
+    // Mark text AI as used when a chat message is sent
+    var origAddMessage = chatWidget.addMessage;
+    // We watch for chat interactions via a MutationObserver on the chat container
+    var chatObserver = new MutationObserver(function (mutations) {
+      mutations.forEach(function (m) {
+        m.addedNodes.forEach(function (node) {
+          if (node.nodeType === 1 && node.classList && node.classList.contains('chat-user')) {
+            taskCards.setComplete('use-text', true);
+          }
+        });
+      });
+    });
+    var chatContainerEl = textChatContainer.querySelector('.chat-container');
+    if (chatContainerEl) {
+      chatObserver.observe(chatContainerEl, { childList: true });
+    }
+
+    // =============================================
+    // Utility
+    // =============================================
+    function escapeHtml(str) {
+      return str
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+  </script>
+
+</body>
+</html>

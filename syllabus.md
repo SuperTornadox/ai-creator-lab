@@ -2,7 +2,7 @@
 # AI 创造者实验室 — 课程大纲
 
 **Grade Level / 年级**: 6-7 (Middle School)
-**Duration / 课时**: 6 weeks, 1 session per week, 60 minutes each
+**Duration / 课时**: 12 weeks, 1 session per week, 60 minutes each
 **Class Size / 班级人数**: 2 students
 **Prerequisites / 前置要求**: None — no programming or AI experience needed
 **Language / 语言**: English instruction with Chinese support
@@ -11,9 +11,9 @@
 
 ## Course Description / 课程简介
 
-AI Creator Lab is a hands-on creative course where students learn to use artificial intelligence as a creative tool. Through 6 weekly sessions, students will chat with AI, write stories, create artwork, compose music, direct films, build interactive programs, design games, explore AI ethics — and combine it all into a final project.
+AI Creator Lab is a hands-on creative course where students learn to use artificial intelligence as a creative tool. Through 12 weekly sessions, students progress from basic AI interaction to building websites, animations, chatbots, and full applications — all powered by AI. The course culminates in a capstone project combining all skills learned.
 
-AI 创造者实验室是一门以动手实践为核心的创意课程，学生将学习把人工智能作为创作工具。在 6 周的课程中，学生将与 AI 对话、写故事、创作艺术品、作曲、导演电影、构建交互式程序、设计游戏、探索 AI 伦理——并将所有技能结合到毕业项目中。
+AI 创造者实验室是一门以动手实践为核心的创意课程，学生将学习把人工智能作为创作工具。在 12 周的课程中，学生从基础 AI 交互逐步进阶到构建网站、动画、聊天机器人和完整应用——全部由 AI 驱动。课程以结合所有技能的毕业项目作为结尾。
 
 ---
 
@@ -23,31 +23,49 @@ By the end of this course, students will be able to:
 
 1. **Communicate effectively with AI** — Write clear, specific prompts to get desired outputs
 2. **Create with multiple AI tools** — Use text, image, music, video, and code generation AI
-3. **Think critically about AI** — Understand AI's capabilities, limitations, and ethical implications
-4. **Iterate and improve** — Use feedback loops to refine AI-generated content
-5. **Combine tools creatively** — Integrate multiple AI tools into a cohesive project
+3. **Build real applications** — Use vibe coding to create websites, apps, games, and chatbots
+4. **Think critically about AI** — Understand AI's capabilities, limitations, and ethical implications
+5. **Combine tools creatively** — Integrate multiple AI tools into cohesive projects
 6. **Present their work** — Explain their creative process and showcase their projects
 
 完成本课程后，学生将能够：
 1. **与 AI 有效沟通** — 撰写清晰、具体的提示词以获得所需输出
 2. **使用多种 AI 工具创作** — 使用文本、图像、音乐、视频和代码生成 AI
-3. **批判性地思考 AI** — 理解 AI 的能力、局限性和伦理含义
-4. **迭代和改进** — 使用反馈循环来完善 AI 生成的内容
-5. **创造性地组合工具** — 将多种 AI 工具整合到一个连贯的项目中
+3. **构建真实应用** — 使用 vibe coding 创建网站、应用、游戏和聊天机器人
+4. **批判性地思考 AI** — 理解 AI 的能力、局限性和伦理含义
+5. **创造性地组合工具** — 将多种 AI 工具整合到连贯的项目中
 6. **展示作品** — 解释创作过程并展示项目
 
 ---
 
 ## Weekly Schedule / 每周课程安排
 
-| Week | Lesson | Topics | Key Activities | Output |
-|------|--------|--------|---------------|--------|
-| 1 | **AI Words** | AI chat, prompt engineering, creative writing | Interview AI characters, co-write stories with AI | Interview article + creative story |
-| 2 | **AI Images** | Image generation, visual descriptions, picture books | Create art with text prompts, build an illustrated storybook | Art gallery + picture book |
-| 3 | **AI Media** | Music composition, film direction, multi-tool integration | Compose songs with Suno, direct a mini film with AI scenes | Original song + mini film |
-| 4 | **AI Code** | AI-assisted coding, vibe coding, game design | Build programs from descriptions, design and play-test games | Interactive programs + web game |
-| 5 | **AI Ethics** | Deepfake detection, bias, critical thinking, guidelines | Spot AI-generated content, investigate bias, write AI guidelines | Ethics challenge + AI guidelines |
-| 6 | **Final Project** | Planning, building, presenting, combining all skills | Plan and build a capstone project, deliver formal presentation | Completed project + presentation |
+### Phase 1: Creative Foundations / 创意基础 (Weeks 1-3)
+
+| Week | Lesson | Topics | Key Output |
+|------|--------|--------|------------|
+| 1 | **AI Words** | AI chat, prompt engineering, creative writing | Interview article + creative story |
+| 2 | **AI Images** | Image generation, picture books | Art gallery + illustrated book |
+| 3 | **AI Media** | Music composition, film direction | Original song + mini film |
+
+### Phase 2: Coding with AI / AI 编程 (Weeks 4-8)
+
+| Week | Lesson | Topics | Key Output |
+|------|--------|--------|------------|
+| 4 | **AI Code Intro** | Vibe coding basics, game design | Interactive programs + web game |
+| 5 | **AI Web Designer** | Website building, design principles | Personal website / portfolio |
+| 6 | **AI Animation Studio** | Animations, generative art, visual effects | Animation collection + generative art |
+| 7 | **AI Chatbot Creator** | Chatbot design, conversation UX, system prompts | Custom chatbot + chat interface |
+| 8 | **AI App Inventor** | App development, UI/UX, useful tools | Functional mini-app |
+
+### Phase 3: Reflection & Capstone / 反思与毕业项目 (Weeks 9-12)
+
+| Week | Lesson | Topics | Key Output |
+|------|--------|--------|------------|
+| 9 | **AI Ethics** | Deepfakes, bias, critical thinking, guidelines | Ethics challenge + AI guidelines |
+| 10 | **AI Toolbox** | Combining all AI tools, complex projects | Mega-project (magazine/pitch/tutorial) |
+| 11 | **Final Project** | Planning and building capstone project | Completed capstone project |
+| 12 | **AI Showcase** | Presentation, reflection, graduation | Presentation + certificate |
 
 ---
 
@@ -60,9 +78,9 @@ Each 60-minute session follows the same format:
 | Segment | Duration | Description |
 |---------|----------|-------------|
 | Concept Warm-up / 概念热身 | 10-12 min | Slides, demos, mini-activities, discussion |
-| Part 1: Hands-on / 动手实践 (上) | 20-22 min | First hands-on activity using the interactive webpage |
-| Part 2: Hands-on / 动手实践 (下) | 20-22 min | Second hands-on activity building on Part 1 skills |
-| Show & Share / 展示分享 | 5-8 min | Present work, brief reflection, peer feedback |
+| Part 1: Hands-on / 动手实践 (上) | 20-25 min | First hands-on activity |
+| Part 2: Hands-on / 动手实践 (下) | 20-25 min | Second hands-on activity building on Part 1 |
+| Show & Share / 展示分享 | 5-10 min | Present work, peer feedback, reflection |
 
 ---
 
@@ -77,10 +95,10 @@ Each 60-minute session follows the same format:
 - Course website: [teaching-theta.vercel.app](https://teaching-theta.vercel.app)
 
 **AI Tools Used / 使用的 AI 工具**:
-- Text AI (GPT-4o-mini) — for chatting, writing, brainstorming
+- Text AI (GPT-4o-mini) — for chatting, writing, brainstorming, chatbot design
 - Image AI (DALL-E 3) — for creating artwork and illustrations
 - Music AI (Suno) — for composing original songs (external tool)
-- Code AI (GPT-4o-mini) — for building interactive programs and games
+- Code AI (GPT-4o-mini) — for building websites, animations, apps, and games
 
 ---
 
@@ -90,13 +108,13 @@ This course uses project-based assessment rather than traditional tests:
 
 本课程采用项目制评估而非传统考试：
 
-- **Weekly Projects (70%)**: Each lesson produces creative works. Assessment is based on effort, creativity, and iterative improvement — not perfection.
-- **Participation & Discussion (10%)**: Engagement during warm-ups, sharing work, and contributing to discussions (especially during the ethics lesson).
-- **Final Project (20%)**: A capstone project combining multiple AI tools, presented in Week 6.
+- **Weekly Projects (60%)**: Each lesson produces creative works. Assessment is based on effort, creativity, and iterative improvement.
+- **Participation & Discussion (10%)**: Engagement during warm-ups, sharing work, and contributing to discussions.
+- **Final Project (30%)**: A capstone project combining multiple AI tools, presented in Week 12.
 
-**每周项目（70%）**：每节课产出创意作品。评估基于努力程度、创造力和迭代改进——而非完美程度。
-**参与和讨论（10%）**：在热身环节、作品分享和讨论中的参与度（尤其是伦理课程）。
-**毕业项目（20%）**：结合多种 AI 工具的综合项目，在第 6 周展示。
+**每周项目（60%）**：每节课产出创意作品。评估基于努力程度、创造力和迭代改进。
+**参与和讨论（10%）**：在热身环节、作品分享和讨论中的参与度。
+**毕业项目（30%）**：结合多种 AI 工具的综合项目，在第 12 周展示。
 
 ---
 
@@ -123,7 +141,9 @@ Students choose one of the following for their capstone project (or propose thei
 1. **AI Magazine** — A multi-page digital magazine with AI-written articles and AI-generated illustrations
 2. **AI Short Film** — An expanded film with original story, visuals, and soundtrack
 3. **AI Game** — A more complex interactive game with multiple features
-4. **Free Choice** — Any creative project that combines at least 2 AI tools
+4. **AI App** — A useful application that solves a real problem
+5. **AI Website** — A complete multi-page website on a topic they care about
+6. **Free Choice** — Any creative project that combines at least 2 AI tools
 
 ---
 

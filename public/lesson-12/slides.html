@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Showcase - Presentation Day! - AI Creator Lab</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/white.css">
+  <link rel="stylesheet" href="/shared/slides-base.css">
+  <style>
+    /* Polish checklist */
+    .polish-list {
+      list-style: none;
+      text-align: left;
+      display: inline-block;
+      margin-top: 20px;
+    }
+
+    .polish-list li {
+      font-size: 1.4rem;
+      margin-bottom: 0.7em;
+      line-height: 1.5;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .polish-list .check-box {
+      width: 28px;
+      height: 28px;
+      border: 3px solid var(--slide-primary);
+      border-radius: 6px;
+      flex-shrink: 0;
+    }
+
+    /* Presentation tips grid */
+    .tips-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+      max-width: 900px;
+      margin: 28px auto 0;
+    }
+
+    .tip-card {
+      padding: 24px 20px;
+      border-radius: 14px;
+      background: rgba(79, 110, 247, 0.06);
+      border: 2px solid rgba(79, 110, 247, 0.12);
+      text-align: center;
+    }
+
+    .tip-card .tip-emoji {
+      font-size: 2.5rem;
+      margin-bottom: 8px;
+    }
+
+    .tip-card .tip-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .tip-card .tip-desc {
+      font-size: 0.95rem;
+      color: var(--slide-muted);
+    }
+
+    /* Presentation template */
+    .pres-template {
+      background: rgba(124, 58, 237, 0.06);
+      border: 2px solid rgba(124, 58, 237, 0.12);
+      border-radius: 14px;
+      padding: 28px 36px;
+      max-width: 750px;
+      margin: 24px auto 0;
+      text-align: left;
+    }
+
+    .pres-template p {
+      font-size: 1.3rem !important;
+      margin-bottom: 0.6em;
+      line-height: 1.6;
+    }
+
+    .pres-template .template-blank {
+      color: var(--slide-secondary);
+      font-weight: 700;
+      font-style: italic;
+    }
+
+    /* Journey timeline (12 lessons) */
+    .journey-timeline {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      max-width: 950px;
+      margin: 24px auto 0;
+    }
+
+    .journey-timeline .jt-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      padding: 14px 8px;
+      border-radius: 12px;
+      background: rgba(79, 110, 247, 0.06);
+      border: 2px solid rgba(79, 110, 247, 0.1);
+    }
+
+    .journey-timeline .jt-item.jt-current {
+      background: rgba(79, 110, 247, 0.15);
+      border-color: var(--slide-primary);
+    }
+
+    .journey-timeline .jt-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--slide-primary);
+      color: #fff;
+      font-size: 0.7rem;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .journey-timeline .jt-emoji {
+      font-size: 1.6rem;
+    }
+
+    .journey-timeline .jt-name {
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-align: center;
+    }
+
+    /* What's Next cards */
+    .next-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      max-width: 900px;
+      margin: 28px auto 0;
+    }
+
+    .next-card {
+      padding: 24px 20px;
+      border-radius: 14px;
+      background: rgba(14, 165, 165, 0.06);
+      border: 2px solid rgba(14, 165, 165, 0.12);
+      text-align: center;
+    }
+
+    .next-card .next-emoji {
+      font-size: 2.5rem;
+      margin-bottom: 8px;
+    }
+
+    .next-card .next-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .next-card .next-desc {
+      font-size: 0.95rem;
+      color: var(--slide-muted);
+    }
+
+    /* Graduation slide */
+    .grad-bg h1,
+    .grad-bg h2 {
+      color: #fff !important;
+      -webkit-text-fill-color: #fff !important;
+    }
+
+    .grad-bg p {
+      color: rgba(255,255,255,0.9) !important;
+    }
+
+    .grad-stars {
+      font-size: 3rem;
+      margin-bottom: 0.3em;
+      letter-spacing: 0.3em;
+    }
+
+    .grad-skills {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+      margin: 28px auto;
+      max-width: 700px;
+    }
+
+    .grad-skills .gs-badge {
+      padding: 10px 20px;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.18);
+      backdrop-filter: blur(6px);
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #fff;
+    }
+
+    /* Showtime transition */
+    .showtime-text {
+      font-size: 4rem !important;
+      font-weight: 800 !important;
+      background: linear-gradient(135deg, var(--slide-primary), var(--slide-secondary), #ec4899);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* Final quote */
+    .final-quote {
+      font-size: 2.8rem !important;
+      font-weight: 800 !important;
+      line-height: 1.4;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    .final-highlight {
+      background: linear-gradient(135deg, var(--slide-primary), var(--slide-secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+  </style>
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- Slide 1: Title -->
+      <section>
+        <p class="slide-big-emoji">&#x1F31F;</p>
+        <h1 class="slide-title">AI Showcase</h1>
+        <p>Presentation Day!</p>
+        <p style="margin-top: 12px; font-size: 1.1rem; color: var(--slide-muted);">AI Creator Lab &middot; Lesson 12 &middot; The Grand Finale</p>
+      </section>
+
+      <!-- Slide 2: Polish Checklist -->
+      <section>
+        <h2>Quick Polish Checklist &#x2728;</h2>
+        <ul class="polish-list">
+          <li><span class="check-box"></span> My project works and looks good</li>
+          <li><span class="check-box"></span> I have a project title</li>
+          <li><span class="check-box"></span> I wrote "About My Project"</li>
+          <li><span class="check-box"></span> I wrote "My Creative Process"</li>
+          <li><span class="check-box"></span> I tested Presentation Mode</li>
+          <li><span class="check-box"></span> I am ready to present!</li>
+        </ul>
+        <p style="margin-top: 24px; font-size: 1.2rem; color: var(--slide-muted);">
+          15 minutes to polish &mdash; make it shine!
+        </p>
+      </section>
+
+      <!-- Slide 3: Presentation Tips -->
+      <section>
+        <h2>Presentation Tips &#x1F3A4;</h2>
+        <div class="tips-grid">
+          <div class="tip-card">
+            <div class="tip-emoji">&#x1F4E2;</div>
+            <div class="tip-title">Speak Clearly</div>
+            <div class="tip-desc">Take your time. Everyone wants to hear you!</div>
+          </div>
+          <div class="tip-card">
+            <div class="tip-emoji">&#x1F4F1;</div>
+            <div class="tip-title">Show Your Work</div>
+            <div class="tip-desc">Demo your project live, don't just talk about it</div>
+          </div>
+          <div class="tip-card">
+            <div class="tip-emoji">&#x1F9E0;</div>
+            <div class="tip-title">Explain Your Process</div>
+            <div class="tip-desc">What tools did you use? What did you try?</div>
+          </div>
+          <div class="tip-card">
+            <div class="tip-emoji">&#x1F60A;</div>
+            <div class="tip-title">Be Proud!</div>
+            <div class="tip-desc">You made something amazing with AI</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 4: Presentation Template -->
+      <section>
+        <h2>Your Presentation &#x1F4CB;</h2>
+        <div class="pres-template">
+          <p>&#x1F680; My project is <span class="template-blank">[project name]</span></p>
+          <p>&#x1F3A8; I made it using <span class="template-blank">[AI tools you used]</span></p>
+          <p>&#x1F4AA; The hardest part was <span class="template-blank">[your challenge]</span></p>
+          <p>&#x1F4A1; I learned that <span class="template-blank">[your insight]</span></p>
+          <p>&#x1F31F; The coolest thing about my project is <span class="template-blank">[your favorite part]</span></p>
+        </div>
+        <p style="margin-top: 20px; font-size: 1.15rem; color: var(--slide-muted);">
+          Use "Launch Presentation Mode" on your page, or just show your workspace!
+        </p>
+      </section>
+
+      <!-- Slide 5: Showtime! -->
+      <section>
+        <p class="slide-big-emoji">&#x1F3AC;</p>
+        <p class="showtime-text">It's Showtime!</p>
+        <p style="font-size: 1.6rem; margin-top: 20px;">Who wants to go first?</p>
+      </section>
+
+      <!-- Slide 6: Our AI Journey -->
+      <section>
+        <h2>Our AI Journey &#x1F30D;</h2>
+        <div class="journey-timeline">
+          <div class="jt-item">
+            <span class="jt-num">1</span>
+            <span class="jt-emoji">&#x1F4AC;</span>
+            <span class="jt-name">AI Words</span>
+          </div>
+          <div class="jt-item">
+            <span class="jt-num">2</span>
+            <span class="jt-emoji">&#x1F3A8;</span>
+            <span class="jt-name">AI Images</span>
+          </div>
+          <div class="jt-item">
+            <span class="jt-num">3</span>
+            <span class="jt-emoji">&#x1F3B5;</span>
+            <span class="jt-name">AI Media</span>
+          </div>
+          <div class="jt-item">
+            <span class="jt-num">4</span>
+            <span class="jt-emoji">&#x1F4BB;</span>
+            <span class="jt-name">AI Code Intro</span>
+          </div>
+          <div class="jt-item">
+            <span class="jt-num">5</span>
+            <span class="jt-emoji">&#x1F310;</span>
+            <span class="jt-name">AI Web Designer</span>
+          </div>
+          <div class="jt-item">
+            <span class="jt-num">6</span>
+            <span class="jt-emoji">&#x1F3AC;</span>
+            <span class="jt-name">AI Animation</span>
+          </div>
+          <div class="jt-item">
+            <span class="jt-num">7</span>
+            <span class="jt-emoji">&#x1F916;</span>
+            <span class="jt-name">AI Chatbot</span>
+          </div>
+          <div class="jt-item">
+            <span class="jt-num">8</span>
+            <span class="jt-emoji">&#x1F4F1;</span>
+            <span class="jt-name">AI App Inventor</span>
+          </div>
+          <div class="jt-item">
+            <span class="jt-num">9</span>
+            <span class="jt-emoji">&#x2696;&#xFE0F;</span>
+            <span class="jt-name">AI Ethics</span>
+          </div>
+          <div class="jt-item">
+            <span class="jt-num">10</span>
+            <span class="jt-emoji">&#x1F9F0;</span>
+            <span class="jt-name">AI Toolbox</span>
+          </div>
+          <div class="jt-item">
+            <span class="jt-num">11</span>
+            <span class="jt-emoji">&#x1F680;</span>
+            <span class="jt-name">Final Project</span>
+          </div>
+          <div class="jt-item jt-current">
+            <span class="jt-num">12</span>
+            <span class="jt-emoji">&#x1F31F;</span>
+            <span class="jt-name">AI Showcase</span>
+          </div>
+        </div>
+        <p style="margin-top: 24px; font-size: 1.4rem;">
+          12 lessons. Countless creations. <strong style="color: var(--slide-secondary);">1 amazing class.</strong>
+        </p>
+      </section>
+
+      <!-- Slide 7: What's Next? -->
+      <section>
+        <h2>What's Next? &#x1F680;</h2>
+        <div class="next-grid">
+          <div class="next-card">
+            <div class="next-emoji">&#x1F3A8;</div>
+            <div class="next-title">Keep Creating</div>
+            <div class="next-desc">Use AI tools to make art, stories, music, and code</div>
+          </div>
+          <div class="next-card">
+            <div class="next-emoji">&#x1F4DA;</div>
+            <div class="next-title">Keep Learning</div>
+            <div class="next-desc">AI is evolving fast &mdash; stay curious and explore new tools</div>
+          </div>
+          <div class="next-card">
+            <div class="next-emoji">&#x1F9D0;</div>
+            <div class="next-title">Stay Critical</div>
+            <div class="next-desc">Question AI outputs. Think about ethics. Use AI responsibly.</div>
+          </div>
+        </div>
+        <p style="margin-top: 28px; font-size: 1.3rem; color: var(--slide-muted);">
+          You now have skills that will only grow more powerful over time.
+        </p>
+      </section>
+
+      <!-- Slide 8: Congratulations! -->
+      <section data-background-gradient="linear-gradient(135deg, #4f6ef7 0%, #7c3aed 40%, #ec4899 70%, #f59e0b 100%)">
+        <div class="grad-stars">&#x2B50; &#x1F31F; &#x1F3C6; &#x1F31F; &#x2B50;</div>
+        <h1 style="color: #fff; -webkit-text-fill-color: #fff; font-size: 3rem;">Congratulations!</h1>
+        <h2 style="color: #fff; -webkit-text-fill-color: #fff; font-size: 2rem; margin-top: 0.2em;">You Are AI Creators! &#x1F393;</h2>
+        <div class="grad-skills">
+          <span class="gs-badge">&#x1F4AC; Text AI</span>
+          <span class="gs-badge">&#x1F3A8; Image AI</span>
+          <span class="gs-badge">&#x1F3B5; Music AI</span>
+          <span class="gs-badge">&#x1F4BB; Code AI</span>
+          <span class="gs-badge">&#x2696;&#xFE0F; Ethics</span>
+          <span class="gs-badge">&#x1F4A1; Creative Thinking</span>
+        </div>
+        <p class="final-quote" style="color: #fff; -webkit-text-fill-color: #fff; font-size: 1.8rem; max-width: 700px; margin: 0 auto; line-height: 1.6;">
+          AI is the tool. <strong>YOU</strong> are the creator.<br>
+          Keep creating. The future is yours.
+        </p>
+      </section>
+
+    </div>
+  </div>
+
+  <!-- Lesson badge overlay -->
+  <div class="lesson-badge">12</div>
+
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+  <script>
+    Reveal.initialize({
+      hash: true,
+      transition: 'slide',
+      width: 1280,
+      height: 720
+    });
+  </script>
+</body>
+</html>

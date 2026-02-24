@@ -3,242 +3,437 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Final Project — Plan, Build, Present! - AI Creator Lab</title>
+  <title>AI Animation Studio - Code in Motion! - AI Creator Lab</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/white.css">
   <link rel="stylesheet" href="/shared/slides-base.css">
   <style>
-    /* Skills recap grid */
-    .skills-recap {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 20px;
-      max-width: 900px;
+    /* Flipbook frames */
+    .flipbook {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
       margin: 28px auto 0;
+      max-width: 800px;
     }
 
-    .skills-recap .skill-item {
-      padding: 20px 16px;
+    .flipbook-frame {
+      width: 120px;
+      height: 120px;
       border-radius: 14px;
-      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3rem;
+      position: relative;
     }
 
-    .skills-recap .skill-item.sk-text {
+    .flipbook-frame.ff-1 {
       background: rgba(79, 110, 247, 0.08);
       border: 2px solid rgba(79, 110, 247, 0.15);
     }
 
-    .skills-recap .skill-item.sk-image {
+    .flipbook-frame.ff-2 {
       background: rgba(124, 58, 237, 0.08);
       border: 2px solid rgba(124, 58, 237, 0.15);
     }
 
-    .skills-recap .skill-item.sk-music {
+    .flipbook-frame.ff-3 {
       background: rgba(14, 165, 165, 0.08);
       border: 2px solid rgba(14, 165, 165, 0.15);
     }
 
-    .skills-recap .skill-item.sk-film {
+    .flipbook-frame.ff-4 {
       background: rgba(245, 158, 11, 0.08);
       border: 2px solid rgba(245, 158, 11, 0.15);
     }
 
-    .skills-recap .skill-item.sk-code {
-      background: rgba(34, 197, 94, 0.08);
-      border: 2px solid rgba(34, 197, 94, 0.15);
-    }
-
-    .skills-recap .skill-item.sk-ethics {
+    .flipbook-frame.ff-5 {
       background: rgba(239, 68, 68, 0.08);
       border: 2px solid rgba(239, 68, 68, 0.15);
     }
 
-    .skills-recap .skill-emoji {
-      font-size: 2.5rem;
-      margin-bottom: 8px;
-    }
-
-    .skills-recap .skill-name {
-      font-size: 1.15rem;
+    .flipbook-num {
+      position: absolute;
+      bottom: 6px;
+      right: 8px;
+      font-size: 0.7rem;
       font-weight: 700;
-      margin-bottom: 2px;
-    }
-
-    .skills-recap .skill-lesson {
-      font-size: 0.9rem;
       color: var(--slide-muted);
     }
 
-    /* Full 6-skill grid (2x3) */
-    .skills-full {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 16px;
-      max-width: 850px;
-      margin: 24px auto 0;
+    .flipbook-arrow {
+      display: flex;
+      align-items: center;
+      font-size: 1.5rem;
+      color: var(--slide-muted);
     }
 
-    .skills-full .sf-item {
-      padding: 18px 14px;
-      border-radius: 14px;
-      background: rgba(79, 110, 247, 0.06);
-      border: 2px solid rgba(79, 110, 247, 0.12);
-      text-align: center;
-    }
-
-    .skills-full .sf-emoji {
-      font-size: 2.2rem;
-      margin-bottom: 6px;
-    }
-
-    .skills-full .sf-name {
-      font-size: 1.1rem;
-      font-weight: 700;
-    }
-
-    .skills-full .sf-check {
-      font-size: 0.9rem;
-      color: #22c55e;
-      margin-top: 2px;
-    }
-
-    /* Project option cards */
-    .project-options {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 18px;
-      max-width: 950px;
+    /* Approach comparison */
+    .approach-cards {
+      display: flex;
+      gap: 32px;
+      max-width: 900px;
       margin: 28px auto 0;
     }
 
-    .project-options .po-card {
-      padding: 24px 16px;
+    .approach-card {
+      flex: 1;
+      padding: 28px 24px;
       border-radius: 14px;
-      background: rgba(79, 110, 247, 0.06);
-      border: 2px solid rgba(79, 110, 247, 0.12);
+      text-align: left;
+    }
+
+    .approach-card.card-css {
+      background: rgba(79, 110, 247, 0.08);
+      border: 2px solid rgba(79, 110, 247, 0.15);
+    }
+
+    .approach-card.card-canvas {
+      background: rgba(124, 58, 237, 0.08);
+      border: 2px solid rgba(124, 58, 237, 0.15);
+    }
+
+    .approach-card h3 {
+      text-align: center;
+      margin-bottom: 12px;
+      font-size: 1.3rem;
+    }
+
+    .approach-card p {
+      font-size: 1.05rem !important;
+      line-height: 1.6;
+    }
+
+    /* Motion vocabulary tags */
+    .motion-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      justify-content: center;
+      max-width: 850px;
+      margin: 28px auto 0;
+    }
+
+    .motion-tag {
+      padding: 14px 24px;
+      border-radius: 12px;
+      font-size: 1.2rem;
+      font-weight: 700;
+    }
+
+    .motion-tag.mt-1 {
+      background: rgba(239, 68, 68, 0.1);
+      border: 2px solid rgba(239, 68, 68, 0.2);
+      color: #dc2626;
+    }
+
+    .motion-tag.mt-2 {
+      background: rgba(245, 158, 11, 0.1);
+      border: 2px solid rgba(245, 158, 11, 0.2);
+      color: #d97706;
+    }
+
+    .motion-tag.mt-3 {
+      background: rgba(34, 197, 94, 0.1);
+      border: 2px solid rgba(34, 197, 94, 0.2);
+      color: #16a34a;
+    }
+
+    .motion-tag.mt-4 {
+      background: rgba(79, 110, 247, 0.1);
+      border: 2px solid rgba(79, 110, 247, 0.2);
+      color: #4f6ef7;
+    }
+
+    .motion-tag.mt-5 {
+      background: rgba(124, 58, 237, 0.1);
+      border: 2px solid rgba(124, 58, 237, 0.2);
+      color: #7c3aed;
+    }
+
+    .motion-tag.mt-6 {
+      background: rgba(14, 165, 165, 0.1);
+      border: 2px solid rgba(14, 165, 165, 0.2);
+      color: #0ea5a5;
+    }
+
+    /* Challenge preview cards */
+    .challenge-preview {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      max-width: 900px;
+      margin: 24px auto 0;
+    }
+
+    .cp-card {
+      padding: 20px 14px;
+      border-radius: 14px;
       text-align: center;
     }
 
-    .project-options .po-emoji {
-      font-size: 2.8rem;
-      margin-bottom: 8px;
+    .cp-card.cp-easy {
+      background: rgba(34, 197, 94, 0.06);
+      border: 2px solid rgba(34, 197, 94, 0.15);
     }
 
-    .project-options .po-name {
-      font-size: 1.2rem;
+    .cp-card.cp-medium {
+      background: rgba(245, 158, 11, 0.06);
+      border: 2px solid rgba(245, 158, 11, 0.15);
+    }
+
+    .cp-card.cp-hard {
+      background: rgba(124, 58, 237, 0.06);
+      border: 2px solid rgba(124, 58, 237, 0.15);
+    }
+
+    .cp-card .cp-emoji {
+      font-size: 2.4rem;
+      margin-bottom: 6px;
+    }
+
+    .cp-card .cp-name {
+      font-size: 1.1rem;
       font-weight: 700;
       margin-bottom: 4px;
     }
 
-    .project-options .po-desc {
-      font-size: 0.9rem;
-      color: var(--slide-muted);
+    .cp-card .cp-diff {
+      font-size: 0.85rem;
+      font-weight: 600;
     }
 
-    /* Tips list */
-    .tips-list {
-      list-style: none;
-      text-align: left;
-      display: inline-block;
-      margin-top: 20px;
-    }
-
-    .tips-list li {
-      font-size: 1.4rem;
-      margin-bottom: 0.6em;
-      line-height: 1.5;
-    }
+    .cp-diff-easy { color: #16a34a; }
+    .cp-diff-medium { color: #d97706; }
+    .cp-diff-hard { color: #7c3aed; }
 
     /* Concept box */
     .concept-box {
       background: rgba(79, 110, 247, 0.08);
       border-radius: 14px;
       padding: 24px 32px;
-      max-width: 750px;
-      margin: 20px auto 0;
+      max-width: 800px;
+      margin: 24px auto 0;
       font-size: 1.4rem;
       line-height: 1.6;
       color: var(--slide-text);
     }
 
-    /* Presentation tips */
-    .pres-tips {
-      list-style: none;
-      text-align: left;
-      display: inline-block;
-      margin-top: 20px;
-    }
-
-    .pres-tips li {
-      font-size: 1.4rem;
-      margin-bottom: 0.6em;
-      line-height: 1.5;
-    }
-
-    /* Course recap timeline */
-    .course-timeline {
+    /* Formula box */
+    .formula-box {
       display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
+      align-items: center;
       justify-content: center;
+      gap: 20px;
+      margin: 32px auto;
+      max-width: 700px;
+    }
+
+    .formula-item {
+      padding: 20px 28px;
+      border-radius: 14px;
+      text-align: center;
+      font-size: 1.3rem;
+      font-weight: 700;
+    }
+
+    .formula-item.fi-rules {
+      background: rgba(79, 110, 247, 0.1);
+      border: 2px solid rgba(79, 110, 247, 0.2);
+    }
+
+    .formula-item.fi-random {
+      background: rgba(124, 58, 237, 0.1);
+      border: 2px solid rgba(124, 58, 237, 0.2);
+    }
+
+    .formula-item.fi-result {
+      background: linear-gradient(135deg, rgba(79, 110, 247, 0.1), rgba(124, 58, 237, 0.1));
+      border: 2px solid rgba(124, 58, 237, 0.2);
+    }
+
+    .formula-operator {
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: var(--slide-muted);
+    }
+
+    /* Art style preview */
+    .art-preview {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
       max-width: 950px;
       margin: 24px auto 0;
     }
 
-    .course-timeline .tl-item {
+    .ap-card {
+      padding: 24px 16px;
+      border-radius: 14px;
+      text-align: center;
+      background: rgba(124, 58, 237, 0.06);
+      border: 2px solid rgba(124, 58, 237, 0.12);
+    }
+
+    .ap-card .ap-emoji {
+      font-size: 2.8rem;
+      margin-bottom: 8px;
+    }
+
+    .ap-card .ap-name {
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+
+    /* Demo comparison */
+    .demo-compare {
       display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 10px 18px;
+      gap: 28px;
+      max-width: 900px;
+      margin: 28px auto 0;
+      align-items: stretch;
+    }
+
+    .demo-col {
+      flex: 1;
+      padding: 24px;
+      border-radius: 14px;
+      text-align: center;
+    }
+
+    .demo-col.demo-a {
+      background: rgba(79, 110, 247, 0.08);
+      border: 2px solid rgba(79, 110, 247, 0.15);
+    }
+
+    .demo-col.demo-b {
+      background: rgba(124, 58, 237, 0.08);
+      border: 2px solid rgba(124, 58, 237, 0.15);
+    }
+
+    .demo-col h3 {
+      margin-bottom: 12px;
+      font-size: 1.2rem;
+    }
+
+    .demo-col p {
+      font-size: 1rem !important;
+      color: var(--slide-muted);
+      line-height: 1.5;
+    }
+
+    /* Interactive tips */
+    .interactive-tips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      justify-content: center;
+      max-width: 900px;
+      margin: 24px auto 0;
+    }
+
+    .it-tag {
+      padding: 12px 20px;
       border-radius: 12px;
-      background: rgba(79, 110, 247, 0.06);
-      border: 2px solid rgba(79, 110, 247, 0.1);
       font-size: 1.05rem;
       font-weight: 600;
+      background: rgba(14, 165, 165, 0.08);
+      border: 2px solid rgba(14, 165, 165, 0.15);
     }
 
-    .course-timeline .tl-num {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      background: var(--slide-primary);
-      color: #fff;
-      font-size: 0.8rem;
-      font-weight: 700;
-      flex-shrink: 0;
+    /* Mission steps */
+    .mission-steps {
+      display: flex;
+      gap: 24px;
+      max-width: 900px;
+      margin: 28px auto 0;
     }
 
-    .course-timeline .tl-arrow {
+    .mission-step {
+      flex: 1;
+      padding: 24px 20px;
+      border-radius: 14px;
+      text-align: center;
+    }
+
+    .mission-step.ms-1 {
+      background: rgba(34, 197, 94, 0.08);
+      border: 2px solid rgba(34, 197, 94, 0.15);
+    }
+
+    .mission-step.ms-2 {
+      background: rgba(124, 58, 237, 0.08);
+      border: 2px solid rgba(124, 58, 237, 0.15);
+    }
+
+    .mission-step.ms-3 {
+      background: rgba(245, 158, 11, 0.08);
+      border: 2px solid rgba(245, 158, 11, 0.15);
+    }
+
+    .mission-step .ms-num {
+      font-size: 2.4rem;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .mission-step .ms-title {
       font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .mission-step .ms-desc {
+      font-size: 0.95rem;
       color: var(--slide-muted);
     }
 
-    /* Graduation slide */
-    .grad-bg {
-      background: linear-gradient(135deg, #4f6ef7 0%, #7c3aed 40%, #ec4899 70%, #f59e0b 100%) !important;
-      color: #fff !important;
+    /* Famous art examples */
+    .famous-examples {
+      display: flex;
+      gap: 24px;
+      max-width: 900px;
+      margin: 24px auto 0;
     }
 
-    .grad-bg h1 {
-      color: #fff !important;
-      -webkit-text-fill-color: #fff !important;
+    .famous-card {
+      flex: 1;
+      padding: 22px 18px;
+      border-radius: 14px;
+      text-align: center;
     }
 
-    .grad-bg h2 {
-      color: #fff !important;
+    .famous-card.fc-1 {
+      background: rgba(79, 110, 247, 0.06);
+      border: 2px solid rgba(79, 110, 247, 0.12);
     }
 
-    .grad-bg p {
-      color: rgba(255,255,255,0.9) !important;
+    .famous-card.fc-2 {
+      background: rgba(124, 58, 237, 0.06);
+      border: 2px solid rgba(124, 58, 237, 0.12);
     }
 
-    .grad-stars {
-      font-size: 3rem;
-      margin-bottom: 0.3em;
-      letter-spacing: 0.3em;
+    .famous-card.fc-3 {
+      background: rgba(14, 165, 165, 0.06);
+      border: 2px solid rgba(14, 165, 165, 0.12);
+    }
+
+    .famous-card .fc-emoji {
+      font-size: 2.5rem;
+      margin-bottom: 8px;
+    }
+
+    .famous-card .fc-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .famous-card .fc-desc {
+      font-size: 0.9rem;
+      color: var(--slide-muted);
+      line-height: 1.4;
     }
   </style>
 </head>
@@ -248,186 +443,284 @@
 
       <!-- Slide 1: Title -->
       <section>
-        <p class="slide-big-emoji">&#x1F680;</p>
-        <h1 class="slide-title">Final Project</h1>
-        <p>Plan, Build, Present!</p>
+        <p class="slide-big-emoji">&#x1F3AC;</p>
+        <h1 class="slide-title">AI Animation Studio</h1>
+        <p style="font-size: 1.8rem;">Code in Motion!</p>
         <p style="margin-top: 12px; font-size: 1.1rem; color: var(--slide-muted);">AI Creator Lab &middot; Lesson 06</p>
       </section>
 
-      <!-- Slide 2: Look how far you've come -->
+      <!-- Slide 2: What is animation? -->
       <section>
-        <h2>Look How Far You've Come! &#x1F31F;</h2>
-        <div class="skills-recap">
-          <div class="skill-item sk-text">
-            <div class="skill-emoji">&#x1F4DD;</div>
-            <div class="skill-name">Text AI</div>
-            <div class="skill-lesson">Stories, articles, lyrics</div>
+        <h2>What Is Animation? &#x1F3AC;</h2>
+        <p style="font-size: 1.4rem; margin-bottom: 8px;">Animation = showing pictures really fast so things look like they move!</p>
+        <div class="flipbook">
+          <div class="flipbook-frame ff-1">
+            <span style="transform: translateX(-20px);">&#x26BD;</span>
+            <span class="flipbook-num">1</span>
           </div>
-          <div class="skill-item sk-image">
-            <div class="skill-emoji">&#x1F3A8;</div>
-            <div class="skill-name">Image AI</div>
-            <div class="skill-lesson">Illustrations, scenes</div>
+          <div class="flipbook-arrow">&rarr;</div>
+          <div class="flipbook-frame ff-2">
+            <span style="transform: translateX(-10px);">&#x26BD;</span>
+            <span class="flipbook-num">2</span>
           </div>
-          <div class="skill-item sk-music">
-            <div class="skill-emoji">&#x1F3B5;</div>
-            <div class="skill-name">Music AI</div>
-            <div class="skill-lesson">Songs, soundtracks</div>
+          <div class="flipbook-arrow">&rarr;</div>
+          <div class="flipbook-frame ff-3">
+            <span>&#x26BD;</span>
+            <span class="flipbook-num">3</span>
+          </div>
+          <div class="flipbook-arrow">&rarr;</div>
+          <div class="flipbook-frame ff-4">
+            <span style="transform: translateX(10px);">&#x26BD;</span>
+            <span class="flipbook-num">4</span>
+          </div>
+          <div class="flipbook-arrow">&rarr;</div>
+          <div class="flipbook-frame ff-5">
+            <span style="transform: translateX(20px);">&#x26BD;</span>
+            <span class="flipbook-num">5</span>
           </div>
         </div>
-        <p style="margin-top: 28px; font-size: 1.6rem;">
-          6 weeks ago, you had <strong>none</strong> of these skills!
+        <p style="margin-top: 24px; font-size: 1.3rem; color: var(--slide-muted);">
+          Like a <strong>flipbook</strong> &mdash; your screen shows 60 tiny pictures every second!
         </p>
       </section>
 
-      <!-- Slide 3: Skills Unlocked -->
+      <!-- Slide 3: CSS vs Canvas -->
       <section>
-        <h2>Skills Unlocked &#x1F513;</h2>
-        <div class="skills-full">
-          <div class="sf-item">
-            <div class="sf-emoji">&#x1F4DD;</div>
-            <div class="sf-name">Text AI</div>
-            <div class="sf-check">&#x2705; Unlocked</div>
+        <h2>Two Ways to Animate &#x1F6E0;&#xFE0F;</h2>
+        <div class="approach-cards">
+          <div class="approach-card card-css">
+            <h3>&#x1F3A8; CSS Animations</h3>
+            <p>
+              - Move HTML elements around<br>
+              - Great for: buttons, text, simple shapes<br>
+              - Uses: <strong>transform</strong>, <strong>transition</strong>, <strong>@keyframes</strong><br>
+              - Easier for simple effects
+            </p>
           </div>
-          <div class="sf-item">
-            <div class="sf-emoji">&#x1F3A8;</div>
-            <div class="sf-name">Image AI</div>
-            <div class="sf-check">&#x2705; Unlocked</div>
+          <div class="approach-card card-canvas">
+            <h3>&#x1F5BC;&#xFE0F; Canvas / JavaScript</h3>
+            <p>
+              - Draw pixels directly on screen<br>
+              - Great for: particles, starfields, games<br>
+              - Uses: <strong>canvas</strong>, <strong>requestAnimationFrame</strong><br>
+              - More powerful for complex animations
+            </p>
           </div>
-          <div class="sf-item">
-            <div class="sf-emoji">&#x1F3B5;</div>
-            <div class="sf-name">Music AI</div>
-            <div class="sf-check">&#x2705; Unlocked</div>
+        </div>
+        <p style="margin-top: 24px; font-size: 1.3rem; color: var(--slide-muted);">
+          Don't worry &mdash; AI handles the code. <strong>You describe the vision!</strong>
+        </p>
+      </section>
+
+      <!-- Slide 4: Animation Vocabulary -->
+      <section>
+        <h2>Animation Vocabulary &#x1F4AC;</h2>
+        <p style="font-size: 1.3rem; margin-bottom: 8px;">Use these MOTION WORDS in your descriptions:</p>
+        <div class="motion-tags">
+          <div class="motion-tag mt-1">&#x1F3C0; bounce</div>
+          <div class="motion-tag mt-2">&#x1F300; spin</div>
+          <div class="motion-tag mt-3">&#x1F32B;&#xFE0F; fade</div>
+          <div class="motion-tag mt-4">&#x1F49C; pulse</div>
+          <div class="motion-tag mt-5">&#x1F30D; orbit</div>
+          <div class="motion-tag mt-6">&#x1F9EC; morph</div>
+        </div>
+        <div class="concept-box" style="margin-top: 24px; font-size: 1.2rem;">
+          <strong>Pro tip:</strong> "A ball that <em>bounces</em> and <em>pulses</em> with color"
+          is way better than just "a moving ball"
+        </div>
+      </section>
+
+      <!-- Slide 5: Same description, different results -->
+      <section>
+        <h2>Same Description &rarr; Different Results! &#x1F3B2;</h2>
+        <p style="font-size: 1.3rem;">Give AI the same prompt twice and you get different animations:</p>
+        <div class="demo-compare">
+          <div class="demo-col demo-a">
+            <h3>&#x1F3B2; Result A</h3>
+            <p>Blue particles with smooth trails, calm floating motion, circular patterns</p>
           </div>
-          <div class="sf-item">
-            <div class="sf-emoji">&#x1F3AC;</div>
-            <div class="sf-name">Film Making</div>
-            <div class="sf-check">&#x2705; Unlocked</div>
+          <div class="demo-col demo-b">
+            <h3>&#x1F3B2; Result B</h3>
+            <p>Rainbow particles with sharp edges, energetic bouncing, scattered patterns</p>
           </div>
-          <div class="sf-item">
-            <div class="sf-emoji">&#x1F4BB;</div>
-            <div class="sf-name">Code AI</div>
-            <div class="sf-check">&#x2705; Unlocked</div>
+        </div>
+        <div class="concept-box" style="margin-top: 20px; font-size: 1.2rem;">
+          Both came from: <em>"colorful particles floating around the screen"</em><br>
+          Every generation is <strong>unique</strong> &mdash; that's part of the fun!
+        </div>
+      </section>
+
+      <!-- Slide 6: Part 1 challenges preview -->
+      <section>
+        <h2>Part 1: Animation Challenges &#x1F3AF;</h2>
+        <p style="font-size: 1.3rem;">6 challenges from Easy to Hard:</p>
+        <div class="challenge-preview">
+          <div class="cp-card cp-easy">
+            <div class="cp-emoji">&#x1F308;</div>
+            <div class="cp-name">Rainbow Wave</div>
+            <div class="cp-diff cp-diff-easy">Easy</div>
           </div>
-          <div class="sf-item">
-            <div class="sf-emoji">&#x1F9E0;</div>
-            <div class="sf-name">AI Ethics</div>
-            <div class="sf-check">&#x2705; Unlocked</div>
+          <div class="cp-card cp-easy">
+            <div class="cp-emoji">&#x26F2;</div>
+            <div class="cp-name">Particle Fountain</div>
+            <div class="cp-diff cp-diff-easy">Easy</div>
+          </div>
+          <div class="cp-card cp-medium">
+            <div class="cp-emoji">&#x2B50;</div>
+            <div class="cp-name">Starfield</div>
+            <div class="cp-diff cp-diff-medium">Medium</div>
+          </div>
+          <div class="cp-card cp-medium">
+            <div class="cp-emoji">&#x1F9EA;</div>
+            <div class="cp-name">Lava Lamp</div>
+            <div class="cp-diff cp-diff-medium">Medium</div>
+          </div>
+          <div class="cp-card cp-hard">
+            <div class="cp-emoji">&#x1F4BB;</div>
+            <div class="cp-name">Matrix Rain</div>
+            <div class="cp-diff cp-diff-hard">Hard</div>
+          </div>
+          <div class="cp-card cp-hard">
+            <div class="cp-emoji">&#x1F386;</div>
+            <div class="cp-name">Fireworks Show</div>
+            <div class="cp-diff cp-diff-hard">Hard</div>
+          </div>
+        </div>
+        <p style="margin-top: 20px; font-size: 1.2rem; color: var(--slide-muted);">
+          Start with Easy, then level up!
+        </p>
+      </section>
+
+      <!-- Slide 7: What is Generative Art? -->
+      <section>
+        <h2>What Is Generative Art? &#x1F3A8;</h2>
+        <div class="formula-box">
+          <div class="formula-item fi-rules">
+            &#x1F4D0; Rules<br>
+            <span style="font-size: 0.9rem; font-weight: 400;">patterns, shapes,<br>colors you choose</span>
+          </div>
+          <div class="formula-operator">+</div>
+          <div class="formula-item fi-random">
+            &#x1F3B2; Randomness<br>
+            <span style="font-size: 0.9rem; font-weight: 400;">unpredictable<br>variations</span>
+          </div>
+          <div class="formula-operator">=</div>
+          <div class="formula-item fi-result">
+            &#x2728; Unique Art<br>
+            <span style="font-size: 0.9rem; font-weight: 400;">different every<br>single time!</span>
+          </div>
+        </div>
+        <p style="font-size: 1.4rem; margin-top: 20px;">
+          You set the <strong>rules</strong>. The computer adds <strong>surprise</strong>.
+        </p>
+      </section>
+
+      <!-- Slide 8: Famous generative art -->
+      <section>
+        <h2>Generative Art Is Everywhere! &#x1F30D;</h2>
+        <div class="famous-examples">
+          <div class="famous-card fc-1">
+            <div class="fc-emoji">&#x1F3B5;</div>
+            <div class="fc-title">Music Visualizers</div>
+            <div class="fc-desc">Spotify, YouTube, and concert light shows all use generative algorithms to create visuals that react to music</div>
+          </div>
+          <div class="famous-card fc-2">
+            <div class="fc-emoji">&#x1F3AE;</div>
+            <div class="fc-title">Video Game Worlds</div>
+            <div class="fc-desc">Games like Minecraft generate random worlds, terrain, and landscapes using rules + randomness</div>
+          </div>
+          <div class="famous-card fc-3">
+            <div class="fc-emoji">&#x1F5BC;&#xFE0F;</div>
+            <div class="fc-title">Digital Art Galleries</div>
+            <div class="fc-desc">Artists sell generative art for thousands of dollars. Each piece is unique because of the random elements!</div>
+          </div>
+        </div>
+        <p style="margin-top: 24px; font-size: 1.3rem; color: var(--slide-muted);">
+          Today <strong>YOU</strong> become a generative artist!
+        </p>
+      </section>
+
+      <!-- Slide 9: Part 2 art styles -->
+      <section>
+        <h2>Part 2: Generative Art Styles &#x1F5BC;&#xFE0F;</h2>
+        <div class="art-preview">
+          <div class="ap-card">
+            <div class="ap-emoji">&#x1F300;</div>
+            <div class="ap-name">Spiral Patterns</div>
+          </div>
+          <div class="ap-card">
+            <div class="ap-emoji">&#x25B3;</div>
+            <div class="ap-name">Geometric Tiles</div>
+          </div>
+          <div class="ap-card">
+            <div class="ap-emoji">&#x1F333;</div>
+            <div class="ap-name">Nature Simulation</div>
+          </div>
+          <div class="ap-card">
+            <div class="ap-emoji">&#x1F3A8;</div>
+            <div class="ap-name">Abstract Painter</div>
           </div>
         </div>
         <p style="margin-top: 24px; font-size: 1.4rem;">
-          Today you put it <strong>ALL</strong> together!
+          Pick a style, generate it, then <strong>make it your own!</strong>
         </p>
       </section>
 
-      <!-- Slide 4: Project Options -->
+      <!-- Slide 10: Making animations interactive -->
       <section>
-        <h2>Choose Your Project &#x1F3AF;</h2>
-        <div class="project-options">
-          <div class="po-card">
-            <div class="po-emoji">&#x1F4F0;</div>
-            <div class="po-name">AI Magazine</div>
-            <div class="po-desc">Articles + illustrations</div>
-          </div>
-          <div class="po-card">
-            <div class="po-emoji">&#x1F3AC;</div>
-            <div class="po-name">Short Film</div>
-            <div class="po-desc">Story + scenes + music</div>
-          </div>
-          <div class="po-card">
-            <div class="po-emoji">&#x1F3AE;</div>
-            <div class="po-name">AI Game</div>
-            <div class="po-desc">Design + code</div>
-          </div>
-          <div class="po-card">
-            <div class="po-emoji">&#x2728;</div>
-            <div class="po-name">Free Choice</div>
-            <div class="po-desc">Your own idea!</div>
-          </div>
+        <h2>Making Animations Interactive &#x26A1;</h2>
+        <p style="font-size: 1.3rem; margin-bottom: 8px;">Upgrade your creation with these interactions:</p>
+        <div class="interactive-tips">
+          <div class="it-tag">&#x1F5B1;&#xFE0F; Mouse follower</div>
+          <div class="it-tag">&#x1F446; Click to create</div>
+          <div class="it-tag">&#x1F3A8; Color shift on hover</div>
+          <div class="it-tag">&#x1F3B5; Music visualizer</div>
+          <div class="it-tag">&#x1F30D; Gravity simulation</div>
+          <div class="it-tag">&#x23EF;&#xFE0F; Speed controls</div>
         </div>
-        <p style="margin-top: 24px; font-size: 1.3rem; color: var(--slide-muted);">Pick the one that excites you the most!</p>
+        <div class="concept-box" style="margin-top: 24px; font-size: 1.2rem;">
+          These are in the <strong>"Make It Interactive"</strong> section on the lesson page.
+          Click any tip to add it to your animation!
+        </div>
       </section>
 
-      <!-- Slide 5: Planning Tips -->
+      <!-- Slide 11: Your Mission -->
       <section>
-        <h2>Quick Planning Tips &#x1F4CB;</h2>
-        <ul class="tips-list">
-          <li>&#x1F3AF; <strong>Start small</strong> &mdash; a finished small project beats an unfinished big one</li>
-          <li>&#x1F9E0; <strong>Use what you know</strong> &mdash; pick tools you're comfortable with</li>
-          <li>&#x2764;&#xFE0F; <strong>Make it personal</strong> &mdash; choose a topic you actually care about</li>
-          <li>&#x1F4DD; <strong>Write a plan</strong> &mdash; 3-5 steps before you start building</li>
-        </ul>
-      </section>
-
-      <!-- Slide 6: Building Time -->
-      <section>
-        <p class="slide-big-emoji">&#x1F528;</p>
-        <h2>Building Time!</h2>
-        <div class="concept-box">
-          You have <strong>35 minutes</strong> to build your project.<br>
-          All tools are available on the Lesson 6 page:<br>
-          <strong>Text AI + Image AI + Code AI</strong>
+        <p class="slide-big-emoji">&#x1F680;</p>
+        <h2>Your Mission</h2>
+        <div class="mission-steps">
+          <div class="mission-step ms-1">
+            <div class="ms-num">1</div>
+            <div class="ms-title">Create</div>
+            <div class="ms-desc">Try 3+ animation challenges</div>
+          </div>
+          <div class="mission-step ms-2">
+            <div class="ms-num">2</div>
+            <div class="ms-title">Customize</div>
+            <div class="ms-desc">Make generative art &amp; add interactivity</div>
+          </div>
+          <div class="mission-step ms-3">
+            <div class="ms-num">3</div>
+            <div class="ms-title">Export</div>
+            <div class="ms-desc">Download your best animation as HTML</div>
+          </div>
         </div>
-        <p style="font-size: 2rem; margin-top: 24px;">&#x1F449; Open <strong>Lesson 6</strong> and start creating!</p>
-      </section>
-
-      <!-- Slide 7: Mid-Build Checkpoint -->
-      <section>
-        <h2>Checkpoint! &#x1F6A6;</h2>
-        <div class="concept-box" style="font-size: 1.3rem;">
-          &#x1F50D; Is your project taking shape?<br><br>
-          Ask yourself:<br>
-          &#x2705; Do I have a clear idea?<br>
-          &#x2705; Have I started creating content?<br>
-          &#x2705; What do I still need to finish?
-        </div>
-        <p style="font-size: 1.5rem; margin-top: 24px; color: var(--slide-muted);">
-          ~15 minutes left &mdash; focus on finishing strong!
+        <p style="margin-top: 24px; font-size: 1.3rem; color: var(--slide-muted);">
+          Part 1: Animation Playground (25 min) &rarr; Part 2: Generative Art (25 min) &rarr; Share (10 min)
         </p>
       </section>
 
-      <!-- Slide 8: Presentation Tips -->
+      <!-- Slide 12: Let's animate! -->
       <section>
-        <h2>Presentation Tips &#x1F3A4;</h2>
-        <ul class="pres-tips">
-          <li>&#x1F4F1; <strong>Show your work</strong> &mdash; demo your project live</li>
-          <li>&#x1F4AC; <strong>Explain your process</strong> &mdash; how did you make it?</li>
-          <li>&#x1F914; <strong>Share a challenge</strong> &mdash; what was hard? How did you solve it?</li>
-          <li>&#x1F60A; <strong>Be proud!</strong> &mdash; you made something amazing with AI</li>
-        </ul>
-      </section>
-
-      <!-- Slide 9: Course Recap -->
-      <section>
-        <h2>Our Journey Together &#x1F30D;</h2>
-        <div class="course-timeline">
-          <div class="tl-item"><span class="tl-num">1</span> Text AI</div>
-          <span class="tl-arrow">&rarr;</span>
-          <div class="tl-item"><span class="tl-num">2</span> Storytelling</div>
-          <span class="tl-arrow">&rarr;</span>
-          <div class="tl-item"><span class="tl-num">3</span> Image AI</div>
-          <span class="tl-arrow">&rarr;</span>
-          <div class="tl-item"><span class="tl-num">4</span> Music AI</div>
-          <span class="tl-arrow">&rarr;</span>
-          <div class="tl-item"><span class="tl-num">5</span> Film Making</div>
-          <span class="tl-arrow">&rarr;</span>
-          <div class="tl-item"><span class="tl-num">6</span> Final Project!</div>
-        </div>
-        <p style="margin-top: 28px; font-size: 1.5rem;">
-          6 lessons. Countless creations. <strong style="color: var(--slide-secondary);">1 amazing class.</strong>
+        <h2>Open your laptops!</h2>
+        <p style="font-size: 2rem; margin-top: 24px;">&#x1F449; Go to the <strong>Lesson 6</strong> page</p>
+        <p style="font-size: 1.4rem; margin-top: 16px; color: var(--slide-muted);">
+          Start with the Easy animations.<br>
+          Work your way up to Medium and Hard.<br>
+          Then explore Generative Art in Part 2!
         </p>
-      </section>
-
-      <!-- Slide 10: Graduation! -->
-      <section data-background-gradient="linear-gradient(135deg, #4f6ef7 0%, #7c3aed 40%, #ec4899 70%, #f59e0b 100%)">
-        <div class="grad-stars">&#x2B50; &#x1F31F; &#x2B50;</div>
-        <h1 style="color: #fff; -webkit-text-fill-color: #fff; font-size: 3rem;">Congratulations!</h1>
-        <h2 style="color: #fff; font-size: 2rem; margin-top: 0.2em;">You Are AI Creators! &#x1F393;</h2>
-        <p style="font-size: 1.5rem; margin-top: 28px; color: rgba(255,255,255,0.9); max-width: 700px; margin-left: auto; margin-right: auto; line-height: 1.6;">
-          You've learned to write with AI, create art, compose music, make films, and code &mdash; all in 6 weeks.
-          Keep creating, keep experimenting, and never stop being curious.
-        </p>
-        <p style="font-size: 2.2rem; margin-top: 32px; color: #fff; font-weight: 700;">
-          The future belongs to creators like YOU!
+        <p style="font-size: 2.5rem; margin-top: 32px; font-weight: 700;">
+          Let's animate! &#x1F3AC;&#x2728;
         </p>
       </section>
 

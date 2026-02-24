@@ -1,262 +1,279 @@
-# Lesson 6: Final Project --- Plan, Build, Present! --- Teacher Script
-# 第六课：期末项目 --- 规划、创建、展示！ --- 教师逐字稿
+# Lesson 6: AI Animation Studio --- Code in Motion! --- Teacher Script
+# 第六课：AI 动画工作室 --- 代码变动画！ --- 教师逐字稿
 
 **Duration / 时长**: 60 minutes / 分钟
-**Materials / 材料**: Slides (`slides.html`), Interactive workspace (`index.html`), Student laptops, optional: printed certificates or digital badges for graduation
-**Goal / 目标**: Students plan, build, and present a creative final project using all AI tools learned throughout the course, culminating in presentations and a graduation celebration.
-**目标**: 学生规划、创建并展示一个使用整个课程学到的所有 AI 工具的创意期末项目，最后进行展示和毕业庆祝。
+**Materials / 材料**: Slides (`slides.html`), Interactive webpage (`index.html`), Student laptops
+**Goal / 目标**: Students create visual animations, particle effects, and generative art by describing what they imagine to AI, which generates the code. Students learn animation concepts, motion vocabulary, and the idea of generative art (rules + randomness).
+**目标**: 学生通过向 AI 描述想象来创建视觉动画、粒子效果和生成艺术。学生学习动画概念、运动词汇以及生成艺术（规则 + 随机性）的概念。
 
 ---
 
 ## Pre-Class Preparation / 课前准备
 
 > **Important / 重要:**
-> This is the capstone lesson --- it combines everything from the entire course into one session. Students will choose their own project type and have freedom to create. Prepare for varying speeds and ambition levels.
+> This lesson is highly visual and exciting for students. The code playground generates HTML/JS animations that run in an iframe --- make sure the API is working before class. Students will want to try many animations, so expect high engagement and potentially high API usage.
 >
-> **Before class / 课前准备:**
-> - Test the lesson page: open `/lesson-06/index.html` and verify all tabs (Text AI, Image AI, Code AI, My Collection) work
-> - Verify `/api/chat`, `/api/image`, and `/api/code` endpoints are working
-> - Have Suno open in a tab in case students want to add music
-> - Optional but highly recommended: prepare simple certificates (paper or digital) with each student's name. Even a printed sheet that says "AI Creator Lab Graduate" with a blank line for the name goes a long way
-> - Consider preparing a 1-minute example of a finished simple project to show as inspiration (e.g., a 3-page magazine with AI text + images)
-> - Have a timer visible for the class --- this lesson has tight timing
+> **这节课非常视觉化，学生会很兴奋。代码游乐场生成在 iframe 中运行的 HTML/JS 动画——课前确保 API 正常工作。学生会想尝试很多动画，所以预期高参与度和可能的高 API 使用量。**
 >
-> **这是总结课——把整个课程的内容综合到一节课中。学生将选择自己的项目类型并自由创作。准备好应对不同的速度和野心水平。**
+> **Technical prep / 技术准备:**
+> - Test the lesson page: open `/lesson-06/index.html` and verify both Code Playgrounds load and generate working animations
+> - Verify `/api/code` endpoint is working --- this is the primary API used in this lesson
+> - Try generating at least one animation challenge (e.g., "Rainbow Wave") to confirm the output works in the preview iframe
+> - The export button downloads an `.html` file --- test it on your machine
+> - Have a backup plan if the API is slow: students can iterate on existing generations using the "What to change?" input rather than generating from scratch
 >
-> **课前准备：**
-> - 测试课程页面：打开 `/lesson-06/index.html`，验证所有标签（文本 AI、图片 AI、代码 AI、我的收藏）正常工作
-> - 验证 `/api/chat`、`/api/image` 和 `/api/code` 接口正常工作
-> - 打开 Suno 标签页以备学生需要添加音乐
-> - 可选但强烈推荐：准备简单的证书（纸质或电子），写上每个学生的名字。即使只是一张写着"AI Creator Lab Graduate"留有名字空白的打印纸也很有意义
-> - 考虑准备一个1分钟的简单完成项目示例作为灵感（例如：一本3页的杂志，包含 AI 文本和图片）
-> - 准备一个对全班可见的计时器——这节课时间安排很紧
+> **测试课程页面：打开 `/lesson-06/index.html`，验证两个代码游乐场都能加载并生成工作动画。验证 `/api/code` 端点正常工作。尝试生成至少一个动画挑战来确认输出在预览 iframe 中工作。导出按钮下载 `.html` 文件——在你的机器上测试。**
 
 ---
 
-## Warm-up & Planning / 热身与规划 (8 minutes / 分钟)
+## Warm-up / 热身引入 (12 minutes / 分钟)
 
 ### [SLIDE 1 --- Title] *(0:00)*
 
-EN: "Welcome to our FINAL lesson in AI Creator Lab! Today is special --- today is your graduation day. You are going to plan, build, and present your own creative project using everything you have learned. And at the end, we celebrate --- because you are all about to become official AI Creators!"
+EN: "Welcome to AI Animation Studio! Today we are going to do something super cool --- we are going to turn plain English descriptions into moving, animated art. No coding knowledge needed. You describe what you want to see, and AI writes the code to make it happen."
 
-CN: "欢迎来到 AI 创造者实验室的最后一课！今天很特别——今天是你们的毕业日。你们要规划、创建和展示你们自己的创意项目，用上你们学到的所有东西。最后我们会庆祝——因为你们都将成为正式的 AI 创造者！"
+CN: "欢迎来到 AI 动画工作室！今天我们要做一些超酷的事情——我们要把普通的英文描述变成会动的动画艺术。不需要任何编程知识。你描述你想看到的，AI 就会写代码让它实现。"
 
----
+EN: "By the end of today, you will have created your own animations --- things like particle fountains, starfields, falling Matrix rain, fireworks --- and you can download them to keep forever!"
 
-### [SLIDE 2 --- Look How Far You've Come] *(0:01)*
-
-EN: "Let's take a moment to look back. Six weeks ago, most of you had never used AI to create anything. Now look at your skills --- you can make AI write stories, generate images, compose music. That is incredible progress."
-
-CN: "让我们花一点时间回顾一下。六周前，你们大多数人从没用 AI 创造过任何东西。现在看看你们的技能——你们能让 AI 写故事、生成图片、创作音乐。这是不可思议的进步。"
+CN: "在今天结束时，你将创建你自己的动画——像粒子喷泉、星空飞行、黑客帝国的字符雨、烟花——你可以下载它们永久保存！"
 
 ---
 
-### [SLIDE 3 --- Skills Unlocked] *(0:02)*
+### [SLIDE 2 --- What Is Animation?] *(0:02)*
 
-EN: "Here are all the skills you have unlocked. Text AI --- you can write stories, articles, lyrics, scripts. Image AI --- you can create illustrations, scenes, characters. Music AI --- you can compose songs and soundtracks. Film making --- you can combine everything into a mini film. Code AI --- you can write and run code with AI help. And AI ethics --- you understand how to use AI responsibly. That is six powerful skills!"
+EN: "First, let us understand what animation actually is. Animation is just showing pictures really fast --- so fast that your eyes see them as movement. Think of a flipbook. Each page has a slightly different drawing, and when you flip through them quickly, it looks like things are moving."
 
-CN: "这是你们解锁的所有技能。文本 AI——你们能写故事、文章、歌词、剧本。图片 AI——你们能创建插画、场景、角色。音乐 AI——你们能作曲和配乐。电影制作——你们能把所有东西组合成迷你电影。代码 AI——你们能在 AI 帮助下编写和运行代码。还有 AI 伦理——你们理解如何负责任地使用 AI。这是六项强大的技能！"
+CN: "首先，让我们理解动画到底是什么。动画就是非常快速地显示图片——快到你的眼睛看到的是运动。想想翻页书。每一页都有一个稍微不同的图画，当你快速翻动它们时，看起来东西在移动。"
 
----
+EN: "Your computer screen works the same way. It shows you about 60 tiny pictures every single second. Each picture is slightly different from the last one. That is how you see smooth movement on screen."
 
-### [SLIDE 4 --- Project Options] *(0:03)*
-
-EN: "For your final project, you get to CHOOSE what you want to make. Here are four options. Option 1: AI Magazine --- write articles and create illustrations, like a real magazine. Option 2: AI Short Film --- write a story, generate scene images, add music. You already know how to do this from Lesson 5! Option 3: AI Game --- design and code a simple game with AI help. Option 4: Free Choice --- your own creative idea using any combination of AI tools. Pick the one that excites you the most!"
-
-CN: "期末项目，你们可以选择自己想做什么。这里有四个选项。选项1：AI 杂志——写文章和创建插画，像真正的杂志一样。选项2：AI 短片——写故事、生成场景图片、添加音乐。你们在第5课已经学会了！选项3：AI 游戏——在 AI 帮助下设计和编写一个简单的游戏。选项4：自由选择——用任何 AI 工具组合的你自己的创意想法。选你最兴奋的那个！"
+CN: "你的电脑屏幕工作方式相同。它每秒给你展示大约60个小图片。每张图片都和上一张略有不同。这就是你在屏幕上看到流畅运动的原因。"
 
 ---
 
-### [SLIDE 5 --- Planning Tips] *(0:04)*
+### [SLIDE 3 --- CSS vs Canvas] *(0:04)*
 
-EN: "Before you start building, here are some important tips. First, start small. A finished small project is MUCH better than an unfinished big one. You only have 35 minutes to build, so keep your scope manageable. Second, use what you know. Pick tools you are comfortable with --- do not try to learn something brand new today. Third, make it personal. Choose a topic you actually care about --- your project will be better when you are excited about it. And fourth, write a plan. Take 3 minutes right now to plan before you build."
+EN: "There are two main ways to animate things on a webpage. The first is CSS animations --- this is like telling HTML elements to move around, spin, fade, or change colors. Great for simple effects. The second is Canvas --- this is like having a blank drawing board where you can draw anything pixel by pixel. This is more powerful and is what most games and particle effects use."
 
-CN: "在开始创建之前，这里有一些重要提示。第一，从小处开始。一个完成的小项目比一个未完成的大项目好得多。你只有35分钟来创建，所以保持范围可控。第二，用你知道的。选你熟悉的工具——今天不要试着学全新的东西。第三，做个人化的。选一个你真正关心的主题——当你对它感到兴奋时，项目会更好。第四，写个计划。现在花3分钟在创建之前先做计划。"
+CN: "在网页上有两种主要的动画方式。第一种是 CSS 动画——这就像告诉 HTML 元素移动、旋转、渐隐或改变颜色。适合简单效果。第二种是 Canvas——这就像有一个空白画板，你可以逐像素地画任何东西。这更强大，是大多数游戏和粒子效果使用的方式。"
 
-EN: "Open your laptops now and go to Lesson 6. Start by choosing your project type --- click on one of the four cards. Then fill in the planning form: your project title, a description, which tools you will use, and 3 to 5 steps for your plan. Click 'Save My Plan' when you are done."
+EN: "But here is the good news --- you do not need to know ANY of this! AI handles all the code. Your job is to describe what you want the animation to look like. You are the creative director. AI is the programmer."
 
-CN: "现在打开电脑，进入第六课。首先选择你的项目类型——点击四张卡片中的一张。然后填写规划表：项目标题、描述、你会使用哪些工具，以及你计划的3到5个步骤。完成后点击'Save My Plan'。"
-
-**[Give students 3-4 minutes to choose and plan / 给学生 3-4 分钟选择和规划]**
-
-> **Contingency / 应对方案:**
-> EN: If a student cannot decide: "Pick the one that sounds the most fun to YOU. If you still cannot decide, go with AI Magazine --- it is the most flexible and you can include anything."
-> CN: 如果学生无法决定："选一个对你来说听起来最有趣的。如果还是无法决定，就选 AI 杂志——它最灵活，你可以包含任何东西。"
-
-> **Contingency / 应对方案:**
-> EN: If a student wants to do something not in the four options: "Absolutely! Click 'Free Choice' and describe your idea in the plan. As long as you use at least two AI tools, anything goes."
-> CN: 如果学生想做四个选项以外的东西："当然可以！点击'Free Choice'并在计划中描述你的想法。只要你使用至少两个 AI 工具，什么都行。"
+CN: "但好消息是——你不需要知道任何这些！AI 处理所有代码。你的工作是描述你想要动画看起来像什么。你是创意总监。AI 是程序员。"
 
 ---
 
-### [SLIDE 6 --- Building Time] *(0:06)*
+### [SLIDE 4 --- Animation Vocabulary] *(0:06)*
 
-EN: "Plans ready? Great! Now it is building time. You have 35 minutes. The workspace has four tabs: Text AI for writing and brainstorming, Image AI for creating pictures, Code AI for writing code, and My Collection to see all your generated images in one place. There is also a Project Notes area at the bottom --- use it to keep track of your ideas and progress."
+EN: "To be a great creative director, you need the right vocabulary. These are the MOTION WORDS that help AI understand what kind of animation you want."
 
-CN: "计划准备好了？太好了！现在是创建时间。你有35分钟。工作区有四个标签：文本 AI 用于写作和头脑风暴，图片 AI 用于创建图片，代码 AI 用于编写代码，还有我的收藏可以在一个地方看到所有生成的图片。底部还有项目笔记区域——用它来记录你的想法和进度。"
+CN: "要成为一个出色的创意总监，你需要正确的词汇。这些是帮助 AI 理解你想要什么样动画的运动词。"
 
-EN: "Go! Start creating!"
+**[Point to each word / 指向每个词]**
 
-CN: "开始！开始创作！"
+EN: "Bounce --- things jumping up and down. Spin --- rotating around. Fade --- gradually appearing or disappearing. Pulse --- getting bigger and smaller rhythmically, like a heartbeat. Orbit --- moving in a circle around something else. Morph --- smoothly changing from one shape into another."
+
+CN: "Bounce 弹跳——东西上下跳动。Spin 旋转——围绕旋转。Fade 渐变——逐渐出现或消失。Pulse 脉动——有节奏地变大变小，像心跳。Orbit 轨道——围绕另一个东西做圆周运动。Morph 变形——从一个形状平滑地变成另一个。"
+
+EN: "The more specific your description is, the better the animation will be. 'A ball that bounces and pulses with color' is much better than just 'a moving ball.' Remember this!"
+
+CN: "你的描述越具体，动画就越好。'一个弹跳并脉动变色的球'比只说'一个移动的球'好得多。记住这一点！"
 
 ---
 
-## Build Phase / 创建阶段 (35 minutes / 分钟)
+### [SLIDE 5 --- Same Description, Different Results] *(0:08)*
 
-### Active Building (first 20 min) *(0:08--0:28)*
+EN: "Here is something fun about working with AI --- even when you give it the exact same description twice, you get different results! This is because AI adds some randomness each time it generates code. So every animation you create is truly unique."
+
+CN: "与 AI 一起工作有一件有趣的事——即使你给它完全相同的描述两次，你也会得到不同的结果！这是因为 AI 每次生成代码时都会添加一些随机性。所以你创建的每个动画都是真正独一无二的。"
+
+EN: "This means if you do not like what you get, just click Generate again! And if you DO like it but want to change something, use the 'What to change?' box to modify it."
+
+CN: "这意味着如果你不喜欢得到的结果，只需再次点击 Generate！如果你喜欢但想改变一些东西，使用'What to change?'框来修改它。"
+
+---
+
+### [SLIDE 6 --- Part 1 Challenges Preview] *(0:09)*
+
+EN: "Now let me show you what you will be building in Part 1. There are six animation challenges, from Easy to Hard. The Easy ones are Rainbow Wave --- colorful bars that wave back and forth --- and Particle Fountain --- particles spraying up like a water fountain. Medium challenges are Starfield --- that classic screensaver where stars fly toward you --- and Lava Lamp --- smooth blobby shapes floating around. And the Hard challenges are Matrix Rain --- you know, the green falling characters from The Matrix movie --- and Fireworks Show --- where you click to launch fireworks!"
+
+CN: "现在让我给你们看第一部分你们要创建什么。有六个动画挑战，从简单到困难。简单的是彩虹波浪——彩色条来回波动——和粒子喷泉——粒子像水喷泉一样向上喷射。中等挑战是星空飞行——那个经典的屏保，星星向你飞来——和熔岩灯——光滑的团块状形状漂浮。困难挑战是黑客帝国字符雨——你知道的，黑客帝国电影中绿色下落的字符——和烟花秀——你点击来发射烟花！"
+
+EN: "I recommend starting with Easy and working your way up. But you can try any challenge in any order."
+
+CN: "我建议从简单的开始，然后逐步提升。但你可以按任何顺序尝试任何挑战。"
+
+---
+
+### [SLIDE 7 --- What Is Generative Art?] *(0:10)*
+
+EN: "In Part 2, we move into something called generative art. This is art made by combining rules with randomness. You set the rules --- like 'draw spirals with rainbow colors' --- and the computer adds random variation so every result is different. Rules plus randomness equals unique art, every single time."
+
+CN: "在第二部分，我们进入一种叫做生成艺术的东西。这是通过结合规则和随机性制作的艺术。你设定规则——比如'用彩虹色画螺旋'——计算机添加随机变化，所以每次结果都不同。规则加随机性等于独特的艺术，每一次都是。"
+
+---
+
+### [SLIDE 8 --- Famous Generative Art] *(0:11)*
+
+EN: "Generative art is not just a school project --- it is everywhere in the real world! Music visualizers on Spotify and YouTube use generative algorithms to create visuals that react to music. Video games like Minecraft generate random worlds using rules plus randomness. And professional artists sell generative art pieces for thousands of dollars --- each one is unique because of the random elements."
+
+CN: "生成艺术不只是学校项目——它在现实世界中无处不在！Spotify 和 YouTube 上的音乐可视化器使用生成算法创建对音乐做出反应的视觉效果。像 Minecraft 这样的视频游戏使用规则加随机性生成随机世界。专业艺术家以数千美元的价格出售生成艺术品——每件都因为随机元素而独一无二。"
+
+EN: "Today YOU become a generative artist."
+
+CN: "今天你成为一个生成艺术家。"
+
+---
+
+### [SLIDE 9 --- Part 2 Art Styles] *(0:11)*
+
+EN: "In Part 2, you will have four art styles to choose from. Spiral Patterns --- colorful spirals growing from the center. Geometric Tiles --- repeating shapes creating mesmerizing patterns. Nature Simulation --- a growing tree with branches and leaves. And Abstract Painter --- random brush strokes creating a painting in real time."
+
+CN: "在第二部分，你将有四种艺术风格可供选择。螺旋图案——从中心生长的彩色螺旋。几何瓷砖——重复形状创造引人入胜的图案。自然模拟——一棵生长的树，有树枝和叶子。还有抽象画家——随机笔触实时创作一幅画。"
+
+---
+
+### [SLIDE 10 --- Making It Interactive] *(0:11)*
+
+EN: "And once you have a working animation or art piece, you can make it INTERACTIVE. We have upgrade tips like mouse follower --- where elements chase your cursor --- click to create, color shifting, a music visualizer effect, gravity simulation, and speed controls. These are all on the lesson page for you to try."
+
+CN: "一旦你有了一个工作的动画或艺术品，你可以让它变得可交互。我们有升级提示，比如鼠标跟随——元素追随你的光标——点击创建、颜色变换、音乐可视化效果、重力模拟和速度控制。这些都在课程页面上供你尝试。"
+
+---
+
+### [SLIDE 11 --- Your Mission] *(0:12)*
+
+EN: "Here is your mission for today. Step 1: Create --- try at least 3 animation challenges in Part 1. Step 2: Customize --- make generative art in Part 2 and add interactivity. Step 3: Export --- download your best animation as an HTML file you can keep."
+
+CN: "这是你今天的任务。第一步：创建——在第一部分尝试至少3个动画挑战。第二步：定制——在第二部分制作生成艺术并添加交互性。第三步：导出——下载你最好的动画作为 HTML 文件保存。"
+
+EN: "You have 25 minutes for Part 1 and 25 minutes for Part 2. At the end, you will share your favorite animation with the class."
+
+CN: "你有25分钟做第一部分和25分钟做第二部分。最后，你将与全班分享你最喜欢的动画。"
+
+---
+
+### [SLIDE 12 --- Let's Animate!] *(0:12)*
+
+EN: "Open your laptops and go to Lesson 6. Start with the Easy animation challenges --- Rainbow Wave or Particle Fountain. Click a challenge card, and it will load the prompt for you. Then just click Generate and watch the magic happen! Ready? Go!"
+
+CN: "打开电脑，进入第六课。从简单的动画挑战开始——彩虹波浪或粒子喷泉。点击挑战卡片，它会为你加载提示。然后只需点击 Generate，看魔法发生！准备好了吗？开始！"
 
 **[Switch from slides to monitoring student screens / 从幻灯片切换到巡视学生屏幕]**
 
-**[Walk around continuously / 持续走动巡视:]**
+---
 
-EN: Check that every student has:
-- Selected a project type
-- Saved their plan
-- Started creating content in at least one tab
+## Part 1: Animation Playground / 动画游乐场 (25 minutes / 分钟) *(0:12--0:37)*
 
-Help students who are stuck. Common issues:
-- "I do not know what to write" --- help them brainstorm with the Text AI chat
-- "The image does not look right" --- help them refine their prompt
-- "The code does not work" --- help them describe the bug to the Code AI
+### Hands-on: Animation Challenges (25 min)
 
-CN: 检查每个学生是否：
-- 选择了项目类型
-- 保存了计划
-- 在至少一个标签中开始创建内容
+EN: "Remember, start with the Easy challenges. Click a challenge card to load the prompt. If the animation does not look right, try clicking Generate again --- every result is different!"
 
-帮助卡住的学生。常见问题：
-- "我不知道写什么"——帮他们用文本 AI 聊天头脑风暴
-- "图片看起来不对"——帮他们优化提示词
-- "代码不工作"——帮他们向代码 AI 描述 bug
+CN: "记住，从简单挑战开始。点击挑战卡片来加载提示。如果动画看起来不对，试试再次点击 Generate——每次结果都不同！"
+
+**[Walk around and observe / 走动观察]**
+
+> **What to look for while walking around / 走动时注意什么:**
+> - Are students clicking challenge cards to load prompts?
+> - Are they getting results in the preview iframe?
+> - Are they trying the "What to change?" input to iterate?
+> - Are any students stuck on an error?
+>
+> 学生是否在点击挑战卡片加载提示？他们在预览 iframe 中得到结果了吗？他们在尝试"What to change?"输入来迭代吗？有没有学生卡在错误上？
+
+**[After 5 minutes / 5 分钟后]**
+
+EN: "If you have finished your first animation, great! Now try a second one. And here is a pro tip: after you generate an animation, use the 'What to change?' box to customize it. For example, 'Make the colors neon' or 'Make it faster' or 'Add a dark background.' This is how you make it YOUR animation."
+
+CN: "如果你完成了第一个动画，太好了！现在尝试第二个。这里有一个专业提示：生成动画后，使用'What to change?'框来定制它。例如，'让颜色变成霓虹色'或'让它更快'或'添加一个深色背景'。这就是你如何让它成为你的动画。"
+
+**[After 15 minutes / 15 分钟后]**
+
+EN: "You should be on your second or third animation by now. If you have finished three --- awesome! Try one of the Hard challenges: Matrix Rain or Fireworks. The Fireworks one is interactive --- you click to launch them!"
+
+CN: "你现在应该在做第二个或第三个动画了。如果你完成了三个——太棒了！试试困难挑战之一：黑客帝国字符雨或烟花。烟花那个是可交互的——你点击来发射！"
 
 > **Contingency / 应对方案:**
-> EN: If API services are slow: "While waiting for a response, switch to another tab and work on a different part of your project. Multitask!"
-> CN: 如果 API 服务很慢："等待回应的时候，切换到另一个标签，做项目的其他部分。多任务并行！"
+> EN: If a student's animation does not work (blank preview or error): "That happens sometimes. Try clicking Generate again --- AI gives a different result each time. If it still does not work, try a different challenge and come back to this one later."
+> CN: 如果学生的动画不工作（空白预览或错误）："这有时会发生。试试再次点击 Generate——AI 每次给出不同的结果。如果仍然不工作，试试不同的挑战，稍后再回来做这个。"
+
+> **Contingency / 应对方案:**
+> EN: If the API is slow: "While waiting, read the tips box below the playground. It has great advice on motion words you can use. Also, try using the 'What to change?' box on an animation you already have --- modifications are usually faster than new generations."
+> CN: 如果 API 很慢："等待的时候，阅读游乐场下面的提示框。它有关于你可以使用的运动词的好建议。也试试对你已有的动画使用'What to change?'框——修改通常比新生成快。"
+
+> **Contingency / 应对方案:**
+> EN: If a student finishes all 6 challenges quickly: "Impressive! Now try writing your OWN prompt from scratch --- describe any animation you can imagine. A galaxy spinning? Snowflakes falling? Bubbles floating? The playground works with any description, not just the challenge cards."
+> CN: 如果学生快速完成了所有6个挑战："太厉害了！现在尝试从头写你自己的提示——描述你能想象的任何动画。一个旋转的银河？飘落的雪花？漂浮的气泡？游乐场适用于任何描述，不仅仅是挑战卡片。"
 
 ---
 
-### [SLIDE 7 --- Mid-Build Checkpoint] *(0:28)*
+## Part 2: Generative Art Gallery / 生成艺术画廊 (15 minutes / 分钟) *(0:37--0:52)*
 
-**[Show slide 7 briefly / 短暂展示幻灯片7]**
+EN: "Great work on the animations! Now scroll down to Part 2: Generative Art Gallery. Remember, generative art is art made by rules plus randomness. You will see four art style cards. Click one to load its prompt, then Generate it in the second playground."
 
-EN: "Quick checkpoint, everyone! We are about halfway through building time. Look at your project and ask yourself: Do I have a clear idea? Have I started creating content? What do I still need to finish? You have about 15 more minutes. If you have been spending a lot of time on one thing, it might be time to move on to the next step. Focus on getting something DONE rather than making everything perfect."
+CN: "动画做得很好！现在向下滚动到第二部分：生成艺术画廊。记住，生成艺术是由规则加随机性制作的艺术。你会看到四个艺术风格卡片。点击一个来加载提示，然后在第二个游乐场中 Generate 它。"
 
-CN: "快速检查点，大家！我们建设时间差不多过半了。看看你的项目，问问自己：我有明确的想法吗？我开始创建内容了吗？我还需要完成什么？你还有大约15分钟。如果你一直在一件事上花很多时间，可能是时候进入下一步了。专注于完成一些东西，而不是让所有东西都完美。"
+EN: "After you generate your art, try the upgrade tips in the 'Make It Interactive' section below. Click any tip card and it will load an upgrade idea into the 'What to change?' box. This is how you add mouse interaction, click effects, or other cool features to your art."
 
-**[Switch back to monitoring / 切换回巡视]**
+CN: "生成你的艺术后，试试下面'Make It Interactive'部分的升级提示。点击任何提示卡片，它会将升级想法加载到'What to change?'框中。这就是你如何给你的艺术添加鼠标交互、点击效果或其他酷功能。"
 
----
+**[Give students 12-13 minutes / 给学生 12-13 分钟]**
 
-### Final Building + Presentation Prep (15 min) *(0:28--0:43)*
+**[Walk around and observe / 走动观察]**
 
-EN: At the 35-minute mark (0:35 from start), give a 8-minute warning:
+> **What to look for while walking around / 走动时注意什么:**
+> - Are students trying different art styles?
+> - Are they using the upgrade tips to add interactivity?
+> - Are they excited about the visual results?
+>
+> 学生是否在尝试不同的艺术风格？他们在使用升级提示添加交互性吗？他们对视觉结果感到兴奋吗？
 
-EN: "Eight minutes left for building! If you have not started on your presentation section yet, scroll down now and start filling in 'About My Project' and 'My Creative Process.' You need these for your presentation."
+EN: "Five minutes left for Part 2. If you haven't tried an interactive upgrade yet, now is a great time! Click one of the tip cards in the 'Make It Interactive' section."
 
-CN: "还剩8分钟创建时间！如果你还没开始写展示部分，现在向下滚动，开始填写'About My Project'和'My Creative Process'。你展示时需要这些。"
+CN: "第二部分还剩5分钟。如果你还没有尝试交互式升级，现在是好时机！点击'Make It Interactive'部分中的一个提示卡片。"
 
-EN: At the 40-minute mark (0:40), give a 3-minute warning:
+EN: "Also, make sure to download your favorite animation! Scroll to the bottom and click the 'Download My Animation' button. This saves it as an HTML file you can open in any browser."
 
-EN: "Three minutes! Finish up what you are working on and make sure your presentation text is written. You do not need to be 100% done with the project --- just have something you are proud to show."
-
-CN: "3分钟！完成你正在做的，确保展示文字已经写好。你不需要100%完成项目——只需要有你自豪展示的东西。"
-
----
-
-## Present & Celebrate / 展示与庆祝 (15 minutes / 分钟)
-
-### [SLIDE 8 --- Presentation Tips] *(0:43)*
-
-EN: "Building time is over! Now comes the fun part --- you get to show off what you made. Here are some quick tips for your presentation. Show your work --- actually demo your project, do not just talk about it. Explain your process --- tell us HOW you made it, what tools you used. Share a challenge --- what was hard? How did you solve it? And most importantly, be proud! You made something amazing with AI."
-
-CN: "创建时间结束！现在是有趣的部分——你们要展示你们做的东西。这里有一些展示的快速提示。展示你的作品——实际演示你的项目，不要只是口头说。解释你的过程——告诉我们你怎么做的，用了什么工具。分享一个挑战——什么是困难的？你怎么解决的？最重要的是，要自豪！你用 AI 做了一些了不起的东西。"
-
-EN: "You can use the 'Launch Presentation Mode' button on your page to show a clean fullscreen version. Or just show your workspace directly --- either is fine."
-
-CN: "你可以用页面上的'Launch Presentation Mode'按钮展示一个干净的全屏版本。或者直接展示你的工作区——都可以。"
+CN: "也确保下载你最喜欢的动画！滚动到底部，点击'Download My Animation'按钮。这会将它保存为 HTML 文件，你可以在任何浏览器中打开。"
 
 ---
 
-### Student Presentations *(0:44--0:56)*
+## Share & Exhibition / 分享与展览 (8 minutes / 分钟) *(0:52--1:00)*
 
-EN: "Who wants to go first? Come up and show us your project!"
+EN: "Time for our student art exhibition! Who wants to show their favorite animation to the class? Come up and tell us: what animation did you make, and what makes it cool?"
 
-CN: "谁想第一个？上来给我们展示你的项目！"
+CN: "是时候进行我们的学生艺术展了！谁想给全班展示他们最喜欢的动画？上来告诉我们：你做了什么动画，是什么让它酷？"
 
-**[Each student gets approximately 5-7 minutes depending on class size / 每个学生根据班级大小大约有5-7分钟]**
+**[Each student gets 2-3 minutes / 每个学生 2-3 分钟]**
 
 **For each presenter / 对每个展示者：**
 
-1. Ask them to introduce their project: "Tell us what you made and why you chose this project."
-   "告诉我们你做了什么以及为什么选择这个项目。"
+1. Ask them to show their animation in the preview panel (or open the downloaded HTML file in full screen).
+   让他们在预览面板中展示动画（或全屏打开下载的 HTML 文件）。
 
-2. Have them demo / show their work (either presentation mode or workspace)
-   让他们演示/展示作品（展示模式或工作区）
+2. Ask one question:
+   - "What words did you use in your description to get this effect?" / "你在描述中用了什么词来得到这个效果？"
+   - "What did you change from the original to make it your own?" / "你从原始版本改了什么来让它成为你自己的？"
+   - "If you could add one more feature, what would it be?" / "如果你能再添加一个功能，会是什么？"
 
-3. Ask one follow-up question:
-   - "What was the hardest part?" / "最难的部分是什么？"
-   - "What AI tool was the most useful for your project?" / "哪个 AI 工具对你的项目最有用？"
-   - "If you had more time, what would you add?" / "如果你有更多时间，你会添加什么？"
-
-4. Lead applause after each presentation / 每次展示后带头鼓掌
+3. Lead applause after each presentation / 每次展示后带头鼓掌
 
 > **Contingency / 应对方案:**
-> EN: If you have more than 3 students and time is tight: Have each student present for 3-4 minutes maximum. Skip the follow-up question if needed. The important thing is that EVERY student gets to show something.
-> CN: 如果有超过3个学生且时间紧张：每个学生最多展示3-4分钟。必要时跳过追问。重要的是每个学生都能展示一些东西。
+> EN: If a student is shy: "That's fine! Just show us the animation running --- the art speaks for itself. You do not have to say anything if you do not want to."
+> CN: 如果学生害羞："没关系！就给我们看动画运行——艺术会说话。如果你不想说话，不必说任何东西。"
 
 > **Contingency / 应对方案:**
-> EN: If a student is shy or their project is not finished: "That is totally fine! Show us one thing you made that you are proud of --- even if it is just one image or one paragraph. Every creator starts somewhere."
-> CN: 如果学生害羞或项目没完成："完全没关系！给我们看一样你自豪的东西——即使只是一张图片或一段文字。每个创作者都是从某个起点开始的。"
+> EN: If time is short: Have students show their animations to the person sitting next to them (pair share) instead of presenting to the whole class. Give 2 minutes for pair sharing. Then ask: "Who saw something amazing? Tell us what your partner made!"
+> CN: 如果时间不够：让学生向旁边坐的人展示他们的动画（配对分享）而不是向全班展示。给2分钟配对分享。然后问："谁看到了很棒的东西？告诉我们你的搭档做了什么！"
 
----
+EN: "Amazing work today! You created animations from nothing but words. Think about that --- you described something you imagined, and AI turned it into real, moving, visual art that you can keep and share. That is the power of AI as a creative tool."
 
-### [SLIDE 9 --- Course Recap] *(0:56)*
+CN: "今天做得太棒了！你们从纯文字创造了动画。想想这个——你描述了你想象的东西，AI 把它变成了真实的、会动的视觉艺术，你可以保存和分享。这就是 AI 作为创意工具的力量。"
 
-EN: "Before we wrap up, let's take one last look at everything we have done together. Lesson 1, we learned to chat with AI and write stories. Lesson 2, we went deeper into storytelling and picture books. Lesson 3, we created amazing images. Lesson 4, we composed music. Lesson 5, we directed mini films. And today, Lesson 6, you combined everything into your own unique project. What a journey!"
+EN: "Make sure you have downloaded your favorite animation. See you next time!"
 
-CN: "在结束之前，让我们最后回顾一下我们一起做的所有事情。第1课，我们学会了和 AI 聊天和写故事。第2课，我们深入了讲故事和绘本。第3课，我们创造了惊人的图片。第4课，我们作了曲。第5课，我们导演了迷你电影。今天，第6课，你们把所有东西组合成了你们自己独特的项目。多么精彩的旅程！"
-
----
-
-## Graduation & Celebration / 毕业与庆祝 (2 minutes / 分钟)
-
-### [SLIDE 10 --- Congratulations!] *(0:58)*
-
-**[Make this moment feel SPECIAL / 让这一刻感觉特别]**
-
-EN: "And now... the moment you have been waiting for."
-
-CN: "现在……你们一直等待的时刻。"
-
-**[Pause for effect / 停顿制造效果]**
-
-EN: "Congratulations! You are now officially AI Creators!"
-
-CN: "恭喜！你们现在正式成为 AI 创造者了！"
-
-**[Lead applause / 带头鼓掌]**
-
-EN: "Over these six weeks, you have learned something that most adults have not figured out yet --- how to use AI as a creative partner. You learned to write with AI, create art, compose music, make films, and code. And today you proved that you can combine all of those skills into something uniquely yours."
-
-CN: "在这六周里，你们学到了大多数成年人还没弄明白的东西——如何把 AI 当作创意伙伴。你们学会了用 AI 写作、创作艺术、作曲、制作电影和编程。今天你们证明了你们可以把所有这些技能组合成独特属于你们自己的东西。"
-
-EN: "Here is what I want you to remember: AI is a tool. A very powerful tool. But the creativity, the ideas, the vision --- that comes from YOU. Never stop creating. Never stop being curious. And never stop experimenting. The future belongs to creators like you."
-
-CN: "我想让你们记住的是：AI 是一个工具。一个非常强大的工具。但创造力、想法、愿景——都来自你们。永远不要停止创作。永远不要停止好奇。永远不要停止实验。未来属于像你们这样的创造者。"
-
-**[If you prepared certificates / 如果你准备了证书:]**
-
-EN: "And now, I have something for each of you..."
-
-CN: "现在，我给你们每个人准备了一样东西……"
-
-**[Hand out certificates or show digital badges / 发放证书或展示数字徽章]**
-
-EN: "Thank you for being an amazing class. Keep creating!"
-
-CN: "谢谢你们成为这么棒的班级。继续创作！"
-
-**[Final applause / 最后的掌声]**
+CN: "确保你下载了你最喜欢的动画。下次见！"
 
 ---
 
@@ -264,44 +281,43 @@ CN: "谢谢你们成为这么棒的班级。继续创作！"
 
 | Time / 时间 | Section / 环节 | Activity / 活动 |
 |---|---|---|
-| 0:00--0:01 | Welcome | Slide 1 --- Title & introduction |
-| 0:01--0:02 | Recap | Slide 2 --- Look how far you've come |
-| 0:02--0:03 | Skills | Slide 3 --- All 6 skills unlocked |
-| 0:03--0:04 | Options | Slide 4 --- Four project types |
-| 0:04--0:06 | Planning | Slide 5 --- Tips + students open laptops, choose & plan |
-| 0:06--0:08 | Launch | Slide 6 --- Building time begins |
-| 0:08--0:28 | Build (1st half) | Students create with all AI tools |
-| 0:28 | Checkpoint | Slide 7 --- Mid-build check-in |
-| 0:28--0:43 | Build (2nd half) | Continue building + start presentation prep |
-| 0:43--0:44 | Tips | Slide 8 --- Presentation tips |
-| 0:44--0:56 | Presentations | Students present projects (5-7 min each) |
-| 0:56--0:58 | Recap | Slide 9 --- Course journey recap |
-| 0:58--1:00 | Graduation | Slide 10 --- Congratulations + certificates |
+| 0:00--0:02 | Welcome | Slide 1 --- Title & framing |
+| 0:02--0:04 | Animation basics | Slide 2 --- What is animation? (flipbook analogy) |
+| 0:04--0:06 | Approaches | Slide 3 --- CSS vs Canvas (simplified) |
+| 0:06--0:08 | Vocabulary | Slide 4 --- Motion words: bounce, spin, fade, pulse, orbit, morph |
+| 0:08--0:09 | Uniqueness | Slide 5 --- Same description, different results |
+| 0:09--0:10 | Preview | Slide 6 --- 6 animation challenges overview |
+| 0:10--0:11 | Generative Art | Slide 7 --- Rules + Randomness = Unique Art |
+| 0:11--0:12 | Examples | Slides 8-10 --- Famous examples, art styles, interactive tips |
+| 0:12 | Launch | Slides 11-12 --- Mission overview, students open laptops |
+| 0:12--0:37 | Part 1 | Animation Playground --- 6 challenges (easy to hard) |
+| 0:37--0:52 | Part 2 | Generative Art Gallery + Interactive upgrades |
+| 0:52--1:00 | Share | Student art exhibition + download animations |
 
 ---
 
 ## Contingency Plans / 应急方案
 
-### If build time runs long / 如果创建时间超时
-- Cut the mid-build checkpoint (skip Slide 7)
-- Reduce presentation time to 3 minutes per student
-- Move graduation celebration to be faster (1 minute)
+### If students are very fast / 如果学生速度很快
+- Encourage them to write original prompts from scratch (not using the challenge cards)
+- Suggest combining two concepts: "What if the starfield had fireworks in it?"
+- Challenge them to make something interactive that responds to BOTH mouse AND keyboard
+- Let them help slower students by suggesting motion words
 
-### If presentations run short / 如果展示时间不够
-- Have students present in pairs --- they can interview each other about their projects
-- Keep presentations to 2-3 minutes each and use remaining time for a class discussion about the whole course
+### If students are slow / 如果学生速度慢
+- Have them focus on just 2 animations in Part 1 instead of 3
+- Skip the generative art section and let them spend more time on Part 1 animations
+- Use pair work: one student describes, the other types
+- Pre-select the "Particle Fountain" (easiest visual result) and have everyone start with that
 
-### If a student's project did not work / 如果学生的项目没有成功
-- "That is part of the creative process! Tell us what you TRIED to make and what you learned. Even professional creators face failures --- it is how we learn."
-- "这是创作过程的一部分！告诉我们你试图做什么以及你学到了什么。即使专业创作者也会面临失败——这是我们学习的方式。"
+### If API is slow or down / 如果 API 慢或宕机
+- Have students iterate on existing generations using "What to change?" (faster than new generations)
+- Reduce the number of required animations from 3 to 1
+- Use the lesson as a vocabulary and concept lesson --- focus on the slides and discussion about animation and generative art
+- Students can write their descriptions on paper and try generating after class
 
-### If APIs are down / 如果 API 宕机
-- Have students plan their projects on paper first (detailed written plan)
-- Use the Text AI chat for brainstorming even if image generation is slow
-- Students can describe their intended images in writing as part of their presentation
-- Focus more on the planning and presentation aspects of the lesson
-
-### Certificate suggestions / 证书建议
-- Simple option: Print a sheet with "AI Creator Lab --- Certificate of Completion" and the student's name, with a list of skills learned
-- Digital option: Create a simple HTML page certificate and share via USB or email
-- Fun option: Have students design their own certificates using Image AI during build time
+### If animations do not render in the preview / 如果动画不在预览中渲染
+- Try clicking Generate again --- the AI produces different code each time
+- Check if the iframe preview area is visible (not collapsed)
+- Try a simpler prompt: "A red circle that bounces around the screen on a black background"
+- If all else fails, switch to Part 2 and try generative art prompts instead

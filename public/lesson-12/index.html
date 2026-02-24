@@ -1,0 +1,1459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lesson 12: AI Showcase - AI Creator Lab</title>
+  <link rel="stylesheet" href="/shared/styles.css">
+  <style>
+    /* ===== Section Dividers ===== */
+    .lesson-section {
+      margin-bottom: var(--space-xl);
+      padding-bottom: var(--space-xl);
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .lesson-section:last-child {
+      border-bottom: none;
+    }
+
+    .section-heading {
+      font-size: var(--text-xl);
+      font-weight: 650;
+      margin-bottom: var(--space-lg);
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+    }
+
+    /* ===== Polish Checklist ===== */
+    .polish-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: var(--space-md);
+      margin-bottom: var(--space-lg);
+    }
+
+    .polish-item {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--space-sm);
+      padding: var(--space-md);
+      background: var(--color-surface);
+      border: 1.5px solid var(--color-border);
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+    }
+
+    .polish-item:hover {
+      border-color: var(--color-primary);
+    }
+
+    .polish-item.checked {
+      border-color: var(--color-success);
+      background: var(--color-success-light);
+    }
+
+    .polish-item input[type="checkbox"] {
+      accent-color: var(--color-success);
+      width: 18px;
+      height: 18px;
+      margin-top: 2px;
+      flex-shrink: 0;
+    }
+
+    .polish-item .polish-text {
+      font-size: var(--text-sm);
+      font-weight: 600;
+    }
+
+    /* ===== Presentation Prep ===== */
+    .present-form {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-lg);
+    }
+
+    .present-form label {
+      display: block;
+      font-size: var(--text-sm);
+      font-weight: 600;
+      margin-bottom: var(--space-xs);
+    }
+
+    .present-actions {
+      display: flex;
+      gap: var(--space-md);
+      flex-wrap: wrap;
+      align-items: center;
+      margin-top: var(--space-md);
+    }
+
+    /* ===== Presentation Mode Overlay ===== */
+    .presentation-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 99999;
+      background: linear-gradient(160deg, #1e2330 0%, #2d1b69 50%, #1e2330 100%);
+      color: #ffffff;
+      overflow-y: auto;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+
+    .presentation-overlay.visible {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 60px 40px;
+    }
+
+    .presentation-close {
+      position: fixed;
+      top: 20px;
+      right: 24px;
+      background: rgba(255,255,255,0.15);
+      border: none;
+      color: #ffffff;
+      font-size: 1.5rem;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: background 0.2s;
+      z-index: 100000;
+    }
+
+    .presentation-close:hover {
+      background: rgba(255,255,255,0.3);
+    }
+
+    .presentation-content {
+      max-width: 800px;
+      width: 100%;
+      text-align: center;
+    }
+
+    .presentation-content h1 {
+      font-size: 3rem;
+      font-weight: 800;
+      margin-bottom: 0.3em;
+      background: linear-gradient(135deg, #a78bfa, #60a5fa);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .presentation-content .pres-author {
+      font-size: 1.2rem;
+      color: rgba(255,255,255,0.6);
+      margin-bottom: 2em;
+    }
+
+    .presentation-content .pres-section {
+      text-align: left;
+      margin-bottom: 2em;
+    }
+
+    .presentation-content .pres-section h2 {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #a78bfa;
+      margin-bottom: 0.5em;
+    }
+
+    .presentation-content .pres-section p {
+      font-size: 1.15rem;
+      line-height: 1.8;
+      color: rgba(255,255,255,0.85);
+      white-space: pre-wrap;
+    }
+
+    /* ===== Showtime Section ===== */
+    .showtime-banner {
+      background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+      border-radius: var(--radius-lg);
+      padding: var(--space-lg) var(--space-xl);
+      color: #ffffff;
+      text-align: center;
+      margin-bottom: var(--space-lg);
+    }
+
+    .showtime-banner h3 {
+      font-size: var(--text-2xl);
+      font-weight: 800;
+      margin-bottom: var(--space-xs);
+    }
+
+    .showtime-banner p {
+      font-size: var(--text-md);
+      opacity: 0.9;
+    }
+
+    /* Timer */
+    .timer-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-md);
+      margin-bottom: var(--space-lg);
+    }
+
+    .timer-display {
+      font-size: 2.5rem;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+      color: var(--color-text);
+      min-width: 140px;
+      text-align: center;
+    }
+
+    .timer-display.warning {
+      color: var(--color-warning);
+    }
+
+    .timer-display.danger {
+      color: var(--color-error);
+    }
+
+    /* ===== Feedback Form ===== */
+    .feedback-form {
+      background: var(--color-surface);
+      border: 1.5px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: var(--space-xl);
+    }
+
+    .feedback-form h3 {
+      margin-bottom: var(--space-lg);
+    }
+
+    .feedback-form .form-group {
+      margin-bottom: var(--space-md);
+    }
+
+    .feedback-form label {
+      display: block;
+      font-size: var(--text-sm);
+      font-weight: 600;
+      margin-bottom: var(--space-xs);
+    }
+
+    /* Star rating */
+    .star-rating {
+      display: flex;
+      gap: 4px;
+      margin-top: var(--space-xs);
+    }
+
+    .star-rating .star {
+      font-size: 2rem;
+      cursor: pointer;
+      transition: transform var(--transition-fast);
+      user-select: none;
+      color: var(--color-border);
+    }
+
+    .star-rating .star:hover {
+      transform: scale(1.15);
+    }
+
+    .star-rating .star.active {
+      color: #f59e0b;
+    }
+
+    /* Feedback entries */
+    .feedback-list {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-md);
+      margin-top: var(--space-lg);
+    }
+
+    .feedback-entry {
+      background: var(--color-bg);
+      border-radius: var(--radius-md);
+      padding: var(--space-md) var(--space-lg);
+      border-left: 4px solid var(--color-primary);
+    }
+
+    .feedback-entry .fb-stars {
+      color: #f59e0b;
+      font-size: 1.1rem;
+      margin-bottom: var(--space-xs);
+    }
+
+    .feedback-entry .fb-liked {
+      font-size: var(--text-sm);
+      margin-bottom: var(--space-xs);
+    }
+
+    .feedback-entry .fb-suggestion {
+      font-size: var(--text-sm);
+      color: var(--color-text-muted);
+    }
+
+    .feedback-entry .fb-time {
+      font-size: var(--text-xs);
+      color: var(--color-text-muted);
+      margin-top: var(--space-sm);
+    }
+
+    /* ===== Journey Timeline ===== */
+    .journey-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: var(--space-md);
+      margin-bottom: var(--space-lg);
+    }
+
+    @media (max-width: 767px) {
+      .journey-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    .journey-item {
+      background: var(--color-surface);
+      border: 1.5px solid var(--color-border);
+      border-radius: var(--radius-md);
+      padding: var(--space-md);
+      text-align: center;
+      transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+    }
+
+    .journey-item:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .journey-item.current {
+      border-color: var(--color-primary);
+      background: var(--color-primary-light);
+    }
+
+    .journey-item .ji-number {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--color-primary);
+      color: #fff;
+      font-size: var(--text-xs);
+      font-weight: 700;
+      margin-bottom: var(--space-xs);
+    }
+
+    .journey-item .ji-emoji {
+      font-size: 1.8rem;
+      margin-bottom: var(--space-xs);
+    }
+
+    .journey-item .ji-name {
+      font-size: var(--text-sm);
+      font-weight: 650;
+    }
+
+    /* ===== Reflection Form ===== */
+    .reflection-form {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-lg);
+    }
+
+    .reflection-form label {
+      display: block;
+      font-size: var(--text-sm);
+      font-weight: 600;
+      margin-bottom: var(--space-xs);
+    }
+
+    .reflection-saved-msg {
+      display: none;
+      color: var(--color-success);
+      font-size: var(--text-sm);
+      font-weight: 600;
+      margin-top: var(--space-sm);
+    }
+
+    /* ===== Graduation Section ===== */
+    .graduation-banner {
+      background: linear-gradient(135deg, #4f6ef7 0%, #7c3aed 30%, #ec4899 60%, #f59e0b 100%);
+      border-radius: var(--radius-lg);
+      padding: var(--space-xl);
+      color: #ffffff;
+      text-align: center;
+      margin-bottom: var(--space-lg);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .graduation-banner::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(2px 2px at 10% 20%, rgba(255,255,255,0.6) 50%, transparent 50%),
+        radial-gradient(2px 2px at 30% 70%, rgba(255,255,255,0.5) 50%, transparent 50%),
+        radial-gradient(2px 2px at 50% 10%, rgba(255,255,255,0.4) 50%, transparent 50%),
+        radial-gradient(2px 2px at 70% 60%, rgba(255,255,255,0.6) 50%, transparent 50%),
+        radial-gradient(2px 2px at 90% 30%, rgba(255,255,255,0.5) 50%, transparent 50%),
+        radial-gradient(2px 2px at 15% 85%, rgba(255,255,255,0.3) 50%, transparent 50%),
+        radial-gradient(2px 2px at 85% 90%, rgba(255,255,255,0.4) 50%, transparent 50%),
+        radial-gradient(3px 3px at 25% 45%, rgba(255,255,255,0.5) 50%, transparent 50%),
+        radial-gradient(3px 3px at 60% 80%, rgba(255,255,255,0.3) 50%, transparent 50%),
+        radial-gradient(3px 3px at 80% 15%, rgba(255,255,255,0.4) 50%, transparent 50%);
+      animation: twinkle 3s ease-in-out infinite alternate;
+      pointer-events: none;
+    }
+
+    @keyframes twinkle {
+      0% { opacity: 0.4; }
+      100% { opacity: 1; }
+    }
+
+    .graduation-banner h2 {
+      font-size: 2.2rem;
+      font-weight: 800;
+      margin-bottom: var(--space-xs);
+      position: relative;
+    }
+
+    .graduation-banner .grad-subtitle {
+      font-size: var(--text-lg);
+      opacity: 0.9;
+      position: relative;
+    }
+
+    /* Skills Badges */
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: var(--space-md);
+      margin-bottom: var(--space-lg);
+    }
+
+    .skill-badge {
+      background: var(--color-surface);
+      border: 2px solid var(--color-border);
+      border-radius: var(--radius-md);
+      padding: var(--space-lg) var(--space-md);
+      text-align: center;
+      transition: transform var(--transition-fast), border-color var(--transition-fast);
+    }
+
+    .skill-badge:hover {
+      transform: translateY(-3px);
+      border-color: var(--color-primary);
+    }
+
+    .skill-badge .skill-emoji {
+      font-size: 2.2rem;
+      margin-bottom: var(--space-sm);
+    }
+
+    .skill-badge .skill-name {
+      font-size: var(--text-sm);
+      font-weight: 700;
+      margin-bottom: 2px;
+    }
+
+    .skill-badge .skill-check {
+      font-size: var(--text-xs);
+      color: var(--color-success);
+      font-weight: 600;
+    }
+
+    /* ===== Certificate ===== */
+    .certificate-wrapper {
+      margin-top: var(--space-lg);
+    }
+
+    .certificate {
+      background: #ffffff;
+      border: 8px double #c9a96e;
+      border-radius: 4px;
+      padding: 48px 56px;
+      text-align: center;
+      max-width: 700px;
+      margin: 0 auto;
+      position: relative;
+    }
+
+    .certificate::before {
+      content: '';
+      position: absolute;
+      inset: 6px;
+      border: 2px solid #ddc896;
+      border-radius: 2px;
+      pointer-events: none;
+    }
+
+    .cert-header {
+      font-size: var(--text-xs);
+      text-transform: uppercase;
+      letter-spacing: 0.3em;
+      color: #8b7355;
+      margin-bottom: var(--space-sm);
+    }
+
+    .cert-title {
+      font-size: 2rem;
+      font-weight: 800;
+      color: #1e2330;
+      margin-bottom: var(--space-xs);
+      letter-spacing: -0.01em;
+    }
+
+    .cert-subtitle {
+      font-size: var(--text-md);
+      color: var(--color-text-muted);
+      margin-bottom: var(--space-lg);
+    }
+
+    .cert-label {
+      font-size: var(--text-sm);
+      color: #8b7355;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      margin-bottom: var(--space-xs);
+    }
+
+    .cert-name {
+      font-size: 2.4rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: var(--space-lg);
+    }
+
+    .cert-title-earned {
+      font-size: var(--text-lg);
+      font-weight: 700;
+      color: var(--color-text);
+      margin-bottom: var(--space-md);
+    }
+
+    .cert-skills {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: var(--space-sm);
+      margin-bottom: var(--space-lg);
+    }
+
+    .cert-skill-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 0.3em 0.8em;
+      font-size: var(--text-sm);
+      font-weight: 600;
+      background: var(--color-primary-light);
+      color: var(--color-primary);
+      border-radius: var(--radius-full);
+    }
+
+    .cert-date {
+      font-size: var(--text-sm);
+      color: var(--color-text-muted);
+      margin-bottom: var(--space-sm);
+    }
+
+    .cert-footer {
+      font-size: var(--text-xs);
+      color: #8b7355;
+      letter-spacing: 0.1em;
+    }
+
+    .cert-actions {
+      display: flex;
+      justify-content: center;
+      gap: var(--space-md);
+      flex-wrap: wrap;
+      margin-top: var(--space-lg);
+    }
+
+    /* ===== Final Message ===== */
+    .final-message {
+      text-align: center;
+      padding: var(--space-xl) var(--space-lg);
+      margin-top: var(--space-lg);
+    }
+
+    .final-message .fm-quote {
+      font-size: var(--text-xl);
+      font-weight: 700;
+      color: var(--color-text);
+      line-height: 1.5;
+      max-width: 500px;
+      margin: 0 auto var(--space-md);
+    }
+
+    .final-message .fm-highlight {
+      background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .final-message .fm-sub {
+      font-size: var(--text-md);
+      color: var(--color-text-muted);
+    }
+
+    /* ===== Print Styles ===== */
+    @media print {
+      body {
+        background: #ffffff;
+      }
+
+      .lesson-header,
+      .lesson-sidebar,
+      .lesson-section:not(.section-graduation),
+      .graduation-banner,
+      .skills-grid,
+      .cert-actions,
+      .final-message,
+      .presentation-overlay {
+        display: none !important;
+      }
+
+      .lesson-page {
+        display: block;
+      }
+
+      .lesson-main {
+        padding: 0;
+      }
+
+      .section-graduation {
+        border: none;
+        padding: 0;
+        margin: 0;
+      }
+
+      .certificate-wrapper {
+        margin: 0;
+      }
+
+      .certificate {
+        max-width: 100%;
+        border-width: 6px;
+        padding: 40px;
+        page-break-inside: avoid;
+      }
+
+      .certificate::before {
+        inset: 4px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Lesson Header -->
+  <header class="lesson-header">
+    <div class="lesson-badge">
+      <span class="lesson-number">12</span>
+      <span class="lesson-title">AI Showcase</span>
+    </div>
+    <a href="/" class="back-link">&larr; Back to all lessons</a>
+  </header>
+
+  <!-- Page Layout -->
+  <div class="lesson-page">
+
+    <!-- Main Content Area -->
+    <main class="lesson-main" id="main-content">
+
+      <!-- ===== Section 1: Polish Time ===== -->
+      <div class="lesson-section">
+        <h2 class="section-heading">&#x2728; Polish Time</h2>
+        <p style="color: var(--color-text-muted); margin-bottom: var(--space-lg);">
+          Quick checks before you present. Make sure everything looks great!
+        </p>
+
+        <div class="polish-grid" id="polish-grid">
+          <!-- rendered by JS -->
+        </div>
+
+        <h3 style="margin-top: var(--space-xl); margin-bottom: var(--space-md);">&#x1F3A4; Presentation Prep</h3>
+
+        <div class="present-form">
+          <div class="form-group">
+            <label for="pres-about">About My Project</label>
+            <textarea class="textarea" id="pres-about" rows="4" placeholder="What is your project? What does it do? Why did you choose this idea?"></textarea>
+          </div>
+          <div class="form-group">
+            <label for="pres-process">My Creative Process</label>
+            <textarea class="textarea" id="pres-process" rows="4" placeholder="What AI tools did you use? What was the hardest part? What did you learn?"></textarea>
+          </div>
+        </div>
+
+        <div class="present-actions">
+          <button class="btn btn-primary btn-lg" id="launch-presentation-btn">&#x1F680; Launch Presentation Mode</button>
+        </div>
+      </div>
+
+      <!-- ===== Section 2: Showtime ===== -->
+      <div class="lesson-section">
+        <h2 class="section-heading">&#x1F3AC; Showtime!</h2>
+
+        <div class="showtime-banner">
+          <h3>&#x1F31F; It's Presentation Time! &#x1F31F;</h3>
+          <p>Time to share your amazing AI creations with the class</p>
+        </div>
+
+        <!-- Timer -->
+        <div class="timer-row">
+          <button class="btn btn-secondary" id="timer-start">&#x25B6; Start Timer</button>
+          <div class="timer-display" id="timer-display">10:00</div>
+          <button class="btn btn-secondary" id="timer-pause">&#x23F8; Pause</button>
+          <button class="btn btn-icon" id="timer-reset" title="Reset timer">&#x21BB;</button>
+        </div>
+
+        <!-- Peer Feedback Form -->
+        <div class="feedback-form" id="feedback-form">
+          <h3>&#x1F4AC; Peer Feedback</h3>
+
+          <div class="form-group">
+            <label for="fb-presenter">Presenter Name</label>
+            <input type="text" class="input" id="fb-presenter" placeholder="Who is presenting?">
+          </div>
+
+          <div class="form-group">
+            <label for="fb-liked">What I liked most:</label>
+            <textarea class="textarea" id="fb-liked" rows="3" placeholder="What stood out about this project? What was cool or creative?"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="fb-suggestion">One suggestion:</label>
+            <textarea class="textarea" id="fb-suggestion" rows="2" placeholder="One idea to make it even better..."></textarea>
+          </div>
+
+          <div class="form-group">
+            <label>Rating:</label>
+            <div class="star-rating" id="star-rating">
+              <span class="star" data-value="1">&#x2605;</span>
+              <span class="star" data-value="2">&#x2605;</span>
+              <span class="star" data-value="3">&#x2605;</span>
+              <span class="star" data-value="4">&#x2605;</span>
+              <span class="star" data-value="5">&#x2605;</span>
+            </div>
+          </div>
+
+          <button class="btn btn-primary" id="submit-feedback-btn">&#x1F4E8; Submit Feedback</button>
+        </div>
+
+        <div class="feedback-list" id="feedback-list">
+          <!-- feedback entries appear here -->
+        </div>
+      </div>
+
+      <!-- ===== Section 3: Course Reflection ===== -->
+      <div class="lesson-section">
+        <h2 class="section-heading">&#x1F30D; Our AI Journey</h2>
+
+        <div class="journey-grid" id="journey-grid">
+          <!-- rendered by JS -->
+        </div>
+
+        <div class="reflection-form">
+          <div class="form-group">
+            <label for="reflect-learned">&#x1F4A1; What I Learned</label>
+            <textarea class="textarea" id="reflect-learned" rows="4" placeholder="What is the most important thing you learned in this course? How has your understanding of AI changed?"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="reflect-fav-lesson">&#x2764;&#xFE0F; My Favorite Lesson</label>
+            <select class="select" id="reflect-fav-lesson">
+              <option value="">Choose a lesson...</option>
+              <option value="1">Lesson 1: AI Words</option>
+              <option value="2">Lesson 2: AI Images</option>
+              <option value="3">Lesson 3: AI Media</option>
+              <option value="4">Lesson 4: AI Code Intro</option>
+              <option value="5">Lesson 5: AI Web Designer</option>
+              <option value="6">Lesson 6: AI Animation Studio</option>
+              <option value="7">Lesson 7: AI Chatbot Creator</option>
+              <option value="8">Lesson 8: AI App Inventor</option>
+              <option value="9">Lesson 9: AI Ethics</option>
+              <option value="10">Lesson 10: AI Toolbox</option>
+              <option value="11">Lesson 11: Final Project</option>
+              <option value="12">Lesson 12: AI Showcase</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="reflect-fav-why">Why was it your favorite?</label>
+            <textarea class="textarea" id="reflect-fav-why" rows="3" placeholder="What made this lesson special for you?"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="reflect-next">&#x1F680; What's Next for Me and AI</label>
+            <textarea class="textarea" id="reflect-next" rows="3" placeholder="How will you use AI in the future? What do you want to create next?"></textarea>
+          </div>
+
+          <button class="btn btn-primary" id="save-reflection-btn">&#x1F4BE; Save My Reflection</button>
+          <div class="reflection-saved-msg" id="reflection-saved-msg">&#x2705; Reflection saved!</div>
+        </div>
+      </div>
+
+      <!-- ===== Section 4: Graduation ===== -->
+      <div class="lesson-section section-graduation">
+        <h2 class="section-heading">&#x1F393; Graduation</h2>
+
+        <div class="graduation-banner">
+          <h2>&#x1F389; Congratulations, AI Creators! &#x1F389;</h2>
+          <p class="grad-subtitle">You did it! 12 lessons. Countless creations. Infinite possibilities ahead.</p>
+        </div>
+
+        <!-- Skills Unlocked -->
+        <h3 style="text-align: center; margin-bottom: var(--space-md);">Skills Unlocked</h3>
+        <div class="skills-grid" id="skills-grid">
+          <!-- rendered by JS -->
+        </div>
+
+        <!-- Certificate -->
+        <div class="certificate-wrapper">
+          <div class="certificate" id="certificate">
+            <div class="cert-header">AI Creator Lab</div>
+            <div class="cert-title">Certificate of Completion</div>
+            <div class="cert-subtitle">This is to certify that</div>
+            <div class="cert-label">Student</div>
+            <div class="cert-name" id="cert-name">Your Name</div>
+            <div class="cert-title-earned">has earned the title of AI Creator</div>
+            <div class="cert-skills" id="cert-skills">
+              <!-- rendered by JS -->
+            </div>
+            <div class="cert-date" id="cert-date"></div>
+            <div class="cert-footer">AI Creator Lab &middot; 12-Week Course</div>
+          </div>
+
+          <div class="cert-actions">
+            <button class="btn btn-primary btn-lg" id="print-cert-btn">&#x1F5A8; Print Certificate</button>
+            <div id="export-container"></div>
+          </div>
+        </div>
+
+        <!-- Final Message -->
+        <div class="final-message">
+          <p class="fm-quote">
+            AI is the tool.<br>
+            <span class="fm-highlight">YOU are the creator.</span>
+          </p>
+          <p class="fm-sub">Keep creating. Keep experimenting. Keep being curious.</p>
+        </div>
+      </div>
+
+    </main>
+
+    <!-- Task Sidebar -->
+    <aside class="lesson-sidebar">
+      <div class="task-sidebar" id="task-sidebar"></div>
+    </aside>
+
+  </div>
+
+  <!-- Presentation Mode Overlay -->
+  <div class="presentation-overlay" id="presentation-overlay">
+    <button class="presentation-close" id="presentation-close">&times;</button>
+    <div class="presentation-content" id="presentation-content">
+      <!-- filled by JS -->
+    </div>
+  </div>
+
+  <script src="/shared/components.js"></script>
+  <script>
+    // =============================================
+    // LocalStorage Keys
+    // =============================================
+    var STORAGE_PREFIX = 'lesson12_';
+    function storageKey(name) { return STORAGE_PREFIX + name; }
+
+    function saveToStorage(key, value) {
+      try { localStorage.setItem(storageKey(key), JSON.stringify(value)); } catch (e) { /* ignore */ }
+    }
+
+    function loadFromStorage(key, fallback) {
+      try {
+        var v = localStorage.getItem(storageKey(key));
+        return v ? JSON.parse(v) : fallback;
+      } catch (e) { return fallback; }
+    }
+
+    function clearChildren(el) {
+      while (el.firstChild) el.removeChild(el.firstChild);
+    }
+
+    function escapeHtml(str) {
+      return str
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    // =============================================
+    // Section 1: Polish Checklist
+    // =============================================
+    var polishItems = [
+      { id: 'p1', text: 'My project works and looks good' },
+      { id: 'p2', text: 'I have a project title' },
+      { id: 'p3', text: 'I have written "About My Project"' },
+      { id: 'p4', text: 'I have written "My Creative Process"' },
+      { id: 'p5', text: 'I tested Presentation Mode' },
+      { id: 'p6', text: 'I am ready to present!' }
+    ];
+
+    var polishGrid = document.getElementById('polish-grid');
+    var polishState = loadFromStorage('polish', {});
+
+    polishItems.forEach(function (item) {
+      var div = document.createElement('div');
+      div.className = 'polish-item' + (polishState[item.id] ? ' checked' : '');
+
+      var cb = document.createElement('input');
+      cb.type = 'checkbox';
+      cb.checked = !!polishState[item.id];
+
+      var span = document.createElement('span');
+      span.className = 'polish-text';
+      span.textContent = item.text;
+
+      div.appendChild(cb);
+      div.appendChild(span);
+
+      function toggle(e) {
+        if (e.target === cb) return;
+        cb.checked = !cb.checked;
+        cb.dispatchEvent(new Event('change'));
+      }
+
+      div.addEventListener('click', toggle);
+
+      cb.addEventListener('change', function () {
+        polishState[item.id] = cb.checked;
+        div.className = 'polish-item' + (cb.checked ? ' checked' : '');
+        saveToStorage('polish', polishState);
+
+        // Check if all polished
+        var allChecked = polishItems.every(function (p) { return polishState[p.id]; });
+        if (allChecked) {
+          taskCards.setComplete('polish', true);
+        }
+      });
+
+      polishGrid.appendChild(div);
+    });
+
+    // =============================================
+    // Presentation Prep — Load & Auto-save
+    // =============================================
+    var presAbout = document.getElementById('pres-about');
+    var presProcess = document.getElementById('pres-process');
+
+    // Try loading from lesson 11 first, then lesson 12 local
+    var savedPresAbout = loadFromStorage('presAbout', '');
+    var savedPresProcess = loadFromStorage('presProcess', '');
+
+    // Also check lesson-11 storage as fallback
+    if (!savedPresAbout) {
+      try {
+        var l11 = localStorage.getItem('lesson06_presAbout');
+        if (l11) savedPresAbout = JSON.parse(l11);
+      } catch (e) { /* ignore */ }
+    }
+    if (!savedPresProcess) {
+      try {
+        var l11p = localStorage.getItem('lesson06_presProcess');
+        if (l11p) savedPresProcess = JSON.parse(l11p);
+      } catch (e) { /* ignore */ }
+    }
+
+    presAbout.value = savedPresAbout || '';
+    presProcess.value = savedPresProcess || '';
+
+    presAbout.addEventListener('input', function () {
+      saveToStorage('presAbout', presAbout.value);
+    });
+    presProcess.addEventListener('input', function () {
+      saveToStorage('presProcess', presProcess.value);
+    });
+
+    // =============================================
+    // Presentation Mode
+    // =============================================
+    var overlay = document.getElementById('presentation-overlay');
+    var presContent = document.getElementById('presentation-content');
+    var launchBtn = document.getElementById('launch-presentation-btn');
+    var closePresBtn = document.getElementById('presentation-close');
+
+    // Try to get project title from lesson 11 storage
+    function getProjectTitle() {
+      var title = '';
+      try {
+        var plan = localStorage.getItem('lesson06_plan');
+        if (plan) {
+          var parsed = JSON.parse(plan);
+          title = parsed.title || '';
+        }
+      } catch (e) { /* ignore */ }
+      return title || 'My AI Project';
+    }
+
+    launchBtn.addEventListener('click', function () {
+      clearChildren(presContent);
+
+      var title = getProjectTitle();
+      var studentName = '';
+      try { studentName = sessionStorage.getItem('studentName') || ''; } catch (e) { /* ignore */ }
+
+      var h1 = document.createElement('h1');
+      h1.textContent = title;
+      presContent.appendChild(h1);
+
+      if (studentName) {
+        var author = document.createElement('p');
+        author.className = 'pres-author';
+        author.textContent = 'by ' + studentName;
+        presContent.appendChild(author);
+      }
+
+      var aboutText = presAbout.value.trim();
+      if (aboutText) {
+        var aboutSection = document.createElement('div');
+        aboutSection.className = 'pres-section';
+        var aboutH2 = document.createElement('h2');
+        aboutH2.textContent = 'About My Project';
+        var aboutP = document.createElement('p');
+        aboutP.textContent = aboutText;
+        aboutSection.appendChild(aboutH2);
+        aboutSection.appendChild(aboutP);
+        presContent.appendChild(aboutSection);
+      }
+
+      var processText = presProcess.value.trim();
+      if (processText) {
+        var processSection = document.createElement('div');
+        processSection.className = 'pres-section';
+        var processH2 = document.createElement('h2');
+        processH2.textContent = 'My Creative Process';
+        var processP = document.createElement('p');
+        processP.textContent = processText;
+        processSection.appendChild(processH2);
+        processSection.appendChild(processP);
+        presContent.appendChild(processSection);
+      }
+
+      overlay.classList.add('visible');
+      taskCards.setComplete('present', true);
+
+      ActivityLogger.log('presentation', 'Launched presentation mode', title);
+    });
+
+    closePresBtn.addEventListener('click', function () {
+      overlay.classList.remove('visible');
+    });
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && overlay.classList.contains('visible')) {
+        overlay.classList.remove('visible');
+      }
+    });
+
+    // =============================================
+    // Section 2: Presentation Timer
+    // =============================================
+    var timerDisplay = document.getElementById('timer-display');
+    var timerStartBtn = document.getElementById('timer-start');
+    var timerPauseBtn = document.getElementById('timer-pause');
+    var timerResetBtn = document.getElementById('timer-reset');
+
+    var timerSeconds = 600; // 10 minutes
+    var timerInterval = null;
+    var timerRunning = false;
+
+    function formatTime(secs) {
+      var m = Math.floor(secs / 60);
+      var s = secs % 60;
+      return (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s;
+    }
+
+    function updateTimerDisplay() {
+      timerDisplay.textContent = formatTime(timerSeconds);
+      timerDisplay.className = 'timer-display';
+      if (timerSeconds <= 60) {
+        timerDisplay.classList.add('danger');
+      } else if (timerSeconds <= 180) {
+        timerDisplay.classList.add('warning');
+      }
+    }
+
+    timerStartBtn.addEventListener('click', function () {
+      if (timerRunning) return;
+      timerRunning = true;
+      timerStartBtn.disabled = true;
+      timerInterval = setInterval(function () {
+        if (timerSeconds > 0) {
+          timerSeconds--;
+          updateTimerDisplay();
+        } else {
+          clearInterval(timerInterval);
+          timerRunning = false;
+          timerStartBtn.disabled = false;
+          timerDisplay.textContent = 'Time!';
+          timerDisplay.className = 'timer-display danger';
+        }
+      }, 1000);
+    });
+
+    timerPauseBtn.addEventListener('click', function () {
+      if (!timerRunning) return;
+      clearInterval(timerInterval);
+      timerRunning = false;
+      timerStartBtn.disabled = false;
+    });
+
+    timerResetBtn.addEventListener('click', function () {
+      clearInterval(timerInterval);
+      timerRunning = false;
+      timerStartBtn.disabled = false;
+      timerSeconds = 600;
+      updateTimerDisplay();
+    });
+
+    updateTimerDisplay();
+
+    // =============================================
+    // Section 2: Peer Feedback
+    // =============================================
+    var starRating = document.getElementById('star-rating');
+    var stars = starRating.querySelectorAll('.star');
+    var currentRating = 0;
+
+    stars.forEach(function (star) {
+      star.addEventListener('click', function () {
+        currentRating = parseInt(star.getAttribute('data-value'), 10);
+        stars.forEach(function (s) {
+          var val = parseInt(s.getAttribute('data-value'), 10);
+          s.className = 'star' + (val <= currentRating ? ' active' : '');
+        });
+      });
+
+      star.addEventListener('mouseenter', function () {
+        var hoverVal = parseInt(star.getAttribute('data-value'), 10);
+        stars.forEach(function (s) {
+          var val = parseInt(s.getAttribute('data-value'), 10);
+          s.className = 'star' + (val <= hoverVal ? ' active' : '');
+        });
+      });
+    });
+
+    starRating.addEventListener('mouseleave', function () {
+      stars.forEach(function (s) {
+        var val = parseInt(s.getAttribute('data-value'), 10);
+        s.className = 'star' + (val <= currentRating ? ' active' : '');
+      });
+    });
+
+    var submitFbBtn = document.getElementById('submit-feedback-btn');
+    var feedbackList = document.getElementById('feedback-list');
+    var allFeedback = loadFromStorage('feedback', []);
+
+    function renderFeedback(fb) {
+      var entry = document.createElement('div');
+      entry.className = 'feedback-entry';
+
+      var starsText = '';
+      for (var i = 0; i < fb.rating; i++) starsText += '\u2605';
+      for (var j = fb.rating; j < 5; j++) starsText += '\u2606';
+
+      var starsDiv = document.createElement('div');
+      starsDiv.className = 'fb-stars';
+      starsDiv.textContent = starsText + ' for ' + fb.presenter;
+
+      var likedDiv = document.createElement('div');
+      likedDiv.className = 'fb-liked';
+      likedDiv.textContent = 'Liked: ' + fb.liked;
+
+      entry.appendChild(starsDiv);
+      entry.appendChild(likedDiv);
+
+      if (fb.suggestion) {
+        var suggDiv = document.createElement('div');
+        suggDiv.className = 'fb-suggestion';
+        suggDiv.textContent = 'Suggestion: ' + fb.suggestion;
+        entry.appendChild(suggDiv);
+      }
+
+      var timeDiv = document.createElement('div');
+      timeDiv.className = 'fb-time';
+      timeDiv.textContent = fb.time || '';
+      entry.appendChild(timeDiv);
+
+      feedbackList.appendChild(entry);
+    }
+
+    // Render saved feedback
+    allFeedback.forEach(renderFeedback);
+
+    submitFbBtn.addEventListener('click', function () {
+      var presenter = document.getElementById('fb-presenter').value.trim();
+      var liked = document.getElementById('fb-liked').value.trim();
+      var suggestion = document.getElementById('fb-suggestion').value.trim();
+
+      if (!presenter || !liked || currentRating === 0) {
+        alert('Please fill in the presenter name, what you liked, and give a star rating.');
+        return;
+      }
+
+      var fb = {
+        presenter: presenter,
+        liked: liked,
+        suggestion: suggestion,
+        rating: currentRating,
+        time: new Date().toLocaleTimeString()
+      };
+
+      allFeedback.push(fb);
+      saveToStorage('feedback', allFeedback);
+      renderFeedback(fb);
+
+      // Clear form
+      document.getElementById('fb-presenter').value = '';
+      document.getElementById('fb-liked').value = '';
+      document.getElementById('fb-suggestion').value = '';
+      currentRating = 0;
+      stars.forEach(function (s) { s.className = 'star'; });
+
+      taskCards.setComplete('feedback', true);
+
+      ActivityLogger.log('feedback', 'Feedback for ' + fb.presenter, fb.liked);
+    });
+
+    // =============================================
+    // Section 3: Journey Timeline
+    // =============================================
+    var lessons = [
+      { num: 1,  emoji: '\uD83D\uDCAC', name: 'AI Words' },
+      { num: 2,  emoji: '\uD83C\uDFA8', name: 'AI Images' },
+      { num: 3,  emoji: '\uD83C\uDFB5', name: 'AI Media' },
+      { num: 4,  emoji: '\uD83D\uDCBB', name: 'AI Code Intro' },
+      { num: 5,  emoji: '\uD83C\uDF10', name: 'AI Web Designer' },
+      { num: 6,  emoji: '\uD83C\uDFAC', name: 'AI Animation Studio' },
+      { num: 7,  emoji: '\uD83E\uDD16', name: 'AI Chatbot Creator' },
+      { num: 8,  emoji: '\uD83D\uDCF1', name: 'AI App Inventor' },
+      { num: 9,  emoji: '\u2696\uFE0F', name: 'AI Ethics' },
+      { num: 10, emoji: '\uD83E\uDDF0', name: 'AI Toolbox' },
+      { num: 11, emoji: '\uD83D\uDE80', name: 'Final Project' },
+      { num: 12, emoji: '\uD83C\uDF1F', name: 'AI Showcase' }
+    ];
+
+    var journeyGrid = document.getElementById('journey-grid');
+
+    lessons.forEach(function (lesson) {
+      var item = document.createElement('div');
+      item.className = 'journey-item' + (lesson.num === 12 ? ' current' : '');
+
+      var num = document.createElement('div');
+      num.className = 'ji-number';
+      num.textContent = lesson.num;
+
+      var emoji = document.createElement('div');
+      emoji.className = 'ji-emoji';
+      emoji.textContent = lesson.emoji;
+
+      var name = document.createElement('div');
+      name.className = 'ji-name';
+      name.textContent = lesson.name;
+
+      item.appendChild(num);
+      item.appendChild(emoji);
+      item.appendChild(name);
+      journeyGrid.appendChild(item);
+    });
+
+    // =============================================
+    // Reflection — Load & Save
+    // =============================================
+    var reflectLearned = document.getElementById('reflect-learned');
+    var reflectFavLesson = document.getElementById('reflect-fav-lesson');
+    var reflectFavWhy = document.getElementById('reflect-fav-why');
+    var reflectNext = document.getElementById('reflect-next');
+    var saveReflectionBtn = document.getElementById('save-reflection-btn');
+    var reflectionSavedMsg = document.getElementById('reflection-saved-msg');
+
+    var savedReflection = loadFromStorage('reflection', null);
+    if (savedReflection) {
+      reflectLearned.value = savedReflection.learned || '';
+      reflectFavLesson.value = savedReflection.favLesson || '';
+      reflectFavWhy.value = savedReflection.favWhy || '';
+      reflectNext.value = savedReflection.next || '';
+    }
+
+    saveReflectionBtn.addEventListener('click', function () {
+      var reflection = {
+        learned: reflectLearned.value.trim(),
+        favLesson: reflectFavLesson.value,
+        favWhy: reflectFavWhy.value.trim(),
+        next: reflectNext.value.trim()
+      };
+      saveToStorage('reflection', reflection);
+
+      reflectionSavedMsg.style.display = 'block';
+      setTimeout(function () { reflectionSavedMsg.style.display = 'none'; }, 2000);
+
+      if (reflection.learned) {
+        taskCards.setComplete('reflect', true);
+      }
+
+      ActivityLogger.log('reflection', JSON.stringify(reflection));
+    });
+
+    // =============================================
+    // Section 4: Graduation — Skills & Certificate
+    // =============================================
+    var skillsList = [
+      { emoji: '\uD83D\uDCAC', name: 'Text AI' },
+      { emoji: '\uD83C\uDFA8', name: 'Image AI' },
+      { emoji: '\uD83C\uDFB5', name: 'Music AI' },
+      { emoji: '\uD83D\uDCBB', name: 'Code AI' },
+      { emoji: '\u2696\uFE0F', name: 'Ethics' },
+      { emoji: '\uD83D\uDCA1', name: 'Creative Thinking' }
+    ];
+
+    var skillsGrid = document.getElementById('skills-grid');
+    var certSkills = document.getElementById('cert-skills');
+
+    skillsList.forEach(function (skill) {
+      // Badge card
+      var badge = document.createElement('div');
+      badge.className = 'skill-badge';
+
+      var emojiDiv = document.createElement('div');
+      emojiDiv.className = 'skill-emoji';
+      emojiDiv.textContent = skill.emoji;
+
+      var nameDiv = document.createElement('div');
+      nameDiv.className = 'skill-name';
+      nameDiv.textContent = skill.name;
+
+      var checkDiv = document.createElement('div');
+      checkDiv.className = 'skill-check';
+      checkDiv.textContent = '\u2705 Unlocked';
+
+      badge.appendChild(emojiDiv);
+      badge.appendChild(nameDiv);
+      badge.appendChild(checkDiv);
+      skillsGrid.appendChild(badge);
+
+      // Certificate skill tag
+      var tag = document.createElement('span');
+      tag.className = 'cert-skill-tag';
+      tag.textContent = skill.emoji + ' ' + skill.name;
+      certSkills.appendChild(tag);
+    });
+
+    // Certificate — Student name
+    var certNameEl = document.getElementById('cert-name');
+    var studentName = '';
+    try { studentName = sessionStorage.getItem('studentName') || ''; } catch (e) { /* ignore */ }
+    if (studentName) {
+      certNameEl.textContent = studentName;
+    }
+
+    // Certificate — Date
+    var certDateEl = document.getElementById('cert-date');
+    var today = new Date();
+    var months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+    certDateEl.textContent = months[today.getMonth()] + ' ' + today.getDate() + ', ' + today.getFullYear();
+
+    // Print Certificate
+    var printBtn = document.getElementById('print-cert-btn');
+    printBtn.addEventListener('click', function () {
+      window.print();
+    });
+
+    // Export Certificate as HTML
+    var exportContainer = document.getElementById('export-container');
+
+    window.ExportButton(exportContainer, {
+      label: 'Download Certificate',
+      filename: 'ai-creator-certificate.html',
+      format: 'html',
+      getData: function () {
+        var name = studentName || 'Student';
+        var date = certDateEl.textContent;
+        var skillTags = skillsList.map(function (s) {
+          return '<span style="display:inline-flex;align-items:center;gap:4px;padding:0.3em 0.8em;font-size:14px;font-weight:600;background:#e8edfe;color:#4f6ef7;border-radius:9999px;">' + s.emoji + ' ' + escapeHtml(s.name) + '</span>';
+        }).join(' ');
+
+        var html = [];
+        html.push('<!DOCTYPE html>');
+        html.push('<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">');
+        html.push('<title>AI Creator Certificate - ' + escapeHtml(name) + '</title>');
+        html.push('<style>');
+        html.push('*{box-sizing:border-box;margin:0;padding:0}');
+        html.push('body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#f8f9fc;display:flex;align-items:center;justify-content:center;min-height:100vh;padding:40px}');
+        html.push('.cert{background:#fff;border:8px double #c9a96e;border-radius:4px;padding:48px 56px;text-align:center;max-width:700px;width:100%;position:relative}');
+        html.push('.cert::before{content:"";position:absolute;inset:6px;border:2px solid #ddc896;border-radius:2px;pointer-events:none}');
+        html.push('.cert-header{font-size:12px;text-transform:uppercase;letter-spacing:0.3em;color:#8b7355;margin-bottom:8px}');
+        html.push('.cert-title{font-size:2rem;font-weight:800;color:#1e2330;margin-bottom:4px}');
+        html.push('.cert-sub{font-size:1rem;color:#6b7280;margin-bottom:24px}');
+        html.push('.cert-label{font-size:14px;color:#8b7355;text-transform:uppercase;letter-spacing:0.15em;margin-bottom:4px}');
+        html.push('.cert-name{font-size:2.4rem;font-weight:800;background:linear-gradient(135deg,#4f6ef7,#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:24px}');
+        html.push('.cert-earned{font-size:1.25rem;font-weight:700;color:#1e2330;margin-bottom:16px}');
+        html.push('.cert-skills{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-bottom:24px}');
+        html.push('.cert-date{font-size:14px;color:#6b7280;margin-bottom:8px}');
+        html.push('.cert-footer{font-size:12px;color:#8b7355;letter-spacing:0.1em}');
+        html.push('@media print{body{background:#fff;padding:0}.cert{border-width:6px;max-width:100%}}');
+        html.push('</style></head><body>');
+        html.push('<div class="cert">');
+        html.push('<div class="cert-header">AI Creator Lab</div>');
+        html.push('<div class="cert-title">Certificate of Completion</div>');
+        html.push('<div class="cert-sub">This is to certify that</div>');
+        html.push('<div class="cert-label">Student</div>');
+        html.push('<div class="cert-name">' + escapeHtml(name) + '</div>');
+        html.push('<div class="cert-earned">has earned the title of AI Creator</div>');
+        html.push('<div class="cert-skills">' + skillTags + '</div>');
+        html.push('<div class="cert-date">' + escapeHtml(date) + '</div>');
+        html.push('<div class="cert-footer">AI Creator Lab &middot; 12-Week Course</div>');
+        html.push('</div></body></html>');
+        return html.join('\n');
+      }
+    });
+
+    // =============================================
+    // Task Sidebar
+    // =============================================
+    var taskSidebar = document.getElementById('task-sidebar');
+
+    var taskCards = window.TaskCards(taskSidebar, [
+      { id: 'polish',   title: 'Polish your project',        description: 'Complete the polish checklist' },
+      { id: 'present',  title: 'Launch Presentation Mode',   description: 'Write your about & process, then present' },
+      { id: 'feedback', title: 'Give peer feedback',          description: 'Review a classmate\'s project' },
+      { id: 'reflect',  title: 'Write your reflection',       description: 'Share what you learned and your favorite lesson' },
+      { id: 'graduate', title: 'Graduate!',                    description: 'Print or download your certificate' }
+    ]);
+
+    // Restore completed states
+    var allPolished = polishItems.every(function (p) { return polishState[p.id]; });
+    if (allPolished) taskCards.setComplete('polish', true);
+    if (allFeedback.length > 0) taskCards.setComplete('feedback', true);
+    if (savedReflection && savedReflection.learned) taskCards.setComplete('reflect', true);
+
+    // Mark graduate when print or export is used
+    printBtn.addEventListener('click', function () {
+      taskCards.setComplete('graduate', true);
+    });
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Toolbox: Combine Everything! - AI Creator Lab</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/white.css">
+  <link rel="stylesheet" href="/shared/slides-base.css">
+  <style>
+    /* Tool review cards */
+    .tool-cards {
+      display: flex;
+      gap: 24px;
+      max-width: 950px;
+      margin: 28px auto 0;
+    }
+
+    .tool-card {
+      flex: 1;
+      padding: 24px 18px;
+      border-radius: 14px;
+      text-align: center;
+    }
+
+    .tool-card.card-text {
+      background: rgba(79, 110, 247, 0.08);
+      border: 2px solid rgba(79, 110, 247, 0.15);
+    }
+
+    .tool-card.card-image {
+      background: rgba(124, 58, 237, 0.08);
+      border: 2px solid rgba(124, 58, 237, 0.15);
+    }
+
+    .tool-card.card-code {
+      background: rgba(14, 165, 165, 0.08);
+      border: 2px solid rgba(14, 165, 165, 0.15);
+    }
+
+    .tool-card.card-music {
+      background: rgba(245, 158, 11, 0.08);
+      border: 2px solid rgba(245, 158, 11, 0.3);
+    }
+
+    .tool-card .tc-emoji {
+      font-size: 3rem;
+      margin-bottom: 10px;
+    }
+
+    .tool-card .tc-name {
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .tool-card .tc-desc {
+      font-size: 0.95rem;
+      color: var(--slide-muted);
+    }
+
+    /* Mega-project option cards */
+    .mega-cards {
+      display: flex;
+      gap: 20px;
+      max-width: 960px;
+      margin: 24px auto 0;
+    }
+
+    .mega-card {
+      flex: 1;
+      padding: 20px 16px;
+      border-radius: 14px;
+      text-align: center;
+      background: rgba(79, 110, 247, 0.06);
+      border: 2px solid rgba(79, 110, 247, 0.12);
+    }
+
+    .mega-card .mc-emoji {
+      font-size: 2.4rem;
+      margin-bottom: 8px;
+    }
+
+    .mega-card .mc-name {
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .mega-card .mc-desc {
+      font-size: 0.85rem;
+      color: var(--slide-muted);
+      line-height: 1.4;
+    }
+
+    /* Workflow diagram */
+    .workflow-flow {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      margin: 32px auto;
+      max-width: 900px;
+      flex-wrap: wrap;
+    }
+
+    .workflow-step {
+      padding: 18px 22px;
+      border-radius: 14px;
+      text-align: center;
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+
+    .workflow-step.ws-plan {
+      background: rgba(245, 158, 11, 0.12);
+      border: 2px solid rgba(245, 158, 11, 0.3);
+    }
+
+    .workflow-step.ws-text {
+      background: rgba(79, 110, 247, 0.1);
+      border: 2px solid rgba(79, 110, 247, 0.2);
+    }
+
+    .workflow-step.ws-image {
+      background: rgba(124, 58, 237, 0.1);
+      border: 2px solid rgba(124, 58, 237, 0.2);
+    }
+
+    .workflow-step.ws-code {
+      background: rgba(14, 165, 165, 0.1);
+      border: 2px solid rgba(14, 165, 165, 0.2);
+    }
+
+    .workflow-step.ws-polish {
+      background: rgba(34, 197, 94, 0.1);
+      border: 2px solid rgba(34, 197, 94, 0.2);
+    }
+
+    .workflow-arrow {
+      font-size: 1.8rem;
+      color: var(--slide-muted);
+    }
+
+    /* Diagram: how tools connect */
+    .connect-diagram {
+      display: flex;
+      gap: 28px;
+      max-width: 880px;
+      margin: 28px auto 0;
+      align-items: stretch;
+    }
+
+    .connect-col {
+      flex: 1;
+      padding: 20px;
+      border-radius: 14px;
+      text-align: left;
+    }
+
+    .connect-col.col-text {
+      background: rgba(79, 110, 247, 0.08);
+      border: 2px solid rgba(79, 110, 247, 0.15);
+    }
+
+    .connect-col.col-image {
+      background: rgba(124, 58, 237, 0.08);
+      border: 2px solid rgba(124, 58, 237, 0.15);
+    }
+
+    .connect-col.col-code {
+      background: rgba(14, 165, 165, 0.08);
+      border: 2px solid rgba(14, 165, 165, 0.15);
+    }
+
+    .connect-col h3 {
+      text-align: center;
+      margin-bottom: 12px;
+      font-size: 1.2rem;
+    }
+
+    .connect-col p {
+      font-size: 1rem !important;
+      line-height: 1.5;
+    }
+
+    /* Tip cards */
+    .tip-cards {
+      display: flex;
+      gap: 24px;
+      max-width: 900px;
+      margin: 24px auto 0;
+    }
+
+    .tip-card {
+      flex: 1;
+      padding: 20px;
+      border-radius: 14px;
+      text-align: center;
+    }
+
+    .tip-card.tip-good {
+      background: rgba(34, 197, 94, 0.08);
+      border: 2px solid rgba(34, 197, 94, 0.2);
+    }
+
+    .tip-card.tip-bad {
+      background: rgba(239, 68, 68, 0.08);
+      border: 2px solid rgba(239, 68, 68, 0.2);
+    }
+
+    .tip-card .tip-emoji {
+      font-size: 2.5rem;
+      margin-bottom: 8px;
+    }
+
+    .tip-card .tip-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .tip-card .tip-desc {
+      font-size: 0.95rem;
+      color: var(--slide-muted);
+      line-height: 1.4;
+    }
+
+    /* Checklist */
+    .checklist {
+      text-align: left;
+      display: inline-block;
+      margin-top: 20px;
+    }
+
+    .checklist li {
+      padding: 10px 0;
+      font-size: 1.4rem;
+    }
+
+    .checklist li strong {
+      color: var(--slide-primary);
+    }
+
+    /* Creator workflow example */
+    .creator-examples {
+      display: flex;
+      gap: 24px;
+      max-width: 900px;
+      margin: 24px auto 0;
+    }
+
+    .creator-example {
+      flex: 1;
+      padding: 20px;
+      border-radius: 14px;
+      text-align: center;
+      background: rgba(124, 58, 237, 0.06);
+      border: 2px solid rgba(124, 58, 237, 0.12);
+    }
+
+    .creator-example .ce-emoji {
+      font-size: 2.2rem;
+      margin-bottom: 8px;
+    }
+
+    .creator-example .ce-title {
+      font-weight: 700;
+      font-size: 1.1rem;
+      margin-bottom: 6px;
+    }
+
+    .creator-example .ce-desc {
+      font-size: 0.9rem;
+      color: var(--slide-muted);
+      line-height: 1.4;
+    }
+
+    /* Concept box */
+    .concept-box {
+      background: rgba(79, 110, 247, 0.08);
+      border-radius: 14px;
+      padding: 24px 32px;
+      max-width: 800px;
+      margin: 24px auto 0;
+      font-size: 1.4rem;
+      line-height: 1.6;
+      color: var(--slide-text);
+    }
+  </style>
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- Slide 1: Title -->
+      <section>
+        <p class="slide-big-emoji">&#x1F9F0;</p>
+        <h1 class="slide-title">AI Toolbox</h1>
+        <p style="font-size: 1.8rem;">Combine Everything!</p>
+        <p style="margin-top: 12px; font-size: 1.1rem; color: var(--slide-muted);">AI Creator Lab &middot; Lesson 10</p>
+      </section>
+
+      <!-- Slide 2: Review — All the tools we've learned -->
+      <section>
+        <h2>Your AI Skills So Far</h2>
+        <div class="tool-cards">
+          <div class="tool-card card-text">
+            <div class="tc-emoji">&#x1F4DD;</div>
+            <div class="tc-name">Text AI</div>
+            <div class="tc-desc">Write stories, articles, ideas</div>
+          </div>
+          <div class="tool-card card-image">
+            <div class="tc-emoji">&#x1F3A8;</div>
+            <div class="tc-name">Image AI</div>
+            <div class="tc-desc">Generate art, photos, illustrations</div>
+          </div>
+          <div class="tool-card card-music">
+            <div class="tc-emoji">&#x1F3B5;</div>
+            <div class="tc-name">Music AI</div>
+            <div class="tc-desc">Compose songs and soundtracks</div>
+          </div>
+          <div class="tool-card card-code">
+            <div class="tc-emoji">&#x1F4BB;</div>
+            <div class="tc-name">Code AI</div>
+            <div class="tc-desc">Build interactive web pages</div>
+          </div>
+        </div>
+        <p style="margin-top: 28px; font-size: 1.5rem; font-weight: 700; color: var(--slide-secondary);">
+          Today we use them ALL together!
+        </p>
+      </section>
+
+      <!-- Slide 3: Real creators combine tools -->
+      <section>
+        <h2>Real Creators Combine Tools &#x1F3AC;</h2>
+        <p style="font-size: 1.3rem; margin-bottom: 8px;">No one uses just ONE tool. Professionals mix and match:</p>
+        <div class="creator-examples">
+          <div class="creator-example">
+            <div class="ce-emoji">&#x1F4F0;</div>
+            <div class="ce-title">Journalists</div>
+            <div class="ce-desc">Write articles + take photos + design layouts</div>
+          </div>
+          <div class="creator-example">
+            <div class="ce-emoji">&#x1F3AE;</div>
+            <div class="ce-title">Game Designers</div>
+            <div class="ce-desc">Code mechanics + create art + compose music</div>
+          </div>
+          <div class="creator-example">
+            <div class="ce-emoji">&#x1F4E2;</div>
+            <div class="ce-title">Marketers</div>
+            <div class="ce-desc">Write copy + design visuals + build websites</div>
+          </div>
+        </div>
+        <p style="margin-top: 24px; font-size: 1.3rem; color: var(--slide-muted);">
+          The more tools you can combine, the more powerful your creations!
+        </p>
+      </section>
+
+      <!-- Slide 4: The 4 mega-project options -->
+      <section>
+        <h2>Choose Your Mega-Project &#x1F3AF;</h2>
+        <div class="mega-cards">
+          <div class="mega-card">
+            <div class="mc-emoji">&#x1F4F0;</div>
+            <div class="mc-name">AI Magazine</div>
+            <div class="mc-desc">Articles + cover art + magazine layout</div>
+          </div>
+          <div class="mega-card">
+            <div class="mc-emoji">&#x1F680;</div>
+            <div class="mc-name">Product Pitch</div>
+            <div class="mc-desc">Marketing copy + product image + landing page</div>
+          </div>
+          <div class="mega-card">
+            <div class="mc-emoji">&#x1F4DA;</div>
+            <div class="mc-name">AI Tutorial</div>
+            <div class="mc-desc">How-to guide + step illustrations + tutorial page</div>
+          </div>
+          <div class="mega-card">
+            <div class="mc-emoji">&#x2708;&#xFE0F;</div>
+            <div class="mc-name">Travel Guide</div>
+            <div class="mc-desc">Destination writing + travel photos + website</div>
+          </div>
+        </div>
+        <p style="margin-top: 24px; font-size: 1.3rem; color: var(--slide-muted);">
+          Every project uses <strong>all 3 tools</strong>: Text AI + Image AI + Code AI
+        </p>
+      </section>
+
+      <!-- Slide 5: Workflow -->
+      <section>
+        <h2>The Workflow &#x1F504;</h2>
+        <div class="workflow-flow">
+          <div class="workflow-step ws-plan">
+            &#x1F4CB; Plan
+          </div>
+          <div class="workflow-arrow">&rarr;</div>
+          <div class="workflow-step ws-text">
+            &#x1F4DD; Write
+          </div>
+          <div class="workflow-arrow">&rarr;</div>
+          <div class="workflow-step ws-image">
+            &#x1F3A8; Illustrate
+          </div>
+          <div class="workflow-arrow">&rarr;</div>
+          <div class="workflow-step ws-code">
+            &#x1F4BB; Build
+          </div>
+          <div class="workflow-arrow">&rarr;</div>
+          <div class="workflow-step ws-polish">
+            &#x2728; Polish
+          </div>
+        </div>
+        <div class="concept-box" style="margin-top: 20px; font-size: 1.2rem;">
+          Start with your content (text &amp; images), then put it all together in code.
+          <br>You can always go back to any step!
+        </div>
+      </section>
+
+      <!-- Slide 6: How text + image + code work together -->
+      <section>
+        <h2>How Tools Connect &#x1F517;</h2>
+        <div class="connect-diagram">
+          <div class="connect-col col-text">
+            <h3>&#x1F4DD; Text AI</h3>
+            <p>Creates your <strong>words</strong><br>
+              - Articles, descriptions<br>
+              - Headlines, slogans<br>
+              - Instructions, stories</p>
+          </div>
+          <div class="connect-col col-image">
+            <h3>&#x1F3A8; Image AI</h3>
+            <p>Creates your <strong>visuals</strong><br>
+              - Cover photos<br>
+              - Illustrations<br>
+              - Product images</p>
+          </div>
+          <div class="connect-col col-code">
+            <h3>&#x1F4BB; Code AI</h3>
+            <p>Puts it <strong>all together</strong><br>
+              - Page layout<br>
+              - Interactive elements<br>
+              - Final presentation</p>
+          </div>
+        </div>
+        <p style="margin-top: 20px; font-size: 1.4rem; font-weight: 600; color: var(--slide-secondary);">
+          Text + Images &#x2192; Code = Complete Project!
+        </p>
+      </section>
+
+      <!-- Slide 7: Tips for combining outputs -->
+      <section>
+        <h2>Combining AI Outputs &#x1F4A1;</h2>
+        <ul class="checklist">
+          <li>&#x1F4CB; <strong>Copy text</strong> from the chat &rarr; paste into your code prompt</li>
+          <li>&#x1F5BC;&#xFE0F; <strong>Copy image URL</strong> &rarr; use it in your code prompt</li>
+          <li>&#x1F504; <strong>Iterate:</strong> generate &rarr; review &rarr; refine &rarr; repeat</li>
+          <li>&#x1F4DD; <strong>Use project notes</strong> to save URLs and text snippets</li>
+        </ul>
+      </section>
+
+      <!-- Slide 8: Common mistakes -->
+      <section>
+        <h2>Step by Step, Not All at Once &#x26A0;&#xFE0F;</h2>
+        <div class="tip-cards">
+          <div class="tip-card tip-bad">
+            <div class="tip-emoji">&#x274C;</div>
+            <div class="tip-title">Don't Do This</div>
+            <div class="tip-desc">
+              Try to build everything at the same time<br><br>
+              Jump straight to code without any content<br><br>
+              Spend all your time on one tool
+            </div>
+          </div>
+          <div class="tip-card tip-good">
+            <div class="tip-emoji">&#x2705;</div>
+            <div class="tip-title">Do This Instead</div>
+            <div class="tip-desc">
+              Work on one piece at a time<br><br>
+              Get text and images ready first, then build<br><br>
+              Budget your time across all tools
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 9: Quality checklist -->
+      <section>
+        <h2>Quality Checklist &#x2705;</h2>
+        <p style="font-size: 1.3rem; margin-bottom: 12px;">Before you call it done, ask yourself:</p>
+        <ul class="checklist">
+          <li>&#x1F441;&#xFE0F; <strong>Does it look good?</strong> &mdash; Is the layout clean and organized?</li>
+          <li>&#x1F4D6; <strong>Does it read well?</strong> &mdash; Is the text interesting and clear?</li>
+          <li>&#x1F5BC;&#xFE0F; <strong>Do images match?</strong> &mdash; Do visuals fit your content?</li>
+          <li>&#x2699;&#xFE0F; <strong>Does it work?</strong> &mdash; Does the page display correctly?</li>
+          <li>&#x1F31F; <strong>Would you show it off?</strong> &mdash; Are you proud of it?</li>
+        </ul>
+      </section>
+
+      <!-- Slide 10: Your mission -->
+      <section>
+        <p class="slide-big-emoji">&#x1F3AF;</p>
+        <h2>Your Mission</h2>
+        <div class="concept-box" style="font-size: 1.3rem;">
+          <strong>1.</strong> Pick a mega-project (Magazine, Product, Tutorial, or Travel)<br><br>
+          <strong>2.</strong> Use <em>all 3 AI tools</em> &mdash; Text, Image, and Code<br><br>
+          <strong>3.</strong> Build a complete project you can share<br><br>
+          <strong>4.</strong> Export and present to the class!
+        </div>
+        <p style="margin-top: 24px; font-size: 1.4rem; color: var(--slide-muted);">
+          You have 45 minutes to build. Make it count!
+        </p>
+      </section>
+
+      <!-- Slide 11: Open your laptops -->
+      <section>
+        <h2>Open your laptops!</h2>
+        <p style="font-size: 2rem; margin-top: 24px;">&#x1F449; Go to the <strong>Lesson 10</strong> page</p>
+        <p style="font-size: 1.4rem; margin-top: 16px; color: var(--slide-muted);">
+          Step 1: Choose your project (5 min)<br>
+          Step 2: Build with all tools (35 min)<br>
+          Step 3: Export &amp; share (10 min)
+        </p>
+        <p style="font-size: 2.5rem; margin-top: 32px;">All tools unlocked &mdash; let's create! &#x1F680;</p>
+      </section>
+
+    </div>
+  </div>
+
+  <!-- Lesson badge overlay -->
+  <div class="lesson-badge">10</div>
+
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+  <script>
+    Reveal.initialize({
+      hash: true,
+      transition: 'slide',
+      width: 1280,
+      height: 720
+    });
+  </script>
+</body>
+</html>
